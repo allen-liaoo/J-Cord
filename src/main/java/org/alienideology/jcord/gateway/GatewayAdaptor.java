@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Communication client for Discord GateWay
  * @author AlienIdeology
  */
 public class GatewayAdaptor extends WebSocketAdapter {
@@ -39,7 +40,7 @@ public class GatewayAdaptor extends WebSocketAdapter {
     public void onTextMessage(WebSocket websocket, String text) throws Exception {
         JSONObject json = new JSONObject(text);
         int opCode = json.getInt("op");
-        handleOPCode(OPCode.getCode(opCode));
+        handleOPCode(OPCode.getCode(opCode), text);
     }
 
     @Override
@@ -47,18 +48,21 @@ public class GatewayAdaptor extends WebSocketAdapter {
         OPCode code = OPCode.getCode(frame.getOpcode());
         LOG.info("OP: " + frame.getOpcode() + "\t" + code);
 
-        handleOPCode(code);
+        handleOPCode(code, frame.getPayloadText());
     }
 
     @Override
     public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
         DisconnectionCode code = DisconnectionCode.getCode(serverCloseFrame.getCloseCode());
-        LOG.error("Gateway Disconnection Code: "+code+"\t"+code.message);
+        LOG.error("Disconnection Code: "+code+"\t"+code.message);
         isConnected = false;
     }
 
-    private void handleOPCode(OPCode code) {
+    private void handleOPCode(OPCode code, String message) {
         switch (code) {
+            case DISPATCH: {
+                handleEvent(new JSONObject(message));
+            }
             case HELLO: {
                 sendHeartBeat();
                 break;
@@ -68,7 +72,14 @@ public class GatewayAdaptor extends WebSocketAdapter {
                 LOG.debug("Heart: "+code);
                 break;
             }
+            default: {
+                LOG.debug("Unknown OP Code");
+            }
         }
+    }
+
+    private void handleEvent(JSONObject json) {
+
     }
 
     private void sendHeartBeat() {

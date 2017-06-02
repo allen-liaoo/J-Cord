@@ -3,6 +3,7 @@ package org.alienideology.jcord;
 import com.neovisionaries.ws.client.WebSocketFactory;
 
 /**
+ * The Identity Builder for constructing an Identity.
  * @author AlienIdeology
  */
 public class IdentityBuilder {

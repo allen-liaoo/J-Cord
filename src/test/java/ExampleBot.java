@@ -3,7 +3,7 @@ import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
 
 /**
- * @a
+ * @author AlienIdeology
  */
 public class ExampleBot {
 

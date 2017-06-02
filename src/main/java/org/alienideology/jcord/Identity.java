@@ -8,6 +8,7 @@ import org.apache.commons.logging.impl.SimpleLog;
 import java.net.URI;
 
 /**
+ * The Identity of a bot (without shards), a shard, or a human (client)
  * @author AlienIdeology
  */
 public class Identity {
