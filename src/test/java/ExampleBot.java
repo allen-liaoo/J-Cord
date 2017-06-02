@@ -11,7 +11,7 @@ public class ExampleBot {
         try {
             Identity bot = new IdentityBuilder()
                     .setIdentityType(IdentityType.BOT)
-                    .useToken(Token.top_secret)
+                    .useToken(Token.TOP_SECRET)
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
