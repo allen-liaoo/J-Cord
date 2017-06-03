@@ -13,7 +13,11 @@ import static com.mashape.unirest.http.HttpMethod.*;
  */
 public class HttpPath {
 
-    private static String apiURL = "https://discordapp.com/api";
+    public static String APIURL = "https://discordapp.com/api";
+
+    public static class Gateway {
+        public final static HttpPath GET_BOT = new HttpPath(GET, "/gateway/bot");
+    }
 
     public static class Guild {
 
@@ -29,7 +33,7 @@ public class HttpPath {
 
     public HttpPath(HttpMethod method, String path) {
         this.method = method;
-        this.path = apiURL + path;
+        this.path = APIURL + path;
     }
 
     public HttpPath useId(String... ids) {
@@ -60,10 +64,6 @@ public class HttpPath {
         request.header("Authorization", identity.getToken())
                 .header("User-Agent", "DiscordBot ($"+path+", $"+")");
         return request;
-    }
-
-    public static String getApiURL() {
-        return apiURL;
     }
 
     public HttpMethod getMethod() {

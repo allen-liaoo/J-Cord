@@ -12,7 +12,7 @@ public abstract class Event {
     protected Identity identity;
 
     private int opCode;
-    private int session;
+    private int sequence;
 
     public Event(Identity identity) {
         this.identity = identity;
@@ -33,11 +33,11 @@ public abstract class Event {
         return this;
     }
 
-    public int getSession() {
-        return session;
+    public int getSequence() {
+        return sequence;
     }
 
-    public Event setSession(int session) {
-        this.session = session; return this;
+    public Event setSequence(int sequence) {
+        this.sequence = sequence; return this;
     }
 }

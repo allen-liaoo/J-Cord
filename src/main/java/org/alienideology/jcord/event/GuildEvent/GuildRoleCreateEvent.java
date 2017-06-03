@@ -7,7 +7,7 @@ import org.json.JSONObject;
 /**
  * @author AlienIdeology
  */
-public class GuildRoleCreateEvent extends Event {
+public class GuildRoleCreateEvent extends GeneralGuildEvent {
 
     //Role newRole = new Role();
 
@@ -19,7 +19,7 @@ public class GuildRoleCreateEvent extends Event {
     public void handleEvent(JSONObject raw) {
         System.out.println(raw.toString(4));
         String guild_id = raw.getString("guild_id");
-
+        //guild = identity.getGuild(guild_id);
         //newRole = new Role(id, id.getGuildById(guild_id), raw.getJSONObject("role"));
     }
 }

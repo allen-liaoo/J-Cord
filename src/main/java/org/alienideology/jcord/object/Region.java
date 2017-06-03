@@ -1,11 +1,9 @@
 package org.alienideology.jcord.object;
 
-import com.sun.org.apache.regexp.internal.RE;
-
 import java.util.Locale;
 
 /**
- * @author Guild Region
+ * @author Guild Voice Region
  */
 public enum Region {
 
@@ -35,7 +33,7 @@ public enum Region {
     VIP_US_CENTRAL ("US Central (VIP)"),
     VIP_US_SOUTH ("US South (VIP)"),
 
-    UNKNOWN("Unknown Region");
+    UNKNOWN ("Unknown");
 
     public final String key;
     public final String name;

@@ -1,7 +1,8 @@
 package org.alienideology.jcord;
 
 /**
- * Created by liaoyilin on 6/2/17.
+ * Identity types (Bot or Human)
+ * @author AlienIdeology
  */
 public enum IdentityType {
     BOT,

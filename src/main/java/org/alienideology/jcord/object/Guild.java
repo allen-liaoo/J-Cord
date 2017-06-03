@@ -2,20 +2,17 @@ package org.alienideology.jcord.object;
 
 import org.alienideology.jcord.Identity;
 import org.json.JSONObject;
-
-import javax.management.relation.Role;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Guild, A collection of users and channels, often referred to in the UI as a server.
+ * Guild - A collection of users and channels, often referred to in the UI as a server.
  * @author AlienIdeology
  */
-public class Guild {
-
-    private final Identity identity;
+public class Guild extends DiscordObject implements SnowFlake {
 
     private final String id;
+    private boolean isAvailable;
+
     private final String name;
 
     private final String icon;
@@ -38,39 +35,68 @@ public class Guild {
     //private List<Emote> emojis;
 
     public Guild (Identity identity, JSONObject json) {
-        this.identity = identity;
+        super(identity);
 
         id = json.getString("id");
-        name = json.getString("name");
 
-        icon = json.getString("icon");
-        splash = json.getString("splash");
+        if (json.getBoolean("unavailable")) {
+            isAvailable = true;
 
-        //owner = identity.getMember(json.getString("owner_id"));
-        region = Region.getByKey(json.getString("region"));
+            name = null;
 
-        afk_timeout = json.getInt("afk_timeout");
-        //afk_channel = identity.getVoiceChannel(json.getString("afk_channel_id"));
+            icon = null;
+            splash = null;
 
-        embed_enabled = json.getBoolean("embed_enabled");
-        //embed_channel = identity.getChannel(json.getString("embed_channel_id"));
+            //owner = null;
+            region = null;
 
-        verification_level = Verification.getByKey(json.getInt("verification_level"));
-        notifications_level = Notification.getByKey(json.getInt("default_message_notifications"));
-        mfa_level = MFA.getByKey(json.getInt("mfa_level"));
+            afk_timeout = -1;
+            //afk_channel = null;;
 
-        //roles = new ArrayList<Role>();
-        //json.getJSONArray("roles").forEach(role -> roles.add(new Role(identity, role.toString())));
-        //emojis = new ArrayList<Emote>();
-        //json.getJSONArray("emojis").forEach(emoji -> emoji.add(new Role(identity, emoji.toString())));
-    }
+            embed_enabled = false;
+            //embed_channel = null;
 
-    public Identity getIdentity() {
-        return identity;
+            verification_level = null;
+            notifications_level = null;
+            mfa_level = null;
+
+            //roles = new ArrayList<Role>();
+            //emojis = new ArrayList<Emote>();
+
+        } else {
+            isAvailable = false;
+
+            name = json.getString("name");
+
+            icon = json.getString("icon");
+            splash = json.getString("splash");
+
+            //owner = identity.getMember(json.getString("owner_id"));
+            region = Region.getByKey(json.getString("region"));
+
+            afk_timeout = json.getInt("afk_timeout");
+            //afk_channel = identity.getVoiceChannel(json.getString("afk_channel_id"));
+
+            embed_enabled = json.getBoolean("embed_enabled");
+            //embed_channel = identity.getChannel(json.getString("embed_channel_id"));
+
+            verification_level = Verification.getByKey(json.getInt("verification_level"));
+            notifications_level = Notification.getByKey(json.getInt("default_message_notifications"));
+            mfa_level = MFA.getByKey(json.getInt("mfa_level"));
+
+            //roles = new ArrayList<Role>();
+            //json.getJSONArray("roles").forEach(role -> roles.add(new Role(identity, role.toString())));
+            //emojis = new ArrayList<Emote>();
+            //json.getJSONArray("emojis").forEach(emoji -> emoji.add(new Role(identity, emoji.toString())));
+        }
     }
 
     public String getId() {
         return id;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
     }
 
     public String getName() {
