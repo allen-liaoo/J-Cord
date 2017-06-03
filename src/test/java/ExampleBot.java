@@ -1,7 +1,6 @@
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
-import org.alienideology.jcord.gateway.OPCode;
 
 /**
  * A simple test bot for J-Cord

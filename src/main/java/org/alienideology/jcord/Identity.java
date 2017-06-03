@@ -2,6 +2,7 @@ package org.alienideology.jcord;
 
 import com.mashape.unirest.http.Unirest;
 import com.neovisionaries.ws.client.*;
+import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.gateway.GatewayAdaptor;
 import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.Guild;
@@ -24,6 +25,7 @@ public class Identity {
     private String token;
 
     private WebSocketFactory wsFactory;
+    private List<DispatcherAdaptor> listeners = new ArrayList<>();
 
     private List<Guild> guilds = new ArrayList<>();
 
@@ -48,12 +50,21 @@ public class Identity {
         return this;
     }
 
+    Identity addListener (DispatcherAdaptor... listeners) {
+        this.listeners.addAll(Arrays.asList(listeners));
+        return this;
+    }
+
+    public List<DispatcherAdaptor> getDispatchers () {
+        return listeners;
+    }
+
     public String getToken () {
         return token;
     }
 
     // TODO: Make this somehow private, unavailable for outside access
-    public void addGuild(Guild... guilds) {
+    public void addGuild (Guild... guilds) {
         this.guilds.addAll(Arrays.asList(guilds));
     }
 

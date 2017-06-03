@@ -27,7 +27,7 @@ public class GatewayAdaptor extends WebSocketAdapter {
     private WebSocket webSocket;
     private Thread heart;
 
-    /* Used for resuming and hearbeat */
+    /* Used for resuming and heartbeat */
     private int sequence;
     /* Use for resuming */
     private String session_id = null;
@@ -161,6 +161,7 @@ public class GatewayAdaptor extends WebSocketAdapter {
             e.setOpCode(opCode)
                 .setSequence(sequence)
                 .handleEvent(event);
+            identity.getListeners().forEach(listener -> listener.onEvent(e));
         }
     }
 
@@ -221,7 +222,7 @@ public class GatewayAdaptor extends WebSocketAdapter {
 
     private void setEventHandler() {
         /* Gateway Event */
-        eventHandler.put("READY", new ReadyEvent(identity));
+        eventHandler.put("READY", new ReadyEvent(identity, this));
 
         /* Guild Event */
         eventHandler.put("GUILD_CREATE", new GuildCreateEvent(identity));

@@ -1,16 +1,16 @@
 package org.alienideology.jcord.event.GatewayEvent;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.event.Event;
+import org.alienideology.jcord.gateway.GatewayAdaptor;
 import org.json.JSONObject;
 
 /**
  * @author AlienIdeology
  */
-public class ReadyEvent extends Event {
+public class ReadyEvent extends GatewayEvent {
 
-    public ReadyEvent(Identity identity) {
-        super(identity);
+    public ReadyEvent(Identity identity, GatewayAdaptor gateway) {
+        super(identity, gateway);
     }
 
     @Override

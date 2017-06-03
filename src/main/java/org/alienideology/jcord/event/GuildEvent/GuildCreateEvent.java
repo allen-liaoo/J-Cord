@@ -7,7 +7,7 @@ import org.json.JSONObject;
 /**
  * @author AlienIdeology
  */
-public class GuildCreateEvent extends GeneralGuildEvent {
+public class GuildCreateEvent extends GuildEvent {
 
     public GuildCreateEvent(Identity identity) {
         super(identity);

@@ -1,13 +1,12 @@
 package org.alienideology.jcord.event.GuildEvent;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.event.Event;
 import org.json.JSONObject;
 
 /**
  * @author AlienIdeology
  */
-public class GuildRoleCreateEvent extends GeneralGuildEvent {
+public class GuildRoleCreateEvent extends GuildEvent {
 
     //Role newRole = new Role();
 

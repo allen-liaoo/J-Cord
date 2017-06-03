@@ -9,11 +9,11 @@ import org.json.JSONObject;
  * General Guild Events
  * @author AlienIdeology
  */
-public abstract class GeneralGuildEvent extends Event {
+public abstract class GuildEvent extends Event {
 
     protected Guild guild;
 
-    public GeneralGuildEvent(Identity identity) {
+    public GuildEvent(Identity identity) {
         super(identity);
     }
 
