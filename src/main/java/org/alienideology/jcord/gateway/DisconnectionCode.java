@@ -19,8 +19,8 @@ public enum DisconnectionCode {
     INVALID_SHARD (4010, "Invalid shard when identifying"),
     SHARDING_REQUIRED (4011, "Requires Sharding");
 
-    public int code;
-    public String message;
+    public final int code;
+    public final String message;
 
     DisconnectionCode(int code, String message) {
         this.code = code;
