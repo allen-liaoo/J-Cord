@@ -13,7 +13,11 @@ public class ExampleBot {
             Identity bot = new IdentityBuilder()
                     .setIdentityType(IdentityType.BOT)
                     .useToken(Token.TOP_SECRET)
+                    .addDispatchers(new ExampleDispatcher())
                     .build();
+
+            Thread.sleep(5000);
+            System.out.println(bot.getGuilds().size());
         } catch (Exception e) {
             e.printStackTrace();
         }

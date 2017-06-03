@@ -11,7 +11,6 @@ public abstract class Event {
 
     protected Identity identity;
 
-    private int opCode;
     private int sequence;
 
     public Event(Identity identity) {
@@ -22,15 +21,6 @@ public abstract class Event {
 
     public Identity getIdentity() {
         return identity;
-    }
-
-    public int getOpCode() {
-        return opCode;
-    }
-
-    public Event setOpCode(int opCode) {
-        this.opCode = opCode;
-        return this;
     }
 
     public int getSequence() {

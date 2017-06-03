@@ -6,11 +6,13 @@ import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.gateway.GatewayAdaptor;
 import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.Guild;
+import org.alienideology.jcord.object.User;
 import org.apache.commons.logging.impl.SimpleLog;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,9 +26,10 @@ public class Identity {
     private IdentityType type;
     private String token;
 
+    private User self;
+
     private WebSocketFactory wsFactory;
     private List<DispatcherAdaptor> listeners = new ArrayList<>();
-
     private List<Guild> guilds = new ArrayList<>();
 
     public Identity (IdentityType type,  WebSocketFactory wsFactory) {
@@ -63,9 +66,21 @@ public class Identity {
         return token;
     }
 
+    public User getSelf() {
+        return self;
+    }
+
+    public List<Guild> getGuilds() {
+        return Collections.unmodifiableList(guilds);
+    }
+
     // TODO: Make this somehow private, unavailable for outside access
     public void addGuild (Guild... guilds) {
         this.guilds.addAll(Arrays.asList(guilds));
+    }
+
+    public void setSelf (User selfUser) {
+        this.self = selfUser;
     }
 
 }

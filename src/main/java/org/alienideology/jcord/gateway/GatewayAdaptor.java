@@ -81,7 +81,7 @@ public class GatewayAdaptor extends WebSocketAdapter {
         }
 
         JSONObject json = new JSONObject(decoded.toString());
-        handleOPCode(OPCode.getCode(json.getInt("op")), json.toString());
+        handleEvent(json);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class GatewayAdaptor extends WebSocketAdapter {
             /* Event */
             case DISPATCH: {
                 handleEvent(new JSONObject(message));
-                LOG.info("Event Json: "+message);
+                //LOG.info("Event Json: "+message);
             }
             /* Server Side HandShake */
             case HELLO: {
@@ -136,32 +136,29 @@ public class GatewayAdaptor extends WebSocketAdapter {
      * @param json the json content
      */
     private void handleEvent(JSONObject json) {
-        int opCode = json.getInt("op");
         sequence = json.getInt("s");
         String key = json.getString("t");
         JSONObject event = json.getJSONObject("d");
 
-        if(key.contains("MESSAGE")) return;
-
         Event e = eventHandler.get(key);
 
         if (e == null) {
-            LOG.fatal("Unknown Event:\n" + json.toString(4));
+            LOG.fatal("Unknown Event: "+key);// + json.toString(4));
         } else {
 
             switch (key) {
                 case "READY": {
-                    session_id = json.getString("session_id");
+                    session_id = event.getString("session_id");
                     LOG.info("[RECEIVED] Ready event!!!");
                     break;
                 }
-                default: break;
+                default: {
+                    break;
+                }
             }
 
-            e.setOpCode(opCode)
-                .setSequence(sequence)
-                .handleEvent(event);
-            identity.getListeners().forEach(listener -> listener.onEvent(e));
+            e.setSequence(sequence).handleEvent(event);
+            identity.getDispatchers().forEach(listener -> listener.onEvent(e));
         }
     }
 
