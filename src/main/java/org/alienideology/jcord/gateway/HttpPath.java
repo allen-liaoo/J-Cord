@@ -13,7 +13,7 @@ import static com.mashape.unirest.http.HttpMethod.*;
  */
 public class HttpPath {
 
-    public static String APIURL = "https://discordapp.com/api";
+    public final static String APIURL = "https://discordapp.com/api";
 
     public static class Gateway {
         public final static HttpPath GET_BOT = new HttpPath(GET, "/gateway/bot");

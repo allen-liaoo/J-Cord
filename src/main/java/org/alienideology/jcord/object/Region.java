@@ -3,7 +3,8 @@ package org.alienideology.jcord.object;
 import java.util.Locale;
 
 /**
- * @author Guild Voice Region
+ * Voice Region (Guild) - Used for guild voice channel connection.
+ * @author AlienIdeology
  */
 public enum Region {
 

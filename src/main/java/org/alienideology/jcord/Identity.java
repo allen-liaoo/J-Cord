@@ -1,7 +1,9 @@
 package org.alienideology.jcord;
 
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.neovisionaries.ws.client.*;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.gateway.GatewayAdaptor;
 import org.alienideology.jcord.gateway.HttpPath;
@@ -9,7 +11,10 @@ import org.alienideology.jcord.object.Guild;
 import org.alienideology.jcord.object.User;
 import org.apache.commons.logging.impl.SimpleLog;
 
+import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,18 +42,28 @@ public class Identity {
         this.wsFactory = wsFactory;
     }
 
-    Identity login (String token) throws Exception {
+    Identity login (String token) throws IllegalArgumentException, IOException {
         if (type == IdentityType.BOT) {
             this.token = "Bot " + token;
         } else {
             this.token = token;
         }
 
-        URI url = new URI(Unirest.get(HttpPath.Gateway.GET_BOT.getPath()).header("Authorization", this.token)
-                .asJson().getBody().getObject().getString("url")+"?encoding=json&v="+GatewayAdaptor.GATEWAY_VERSION);
+        try {
+            URI url = new URI(Unirest.get(HttpPath.Gateway.GET_BOT.getPath()).header("Authorization", this.token)
+                    .asJson().getBody().getObject().getString("url") + "?encoding=json&v=" + GatewayAdaptor.GATEWAY_VERSION);
 
-        WebSocket socket = wsFactory.createSocket(url);
-        socket.addListener(new GatewayAdaptor(this, socket)).connect();
+            WebSocket socket = wsFactory.createSocket(url);
+            socket.addListener(new GatewayAdaptor(this, socket)).connect();
+        } catch (UnirestException ne) {
+            throw new IllegalArgumentException("The ID provided it not valid!");
+        } catch (URISyntaxException urise) {
+            throw new ConnectException("Discord fail to provide a valid URI!");
+        } catch (IOException iow) {
+            throw new IOException("Fail to create WebSocket!");
+        } catch (WebSocketException wse) {
+            throw new ConnectException("Fail to connect to the Discord server!");
+        }
 
         return this;
     }

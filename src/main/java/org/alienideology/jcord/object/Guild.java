@@ -1,6 +1,7 @@
 package org.alienideology.jcord.object;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.gateway.HttpPath;
 import org.json.JSONObject;
 import java.util.Arrays;
 
@@ -11,14 +12,14 @@ import java.util.Arrays;
 public class Guild extends DiscordObject implements SnowFlake {
 
     private final String id;
-    private boolean isAvailable;
+    private boolean isAvailable = false;
 
     private final String name;
 
     private final String icon;
     private final String splash;
 
-//    private final Member owner;
+//    private final Member owner
     private final Region region;
 
     private final AFK_Timeout afk_timeout;
@@ -34,62 +35,45 @@ public class Guild extends DiscordObject implements SnowFlake {
 //    private List<Role> roles;
 //    private List<Emote> emojis;
 
-    public Guild (Identity identity, JSONObject json) {
+    /**
+     * Unavailable Guild
+     * @param identity The Identity this guild belongs to.
+     * @param id The ID of this guild
+     */
+    public Guild (Identity identity, String id) {
+        this(identity, id, null, null, null, null,
+                -1, false, -1, -1, -1);
+    }
+
+    /**
+     * Available Guild
+     * @param identity The Identity this guild belongs to.
+     * @param id The ID of this guild
+     * @param name
+     * @param icon
+     * @param splash
+     *
+     */
+    // TODO: Add Owner Field
+    public Guild (Identity identity, String id, String name, String icon, String splash, String region,
+                  int afk_timeout, boolean embed_enabled, int verification_level, int notification_level, int mfa_level) {
         super(identity);
-
-        id = json.getString("id");
-
-        if (json.has("unavailable") && json.getBoolean("unavailable")) {
-
-            isAvailable = false;
-
-            name = null;
-
-            icon = null;
-            splash = null;
-
-//            owner = null;
-            region = null;
-//
-            afk_timeout = AFK_Timeout.UNKNOWN;
-//            afk_channel = null;;
-//
-            embed_enabled = false;
-//            embed_channel = null;
-//
-            verification_level = null;
-            notifications_level = null;
-            mfa_level = null;
-
-//            roles = new ArrayList<Role>();
-//            emojis = new ArrayList<Emote>();
-
-        } else {
-            isAvailable = true;
-
-            name = json.getString("name");
-
-            icon = json.getString("icon");
-            splash = json.isNull("splash") ? null : json.getString("splash");
-
-//            owner = identity.getMember(json.getString("owner_id"));
-            region = Region.getByKey(json.getString("region"));
-
-            afk_timeout = AFK_Timeout.getByTimeout(json.getInt("afk_timeout"));
-//            afk_channel = json.isNull("afk_channel_id") ? null : identity.getVoiceChannel(json.getString("afk_channel_id"));
-
-            embed_enabled = json.has("embed_enabled") && json.getBoolean("embed_enabled");
-//            embed_channel = json.has("embed_channel_id") ? : identity.getChannel(json.getString("embed_channel_id")) : null;
-
-            verification_level = Verification.getByKey(json.getInt("verification_level"));
-            notifications_level = Notification.getByKey(json.getInt("default_message_notifications"));
-            mfa_level = MFA.getByKey(json.getInt("mfa_level"));
-
-//            roles = new ArrayList<Role>();
-//            json.getJSONArray("roles").forEach(role -> roles.add(new Role(identity, role.toString())));
-//            emojis = new ArrayList<Emote>();
-//            json.getJSONArray("emojis").forEach(emoji -> emoji.add(new Role(identity, emoji.toString())));
-        }
+        this.id = id;
+        isAvailable = true;
+        this.name = name;
+        this.icon = icon;
+        this.splash = splash;
+//         this.owner = owner;
+        this.region = Region.getByKey(region);
+        this.afk_timeout = AFK_Timeout.getByTimeout(afk_timeout);
+//        this.afk_channel = null;
+        this.embed_enabled = embed_enabled;
+//        embed_channel = null;
+        this.verification_level = Verification.getByKey(verification_level);
+        this.notifications_level = Notification.getByKey(notification_level);
+        this.mfa_level = MFA.getByKey(mfa_level);
+//        roles = new ArrayList<Role>();
+//        emojis = new ArrayList<Emote>();
     }
 
     @Override

@@ -1,12 +1,8 @@
 package org.alienideology.jcord.event.GatewayEvent;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.gateway.GatewayAdaptor;
-import org.alienideology.jcord.gateway.HttpPath;
-import org.alienideology.jcord.object.Guild;
-import org.alienideology.jcord.object.User;
-import org.json.JSONArray;
+import org.alienideology.jcord.object.ObjectBuilder;
 import org.json.JSONObject;
 
 /**
@@ -42,6 +38,6 @@ public class ReadyEvent extends GatewayEvent {
         }*/
 
         /* Initialize Self User */
-        identity.setSelf(new User(identity, raw.getJSONObject("user")));
+        identity.setSelf(new ObjectBuilder(identity).buildUser(raw.getJSONObject("user")));
     }
 }

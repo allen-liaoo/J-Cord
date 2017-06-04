@@ -5,7 +5,10 @@ package org.alienideology.jcord;
  * @author AlienIdeology
  */
 public enum IdentityType {
+
+    /* Discord Bot or Application Account */
     BOT,
 
+    /* Client Account */
     HUMAN;
 }

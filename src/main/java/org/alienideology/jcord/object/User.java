@@ -4,7 +4,7 @@ import org.alienideology.jcord.Identity;
 import org.json.JSONObject;
 
 /**
- * User - A base entity, can be a member of guild/private channel, and bot/normal.
+ * User - A base entity, can be a member of guild/private channel, and bot/human.
  * @author AlienIdeology
  */
 public class User extends DiscordObject implements SnowFlake {
@@ -20,19 +20,17 @@ public class User extends DiscordObject implements SnowFlake {
     private boolean isVerified;
     private boolean MFAEnabled;
 
-    public User(Identity identity, JSONObject json) {
+    public User (Identity identity, String id, String name, String discriminator, String avatar, String email,
+                 boolean isBot, boolean isVerified, boolean MFAEnabled) {
         super(identity);
-
-        id = json.getString("id");
-
-        name = json.getString("username");
-        discriminator = json.getString("discriminator");
-        avatar = json.getString("avatar");
-        email = json.isNull("email") ? null : json.getString("email");
-
-        isBot = json.getBoolean("bot");
-        isVerified = json.getBoolean("verified");
-        MFAEnabled = json.getBoolean("mfa_enabled");
+        this.id = id;
+        this.name = name;
+        this.discriminator = discriminator;
+        this.avatar = avatar;
+        this.email = email;
+        this.isBot = isBot;
+        this.isVerified = isVerified;
+        this.MFAEnabled = MFAEnabled;
     }
 
     @Override

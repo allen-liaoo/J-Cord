@@ -13,21 +13,33 @@ public abstract class Event {
 
     private int sequence;
 
-    public Event(Identity identity) {
+    /**
+     * Default Constructor
+     * @param identity The identity where this event is fired.
+     */
+    public Event (Identity identity) {
         this.identity = identity;
     }
 
-    public abstract void handleEvent(JSONObject raw);
+    /**
+     * Handle events
+     * Initializing event object from the json provided.
+     * @param raw the JSONObject representing this event.
+     */
+    public abstract void handleEvent (JSONObject raw);
 
     public Identity getIdentity() {
         return identity;
     }
 
+    /**
+     * @return The sequence of this event
+     */
     public int getSequence() {
         return sequence;
     }
 
-    public Event setSequence(int sequence) {
+    public Event setSequence (int sequence) {
         this.sequence = sequence; return this;
     }
 }

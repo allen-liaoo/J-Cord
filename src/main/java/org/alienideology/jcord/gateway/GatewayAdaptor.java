@@ -36,6 +36,11 @@ public class GatewayAdaptor extends WebSocketAdapter {
     /* <Event Name, Event Object> */
     public HashMap<String, Event> eventHandler = new HashMap<>();
 
+    /**
+     * The listener for Gateway messages.
+     * @param identity The identity this gateway belongs to.
+     * @param webSocket The WebSocket where events are fired.
+     */
     public GatewayAdaptor(Identity identity, WebSocket webSocket) {
         this.identity = identity;
         this.webSocket = webSocket;
@@ -183,7 +188,7 @@ public class GatewayAdaptor extends WebSocketAdapter {
         heart.start();
     }
 
-    private void sendIdentification() {
+    private void sendIdentification() throws IllegalArgumentException {
         JSONObject identify = new JSONObject()
             .put("op", OPCode.IDENTIFY.key)
             .put("d", new JSONObject()
