@@ -8,7 +8,7 @@ import org.alienideology.jcord.Identity;
 import static com.mashape.unirest.http.HttpMethod.*;
 
 /**
- * Http Requests (GET, POST, etc) for Gateway
+ * HttpPath - Used to set HttpRequest Paths and request them
  * @author AlienIdeology
  */
 public class HttpPath {

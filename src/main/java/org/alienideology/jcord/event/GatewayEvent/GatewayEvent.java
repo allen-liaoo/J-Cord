@@ -6,6 +6,7 @@ import org.alienideology.jcord.gateway.GatewayAdaptor;
 import org.json.JSONObject;
 
 /**
+ * GatewayEvent - Events that are fired at connection
  * @author AlienIdeology
  */
 public abstract class GatewayEvent extends Event {

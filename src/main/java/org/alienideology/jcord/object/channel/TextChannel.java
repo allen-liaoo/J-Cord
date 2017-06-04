@@ -3,6 +3,7 @@ package org.alienideology.jcord.object.channel;
 import org.alienideology.jcord.Identity;
 
 /**
+ * TextChannel - A GuildChannel for text messages.
  * @author AlienIdeology
  */
 public class TextChannel extends GuildChannel {

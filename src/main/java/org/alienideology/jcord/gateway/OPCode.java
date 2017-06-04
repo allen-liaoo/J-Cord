@@ -1,7 +1,7 @@
 package org.alienideology.jcord.gateway;
 
 /**
- * OP Code sent by Discord GateWay server.
+ * OPCode - OP Code sent by Discord GateWay server.
  * @author AlienIdeology
  */
 public enum OPCode {

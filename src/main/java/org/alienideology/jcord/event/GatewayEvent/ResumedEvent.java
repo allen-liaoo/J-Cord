@@ -5,6 +5,7 @@ import org.alienideology.jcord.gateway.GatewayAdaptor;
 import org.json.JSONObject;
 
 /**
+ * ResumedEvent - Event fired when reconnect to the Discord server
  * @author AlienIdeology
  */
 public class ResumedEvent extends GatewayEvent {

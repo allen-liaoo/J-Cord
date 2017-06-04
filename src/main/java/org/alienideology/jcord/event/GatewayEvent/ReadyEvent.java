@@ -6,6 +6,7 @@ import org.alienideology.jcord.object.ObjectBuilder;
 import org.json.JSONObject;
 
 /**
+ * ReadyEvent - Event that fired when the Discord server is ready
  * @author AlienIdeology
  */
 public class ReadyEvent extends GatewayEvent {

@@ -3,7 +3,7 @@ package org.alienideology.jcord.object;
 import org.alienideology.jcord.Identity;
 
 /**
- * Channel - A communication pipe
+ * Channel - A communication pipeline
  * Can be GuildChannel, VoiceChannel or PrivateChannel
  * @author AlienIdeology
  */

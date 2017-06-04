@@ -1,7 +1,7 @@
 package org.alienideology.jcord.gateway;
 
 /**
- * Json Error Responses
+ * ErrorResponse - Json Error Responses
  * @author AlienIdeology
  */
 public enum ErrorResponse {

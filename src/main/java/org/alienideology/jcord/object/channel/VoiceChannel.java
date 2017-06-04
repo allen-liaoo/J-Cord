@@ -3,6 +3,7 @@ package org.alienideology.jcord.object.channel;
 import org.alienideology.jcord.Identity;
 
 /**
+ * VoiceChannel - A GuildChannel for audio connections.
  * @author AlienIdeology
  */
 public class VoiceChannel extends GuildChannel {

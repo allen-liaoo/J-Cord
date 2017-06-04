@@ -1,7 +1,7 @@
 package org.alienideology.jcord.gateway;
 
 /**
- * Disconnection Code sent when Discord gateway closed
+ * DisconnectionCode - Disconnection Code sent when Discord gateway closed
  * @author AlienIdeology
  */
 public enum DisconnectionCode {

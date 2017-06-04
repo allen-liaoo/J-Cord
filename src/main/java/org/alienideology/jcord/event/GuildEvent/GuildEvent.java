@@ -6,7 +6,7 @@ import org.alienideology.jcord.object.guild.Guild;
 import org.json.JSONObject;
 
 /**
- * General Guild Events
+ * Guild Events - Any events that happens under a guild
  * @author AlienIdeology
  */
 public abstract class GuildEvent extends Event {

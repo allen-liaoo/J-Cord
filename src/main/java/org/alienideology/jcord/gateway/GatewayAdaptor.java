@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.zip.Inflater;
 
 /**
- * Communication client for Discord GateWay
+ * GatewayAdaptor - Communication client for Discord GateWay
  * @author AlienIdeology
  */
 public final class GatewayAdaptor extends WebSocketAdapter {

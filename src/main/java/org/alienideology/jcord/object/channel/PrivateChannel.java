@@ -5,6 +5,7 @@ import org.alienideology.jcord.object.Channel;
 import org.alienideology.jcord.object.User;
 
 /**
+ * PrivateChannel - A one-to-one channel between two users
  * @author AlienIdeology
  */
 public class PrivateChannel extends Channel {

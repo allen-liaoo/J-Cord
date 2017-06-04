@@ -5,6 +5,7 @@ import org.alienideology.jcord.object.ObjectBuilder;
 import org.json.JSONObject;
 
 /**
+ * GuildCreateEvent - Fired whenever a guild is detected
  * This event is a general guild event.
  * Three ways this event is fired:
  *  - Initially connecting

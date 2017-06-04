@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The Identity of a bot (without shards), a shard, or a human (client)
+ * Identity - The identity of a bot (without shards), a shard, or a human (client)
  * @author AlienIdeology
  */
 public class Identity {

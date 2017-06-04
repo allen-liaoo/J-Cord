@@ -4,6 +4,7 @@ import org.alienideology.jcord.Identity;
 import org.json.JSONObject;
 
 /**
+ * GuildRoleCreatedEvent - Fired whenever a role is created
  * @author AlienIdeology
  */
 public class GuildRoleCreateEvent extends GuildEvent {

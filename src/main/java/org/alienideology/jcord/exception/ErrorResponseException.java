@@ -3,7 +3,7 @@ package org.alienideology.jcord.exception;
 import org.alienideology.jcord.gateway.ErrorResponse;
 
 /**
- * An exception for Json ErrorResponse
+ * ErrorResponseException - An exception for Json ErrorResponse
  * @author AlienIdeology
  */
 public class ErrorResponseException extends Exception {

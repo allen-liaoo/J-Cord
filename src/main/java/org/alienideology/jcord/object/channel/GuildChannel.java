@@ -5,6 +5,7 @@ import org.alienideology.jcord.object.Channel;
 import org.alienideology.jcord.object.guild.Guild;
 
 /**
+ * GuildChannel - A Channel that exist in a guild
  * @author AlienIdeology
  */
 public class GuildChannel extends Channel {

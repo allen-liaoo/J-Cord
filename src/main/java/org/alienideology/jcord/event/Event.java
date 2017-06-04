@@ -4,7 +4,7 @@ import org.alienideology.jcord.Identity;
 import org.json.JSONObject;
 
 /**
- * The super class of every event event, for parsing json.
+ * Event - Whenever a change happens to an entity, an event get fired
  * @author AlienIdeology
  */
 public abstract class Event {
