@@ -17,11 +17,9 @@ public class GuildCreateEventHandler extends EventHandler {
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
 
-        //Guild guild = builder.buildGuild(json);
-
-        /* Fire  GuildCreateEvent */
-        //GuildCreateEvent created = new GuildCreateEvent(identity, guild, sequence);
-        //fireEvent(created);
+        Guild guild = builder.buildGuild(json);
+        GuildCreateEvent created = new GuildCreateEvent(identity, guild, sequence);
+        fireEvent(created);
 
     }
 

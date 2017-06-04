@@ -15,7 +15,8 @@ public class ExampleDispatcher extends DispatcherAdaptor {
 
     @Override
     public void onGuildCreate(GuildCreateEvent event) {
-        System.out.println("New Guild created!");
+        System.out.println("New Guild created! " + event.getGuild().toString());
+        System.out.println("Size: "+event.getIdentity().getGuilds().size());
     }
 
     @Override

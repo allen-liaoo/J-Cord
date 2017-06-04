@@ -3,6 +3,7 @@ package org.alienideology.jcord.event.handler;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
+import org.alienideology.jcord.event.gateway.ResumedEvent;
 import org.alienideology.jcord.gateway.GatewayAdaptor;
 import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.ObjectBuilder;
@@ -37,16 +38,11 @@ public class GatewayEventHandler extends EventHandler {
             JSONArray guilds = json.getJSONArray("guilds");
             for (int i = 0; i < guilds.length(); i++) {
                 JSONObject guild = guilds.getJSONObject(i);
-
                 try {
                     JSONObject get = HttpPath.Guild.GET_GUILD.request(identity, guild.getString("id")).asJson().getBody().getObject();
-
-                    //System.out.println(get.toString(4));
-
                     identity.addGuild(builder.buildGuild(get));
-
                 } catch (UnirestException ne) {
-                    LOG.debug("Getting guilds", ne);
+                    LOG.error("Initializing Guilds", ne);
                 }
             }
 
@@ -61,6 +57,8 @@ public class GatewayEventHandler extends EventHandler {
             }
             LOG.info("[READY] Private Channels: "+pms.length());
 
+            System.out.println(json.toString(4));
+
             /* Initialize Self User */
             identity.setSelf(builder.buildUser(json.getJSONObject("user")));
             LOG.info("[READY] Self");
@@ -71,6 +69,12 @@ public class GatewayEventHandler extends EventHandler {
 
         /* Resume Event */
         } else {
+
+            identity.CONNECTION = Identity.Connection.RESUMING;
+
+            fireEvent(new ResumedEvent(identity, gateway, sequence));
+
+            identity.CONNECTION = Identity.Connection.READY;
 
         }
     }

@@ -183,7 +183,15 @@ public final class GatewayAdaptor extends WebSocketAdapter {
                     break;
                 }
             }
-            handler.dispatchEvent(event, sequence);
+
+            // Only fire Non-Gateway events after the connection is ready.
+            if (!(handler instanceof GatewayEventHandler)) {
+                if (identity.CONNECTION.isReady()) {
+                    handler.dispatchEvent(event, sequence);
+                }
+            } else {
+                handler.dispatchEvent(event, sequence);
+            }
         }
     }
 

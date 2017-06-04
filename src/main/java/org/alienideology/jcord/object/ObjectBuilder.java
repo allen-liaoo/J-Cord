@@ -1,8 +1,11 @@
 package org.alienideology.jcord.object;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.channel.*;
 import org.alienideology.jcord.object.guild.Guild;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -28,7 +31,7 @@ public class ObjectBuilder {
      */
     public Guild buildGuild (JSONObject json) {
         String id = json.getString("id");
-        System.out.println(json.toString(4));
+        //System.out.println(json.toString(4));
 
         if (json.has("unavailable") && json.getBoolean("unavailable")) {
             return new Guild(identity, id);
@@ -51,11 +54,30 @@ public class ObjectBuilder {
 //            emojis = new ArrayList<Emote>();
 //            json.getJSONArray("emojis").forEach(emoji -> emoji.add(new Role(identity, emoji.toString())));
 
-            /* Build Channels */
-
-
-            return new Guild(identity, id, name, icon, splash, region, afk_timeout, embed_enabled, verification_level, notifications_level, mfa_level);
+            Guild guild = new Guild(identity, id, name, icon, splash, region, afk_timeout, embed_enabled, verification_level, notifications_level, mfa_level);
 //                .setAFKChannel(afk_channel).setEmbedChannel(embed_channel).addRoles(roles).addEmojis(emojis);
+
+            /* Build Channels */
+            try {
+                JSONArray guildChannels = HttpPath.Guild.GET_GUILD_CHANNELS.request(identity, id).asJson().getBody().getArray();
+
+                for (int i = 0; i < guildChannels.length(); i++) {
+
+                    JSONObject newChannel = guildChannels.getJSONObject(i);
+                    GuildChannel channel = buildGuildChannel(newChannel);
+
+                    if (!channel.getChannelType().equals(Channel.Type.UNKNOWN)) {
+                        guild.addGuildChannel(channel);
+                    } else {
+                        throw new RuntimeException("Unknown channel type!!");
+                    }
+                }
+
+            } catch (UnirestException e) {
+                identity.LOG.error("Building guild channels. (Guild: "+guild.toString()+")", e);
+            }
+
+            return guild;
         }
     }
 
@@ -73,8 +95,8 @@ public class ObjectBuilder {
 
         switch (type) {
             case "text": {
-                String topic = json.getString("topic");
-                String last_msg = json.getString("last_message_id");
+                String topic = json.isNull("topic") ? null : json.getString("topic");
+                String last_msg = json.isNull("topic") ? null : json.getString("last_message_id");
                 return new TextChannel(identity, guild_id, id, name, position, topic, last_msg);
             }
             case "voice": {
@@ -109,8 +131,8 @@ public class ObjectBuilder {
         String id = json.getString("id");
         String name = json.getString("username");
         String discriminator = json.getString("discriminator");
-        String avatar = json.has("avatar") ? json.getString("avatar") : null;  // Require Email OAuth2
-        String email = json.has("email") ? json.getString("email") : null;  // Require Email OAuth2
+        String avatar = json.has("avatar") && !json.isNull("avatar") ? json.getString("avatar") : null;  // Require Email OAuth2
+        String email = json.has("email") && !json.isNull("email") ? json.getString("email") : null;  // Require Email OAuth2
         boolean isBot = json.has("bot") && json.getBoolean("bot");
         boolean isVerified = json.has("verified") && json.getBoolean("verified");
         boolean MFAEnabled = json.has("mfa_enabled") && json.getBoolean("mfa_enabled");

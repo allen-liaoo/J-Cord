@@ -91,25 +91,46 @@ public class Identity {
         return Collections.unmodifiableList(guilds);
     }
 
+    /**
+     * [API Use Only]
+     * Add guilds to this identity
+     * @param guilds Varargs of guilds to be added.
+     */
     // TODO: Make this somehow private, unavailable for outside access
     public void addGuild (Guild... guilds) {
         this.guilds.addAll(Arrays.asList(guilds));
     }
 
+    /**
+     * [API Use Only]
+     * Set the self (user) of this identity.
+     * @param selfUser The self user
+     */
     public void setSelf (User selfUser) {
         this.self = selfUser;
     }
 
     public enum Connection {
         CONNECTING,
+        RESUMING,
         CONNECTED,
         READY,
-        RESUMING,
         OFFLINE;
 
+        /**
+         * @return Is the connection open.
+         */
         public boolean isConnected() {
             return this == CONNECTED || this == READY;
         }
+
+        /**
+         * @return Is the connection ready to fire event.
+         */
+        public boolean isReady() {
+            return this == READY;
+        }
+
     }
 
 }

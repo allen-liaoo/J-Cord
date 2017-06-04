@@ -4,8 +4,15 @@ import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.object.DiscordObject;
 import org.alienideology.jcord.object.Region;
 import org.alienideology.jcord.object.SnowFlake;
+import org.alienideology.jcord.object.channel.GuildChannel;
+import org.alienideology.jcord.object.channel.TextChannel;
+import org.alienideology.jcord.object.channel.VoiceChannel;
 
+import javax.xml.soap.Text;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Guild - A collection of users and channels, often referred to in the UI as a server.
@@ -36,6 +43,9 @@ public class Guild extends DiscordObject implements SnowFlake {
 
 //    private List<Role> roles;
 //    private List<Emote> emojis;
+
+    private final List<TextChannel> textChannels;
+    private final List<VoiceChannel> voiceChannels;
 
     /**
      * Unavailable Guild
@@ -81,6 +91,8 @@ public class Guild extends DiscordObject implements SnowFlake {
         this.mfa_level = MFA.getByKey(mfa_level);
 //        roles = new ArrayList<Role>();
 //        emojis = new ArrayList<Emote>();
+        textChannels = new ArrayList<>();
+        voiceChannels = new ArrayList<>();
     }
 
     public boolean isAvailable() {
@@ -123,6 +135,14 @@ public class Guild extends DiscordObject implements SnowFlake {
         return mfa_level;
     }
 
+    public List<TextChannel> getTextChannels() {
+        return Collections.unmodifiableList(textChannels);
+    }
+
+    public List<VoiceChannel> getVoiceChannels() {
+        return Collections.unmodifiableList(voiceChannels);
+    }
+
     @Override
     public String toString() {
         return "Name: "+name+"\tID: "+id;
@@ -131,6 +151,23 @@ public class Guild extends DiscordObject implements SnowFlake {
     @Override
     public String getId() {
         return id;
+    }
+
+    /**
+     * [API Use Only]
+     * Add Text or Voice channels.
+     * @param channels the varargs of channels to be added.
+     * @return this guild for chaining.
+     */
+    public Guild addGuildChannel (GuildChannel... channels) {
+        for (GuildChannel channel : channels) {
+            if (channel instanceof TextChannel) {
+                textChannels.add((TextChannel) channel);
+            } else if (channel instanceof VoiceChannel) {
+                voiceChannels.add((VoiceChannel) channel);
+            }
+        }
+        return this;
     }
 
     /**
