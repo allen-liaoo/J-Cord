@@ -3,13 +3,15 @@ package org.alienideology.jcord.object;
 import org.alienideology.jcord.Identity;
 
 /**
- * @author liaoyilin
+ * Generic Discord Objects
+ * Such as Guild, User, Channel
+ * @author AlienIdeology
  */
 public class DiscordObject {
 
     private final Identity identity;
 
-    public DiscordObject(Identity identity) {
+    protected DiscordObject(Identity identity) {
         this.identity = identity;
     }
 

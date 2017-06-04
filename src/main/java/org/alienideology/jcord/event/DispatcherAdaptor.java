@@ -3,6 +3,7 @@ package org.alienideology.jcord.event;
 import org.alienideology.jcord.event.GuildEvent.GuildEvent;
 import org.alienideology.jcord.event.GuildEvent.GuildCreateEvent;
 import org.alienideology.jcord.event.GuildEvent.GuildRoleCreateEvent;
+import org.alienideology.jcord.exception.ErrorResponseException;
 
 /**
  * Event Listener used to listen to events and perform actions
@@ -10,6 +11,9 @@ import org.alienideology.jcord.event.GuildEvent.GuildRoleCreateEvent;
  */
 public class DispatcherAdaptor {
 
+    /*
+        Fire Events
+     */
     public final void onEvent (Event event) {
         if (event instanceof GuildEvent) {
             onGuildEvent((GuildEvent) event);
@@ -27,5 +31,18 @@ public class DispatcherAdaptor {
     public void onGuildCreate (GuildCreateEvent event) {}
 
     public void onGuildRoleCreate (GuildRoleCreateEvent event) {}
+
+    /*
+        Fire Exceptions
+     */
+    public void onException (Exception exception) {
+        exception.printStackTrace();
+
+        if (exception instanceof ErrorResponseException) {
+            onErrorResponseException((ErrorResponseException) exception);
+        }
+    }
+
+    public void onErrorResponseException (ErrorResponseException exception) {}
 
 }

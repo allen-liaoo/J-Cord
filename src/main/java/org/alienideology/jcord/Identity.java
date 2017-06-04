@@ -3,11 +3,12 @@ package org.alienideology.jcord;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.neovisionaries.ws.client.*;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.alienideology.jcord.event.DispatcherAdaptor;
+import org.alienideology.jcord.exception.ErrorResponseException;
+import org.alienideology.jcord.gateway.ErrorResponse;
 import org.alienideology.jcord.gateway.GatewayAdaptor;
 import org.alienideology.jcord.gateway.HttpPath;
-import org.alienideology.jcord.object.Guild;
+import org.alienideology.jcord.object.guild.Guild;
 import org.alienideology.jcord.object.User;
 import org.apache.commons.logging.impl.SimpleLog;
 
@@ -42,7 +43,7 @@ public class Identity {
         this.wsFactory = wsFactory;
     }
 
-    Identity login (String token) throws IllegalArgumentException, IOException {
+    Identity login (String token) throws ErrorResponseException, IllegalArgumentException, IOException {
         if (type == IdentityType.BOT) {
             this.token = "Bot " + token;
         } else {
@@ -56,7 +57,7 @@ public class Identity {
             WebSocket socket = wsFactory.createSocket(url);
             socket.addListener(new GatewayAdaptor(this, socket)).connect();
         } catch (UnirestException ne) {
-            throw new IllegalArgumentException("The ID provided it not valid!");
+            throw new ErrorResponseException(ErrorResponse.INVALID_AUTHENTICATION_TOKEN);
         } catch (URISyntaxException urise) {
             throw new ConnectException("Discord fail to provide a valid URI!");
         } catch (IOException iow) {

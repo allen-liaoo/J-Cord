@@ -1,8 +1,10 @@
-package org.alienideology.jcord.object;
+package org.alienideology.jcord.object.guild;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.gateway.HttpPath;
-import org.json.JSONObject;
+import org.alienideology.jcord.object.DiscordObject;
+import org.alienideology.jcord.object.Region;
+import org.alienideology.jcord.object.SnowFlake;
+
 import java.util.Arrays;
 
 /**
@@ -45,14 +47,19 @@ public class Guild extends DiscordObject implements SnowFlake {
                 -1, false, -1, -1, -1);
     }
 
+
     /**
      * Available Guild
      * @param identity The Identity this guild belongs to.
      * @param id The ID of this guild
-     * @param name
-     * @param icon
-     * @param splash
-     *
+     * @param icon The icon of this guild
+     * @param splash The splash hash of this guild
+     * @param region The string value of the region
+     * @param afk_timeout The afk timeout
+     * @param embed_enabled Is embed enabled (i.e. widget)
+     * @param verification_level Level of verification
+     * @param notification_level Level of notification
+     * @param mfa_level Required MFA level
      */
     // TODO: Add Owner Field
     public Guild (Identity identity, String id, String name, String icon, String splash, String region,
@@ -126,7 +133,10 @@ public class Guild extends DiscordObject implements SnowFlake {
         return "Name: "+name+"\tID: "+id;
     }
 
-    enum AFK_Timeout {
+    /**
+     * AFK Timeouts (second)
+     */
+    public enum AFK_Timeout {
         MINUTE_1 (60),
         MINUTES_5 (300),
         MINUTES_10 (600),
@@ -149,7 +159,10 @@ public class Guild extends DiscordObject implements SnowFlake {
         }
     }
 
-    enum Verification {
+    /**
+     * Guild Verification Level
+     */
+    public enum Verification {
         NONE (0),
         LOW (1),
         MEDIUM (2),
@@ -164,16 +177,18 @@ public class Guild extends DiscordObject implements SnowFlake {
         }
 
         public static Verification getByKey(int key) {
-            if (Arrays.stream(values()).anyMatch(vf -> vf.key == key)) {
-                return Arrays.stream(values()).filter(vf -> vf.key == key).findFirst().get();
-            } else {
-                return UNKNOWN;
+            for (Verification verify : values()) {
+                if (verify.key == key) return verify;
             }
+            return UNKNOWN;
         }
 
     }
 
-    enum Notification {
+    /**
+     * Guild Notification Level
+     */
+    public enum Notification {
         ALL_MESSAGE (0),
         ONLY_MENTIONS (1),
         UNKNOWN (-1);
@@ -185,16 +200,18 @@ public class Guild extends DiscordObject implements SnowFlake {
         }
 
         public static Notification getByKey(int key) {
-            if (Arrays.stream(values()).anyMatch(nf -> nf.key == key)) {
-                return Arrays.stream(values()).filter(nf -> nf.key == key).findFirst().get();
-            } else {
-                return UNKNOWN;
+            for (Notification notif : values()) {
+                if (notif.key == key) return notif;
             }
+            return UNKNOWN;
         }
 
     }
 
-    enum MFA {
+    /**
+     * Guild MFA Level
+     */
+    public enum MFA {
         NONE (0),
         TWO_FACTOR (1),
         UNKNOWN (-1);
@@ -206,11 +223,10 @@ public class Guild extends DiscordObject implements SnowFlake {
         }
 
         public static MFA getByKey(int key) {
-            if (Arrays.stream(values()).anyMatch(mfa -> mfa.key == key)) {
-                return Arrays.stream(values()).filter(mfa -> mfa.key == key).findFirst().get();
-            } else {
-                return UNKNOWN;
+            for (MFA mfa : values()) {
+                if (mfa.key == key) return mfa;
             }
+            return UNKNOWN;
         }
 
     }

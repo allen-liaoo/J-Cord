@@ -1,7 +1,5 @@
 package org.alienideology.jcord.gateway;
 
-import java.util.Arrays;
-
 /**
  * OP Code sent by Discord GateWay server.
  * @author AlienIdeology
@@ -29,10 +27,10 @@ public enum OPCode {
     }
 
     public static OPCode getCode (int key) {
-        if (key >= OPCode.values().length || key < 0) {
-            return UNKNOWN;
+        for (OPCode op : values()) {
+            if (op.key == key) return op;
         }
-        return Arrays.stream(OPCode.values()).filter(op -> op.key == key).findFirst().get();
+        return UNKNOWN;
     }
 
 }

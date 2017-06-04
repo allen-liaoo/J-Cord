@@ -2,12 +2,15 @@ package org.alienideology.jcord.gateway;
 
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
+import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.Event;
 import org.alienideology.jcord.event.GatewayEvent.ReadyEvent;
+import org.alienideology.jcord.event.GatewayEvent.ResumedEvent;
 import org.alienideology.jcord.event.GuildEvent.GuildCreateEvent;
 import org.alienideology.jcord.event.GuildEvent.GuildRoleCreateEvent;
+import org.alienideology.jcord.exception.ErrorResponseException;
 import org.apache.commons.logging.impl.SimpleLog;
 import org.json.JSONObject;
 
@@ -18,7 +21,7 @@ import java.util.zip.Inflater;
  * Communication client for Discord GateWay
  * @author AlienIdeology
  */
-public class GatewayAdaptor extends WebSocketAdapter {
+public final class GatewayAdaptor extends WebSocketAdapter {
 
     public static int GATEWAY_VERSION = 5;
     public SimpleLog LOG = new SimpleLog("Gateway");
@@ -66,8 +69,16 @@ public class GatewayAdaptor extends WebSocketAdapter {
     @Override
     public void onTextMessage(WebSocket websocket, String text) throws Exception {
         JSONObject json = new JSONObject(text);
-        int opCode = json.getInt("op");
-        handleOPCode(OPCode.getCode(opCode), text);
+
+        /* Error Response */
+        if (json.has("code")) {
+            ErrorResponse response = ErrorResponse.getByKey(json.getInt("code"));
+            handleError(new ErrorResponseException(response));
+        /* Payload */
+        } else {
+            int opCode = json.getInt("op");
+            handleOPCode(OPCode.getCode(opCode), text);
+        }
     }
 
     @Override
@@ -96,10 +107,16 @@ public class GatewayAdaptor extends WebSocketAdapter {
     }
 
     @Override
+    public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
+        handleError(cause);
+    }
+
+    @Override
     public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
-        DisconnectionCode code = DisconnectionCode.getCode(serverCloseFrame.getCloseCode());
-        LOG.error(code+"\t"+code.message);
         isConnected = false;
+        DisconnectionCode code = DisconnectionCode.getCode(serverCloseFrame.getCloseCode());
+        if(closedByServer) handleError(new RuntimeException("Connection closed: "+code.code+"\tBy reason: "+code.message));
+        LOG.error(code+"\t"+code.message);
     }
 
     /**
@@ -112,7 +129,6 @@ public class GatewayAdaptor extends WebSocketAdapter {
             /* Event */
             case DISPATCH: {
                 handleEvent(new JSONObject(message));
-                //LOG.info("Event Json: "+message);
             }
             /* Server Side HandShake */
             case HELLO: {
@@ -129,6 +145,10 @@ public class GatewayAdaptor extends WebSocketAdapter {
             case HEARTBEAT: {
                 LOG.info("Heart: "+code);
                 break;
+            }
+            case RESUME: {
+                sendIdentification();
+                sendHeartBeat(4000);
             }
             default: {
                 LOG.error("Unknown OP Code");
@@ -165,6 +185,14 @@ public class GatewayAdaptor extends WebSocketAdapter {
             e.setSequence(sequence).handleEvent(event);
             identity.getDispatchers().forEach(listener -> listener.onEvent(e));
         }
+    }
+
+    /**
+     * Fire exceptions to DispatcherAdaptors
+     * @param exception The exception being caught
+     */
+    private void handleError(Exception exception) {
+        identity.getDispatchers().forEach(listener -> listener.onException(exception));
     }
 
     private void sendHeartBeat(long interval) {
@@ -225,6 +253,7 @@ public class GatewayAdaptor extends WebSocketAdapter {
     private void setEventHandler() {
         /* Gateway Event */
         eventHandler.put("READY", new ReadyEvent(identity, this));
+        eventHandler.put("RESUMED", new ResumedEvent(identity, this));
 
         /* Guild Event */
         eventHandler.put("GUILD_CREATE", new GuildCreateEvent(identity));

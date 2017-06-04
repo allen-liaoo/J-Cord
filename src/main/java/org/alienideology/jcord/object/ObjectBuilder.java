@@ -1,6 +1,11 @@
 package org.alienideology.jcord.object;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.object.channel.GuildChannel;
+import org.alienideology.jcord.object.channel.PrivateChannel;
+import org.alienideology.jcord.object.channel.TextChannel;
+import org.alienideology.jcord.object.channel.VoiceChannel;
+import org.alienideology.jcord.object.guild.Guild;
 import org.json.JSONObject;
 
 /**
@@ -39,7 +44,7 @@ public class ObjectBuilder {
             int afk_timeout = json.getInt("afk_timeout");
 //            VoiceChannel afk_channel = json.isNull("afk_channel_id") ? null : identity.getVoiceChannel(json.getString("afk_channel_id"));
             boolean embed_enabled = json.has("embed_enabled") && json.getBoolean("embed_enabled");
-//            TextChannel embed_channel = json.has("embed_channel_id") ? : identity.getChannel(json.getString("embed_channel_id")) : null;
+//            GuildChannel embed_channel = json.has("embed_channel_id") ? : identity.getChannel(json.getString("embed_channel_id")) : null;
             int verification_level = json.getInt("verification_level");
             int notifications_level = json.getInt("default_message_notifications");
             int mfa_level = json.getInt("mfa_level");
@@ -54,8 +59,49 @@ public class ObjectBuilder {
     }
 
     /**
+     * Build a guild channel object base on provided json.
+     * @param json The GuildChannel JSONObject
+     * @return TextChannel or VoiceChannel, wrapped as a GuildChannel
+     */
+    public GuildChannel buildGuildChannel (JSONObject json) {
+        String guild_id = json.getString("guild_id");
+        String id = json.getString("id");
+        String name = json.getString("name");
+        int position = json.getInt("position");
+        String type = json.getString("type");
+
+        switch (type) {
+            case "text": {
+                String topic = json.getString("topic");
+                String last_msg = json.getString("last_message_id");
+                return new TextChannel(identity, guild_id, id, name, position, topic, last_msg);
+            }
+            case "voice": {
+                int bitrate = json.getInt("bitrate");
+                int user_limit = json.getInt("user_limit");
+                return new VoiceChannel(identity, guild_id, id, name, position, bitrate, user_limit);
+            }
+            default: {
+                return new GuildChannel(identity, guild_id, id, Channel.Type.UNKNOWN, name, position);
+            }
+        }
+    }
+
+    /**
+     * Build a private channel object base on provided json.
+     * @param json The PrivateChannel JSONObject
+     * @return The PrivateChannel object
+     */
+    public PrivateChannel buildPrivateChannel (JSONObject json) {
+        String id = json.getString("id");
+        User recipient = new ObjectBuilder(identity).buildUser(json.getJSONObject("recipient"));
+        String last_msg = json.getString("last_message_id");
+        return new PrivateChannel(identity, id, recipient, last_msg);
+    }
+
+    /**
      * Build a user object base on provided json.
-     * @param json The userJSONObject
+     * @param json The user JSONObject
      * @return The User object
      */
     public User buildUser (JSONObject json) {

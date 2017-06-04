@@ -2,7 +2,7 @@ package org.alienideology.jcord.event.GuildEvent;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.Event;
-import org.alienideology.jcord.object.Guild;
+import org.alienideology.jcord.object.guild.Guild;
 import org.json.JSONObject;
 
 /**

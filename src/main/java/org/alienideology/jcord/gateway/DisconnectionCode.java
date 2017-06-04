@@ -1,8 +1,7 @@
 package org.alienideology.jcord.gateway;
 
-import java.util.Arrays;
-
 /**
+ * Disconnection Code sent when Discord gateway closed
  * @author AlienIdeology
  */
 public enum DisconnectionCode {
@@ -28,7 +27,10 @@ public enum DisconnectionCode {
     }
 
     public static DisconnectionCode getCode (int code) {
-        return Arrays.stream(values()).filter(val -> val.code == code).findFirst().get();
+        for (DisconnectionCode disconnection : values()) {
+            if (disconnection.code == code) return disconnection;
+        }
+        return UNKNOWN;
     }
 
 }
