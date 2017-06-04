@@ -6,7 +6,7 @@
 ### Discord Objects
  - [x] Guild
  - [x] User
- - [ ] Channel (half)
+ - [ ] Channel (Half-Done)
   - [ ] GuildChannel
       - [ ] TextChannel
       - [ ] VoiceChannel
@@ -16,7 +16,6 @@
  - [ ] Permission
  - [ ] Invite
  - [ ] Webhook
- - [ ] Mention (Interface) - For DiscordObjects that are able to be mentioned.
 
 ### Event
  - [ ] Events corresponding to Discord Objects.

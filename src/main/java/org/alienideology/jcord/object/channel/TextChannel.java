@@ -1,12 +1,13 @@
 package org.alienideology.jcord.object.channel;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.object.Mention;
 
 /**
  * TextChannel - A GuildChannel for text messages.
  * @author AlienIdeology
  */
-public class TextChannel extends GuildChannel {
+public class TextChannel extends GuildChannel implements Mention {
 
     private String topic;
 //    private Message message;
@@ -19,5 +20,10 @@ public class TextChannel extends GuildChannel {
 
     public String getTopic() {
         return topic;
+    }
+
+    @Override
+    public String mention() {
+        return "<#"+id+">";
     }
 }

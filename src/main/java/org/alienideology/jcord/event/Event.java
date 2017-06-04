@@ -9,24 +9,17 @@ import org.json.JSONObject;
  */
 public abstract class Event {
 
-    protected Identity identity;
-
-    private int sequence;
+    protected final Identity identity;
+    private final int sequence;
 
     /**
      * Default Constructor
      * @param identity The identity where this event is fired.
      */
-    public Event (Identity identity) {
+    public Event (Identity identity, int sequence) {
         this.identity = identity;
+        this.sequence = sequence;
     }
-
-    /**
-     * Handle events
-     * Initializing event object from the json provided.
-     * @param raw the JSONObject representing this event.
-     */
-    public abstract void handleEvent (JSONObject raw);
 
     public Identity getIdentity() {
         return identity;
@@ -39,7 +32,4 @@ public abstract class Event {
         return sequence;
     }
 
-    public Event setSequence (int sequence) {
-        this.sequence = sequence; return this;
-    }
 }

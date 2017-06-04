@@ -1,8 +1,7 @@
-package org.alienideology.jcord.event.GuildEvent;
+package org.alienideology.jcord.event.guild;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.object.ObjectBuilder;
-import org.json.JSONObject;
+import org.alienideology.jcord.object.guild.Guild;
 
 /**
  * GuildCreateEvent - Fired whenever a guild is detected
@@ -16,13 +15,8 @@ import org.json.JSONObject;
  */
 public class GuildCreateEvent extends GuildEvent {
 
-    public GuildCreateEvent(Identity identity) {
-        super(identity);
+    public GuildCreateEvent(Identity identity, Guild guild, int sequence) {
+        super(identity, guild, sequence);
     }
 
-    @Override
-    public void handleEvent(JSONObject raw) {
-        guild = new ObjectBuilder(identity).buildGuild(raw);
-        identity.addGuild(guild);
-    }
 }

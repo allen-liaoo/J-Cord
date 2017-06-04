@@ -1,7 +1,6 @@
 package org.alienideology.jcord.object.channel;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.object.Channel;
 import org.alienideology.jcord.object.guild.Guild;
 
 /**

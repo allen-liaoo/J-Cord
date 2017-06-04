@@ -32,11 +32,12 @@ public class Identity {
     private IdentityType type;
     private String token;
 
-    private User self;
-
     private WebSocketFactory wsFactory;
+    public Connection CONNECTION = Connection.OFFLINE;
+
     private List<DispatcherAdaptor> listeners = new ArrayList<>();
     private List<Guild> guilds = new ArrayList<>();
+    private User self;
 
     public Identity (IdentityType type,  WebSocketFactory wsFactory) {
         this.type = type;
@@ -97,6 +98,18 @@ public class Identity {
 
     public void setSelf (User selfUser) {
         this.self = selfUser;
+    }
+
+    public enum Connection {
+        CONNECTING,
+        CONNECTED,
+        READY,
+        RESUMING,
+        OFFLINE;
+
+        public boolean isConnected() {
+            return this == CONNECTED || this == READY;
+        }
     }
 
 }

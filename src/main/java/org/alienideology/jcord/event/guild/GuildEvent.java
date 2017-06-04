@@ -1,4 +1,4 @@
-package org.alienideology.jcord.event.GuildEvent;
+package org.alienideology.jcord.event.guild;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.Event;
@@ -13,14 +13,13 @@ public abstract class GuildEvent extends Event {
 
     protected Guild guild;
 
-    public GuildEvent(Identity identity) {
-        super(identity);
+    public GuildEvent(Identity identity, Guild guild, int sequence) {
+        super(identity, sequence);
+        this.guild = guild;
     }
 
     public Guild getGuild() {
         return guild;
     }
 
-    @Override
-    public abstract void handleEvent(JSONObject raw);
 }

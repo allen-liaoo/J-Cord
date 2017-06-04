@@ -1,6 +1,9 @@
-package org.alienideology.jcord.object;
+package org.alienideology.jcord.object.channel;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.object.DiscordObject;
+import org.alienideology.jcord.object.Mention;
+import org.alienideology.jcord.object.SnowFlake;
 
 /**
  * Channel - A communication pipeline
@@ -23,13 +26,13 @@ public class Channel extends DiscordObject implements SnowFlake {
         this.isPrivate = isPrivate;
     }
 
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
     @Override
     public String getId() {
         return id;
-    }
-
-    public boolean isPrivate() {
-        return isPrivate;
     }
 
     /**

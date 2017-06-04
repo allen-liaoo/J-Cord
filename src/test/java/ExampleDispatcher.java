@@ -1,11 +1,17 @@
 import org.alienideology.jcord.event.DispatcherAdaptor;
-import org.alienideology.jcord.event.GuildEvent.GuildCreateEvent;
-import org.alienideology.jcord.event.GuildEvent.GuildRoleCreateEvent;
+import org.alienideology.jcord.event.gateway.ReadyEvent;
+import org.alienideology.jcord.event.guild.GuildCreateEvent;
+import org.alienideology.jcord.event.guild.GuildRoleCreateEvent;
 
 /**
  * @author AlienIdeology
  */
 public class ExampleDispatcher extends DispatcherAdaptor {
+
+    @Override
+    public void onReady(ReadyEvent event) {
+        System.out.println("API is Ready!");
+    }
 
     @Override
     public void onGuildCreate(GuildCreateEvent event) {

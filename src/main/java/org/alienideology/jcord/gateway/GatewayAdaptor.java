@@ -6,10 +6,13 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.Event;
-import org.alienideology.jcord.event.GatewayEvent.ReadyEvent;
-import org.alienideology.jcord.event.GatewayEvent.ResumedEvent;
-import org.alienideology.jcord.event.GuildEvent.GuildCreateEvent;
-import org.alienideology.jcord.event.GuildEvent.GuildRoleCreateEvent;
+import org.alienideology.jcord.event.gateway.ReadyEvent;
+import org.alienideology.jcord.event.gateway.ResumedEvent;
+import org.alienideology.jcord.event.guild.GuildCreateEvent;
+import org.alienideology.jcord.event.guild.GuildRoleCreateEvent;
+import org.alienideology.jcord.event.handler.EventHandler;
+import org.alienideology.jcord.event.handler.GatewayEventHandler;
+import org.alienideology.jcord.event.handler.GuildCreateEventHandler;
 import org.alienideology.jcord.exception.ErrorResponseException;
 import org.apache.commons.logging.impl.SimpleLog;
 import org.json.JSONObject;
@@ -34,10 +37,9 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     private int sequence;
     /* Use for resuming */
     private String session_id = null;
-    private boolean isConnected = false;
 
     /* <Event Name, Event Object> */
-    public HashMap<String, Event> eventHandler = new HashMap<>();
+    public HashMap<String, EventHandler> eventHandler = new HashMap<>();
 
     /**
      * The listener for Gateway messages.
@@ -54,7 +56,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         LOG.info("Connected");
-        isConnected = true;
+        identity.CONNECTION = Identity.Connection.CONNECTED;
 
         if (session_id == null || session_id.isEmpty()) {
             sendIdentification();
@@ -113,7 +115,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
     @Override
     public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
-        isConnected = false;
+        identity.CONNECTION = Identity.Connection.OFFLINE;
         DisconnectionCode code = DisconnectionCode.getCode(serverCloseFrame.getCloseCode());
         if(closedByServer) handleError(new RuntimeException("Connection closed: "+code.code+"\tBy reason: "+code.message));
         LOG.error(code+"\t"+code.message);
@@ -165,25 +167,23 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         String key = json.getString("t");
         JSONObject event = json.getJSONObject("d");
 
-        Event e = eventHandler.get(key);
+        EventHandler handler = eventHandler.get(key);
 
-        if (e == null) {
+        if (handler == null) {
             LOG.fatal("Unknown Event: "+key);// + json.toString(4));
         } else {
 
             switch (key) {
                 case "READY": {
                     session_id = event.getString("session_id");
-                    LOG.info("[RECEIVED] Ready event!!!");
+                    LOG.info("[RECEIVED] Ready Event");
                     break;
                 }
                 default: {
                     break;
                 }
             }
-
-            e.setSequence(sequence).handleEvent(event);
-            identity.getDispatchers().forEach(listener -> listener.onEvent(e));
+            handler.dispatchEvent(event, sequence);
         }
     }
 
@@ -199,7 +199,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         LOG.info("Interval: "+interval);
         webSocket.setPingInterval(interval);
         heart = new Thread(() -> {
-            while (isConnected) {
+            while (identity.CONNECTION.isConnected()) {
                 webSocket.sendText(
                         new JSONObject()
                             .put("op", OPCode.HEARTBEAT.key)
@@ -238,6 +238,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     }
 
     private void sendResume() {
+        identity.CONNECTION = Identity.Connection.RESUMING;
         JSONObject resume = new JSONObject()
             .put("op", OPCode.RESUME.key)
             .put("d", new JSONObject()
@@ -252,12 +253,12 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
     private void setEventHandler() {
         /* Gateway Event */
-        eventHandler.put("READY", new ReadyEvent(identity, this));
-        eventHandler.put("RESUMED", new ResumedEvent(identity, this));
+        eventHandler.put("READY", new GatewayEventHandler(identity, this));
+        eventHandler.put("RESUMED", new GatewayEventHandler(identity, this));
 
         /* Guild Event */
-        eventHandler.put("GUILD_CREATE", new GuildCreateEvent(identity));
-        eventHandler.put("GUILD_ROLE_CREATE", new GuildRoleCreateEvent(identity));
+        eventHandler.put("GUILD_CREATE", new GuildCreateEventHandler(identity));
+        //eventHandler.put("GUILD_ROLE_CREATE", new GuildRoleCreateEvent(identity));
     }
 
 }

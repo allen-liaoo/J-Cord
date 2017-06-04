@@ -83,11 +83,6 @@ public class Guild extends DiscordObject implements SnowFlake {
 //        emojis = new ArrayList<Emote>();
     }
 
-    @Override
-    public String getId() {
-        return id;
-    }
-
     public boolean isAvailable() {
         return isAvailable;
     }
@@ -131,6 +126,11 @@ public class Guild extends DiscordObject implements SnowFlake {
     @Override
     public String toString() {
         return "Name: "+name+"\tID: "+id;
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     /**

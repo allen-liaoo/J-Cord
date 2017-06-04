@@ -12,7 +12,7 @@ IdentityType (Enumeration) - The types of identities available for building.
 
 ## Discord Objects
 Discord Objects - entities such as Guild, User, or Channel.
- - SnowFake (Interface) - Objects that has ID.
+ - SnowFake (Interface) - Objects that has ID and mentionable.
 
 #### Guild
 Guild - A collection of users and channels, often referred to in the UI as a server.

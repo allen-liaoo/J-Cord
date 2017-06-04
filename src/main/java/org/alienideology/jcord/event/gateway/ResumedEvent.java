@@ -1,8 +1,7 @@
-package org.alienideology.jcord.event.GatewayEvent;
+package org.alienideology.jcord.event.gateway;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.gateway.GatewayAdaptor;
-import org.json.JSONObject;
 
 /**
  * ResumedEvent - Event fired when reconnect to the Discord server
@@ -10,10 +9,8 @@ import org.json.JSONObject;
  */
 public class ResumedEvent extends GatewayEvent {
 
-    public ResumedEvent(Identity identity, GatewayAdaptor gateway) {
-        super(identity, gateway);
+    public ResumedEvent(Identity identity, GatewayAdaptor gateway, int sequence) {
+        super(identity, gateway, sequence);
     }
 
-    @Override
-    public void handleEvent(JSONObject raw) {}
 }

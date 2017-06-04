@@ -2,6 +2,7 @@ package org.alienideology.jcord;
 
 import com.neovisionaries.ws.client.WebSocketFactory;
 import org.alienideology.jcord.event.DispatcherAdaptor;
+import org.alienideology.jcord.exception.ErrorResponseException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class IdentityBuilder {
      * @throws IOException If there is any connection issue.
      */
     @Deprecated
-    public Identity build () throws IllegalArgumentException, IOException {
+    public Identity build () throws IllegalArgumentException, ErrorResponseException, IOException {
         Identity id =  new Identity(type, new WebSocketFactory());
         id.login(token);
         dispatchers.forEach(id::addListener);
@@ -48,7 +49,7 @@ public class IdentityBuilder {
      * @throws IllegalArgumentException If the provided token is not valid.
      * @throws IOException If there is any connection issue.
      */
-    public Identity build (boolean useBlocking) throws IllegalArgumentException, IOException {
+    public Identity build (boolean useBlocking) throws IllegalArgumentException, ErrorResponseException, IOException {
         Identity id = build();
         if (useBlocking) {
 //        while (id.getConnection() != Connection.CONNECTED) {
