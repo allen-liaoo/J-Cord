@@ -25,6 +25,9 @@ Channel - A communication pipeline.
    - VoiceChannel - A GuildChannel for audio connections.
  - PrivateChannel - A one-to-one channel between two users.
 
+#### Message
+Message - A text bubble some user just said.
+
 ## Event
 Event - Whenever a change happens to an entity, an event get fired.
  - GatewayEvent - Events that are fired at connection.

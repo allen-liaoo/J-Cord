@@ -2,6 +2,8 @@ package org.alienideology.jcord.object.channel;
 
 import org.alienideology.jcord.Identity;
 
+import java.util.Objects;
+
 /**
  * VoiceChannel - A GuildChannel for audio connections.
  * @author AlienIdeology
@@ -23,5 +25,10 @@ public class VoiceChannel extends GuildChannel {
 
     public int getUser_limit() {
         return user_limit;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof VoiceChannel) && Objects.equals(this.id, ((VoiceChannel) obj).getId());
     }
 }

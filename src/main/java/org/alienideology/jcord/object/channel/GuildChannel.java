@@ -39,4 +39,8 @@ public class GuildChannel extends Channel {
         return position;
     }
 
+    @Override
+    public String toString() {
+        return "ID: "+id+"\tName: "+name;
+    }
 }

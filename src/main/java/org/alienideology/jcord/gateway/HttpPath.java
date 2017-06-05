@@ -15,7 +15,7 @@ import static com.mashape.unirest.http.HttpMethod.*;
  * HttpPath - Used to set HttpRequest Paths and request them
  * @author AlienIdeology
  */
-public class HttpPath {
+public final class HttpPath {
 
     public final static String APIURL = "https://discordapp.com/api";
 

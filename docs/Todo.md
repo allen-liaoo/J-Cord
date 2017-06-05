@@ -1,17 +1,18 @@
 ### Description
  - [x] Done : Tested and working.
  - [ ] Half-Done : Not tested but written. (Half-Done)
- - [ ] Not Done :
+ - [ ] Not Done
 
 ### Discord Objects
  - [x] Guild
  - [x] User
  - [ ] Channel (Half-Done)
-  - [ ] GuildChannel
+  - [x] GuildChannel
       - [ ] TextChannel
       - [ ] VoiceChannel
   - [ ] PrivateChannel
  - [ ] Member
+ - [ ] Message (Half-Done)
  - [ ] Role
  - [ ] Permission
  - [ ] Invite

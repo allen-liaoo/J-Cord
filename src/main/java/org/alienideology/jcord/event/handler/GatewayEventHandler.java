@@ -57,8 +57,6 @@ public class GatewayEventHandler extends EventHandler {
             }
             LOG.info("[READY] Private Channels: "+pms.length());
 
-            System.out.println(json.toString(4));
-
             /* Initialize Self User */
             identity.setSelf(builder.buildUser(json.getJSONObject("user")));
             LOG.info("[READY] Self");

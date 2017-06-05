@@ -4,6 +4,9 @@ import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.object.DiscordObject;
 import org.alienideology.jcord.object.Mention;
 import org.alienideology.jcord.object.SnowFlake;
+import org.alienideology.jcord.object.guild.Guild;
+
+import java.util.Objects;
 
 /**
  * Channel - A communication pipeline
@@ -33,6 +36,16 @@ public class Channel extends DiscordObject implements SnowFlake {
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Channel) && Objects.equals(this.id, ((Channel) obj).getId());
+    }
+
+    @Override
+    public String toString() {
+        return "ID: "+id;
     }
 
     /**

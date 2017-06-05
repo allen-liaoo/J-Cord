@@ -4,15 +4,13 @@ import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.object.DiscordObject;
 import org.alienideology.jcord.object.Region;
 import org.alienideology.jcord.object.SnowFlake;
+import org.alienideology.jcord.object.User;
 import org.alienideology.jcord.object.channel.GuildChannel;
 import org.alienideology.jcord.object.channel.TextChannel;
 import org.alienideology.jcord.object.channel.VoiceChannel;
 
 import javax.xml.soap.Text;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Guild - A collection of users and channels, often referred to in the UI as a server.
@@ -144,13 +142,18 @@ public class Guild extends DiscordObject implements SnowFlake {
     }
 
     @Override
-    public String toString() {
-        return "Name: "+name+"\tID: "+id;
+    public String getId() {
+        return id;
     }
 
     @Override
-    public String getId() {
-        return id;
+    public boolean equals(Object obj) {
+        return (obj instanceof Guild) && Objects.equals(this.id, ((Guild) obj).getId());
+    }
+
+    @Override
+    public String toString() {
+        return "ID: "+id+"\tName: "+name;
     }
 
     /**

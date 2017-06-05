@@ -2,6 +2,8 @@ package org.alienideology.jcord.object;
 
 import org.alienideology.jcord.Identity;
 
+import java.util.Objects;
+
 /**
  * User - A base entity, can be a member of guild/private channel, and bot/human.
  * @author AlienIdeology
@@ -16,11 +18,12 @@ public class User extends DiscordObject implements SnowFlake, Mention {
     private String email;
 
     private final boolean isBot;
+    private final boolean isWebHook;
     private boolean isVerified;
     private boolean MFAEnabled;
 
     public User (Identity identity, String id, String name, String discriminator, String avatar, String email,
-                 boolean isBot, boolean isVerified, boolean MFAEnabled) {
+                 boolean isBot, boolean isWebHook, boolean isVerified, boolean MFAEnabled) {
         super(identity);
         this.id = id;
         this.name = name;
@@ -28,6 +31,7 @@ public class User extends DiscordObject implements SnowFlake, Mention {
         this.avatar = avatar;
         this.email = email;
         this.isBot = isBot;
+        this.isWebHook = isWebHook;
         this.isVerified = isVerified;
         this.MFAEnabled = MFAEnabled;
     }
@@ -52,6 +56,10 @@ public class User extends DiscordObject implements SnowFlake, Mention {
         return isBot;
     }
 
+    public boolean isWebHook() {
+        return isWebHook;
+    }
+
     public boolean isVerified() {
         return isVerified;
     }
@@ -67,7 +75,16 @@ public class User extends DiscordObject implements SnowFlake, Mention {
 
     @Override
     public String mention() {
-        return "<@!"+id+">";
+        return "<@"+id+">";
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof User) && Objects.equals(this.id, ((User) obj).getId());
+    }
+
+    @Override
+    public String toString() {
+        return "ID: "+id+"\tName: "+name;
+    }
 }
