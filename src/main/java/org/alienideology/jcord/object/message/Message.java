@@ -13,12 +13,10 @@ import java.util.Objects;
  */
 public class Message extends DiscordObject implements SnowFlake {
 
-    private final String id;
-    private final User author;
+    protected final String id;
+    protected final User author;
 
-    private String content;
-
-    private final OffsetDateTime timeStamp;
+    private final OffsetDateTime createdTime;
 
 //    private List<Member> mentions;
 //    private List<Role> mentionedRoles;
@@ -27,15 +25,15 @@ public class Message extends DiscordObject implements SnowFlake {
 //    private List<Emoji> reactions;
 
     private boolean isTTS;
+
     private boolean mentionedEveryone;
     private boolean isPinned;
 
-    public Message (Identity identity, String id, User author, String content, String timeStamp, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
+    public Message (Identity identity, String id, User author, String createdTime, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
         super(identity);
         this.id = id;
         this.author = author;
-        this.content = content;
-        this.timeStamp = OffsetDateTime.parse(timeStamp);
+        this.createdTime = createdTime == null ? null : OffsetDateTime.parse(createdTime);
         this.isTTS = isTTs;
         this.mentionedEveryone = mentionedEveryone;
         this.isPinned = isPinned;
@@ -45,10 +43,6 @@ public class Message extends DiscordObject implements SnowFlake {
         return author;
     }
 
-    public String getOriginalContent() {
-        return content;
-    }
-
 //    public List<User> getMentionedUsers() {
 //        List<User> mentioned = new ArrayList<>();
 //
@@ -56,8 +50,8 @@ public class Message extends DiscordObject implements SnowFlake {
 //
 //    }
 
-    public OffsetDateTime getTimeStamp() {
-        return timeStamp;
+    public OffsetDateTime getCreatedTime() {
+        return createdTime;
     }
 
     public boolean isTTS() {
@@ -84,6 +78,7 @@ public class Message extends DiscordObject implements SnowFlake {
 
     @Override
     public String toString() {
-        return "ID: "+id+"\tContent: "+content;
+        return "ID: "+id;
     }
+
 }

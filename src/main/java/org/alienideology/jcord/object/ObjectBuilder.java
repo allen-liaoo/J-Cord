@@ -5,7 +5,9 @@ import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.channel.*;
 import org.alienideology.jcord.object.guild.Guild;
+import org.alienideology.jcord.object.message.EmbedMessage;
 import org.alienideology.jcord.object.message.Message;
+import org.alienideology.jcord.object.message.StringMessage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -209,12 +211,66 @@ public final class ObjectBuilder {
                 buildWebHook(json.getJSONObject("author"), json.getString("webhook_id")) :
                 buildUser(json.getJSONObject("author"));
 
-        String content = json.getString("content");
         String timeStamp = json.getString("timestamp");
         boolean isTTS = json.getBoolean("tts");
         boolean mentionedEveryone = json.getBoolean("mention_everyone");
         boolean isPinned = json.has("pinned") && json.getBoolean("pinned");
-        return new Message(identity, id, author, content, timeStamp, isTTS, mentionedEveryone, isPinned);
+
+        /* StringMessage */
+        if (json.getJSONArray("embeds").length() == 0) {
+            String content = json.getString("content");
+            return new StringMessage(identity, id, author, timeStamp, isTTS, mentionedEveryone, isPinned, content);
+
+        /* EmbedMessage */
+        } else {
+
+            JSONObject embed = json.getJSONArray("embeds").getJSONObject(0);
+
+            String title = embed.has("title") ? embed.getString("title") : null;
+            String description = embed.has("description") ? embed.getString("description") : null;
+            String embed_url = embed.has("embed_url") ? embed.getString("embed_url") : null;
+            String time_stamp = embed.has("timestamp") ? embed.getString("timestamp") : null;
+            int color = embed.has("color") ? embed.getInt("color") : 0;
+
+            EmbedMessage embedMessage =  new EmbedMessage(identity, id, author, timeStamp, isTTS, mentionedEveryone, isPinned)
+                    .setEmbed(title, description, embed_url, time_stamp, color);
+
+            if (embed.has("author")) {
+                JSONObject emAuthor = embed.getJSONObject("author");
+
+                String name = emAuthor.has("name") ? emAuthor.getString("name") : null;
+                String url = emAuthor.has("embed_url") ? emAuthor.getString("embed_url") : null;
+                String icon_url = emAuthor.has("icon_url") ? emAuthor.getString("icon_url") : null;
+                String proxy_url = emAuthor.has("proxy_icon_url") ? emAuthor.getString("proxy_icon_url") : null;
+                embedMessage.setAuthor(new EmbedMessage.Author(name, url, icon_url, proxy_url));
+            }
+
+            if (embed.has("fields")) {
+                JSONArray fields = embed.getJSONArray("fields");
+
+                for (int i = 0; i < fields.length(); i++) {
+                    JSONObject field = fields.getJSONObject(i);
+
+                    String name = field.getString("name");
+                    String value = field.getString("value");
+                    boolean inline = field.getBoolean("inline");
+                    embedMessage.addFields(new EmbedMessage.Field(name, value, inline));
+                }
+
+            }
+
+            if (embed.has("thumbnail")) {
+                JSONObject thumbnail = embed.getJSONObject("thumbnail");
+                String url = thumbnail.getString("url");
+                String proxy_url = thumbnail.getString("proxy_url");
+                int height = thumbnail.getInt("height");
+                int width = thumbnail.getInt("width");
+
+                embedMessage.setThumbnail(new EmbedMessage.Thumbnail(url, proxy_url, height, width));
+            }
+
+            return embedMessage;
+        }
     }
 
     /**

@@ -141,6 +141,34 @@ public class Guild extends DiscordObject implements SnowFlake {
         return Collections.unmodifiableList(voiceChannels);
     }
 
+    /**
+     * Get a text channel by id.
+     * @param id The specified id
+     * @return a TextChannel or null if no channel is found.
+     */
+    public TextChannel getTextChannel(String id) {
+        for (TextChannel tc : textChannels) {
+            if (tc.getId().equals(id)) {
+                return tc;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get a voice channel by id.
+     * @param id The specified id
+     * @return a VoiceChannel or null if no channel is found.
+     */
+    public VoiceChannel getVoiceChannel(String id) {
+        for (VoiceChannel vc : voiceChannels) {
+            if (vc.getId().equals(id)) {
+                return vc;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String getId() {
         return id;

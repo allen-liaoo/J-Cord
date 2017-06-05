@@ -169,6 +169,10 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
         EventHandler handler = eventHandler.get(key);
 
+        if (key.equals("MESSAGE_CREATE")) {
+            System.out.println(event.toString(4));
+        }
+
         if (handler == null) {
             LOG.fatal("Unknown Event: "+key);// + json.toString(4));
         } else {

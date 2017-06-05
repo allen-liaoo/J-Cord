@@ -12,18 +12,18 @@ import java.util.Objects;
  */
 public class PrivateChannel extends Channel {
 
-    private final User recipent;
+    private final User recipient;
     private final Type type;
     private Message lastMessage;
 
     public PrivateChannel(Identity identity, String id, User recipient) {
         super(identity, id, true);
-        this.recipent = recipient;
+        this.recipient = recipient;
         this.type = Type.PRIVATE;
     }
 
-    public User getRecipent() {
-        return recipent;
+    public User getRecipient() {
+        return recipient;
     }
 
     public Type getType() {
@@ -51,7 +51,7 @@ public class PrivateChannel extends Channel {
 
     @Override
     public String toString() {
-        return "ID: "+id+"\tRecipient: "+recipent.getName();
+        return "ID: "+id+"\tRecipient: "+ recipient.getName();
     }
 
 }
