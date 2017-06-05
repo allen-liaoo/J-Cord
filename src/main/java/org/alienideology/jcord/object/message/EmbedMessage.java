@@ -14,7 +14,6 @@ import java.util.List;
  * The message have a special block embed surround it.
  * @author AlienIdeology
  */
-// TODO: Finish other Video, Image, Footer (Static Inner Classes)
 public class EmbedMessage extends Message {
 
     private String title;
@@ -27,6 +26,10 @@ public class EmbedMessage extends Message {
     private Author author = null;
     private List<Field> fields = new ArrayList<>();
     private Thumbnail thumbnail = null;
+    private Video video = null;
+    private Provider provider = null;
+    private Image image = null;
+    private Footer footer = null;
 
     public EmbedMessage(Identity identity, String id, User author, String timeStamp, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
         super(identity, id, author, timeStamp, isTTs, mentionedEveryone, isPinned);
@@ -73,6 +76,22 @@ public class EmbedMessage extends Message {
         return thumbnail;
     }
 
+    public Video getVideo() {
+        return video;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public Footer getFooter() {
+        return footer;
+    }
+
     public EmbedMessage setAuthor(Author author) {
         this.author = author;
         return this;
@@ -83,8 +102,29 @@ public class EmbedMessage extends Message {
         return this;
     }
 
-    public void setThumbnail(Thumbnail thumbnail) {
+    public EmbedMessage setThumbnail(Thumbnail thumbnail) {
         this.thumbnail = thumbnail;
+        return this;
+    }
+
+    public EmbedMessage setVideo(Video video) {
+        this.video = video;
+        return this;
+    }
+
+    public EmbedMessage setProvider(Provider provider) {
+        this.provider = provider;
+        return this;
+    }
+
+    public EmbedMessage setImage(Image image) {
+        this.image = image;
+        return this;
+    }
+
+    public EmbedMessage setFooter(Footer footer) {
+        this.footer = footer;
+        return this;
     }
 
     public static class Author {
@@ -168,6 +208,102 @@ public class EmbedMessage extends Message {
 
         public int getWidth() {
             return width;
+        }
+    }
+
+    public static class Video {
+        private String url;
+        private int height;
+        private int width;
+
+        public Video(String url, int height, int width) {
+            this.url = url;
+            this.height = height;
+            this.width = width;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+    }
+
+    public static class Provider {
+        private String name;
+        private String url;
+
+        public Provider(String name, String url) {
+            this.name = name;
+            this.url = url;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+    }
+
+    public static class Image {
+        private String url;
+        private String proxy_url;
+        private int height;
+        private int width;
+
+        public Image(String url, String proxy_url, int height, int width) {
+            this.url = url;
+            this.proxy_url = proxy_url;
+            this.height = height;
+            this.width = width;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public String getProxy_url() {
+            return proxy_url;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+    }
+
+    public static class Footer {
+        private String text;
+        private String iconUrl;
+        private String proxyIconUrl;
+
+        public Footer(String text, String iconUrl, String proxyIconUrl) {
+            this.text = text;
+            this.iconUrl = iconUrl;
+            this.proxyIconUrl = proxyIconUrl;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public String getIconUrl() {
+            return iconUrl;
+        }
+
+        public String getProxyIconUrl() {
+            return proxyIconUrl;
         }
     }
 

@@ -203,7 +203,6 @@ public final class ObjectBuilder {
      */
     // TODO: Add lists (See Message object)
     public Message buildMessage (JSONObject json) {
-        System.out.println(json.toString(4));
         String id = json.getString("id");
 
         /* Build User (Can be Webhook) */
@@ -217,7 +216,7 @@ public final class ObjectBuilder {
         boolean isPinned = json.has("pinned") && json.getBoolean("pinned");
 
         /* StringMessage */
-        if (json.getJSONArray("embeds").length() == 0) {
+        if (!json.getString("content").isEmpty()) {
             String content = json.getString("content");
             return new StringMessage(identity, id, author, timeStamp, isTTS, mentionedEveryone, isPinned, content);
 
@@ -256,7 +255,6 @@ public final class ObjectBuilder {
                     boolean inline = field.getBoolean("inline");
                     embedMessage.addFields(new EmbedMessage.Field(name, value, inline));
                 }
-
             }
 
             if (embed.has("thumbnail")) {
@@ -267,6 +265,39 @@ public final class ObjectBuilder {
                 int width = thumbnail.getInt("width");
 
                 embedMessage.setThumbnail(new EmbedMessage.Thumbnail(url, proxy_url, height, width));
+            }
+
+            if (embed.has("video")) {
+                JSONObject video = embed.getJSONObject("video");
+                String url = video.getString("url");
+                int height = video.getInt("height");
+                int width = video.getInt("width");
+                embedMessage.setVideo(new EmbedMessage.Video(url, height, width));
+            }
+
+            if (embed.has("provider")) {
+                JSONObject video = embed.getJSONObject("provider");
+                String name = video.getString("name");
+                String url = video.getString("url");
+                embedMessage.setProvider(new EmbedMessage.Provider(name, url));
+            }
+
+            if (embed.has("image")) {
+                JSONObject image = embed.getJSONObject("image");
+                String url = image.getString("url");
+                String proxy_url = image.getString("proxy_url");
+                int height = image.getInt("height");
+                int width = image.getInt("width");
+                embedMessage.setImage(new EmbedMessage.Image(url, proxy_url , height, width));
+            }
+
+            if (embed.has("footer")) {
+                JSONObject footer = embed.getJSONObject("footer");
+
+                String name = footer.has("name") ? footer.getString("name") : null;
+                String icon_url = footer.has("icon_url") ? footer.getString("icon_url") : null;
+                String proxy_url = footer.has("proxy_icon_url") ? footer.getString("proxy_icon_url") : null;
+                embedMessage.setFooter(new EmbedMessage.Footer(name, icon_url, proxy_url));
             }
 
             return embedMessage;
