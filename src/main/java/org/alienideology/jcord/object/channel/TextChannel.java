@@ -2,6 +2,7 @@ package org.alienideology.jcord.object.channel;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.object.Mention;
+import org.alienideology.jcord.object.guild.Guild;
 import org.alienideology.jcord.object.message.Message;
 
 import java.util.Objects;
@@ -10,32 +11,42 @@ import java.util.Objects;
  * TextChannel - A GuildChannel for text messages.
  * @author AlienIdeology
  */
-public class TextChannel extends GuildChannel implements Mention {
+public class TextChannel extends MessageChannel implements GuildChannel, Mention {
 
+    private Guild guild;
+    private String name;
+    private int position;
     private String topic;
-    private Message lastMessage;
 
-    public TextChannel(Identity identity, String guild_id, String id, String name, int position, String topic) {
-        super(identity, guild_id, id, Type.TEXT, name, position);
+    public TextChannel(Identity identity, String guild_id, String id, String name, int position, String topic, Message lastMessagt) {
+        super(identity, id, Channel.Type.TEXT, lastMessagt);
+        this.guild = identity.getGuild(guild_id);
+        this.name = name;
+        this.position = position;
         this.topic = topic;
+    }
+
+    @Override
+    public Guild getGuild() {
+        return guild;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
     }
 
     public String getTopic() {
         return topic;
     }
 
-    public Message getLastMessage() {
-        return lastMessage;
-    }
-
-    /**
-     * [API Use Only]
-     * @param lastMessage The last message of this channel
-     * @return TextChannel for chaining
-     */
-    public TextChannel setLastMessage(Message lastMessage) {
-        this.lastMessage = lastMessage;
-        return this;
+    public boolean isDefaultChannel() {
+        return id.equals(guild.getId());
     }
 
     @Override
@@ -46,6 +57,11 @@ public class TextChannel extends GuildChannel implements Mention {
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof TextChannel) && Objects.equals(this.id, ((TextChannel) obj).getId());
+    }
+
+    @Override
+    public String toString() {
+        return "ID: "+id+"\tName: "+name;
     }
 
 }

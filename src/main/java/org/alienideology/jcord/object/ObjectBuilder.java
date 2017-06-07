@@ -1,15 +1,20 @@
 package org.alienideology.jcord.object;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import jdk.internal.dynalink.linker.GuardingDynamicLinker;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.channel.*;
 import org.alienideology.jcord.object.guild.Guild;
+import org.alienideology.jcord.object.guild.Member;
 import org.alienideology.jcord.object.message.EmbedMessage;
 import org.alienideology.jcord.object.message.Message;
 import org.alienideology.jcord.object.message.StringMessage;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A builder for building DiscordObjects
@@ -29,6 +34,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a guild object base on provided json.
+     * The guild will be added to the identity automatically.
      * @param json The guild JSONObject
      * @return The Guild object
      */
@@ -59,6 +65,8 @@ public final class ObjectBuilder {
             Guild guild = new Guild(identity, id, name, icon, splash, region, afk_timeout, embed_enabled, verification_level, notifications_level, mfa_level);
 //                .setAFKChannel(afk_channel).setEmbedChannel(embed_channel).addRoles(roles).addEmojis(emojis);
 
+            identity.addGuild(guild);
+
             /* Build Channels */
             try {
                 JSONArray guildChannels = HttpPath.Guild.GET_GUILD_CHANNELS.request(identity, id).asJson().getBody().getArray();
@@ -66,17 +74,32 @@ public final class ObjectBuilder {
                 for (int i = 0; i < guildChannels.length(); i++) {
 
                     JSONObject newChannel = guildChannels.getJSONObject(i);
-                    GuildChannel channel = buildGuildChannel(newChannel);
+                    Channel channel = buildGuildChannel(newChannel);
 
-                    if (!channel.getChannelType().equals(Channel.Type.UNKNOWN)) {
-                        guild.addGuildChannel(channel);
+                    if (channel instanceof GuildChannel) {
+                        guild.addGuildChannel((GuildChannel) channel);
                     } else {
-                        throw new RuntimeException("Unknown channel type!!");
+                        throw new RuntimeException("Private Channel encountered when building guild.");
                     }
                 }
 
             } catch (UnirestException e) {
                 identity.LOG.error("Building guild channels. (Guild: "+guild.toString()+")", e);
+            }
+
+            /* Build Members */
+            try {
+                JSONArray members = HttpPath.Guild.LIST_GUILD_MEMBERS.request(identity, id).queryString("limit", "1000")
+                        .asJson().getBody().getArray();
+                System.out.println(members.toString(4));
+                for (int i = 0; i < members.length(); i++) {
+                    JSONObject member = members.getJSONObject(i);
+                    Member mem = buildMember(member, guild);
+                    guild.addMember(mem);
+                }
+
+            } catch (UnirestException e) {
+                identity.LOG.error("Building guild members. (Guild: "+guild.toString()+")", e);
             }
 
             return guild;
@@ -104,7 +127,7 @@ public final class ObjectBuilder {
      * @param json The GuildChannel JSONObject
      * @return TextChannel or VoiceChannel, wrapped as a GuildChannel
      */
-    public GuildChannel buildGuildChannel (JSONObject json) {
+    public Channel buildGuildChannel (JSONObject json) {
         String guild_id = json.getString("guild_id");
         String id = json.getString("id");
         String name = json.getString("name");
@@ -116,16 +139,19 @@ public final class ObjectBuilder {
                 String topic = json.isNull("topic") ? null : json.getString("topic");
                 String last_msg = json.isNull("last_message_id") ? null : json.getString("last_message_id");
                 Message lastMessage = last_msg == null ? null : buildMessageById(id, last_msg);
-                return new TextChannel(identity, guild_id, id, name, position, topic)
-                        .setLastMessage(lastMessage);
+                TextChannel tc = new TextChannel(identity, guild_id, id, name, position, topic, lastMessage);
+                identity.addTextChannel(tc);
+                return tc;
             }
             case "voice": {
                 int bitrate = json.getInt("bitrate");
                 int user_limit = json.getInt("user_limit");
-                return new VoiceChannel(identity, guild_id, id, name, position, bitrate, user_limit);
+                VoiceChannel vc = new VoiceChannel(identity, guild_id, id, name, position, bitrate, user_limit);
+                identity.addVoiceChannel(vc);
+                return vc;
             }
             default: {
-                return new GuildChannel(identity, guild_id, id, Channel.Type.UNKNOWN, name, position);
+                return null;
             }
         }
     }
@@ -135,7 +161,7 @@ public final class ObjectBuilder {
      * @param id The id of the channel
      * @return The GuildChannel object
      */
-    public GuildChannel buildGuildChannelById (String id) {
+    public Channel buildGuildChannelById (String id) {
         JSONObject gChannel = null;
         try {
             gChannel = HttpPath.Channel.GET_CHANNEL.request(identity, id).asJson().getBody().getObject();
@@ -157,8 +183,9 @@ public final class ObjectBuilder {
         String last_msg = json.isNull("last_message_id") ? null : json.getString("last_message_id");
         Message lastMessage = last_msg == null ? null : buildMessageById(id, last_msg);
 
-        return new PrivateChannel(identity, id, recipient)
-                .setLastMessage(lastMessage);
+        PrivateChannel dm = new PrivateChannel(identity, id, recipient, lastMessage);
+        identity.addPrivateChannel(dm);
+        return dm;
     }
 
     /**
@@ -183,7 +210,9 @@ public final class ObjectBuilder {
         boolean isVerified = json.has("verified") && json.getBoolean("verified");
         boolean MFAEnabled = json.has("mfa_enabled") && json.getBoolean("mfa_enabled");
 
-        return new User(identity, id, name, discriminator, avatar, email, isBot, isWebHook, isVerified, MFAEnabled);
+        User user = new User(identity, id, name, discriminator, avatar, email, isBot, isWebHook, isVerified, MFAEnabled);
+        identity.addUser(user);
+        return user;
     }
 
     /**
@@ -197,6 +226,31 @@ public final class ObjectBuilder {
     }
 
     /**
+     * Build a member object base on provided json.
+     * @param json The member JSONObject
+     * @return The Member object
+     */
+    public Member buildMember (JSONObject json, Guild guild) {
+        String nick = !json.has("nick") || json.isNull("nick") ? null : json.getString("nick");
+        String joined_at = json.getString("joined_at");
+        boolean isDeaf = json.getBoolean("deaf");
+        boolean isMute = json.getBoolean("mute");
+        User user = buildUser(json.getJSONObject("user"));
+
+        return new Member(identity, guild, user, nick, joined_at, isDeaf, isMute);
+    }
+
+    /**
+     * Build a member object base on provided json.
+     * @param json The member JSONObject
+     * @return The Member object
+     */
+    public Member buildMemberById (JSONObject json, String guild_id) {
+        Guild guild = identity.getGuild(guild_id);
+        return buildMember(json, guild);
+    }
+
+    /**
      * Build a message object base on provided json.
      * @param json The message JSONObject
      * @return The Message object
@@ -204,6 +258,7 @@ public final class ObjectBuilder {
     // TODO: Add lists (See Message object)
     public Message buildMessage (JSONObject json) {
         String id = json.getString("id");
+        String channel_id = json.getString("channel_id");
 
         /* Build User (Can be Webhook) */
         User author = json.has("webhook_id") && !json.isNull("webhook_id") ?
@@ -211,6 +266,12 @@ public final class ObjectBuilder {
                 buildUser(json.getJSONObject("author"));
 
         String timeStamp = json.getString("timestamp");
+        List<User> mentions = new ArrayList<>();
+        JSONArray mentionUser = json.getJSONArray("mentions");
+        for (int i = 0; i < mentionUser.length(); i++) {
+            mentions.add(identity.getUser(mentionUser.getJSONObject(i).getString("id")));
+        }
+
         boolean isTTS = json.getBoolean("tts");
         boolean mentionedEveryone = json.getBoolean("mention_everyone");
         boolean isPinned = json.has("pinned") && json.getBoolean("pinned");
@@ -218,7 +279,7 @@ public final class ObjectBuilder {
         /* StringMessage */
         if (!json.getString("content").isEmpty()) {
             String content = json.getString("content");
-            return new StringMessage(identity, id, author, timeStamp, isTTS, mentionedEveryone, isPinned, content);
+            return new StringMessage(identity, channel_id, id, author, timeStamp, mentions, isTTS, mentionedEveryone, isPinned, content);
 
         /* EmbedMessage */
         } else {
@@ -231,7 +292,7 @@ public final class ObjectBuilder {
             String time_stamp = embed.has("timestamp") ? embed.getString("timestamp") : null;
             int color = embed.has("color") ? embed.getInt("color") : 0;
 
-            EmbedMessage embedMessage =  new EmbedMessage(identity, id, author, timeStamp, isTTS, mentionedEveryone, isPinned)
+            EmbedMessage embedMessage =  new EmbedMessage(identity, channel_id, id, author, timeStamp, mentions, isTTS, mentionedEveryone, isPinned)
                     .setEmbed(title, description, embed_url, time_stamp, color);
 
             if (embed.has("author")) {

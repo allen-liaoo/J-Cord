@@ -9,7 +9,7 @@ import org.alienideology.jcord.Identity;
  */
 public class DiscordObject {
 
-    private final Identity identity;
+    protected final Identity identity;
 
     protected DiscordObject(Identity identity) {
         this.identity = identity;

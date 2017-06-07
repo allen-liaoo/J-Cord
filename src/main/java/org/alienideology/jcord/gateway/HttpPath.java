@@ -3,6 +3,7 @@ package org.alienideology.jcord.gateway;
 import com.mashape.unirest.http.HttpMethod;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.HttpRequest;
+import com.mashape.unirest.request.HttpRequestWithBody;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.JCord;
 import org.json.JSONObject;
@@ -89,7 +90,7 @@ public final class HttpPath {
         public final static HttpPath GET_CHANNEL_MESSAGES_BEFORE = new HttpPath(GET, "/channels/{channel.id}/messages?limit={limit}&before={before}");
         public final static HttpPath GET_CHANNEL_MESSAGES_AFTER = new HttpPath(GET, "/channels/{channel.id}/messages?limit={limit}&after={after}");
         public final static HttpPath GET_CHANNEL_MESSAGE = new HttpPath(GET, "/channels/{channel.id}/messages/{message.id}");
-        public final static HttpPath CREATE_CHANNEL_MESSAGE = new HttpPath(POST, "/channels/{channel.id}/messages");
+        public final static HttpPath CREATE_MESSAGE = new HttpPath(POST, "/channels/{channel.id}/messages");
         public final static HttpPath EDIT_MESSAGE = new HttpPath(PATCH, "/channels/{channel.id}/messages/{message.id}");
         public final static HttpPath EDIT_MESSAGE_CONTENT = new HttpPath(PATCH, "/channels/{channel.id}/messages/{message.id}?content={content}");
         public final static HttpPath EDIT_MESSAGE_EMBED = new HttpPath(PATCH, "/channels/{channel.id}/messages/{message.id}?embed={embed}");

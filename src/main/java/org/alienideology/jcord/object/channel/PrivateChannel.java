@@ -10,38 +10,17 @@ import java.util.Objects;
  * PrivateChannel - A one-to-one channel between two users
  * @author AlienIdeology
  */
-public class PrivateChannel extends Channel {
+public class PrivateChannel extends MessageChannel {
 
     private final User recipient;
-    private final Type type;
-    private Message lastMessage;
 
-    public PrivateChannel(Identity identity, String id, User recipient) {
-        super(identity, id, true);
+    public PrivateChannel(Identity identity, String id, User recipient, Message lastMessage) {
+        super(identity, id, Type.PRIVATE, lastMessage);
         this.recipient = recipient;
-        this.type = Type.PRIVATE;
     }
 
     public User getRecipient() {
         return recipient;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public Message getLastMessage() {
-        return lastMessage;
-    }
-
-    /**
-     * [API Use Only]
-     * @param lastMessage The last message of this channel.
-     * @return PrivateChannel for chaining.
-     */
-    public PrivateChannel setLastMessage(Message lastMessage) {
-        this.lastMessage = lastMessage;
-        return this;
     }
 
     @Override

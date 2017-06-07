@@ -17,16 +17,21 @@ Discord Objects - entities such as Guild, User, or Channel.
 #### Guild
 Guild - A collection of users and channels, often referred to in the UI as a server.
  - Region - Used for guild voice channel connection.
+ - Member - A user representation in a guild.
 
 #### Channel
 Channel - A communication pipeline.
- - GuildChannel - A Channel that exist in a guild.
-   - TextChannel - A GuildChannel for text messages.
-   - VoiceChannel - A GuildChannel for audio connections.
- - PrivateChannel - A one-to-one channel between two users.
+ - MessageChannel - A channel that allows users to send message.
+   - TextChannel - A GuildChannel for text messages. (GuildChannel)
+   - PrivateChannel - A one-to-one channel between two users.
+
+ - VoiceChannel - A GuildChannel for audio connections. (GuildChannel)
+ - GuildChannel (Interface) - A Channel that exist in a guild.
 
 #### Message
 Message - A text bubble some user just said.
+ - StringMessage - Normal messages that only contains string.
+ - EmbedMessage - Embed messages that can by sent by bot.
 
 ## Event
 Event - Whenever a change happens to an entity, an event get fired.

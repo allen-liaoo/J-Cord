@@ -17,6 +17,7 @@ public class ExampleDispatcher extends DispatcherAdaptor {
     public void onGuildCreate(GuildCreateEvent event) {
         System.out.println("New Guild created! " + event.getGuild().toString());
         System.out.println("Size: "+event.getIdentity().getGuilds().size());
+        System.out.println(event.getIdentity().getGuilds());
         System.out.println("TC: "+event.getGuild().getTextChannels().size());
         System.out.println("VC: "+event.getGuild().getVoiceChannels().size());
     }

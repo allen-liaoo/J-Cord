@@ -9,8 +9,8 @@ import org.alienideology.jcord.object.channel.GuildChannel;
 import org.alienideology.jcord.object.channel.TextChannel;
 import org.alienideology.jcord.object.channel.VoiceChannel;
 
-import javax.xml.soap.Text;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Guild - A collection of users and channels, often referred to in the UI as a server.
@@ -42,6 +42,7 @@ public class Guild extends DiscordObject implements SnowFlake {
 //    private List<Role> roles;
 //    private List<Emote> emojis;
 
+    private final List<Member> members;
     private final List<TextChannel> textChannels;
     private final List<VoiceChannel> voiceChannels;
 
@@ -89,6 +90,7 @@ public class Guild extends DiscordObject implements SnowFlake {
         this.mfa_level = MFA.getByKey(mfa_level);
 //        roles = new ArrayList<Role>();
 //        emojis = new ArrayList<Emote>();
+        members = new ArrayList<>();
         textChannels = new ArrayList<>();
         voiceChannels = new ArrayList<>();
     }
@@ -139,6 +141,18 @@ public class Guild extends DiscordObject implements SnowFlake {
 
     public List<VoiceChannel> getVoiceChannels() {
         return Collections.unmodifiableList(voiceChannels);
+    }
+
+    public List<Member> getMembers() {
+        return Collections.unmodifiableList(members);
+    }
+
+    public List<User> getUsers() {
+        List<User> users = new ArrayList<>();
+        for (Member mem : members) {
+            users.add(mem.getUser());
+        }
+        return Collections.unmodifiableList(users);
     }
 
     /**
@@ -198,6 +212,17 @@ public class Guild extends DiscordObject implements SnowFlake {
                 voiceChannels.add((VoiceChannel) channel);
             }
         }
+        return this;
+    }
+
+    /**
+     * [API Use Only]
+     * Add Members.
+     * @param members the varargs of members to be added.
+     * @return this guild for chaining.
+     */
+    public Guild addMember (Member... members) {
+        this.members.addAll(Arrays.asList(members));
         return this;
     }
 

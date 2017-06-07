@@ -52,9 +52,13 @@ public class IdentityBuilder {
     public Identity build (boolean useBlocking) throws IllegalArgumentException, ErrorResponseException, IOException {
         Identity id = build();
         if (useBlocking) {
-//        while (id.getConnection() != Connection.CONNECTED) {
-//            Thread.sleep(100);
-//        }
+            while (!id.CONNECTION.isReady()) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+
+                }
+            }
         }
 
         return id;

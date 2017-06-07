@@ -8,10 +8,10 @@
  - [x] User
  - [ ] Channel (Half-Done)
   - [x] GuildChannel
-      - [ ] TextChannel
-      - [ ] VoiceChannel
-  - [ ] PrivateChannel
- - [ ] Member
+      - [x] TextChannel
+      - [x] VoiceChannel
+  - [x] PrivateChannel
+ - [x] Member
  - [ ] Message (Half-Done)
  - [ ] Role
  - [ ] Permission

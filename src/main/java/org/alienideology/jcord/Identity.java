@@ -8,6 +8,9 @@ import org.alienideology.jcord.exception.ErrorResponseException;
 import org.alienideology.jcord.gateway.ErrorResponse;
 import org.alienideology.jcord.gateway.GatewayAdaptor;
 import org.alienideology.jcord.gateway.HttpPath;
+import org.alienideology.jcord.object.channel.PrivateChannel;
+import org.alienideology.jcord.object.channel.TextChannel;
+import org.alienideology.jcord.object.channel.VoiceChannel;
 import org.alienideology.jcord.object.guild.Guild;
 import org.alienideology.jcord.object.User;
 import org.apache.commons.logging.impl.SimpleLog;
@@ -36,8 +39,13 @@ public class Identity {
     public Connection CONNECTION = Connection.OFFLINE;
 
     private List<DispatcherAdaptor> listeners = new ArrayList<>();
-    private List<Guild> guilds = new ArrayList<>();
+
     private User self;
+    private List<User> users = new ArrayList<>();
+    private List<Guild> guilds = new ArrayList<>();
+    private List<TextChannel> textChannels = new ArrayList<>();
+    private List<VoiceChannel> voiceChannels = new ArrayList<>();
+    private List<PrivateChannel> privateChannels = new ArrayList<>();
 
     public Identity (IdentityType type,  WebSocketFactory wsFactory) {
         this.type = type;
@@ -87,19 +95,72 @@ public class Identity {
         return self;
     }
 
+    public User getUser(String id) {
+        for (User user : users) {
+            if (user.getId().equals(id)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public Guild getGuild(String id) {
+        for (Guild guild : guilds) {
+            if (guild.getId().equals(id)) {
+                return guild;
+            }
+        }
+        return null;
+    }
+
     public List<Guild> getGuilds() {
         return Collections.unmodifiableList(guilds);
     }
 
-    /**
-     * [API Use Only]
-     * Add guilds to this identity
-     * @param guilds Varargs of guilds to be added.
-     */
-    // TODO: Make this somehow private, unavailable for outside access
-    public void addGuild (Guild... guilds) {
-        this.guilds.addAll(Arrays.asList(guilds));
+    public TextChannel getTextChannel(String id) {
+        for (TextChannel tc : textChannels) {
+            if (tc.getId().equals(id)) {
+                return tc;
+            }
+        }
+        return null;
     }
+
+    public List<TextChannel> getTextChannels() {
+        return textChannels;
+    }
+
+    public VoiceChannel getVoiceChannel(String id) {
+        for (VoiceChannel vc : voiceChannels) {
+            if (vc.getId().equals(id)) {
+                return vc;
+            }
+        }
+        return null;
+    }
+
+    public List<VoiceChannel> getVoiceChannels() {
+        return voiceChannels;
+    }
+
+    public PrivateChannel getPrivateChannel(String id) {
+        for (PrivateChannel dm : privateChannels) {
+            if (dm.getId().equals(id)) {
+                return dm;
+            }
+        }
+        return null;
+    }
+
+    public List<PrivateChannel> getPrivateChannels() {
+        return privateChannels;
+    }
+
+    // TODO: Make these methods somehow private, unavailable for outside access
 
     /**
      * [API Use Only]
@@ -108,6 +169,56 @@ public class Identity {
      */
     public void setSelf (User selfUser) {
         this.self = selfUser;
+    }
+
+    /**
+     * [API Use Only]
+     * Add an user to this identity
+     * @param user The user to be added.
+     */
+    public void addUser (User user) {
+        if(users.contains(user)) return;
+        this.users.add(user);
+    }
+
+    /**
+     * [API Use Only]
+     * Add a guild to this identity
+     * @param guild The guild to be added.
+     */
+    public void addGuild (Guild guild) {
+        if(guilds.contains(guild)) return;
+        this.guilds.add(guild);
+    }
+
+    /**
+     * [API Use Only]
+     * Add a TextChannel to this identity
+     * @param textChannel The TextChannel to be added.
+     */
+    public void addTextChannel (TextChannel textChannel) {
+        if(textChannels.contains(textChannel)) return;
+        this.textChannels.add(textChannel);
+    }
+
+    /**
+     * [API Use Only]
+     * Add a VoiceChannel to this identity
+     * @param voiceChannel The VoiceChannel to be added.
+     */
+    public void addVoiceChannel (VoiceChannel voiceChannel) {
+        if(voiceChannels.contains(voiceChannel)) return;
+        this.voiceChannels.add(voiceChannel);
+    }
+
+    /**
+     * [API Use Only]
+     * Add a PrivateChannel to this identity
+     * @param privateChannel The PrivateChannel to be added.
+     */
+    public void addPrivateChannel (PrivateChannel privateChannel) {
+        if(privateChannels.contains(privateChannel)) return;
+        this.privateChannels.add(privateChannel);
     }
 
     public enum Connection {

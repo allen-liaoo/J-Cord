@@ -16,17 +16,23 @@ import java.util.Objects;
 public class Channel extends DiscordObject implements SnowFlake {
 
     protected final String id;
+    protected final Type type;
     protected final boolean isPrivate;
 
     /**
      * Channel Constructor
      * @param id The id of this channel
-     * @param isPrivate Always false for Guild channels
+     * @param type The type of channel
      */
-    public Channel (Identity identity, String id, boolean isPrivate) {
+    public Channel (Identity identity, String id, Type type) {
         super(identity);
         this.id = id;
-        this.isPrivate = isPrivate;
+        this.type = type;
+        this.isPrivate = (type == Type.PRIVATE);
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public boolean isPrivate() {

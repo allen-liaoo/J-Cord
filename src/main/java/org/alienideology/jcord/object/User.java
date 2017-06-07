@@ -87,4 +87,5 @@ public class User extends DiscordObject implements SnowFlake, Mention {
     public String toString() {
         return "ID: "+id+"\tName: "+name;
     }
+
 }
