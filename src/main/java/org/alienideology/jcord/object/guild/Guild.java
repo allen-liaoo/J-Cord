@@ -147,6 +147,14 @@ public class Guild extends DiscordObject implements SnowFlake {
         return Collections.unmodifiableList(members);
     }
 
+    public Member getMember(String id) {
+        for (Member member : members) {
+            if (member.getId().equals(id))
+                return member;
+        }
+        return null;
+    }
+
     public List<User> getUsers() {
         List<User> users = new ArrayList<>();
         for (Member mem : members) {

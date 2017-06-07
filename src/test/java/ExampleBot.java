@@ -40,8 +40,6 @@ public class ExampleBot {
 //            System.out.println("Msg: "+message.processContent(true, true));
 //
 //            bot.getTextChannel("311250670068170752").sendMessage("hi");
-            System.out.println(bot.getGuild("311250670068170752").getMembers().size());
-            System.out.println(bot.getUsers().size());
 
         } catch (Exception e) {
             e.printStackTrace();

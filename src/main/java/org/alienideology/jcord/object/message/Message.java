@@ -6,6 +6,8 @@ import org.alienideology.jcord.object.SnowFlake;
 import org.alienideology.jcord.object.User;
 import org.alienideology.jcord.object.channel.Channel;
 import org.alienideology.jcord.object.channel.MessageChannel;
+import org.alienideology.jcord.object.guild.Guild;
+import org.alienideology.jcord.object.guild.Member;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -48,6 +50,14 @@ public class Message extends DiscordObject implements SnowFlake {
         this.isPinned = isPinned;
     }
 
+    public Guild getGuild() {
+        if(!channel.isPrivate()) {
+            return identity.getTextChannel(channel.getId()).getGuild();
+        } else {
+            return null;
+        }
+    }
+
     public MessageChannel getChannel() {
         return channel;
     }
@@ -62,6 +72,14 @@ public class Message extends DiscordObject implements SnowFlake {
 
     public User getAuthor() {
         return author;
+    }
+
+    public Member getMember() {
+        if (!channel.isPrivate()) {
+            return getGuild().getMember(author.getId());
+        } else {
+            return null;
+        }
     }
 
     public List<User> getMentionedUsers() {

@@ -13,6 +13,7 @@ import org.alienideology.jcord.event.guild.GuildRoleCreateEvent;
 import org.alienideology.jcord.event.handler.EventHandler;
 import org.alienideology.jcord.event.handler.GatewayEventHandler;
 import org.alienideology.jcord.event.handler.GuildCreateEventHandler;
+import org.alienideology.jcord.event.handler.MessageCreateEventHandler;
 import org.alienideology.jcord.exception.ErrorResponseException;
 import org.apache.commons.logging.impl.SimpleLog;
 import org.json.JSONObject;
@@ -169,10 +170,6 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
         EventHandler handler = eventHandler.get(key);
 
-        if (key.equals("MESSAGE_CREATE")) {
-            System.out.println(event.toString(4));
-        }
-
         if (handler == null) {
             LOG.fatal("Unknown Event: "+key);// + json.toString(4));
         } else {
@@ -271,6 +268,10 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         /* Guild Event */
         eventHandler.put("GUILD_CREATE", new GuildCreateEventHandler(identity));
         //eventHandler.put("GUILD_ROLE_CREATE", new GuildRoleCreateEvent(identity));
+
+
+        /* Message Event */
+        eventHandler.put("MESSAGE_CREATE", new MessageCreateEventHandler(identity));
     }
 
 }

@@ -35,6 +35,10 @@ public class Channel extends DiscordObject implements SnowFlake {
         return type;
     }
 
+    public boolean isType(Type type) {
+        return this.type.equals(type);
+    }
+
     public boolean isPrivate() {
         return isPrivate;
     }

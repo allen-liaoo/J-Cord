@@ -6,6 +6,10 @@ import org.alienideology.jcord.event.gateway.ResumedEvent;
 import org.alienideology.jcord.event.guild.GuildEvent;
 import org.alienideology.jcord.event.guild.GuildCreateEvent;
 import org.alienideology.jcord.event.guild.GuildRoleCreateEvent;
+import org.alienideology.jcord.event.message.GuildMessageCreateEvent;
+import org.alienideology.jcord.event.message.MessageCreateEvent;
+import org.alienideology.jcord.event.message.MessageEvent;
+import org.alienideology.jcord.event.message.PrivateMessageCreateEvent;
 import org.alienideology.jcord.exception.ErrorResponseException;
 
 /**
@@ -15,13 +19,17 @@ import org.alienideology.jcord.exception.ErrorResponseException;
 public class DispatcherAdaptor {
 
     /*
-        Fire Events
+        -------------------
+            Fire Events
+        -------------------
      */
     public final void onEvent (Event event) {
         if (event instanceof GatewayEvent) {
             onGatewayEvent((GatewayEvent) event);
         } else if (event instanceof GuildEvent) {
             onGuildEvent((GuildEvent) event);
+        } else if (event instanceof MessageEvent) {
+            onMessageEvent((MessageEvent) event);
         }
     }
 
@@ -49,8 +57,27 @@ public class DispatcherAdaptor {
 
     public void onGuildRoleCreate (GuildRoleCreateEvent event) {}
 
+    private void onMessageEvent (MessageEvent event) {
+        if (event instanceof MessageCreateEvent) {
+            onMessageCreate((MessageCreateEvent) event);
+            if (event instanceof GuildMessageCreateEvent) {
+                onGuildMessageCreate((GuildMessageCreateEvent) event);
+            } else if (event instanceof PrivateMessageCreateEvent) {
+                onPrivateMessageCreate((PrivateMessageCreateEvent) event);
+            }
+        }
+    }
+
+    public void onMessageCreate (MessageCreateEvent event) {}
+
+    public void onGuildMessageCreate (GuildMessageCreateEvent event) {}
+
+    public void onPrivateMessageCreate (PrivateMessageCreateEvent event) {}
+
     /*
-        Fire Exceptions
+        -----------------------
+            Fire Exceptions
+        -----------------------
      */
     public void onException (Exception exception) {
         exception.printStackTrace();

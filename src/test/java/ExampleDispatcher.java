@@ -2,6 +2,10 @@ import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.guild.GuildCreateEvent;
 import org.alienideology.jcord.event.guild.GuildRoleCreateEvent;
+import org.alienideology.jcord.event.message.GuildMessageCreateEvent;
+import org.alienideology.jcord.event.message.MessageCreateEvent;
+import org.alienideology.jcord.event.message.PrivateMessageCreateEvent;
+import org.alienideology.jcord.object.guild.Guild;
 
 /**
  * @author AlienIdeology
@@ -25,5 +29,17 @@ public class ExampleDispatcher extends DispatcherAdaptor {
     @Override
     public void onGuildRoleCreate(GuildRoleCreateEvent event) {
         //System.out.println("New Role created!");
+    }
+
+    @Override
+    public void onGuildMessageCreate(GuildMessageCreateEvent event) {
+        System.out.println("------------\nGuild msg: \n"+event.getChannel());
+        System.out.println(event.getMessage()+"\n------------");
+    }
+
+    @Override
+    public void onPrivateMessageCreate(PrivateMessageCreateEvent event) {
+        System.out.println("------------\nPrivate msg: \n"+event.getChannel());
+        System.out.println(event.getMessage()+"\n------------");
     }
 }
