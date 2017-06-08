@@ -69,7 +69,13 @@ public final class HttpPath {
         public final static HttpPath DELETE_GUILD_INTEGRATION = new HttpPath(DELETE, "/guilds/{guild.id}/integrations/{integration.id}");
         public final static HttpPath SYNC_GUILD_INTEGRATION = new HttpPath(GET, "/guilds/{guild.id}/integrations/{integration.id}/sync");
 
+        /* Invite Action */
+        public final static HttpPath GET_INVITE = new HttpPath(GET, "/invites/{invite.code}");
+        public final static HttpPath DELETE_INVITE = new HttpPath(DELETE, "/invites/{invite.code}");
+        public final static HttpPath ACCEPT_INVITE = new HttpPath(POST, "/invites/{invite.code}");
+
         /* Other Action */
+        public final static HttpPath LIST_VOICE_REGIONS = new HttpPath(GET, "/voice/regions");
         public final static HttpPath GET_GUILD_VOICE_REGIONS = new HttpPath(GET, "/guilds/{guild.id}/regions");
         public final static HttpPath GET_GUILD_INVITES = new HttpPath(GET, "/guilds/{guild.id}/invites");
         public final static HttpPath GET_GUILD_EMBED = new HttpPath(GET, "/guilds/{guild.id}/embed");
@@ -122,8 +128,24 @@ public final class HttpPath {
     public static class Group {
 
         /* Recipient Action */
+        public final static HttpPath CREATE_GROUP_DM = new HttpPath(POST, "/users/@me/channels");
         public final static HttpPath ADD_RECIPIENT = new HttpPath(PUT, "/channels/{channel.id}/recipients/{user.id}");
         public final static HttpPath DELETE_RECIPIENT = new HttpPath(DELETE, "/channels/{channel.id}/recipients/{user.id}");
+
+    }
+
+    public static class User {
+
+        /* Current User Action */
+        public final static HttpPath GET_CURRENT_USER = new HttpPath(GET, "/users/@me");
+        public final static HttpPath MODIFY_CURRENT_USER = new HttpPath(PATCH, "/users/@me");
+        public final static HttpPath GET_CURRENT_USER_GUILDS = new HttpPath(GET, "/users/@me/guilds");
+        public final static HttpPath LEAVE_GUILD = new HttpPath(DELETE, "/users/@me/guilds/{guild.id}");
+        public final static HttpPath GET_CURRENT_USER_DM = new HttpPath(DELETE, "/users/@me/channels");
+        public final static HttpPath GET_CURRENT_USER_CONNECTIONS = new HttpPath(GET, "/users/@me/connections");
+
+        /* User Action */
+        public final static HttpPath GET_USER = new HttpPath(GET, "/users/{user.id}");
 
     }
 
