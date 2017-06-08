@@ -1,11 +1,14 @@
 package org.alienideology.jcord.object.channel;
 
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.exception.ErrorResponseException;
+import org.alienideology.jcord.gateway.ErrorResponse;
 import org.alienideology.jcord.gateway.HttpPath;
+import org.alienideology.jcord.object.message.EmbedMessageBuilder;
 import org.alienideology.jcord.object.message.Message;
+import org.alienideology.jcord.object.message.MessageBuilder;
 import org.json.JSONObject;
 
 /**
@@ -25,20 +28,60 @@ public class MessageChannel extends Channel {
         return lastMessage;
     }
 
+    /**
+     * Send a string message.
+     * @param message The message to be sent.
+     * @throws IllegalArgumentException
+     *          If the message is more than 2000 characters.
+     * @return The message sent.
+     */
     public Message sendMessage(String message) {
 
-        if (message.length() > 2000) {  // Message content can by up to 2000 characters
-            throw new IllegalArgumentException("String messages can only contains up to 2000 characters.");
+        if (message.length() > Message.MAX_CONTENT_LENGTH) {  // Message content can by up to 2000 characters
+            IllegalArgumentException exception = new IllegalArgumentException("String messages can only contains up to 2000 characters.");
+            exception.printStackTrace();
+            throw new IllegalArgumentException();
         }
 
+        send(new MessageBuilder().setContent(message).build());
+        return lastMessage;
+    }
+
+    public Message sendMessageFormat(String format, Object... args) {
+        sendMessage(new MessageBuilder().appendContentFormat(format, args));
+        return lastMessage;
+    }
+
+    public Message sendMessage(MessageBuilder message) {
+        send(message.build());
+        return lastMessage;
+    }
+
+    /**
+     * Send an embed message.
+     * @param embed The EmbedMessageBuilder
+     * @throws IllegalStateException
+     *          If the embed message is built but the embed is empty.
+     * @return The message sent.
+     */
+    public Message sendMessage(EmbedMessageBuilder embed) {
+        return sendMessage(new MessageBuilder().setAsEmbed(embed));
+    }
+
+    private void send(JSONObject json) {
         HttpRequestWithBody http = (HttpRequestWithBody) HttpPath.Channel.CREATE_MESSAGE.request(identity, id);
-        http.field("content", message);
+        http.header("Content-Type", "application/json").body(json);
         try {
-            System.out.println(http.asJson().getBody().getObject().toString(4));
+            JSONObject response = http.asJson().getBody().getObject();
+            if (response.has("code")) {
+                ErrorResponseException exception = new ErrorResponseException(ErrorResponse.getByKey(response.getInt("code")));
+                exception.printStackTrace();
+                throw exception;
+            }
+            System.out.println(response.toString(4));
         } catch (UnirestException e) {
             e.printStackTrace();
         }
-        return lastMessage;
     }
 
     /**

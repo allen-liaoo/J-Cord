@@ -1,3 +1,4 @@
+import java.awt.Color;
 import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
@@ -6,7 +7,7 @@ import org.alienideology.jcord.event.guild.GuildRoleCreateEvent;
 import org.alienideology.jcord.event.message.GuildMessageCreateEvent;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.PrivateMessageCreateEvent;
-import org.alienideology.jcord.object.guild.Guild;
+import org.alienideology.jcord.object.message.EmbedMessageBuilder;
 
 /**
  * @author AlienIdeology
@@ -47,7 +48,8 @@ public class ExampleDispatcher extends DispatcherAdaptor {
 
             // Do stuff
             if (event.getMessage().getContent().replaceFirst("\\?", "").equals("ping")) {
-                event.getChannel().sendMessage("pong");
+                EmbedMessageBuilder builder = new EmbedMessageBuilder();
+                event.getChannel().sendMessage(builder);
             }
 
         }
@@ -61,8 +63,8 @@ public class ExampleDispatcher extends DispatcherAdaptor {
 
     @Override
     public void onPrivateMessageCreate(PrivateMessageCreateEvent event) {
-//        System.out.println("------------\nPrivate msg: \n"+event.getChannel());
-//        System.out.println(event.getMessage()+"\n------------");
+        System.out.println("------------\nPrivate msg: \n"+event.getChannel());
+        System.out.println(event.getMessage()+"\n------------");
     }
 
     @Override

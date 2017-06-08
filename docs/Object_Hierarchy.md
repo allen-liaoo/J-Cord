@@ -32,6 +32,11 @@ Channel - A communication pipeline.
 Message - A text bubble some user just said.
  - StringMessage - Normal messages that only contains string.
  - EmbedMessage - Embed messages that can by sent by bot.
+ <br /><br />
+ - Builders
+   - MessageBuilder - Build a message, can be StringMessage or EmbedMessage.
+   - EmbedMessageBuilder - Build a JSONObject of an embed, used to build
+     embed messages and send in channels.
 
 ## Event
 Event - Whenever a change happens to an entity, an event get fired.

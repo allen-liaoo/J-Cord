@@ -65,7 +65,7 @@ public enum ErrorResponse {
 
     ErrorResponse (int key, String message) {
         this.key = key;
-        this.message = toString();
+        this.message = message;
     }
 
     public static ErrorResponse getByKey (int key) {

@@ -6,13 +6,13 @@
 ### Discord Objects
  - [x] Guild
  - [x] User
- - [ ] Channel (Half-Done)
+ - [ ] Channel (Half-Done, Actions)
   - [x] GuildChannel
       - [x] TextChannel
       - [x] VoiceChannel
   - [x] PrivateChannel
  - [x] Member
- - [ ] Message (Half-Done)
+ - [ ] Message (Half-Done, Builders)
  - [ ] Role
  - [ ] Permission
  - [ ] Invite

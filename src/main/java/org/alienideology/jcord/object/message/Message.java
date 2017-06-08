@@ -19,6 +19,10 @@ import java.util.Objects;
  */
 public class Message extends DiscordObject implements SnowFlake {
 
+    /* Constant */
+    public final static int MAX_CONTENT_LENGTH = 2000;
+
+    /* Instance Field */
     protected MessageChannel channel;
 
     protected final String id;
