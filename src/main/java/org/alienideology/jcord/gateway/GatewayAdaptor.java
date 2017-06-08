@@ -5,11 +5,7 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.event.Event;
-import org.alienideology.jcord.event.gateway.ReadyEvent;
-import org.alienideology.jcord.event.gateway.ResumedEvent;
-import org.alienideology.jcord.event.guild.GuildCreateEvent;
-import org.alienideology.jcord.event.guild.GuildRoleCreateEvent;
+import org.alienideology.jcord.event.handler.GuildDeleteEventHandler;
 import org.alienideology.jcord.event.handler.EventHandler;
 import org.alienideology.jcord.event.handler.GatewayEventHandler;
 import org.alienideology.jcord.event.handler.GuildCreateEventHandler;
@@ -273,6 +269,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
         /* Guild Event */
         eventHandler.put("GUILD_CREATE", new GuildCreateEventHandler(identity));
+        eventHandler.put("GUILD_DELETE", new GuildDeleteEventHandler(identity));
         //eventHandler.put("GUILD_ROLE_CREATE", new GuildRoleCreateEvent(identity));
 
 

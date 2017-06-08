@@ -3,9 +3,7 @@ package org.alienideology.jcord.event;
 import org.alienideology.jcord.event.gateway.GatewayEvent;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.gateway.ResumedEvent;
-import org.alienideology.jcord.event.guild.GuildEvent;
-import org.alienideology.jcord.event.guild.GuildCreateEvent;
-import org.alienideology.jcord.event.guild.GuildRoleCreateEvent;
+import org.alienideology.jcord.event.guild.*;
 import org.alienideology.jcord.event.message.GuildMessageCreateEvent;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.MessageEvent;
@@ -48,12 +46,20 @@ public class DispatcherAdaptor {
     private void onGuildEvent (GuildEvent event) {
         if (event instanceof GuildCreateEvent) {
             onGuildCreate((GuildCreateEvent) event);
+        } else if (event instanceof GuildDeleteEvent) {
+            onGuildDelete((GuildDeleteEvent) event);
+        } else if (event instanceof GuildUnavailableEvent) {
+            onGuildUnavailable((GuildUnavailableEvent) event);
         } else if (event instanceof GuildRoleCreateEvent) {
             onGuildRoleCreate((GuildRoleCreateEvent) event);
         }
     }
 
     public void onGuildCreate (GuildCreateEvent event) {}
+
+    public void onGuildDelete (GuildDeleteEvent event) {}
+
+    public void onGuildUnavailable (GuildUnavailableEvent event) {}
 
     public void onGuildRoleCreate (GuildRoleCreateEvent event) {}
 
