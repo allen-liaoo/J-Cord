@@ -1,5 +1,6 @@
 package org.alienideology.jcord.object.message;
 
+import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.object.DiscordObject;
 import org.alienideology.jcord.object.SnowFlake;
@@ -10,7 +11,6 @@ import org.alienideology.jcord.object.guild.Guild;
 import org.alienideology.jcord.object.guild.Member;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +24,7 @@ public class Message extends DiscordObject implements SnowFlake {
     protected final String id;
     protected final User author;
 
+    protected String content;
     private final OffsetDateTime createdTime;
 
     private List<User> mentions;
@@ -37,12 +38,13 @@ public class Message extends DiscordObject implements SnowFlake {
     private boolean mentionedEveryone;
     private boolean isPinned;
 
-    public Message (Identity identity, String channelId, String id, User author, String createdTime, List<User> mentions,
+    public Message (Identity identity, String channelId, String id, User author, String content, String createdTime, List<User> mentions,
                     boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
         super(identity);
         channel = identity.getTextChannel(channelId) == null ? identity.getPrivateChannel(channelId) : identity.getTextChannel(channelId);
         this.id = id;
         this.author = author;
+        this.content = content;
         this.createdTime = createdTime == null ? null : OffsetDateTime.parse(createdTime);
         this.mentions = mentions;
         this.isTTS = isTTs;
@@ -50,6 +52,11 @@ public class Message extends DiscordObject implements SnowFlake {
         this.isPinned = isPinned;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    @Nullable
     public Guild getGuild() {
         if(!channel.isPrivate()) {
             return identity.getTextChannel(channel.getId()).getGuild();
@@ -74,6 +81,10 @@ public class Message extends DiscordObject implements SnowFlake {
         return author;
     }
 
+    public boolean isFromSelf() {
+        return author.equals(identity.getSelf());
+    }
+
     public Member getMember() {
         if (!channel.isPrivate()) {
             return getGuild().getMember(author.getId());
@@ -88,6 +99,10 @@ public class Message extends DiscordObject implements SnowFlake {
 
     public OffsetDateTime getCreatedTime() {
         return createdTime;
+    }
+
+    public boolean isEmbed() {
+        return !(this instanceof StringMessage);
     }
 
     public boolean isTTS() {

@@ -40,7 +40,7 @@ public class GatewayEventHandler extends EventHandler {
                 JSONObject guild = guilds.getJSONObject(i);
                 try {
                     JSONObject get = HttpPath.Guild.GET_GUILD.request(identity, guild.getString("id")).asJson().getBody().getObject();
-                    builder.buildGuild(get); // Added to identity automatically
+                    builder.buildGuild(get); // Guild added to identity automatically
                 } catch (UnirestException ne) {
                     LOG.error("Initializing Guilds", ne);
                 }

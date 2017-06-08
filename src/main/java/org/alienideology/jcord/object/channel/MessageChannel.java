@@ -21,19 +21,20 @@ public class MessageChannel extends Channel {
         this.lastMessage = lastMessage;
     }
 
-    public Message getLastMessage() {
+    public Message getLastestMessage() {
         return lastMessage;
     }
 
     public Message sendMessage(String message) {
 
-        JSONObject msg = new JSONObject()
-            .put("content", message);    // message content can by up to 2000 characters
+        if (message.length() > 2000) {  // Message content can by up to 2000 characters
+            throw new IllegalArgumentException("String messages can only contains up to 2000 characters.");
+        }
 
         HttpRequestWithBody http = (HttpRequestWithBody) HttpPath.Channel.CREATE_MESSAGE.request(identity, id);
         http.field("content", message);
         try {
-            System.out.println(http.asJson());
+            System.out.println(http.asJson().getBody().getObject().toString(4));
         } catch (UnirestException e) {
             e.printStackTrace();
         }

@@ -12,15 +12,9 @@ import java.util.List;
  */
 public class StringMessage extends Message {
 
-    private String content;
-
-    public StringMessage(Identity identity, String channelId, String id, User author, String timeStamp, List<User> mentions, boolean isTTs, boolean mentionedEveryone, boolean isPinned, String content) {
-        super(identity, channelId, id, author, timeStamp, mentions, isTTs, mentionedEveryone, isPinned);
-        this.content = content;
-    }
-
-    public String getContent() {
-        return content;
+    public StringMessage(Identity identity, String channelId, String id, User author, String content, String timeStamp,
+                         List<User> mentions, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
+        super(identity, channelId, id, author, content, timeStamp, mentions, isTTs, mentionedEveryone, isPinned);
     }
 
     // TODO: Finish this method

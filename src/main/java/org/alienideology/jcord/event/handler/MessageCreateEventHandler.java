@@ -1,9 +1,7 @@
 package org.alienideology.jcord.event.handler;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.event.guild.GuildCreateEvent;
 import org.alienideology.jcord.event.message.GuildMessageCreateEvent;
-import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.PrivateMessageCreateEvent;
 import org.alienideology.jcord.object.channel.Channel;
 import org.alienideology.jcord.object.channel.MessageChannel;
@@ -26,7 +24,6 @@ public class MessageCreateEventHandler extends EventHandler {
                 .setLastMessage(message);
 
         if (message.fromType(Channel.Type.TEXT)) {
-            System.out.println("Here");
             fireEvent(new GuildMessageCreateEvent(identity, sequence, channel, message));
         } else {
             fireEvent(new PrivateMessageCreateEvent(identity, sequence, channel, message));

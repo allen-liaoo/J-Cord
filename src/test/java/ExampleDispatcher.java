@@ -1,3 +1,4 @@
+import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.guild.GuildCreateEvent;
@@ -32,6 +33,27 @@ public class ExampleDispatcher extends DispatcherAdaptor {
     }
 
     @Override
+    public void onMessageCreate(MessageCreateEvent event) {
+
+        // Ignore messages from other bots and webhooks
+        if (event.getUser().isBot() || event.getUser().isWebHook())
+            return;
+
+        // Ignore messages from the bot itself
+        if (event.getMessage().isFromSelf())
+            return;
+
+        if (event.getMessage().getContent().startsWith("?")) { // Your prefix
+
+            // Do stuff
+            if (event.getMessage().getContent().replaceFirst("\\?", "").equals("ping")) {
+                event.getChannel().sendMessage("pong");
+            }
+
+        }
+    }
+
+    @Override
     public void onGuildMessageCreate(GuildMessageCreateEvent event) {
         System.out.println("------------\nGuild msg: \n"+event.getChannel());
         System.out.println(event.getMessage()+"\n------------");
@@ -39,7 +61,12 @@ public class ExampleDispatcher extends DispatcherAdaptor {
 
     @Override
     public void onPrivateMessageCreate(PrivateMessageCreateEvent event) {
-        System.out.println("------------\nPrivate msg: \n"+event.getChannel());
-        System.out.println(event.getMessage()+"\n------------");
+//        System.out.println("------------\nPrivate msg: \n"+event.getChannel());
+//        System.out.println(event.getMessage()+"\n------------");
+    }
+
+    @Override
+    public void onException(Exception exception) {
+        JCord.LOGGER.fatal(exception);
     }
 }

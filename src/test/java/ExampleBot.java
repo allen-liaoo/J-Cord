@@ -35,8 +35,8 @@ public class ExampleBot {
                 System.out.println("DM:\t"+dm.getRecipient().getName());
             }
 
-//            System.out.println(bot.getTextChannel("311250670068170752").getLastMessage());
-//            StringMessage message = (StringMessage) bot.getTextChannel("311250670068170752").getLastMessage();
+//            System.out.println(bot.getTextChannel("311250670068170752").getLastestMessage());
+//            StringMessage message = (StringMessage) bot.getTextChannel("311250670068170752").getLastestMessage();
 //            System.out.println("Msg: "+message.processContent(true, true));
 //
 //            bot.getTextChannel("311250670068170752").sendMessage("hi");

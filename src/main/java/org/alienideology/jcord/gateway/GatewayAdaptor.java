@@ -185,6 +185,12 @@ public final class GatewayAdaptor extends WebSocketAdapter {
                 }
             }
 
+            // Handle Error Response
+            if (event.has("code")) {
+                handleError(new ErrorResponseException(ErrorResponse.getByKey(json.getInt("code"))));
+                return;
+            }
+
             // Only fire Non-Gateway events after the connection is ready.
             if (!(handler instanceof GatewayEventHandler)) {
                 if (identity.CONNECTION.isReady()) {

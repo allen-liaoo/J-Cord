@@ -36,6 +36,10 @@ public class MessageEvent extends Event {
         return message;
     }
 
+    public boolean isEmbed() {
+        return message.isEmbed();
+    }
+
     public MessageChannel getChannel() {
         return channel;
     }

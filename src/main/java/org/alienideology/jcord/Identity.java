@@ -3,6 +3,7 @@ package org.alienideology.jcord;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.neovisionaries.ws.client.*;
+import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.exception.ErrorResponseException;
 import org.alienideology.jcord.gateway.ErrorResponse;
@@ -95,6 +96,7 @@ public class Identity {
         return self;
     }
 
+    @Nullable
     public User getUser(String id) {
         for (User user : users) {
             if (user.getId().equals(id)) {
@@ -121,6 +123,7 @@ public class Identity {
         return Collections.unmodifiableList(guilds);
     }
 
+    @Nullable
     public TextChannel getTextChannel(String id) {
         for (TextChannel tc : textChannels) {
             if (tc.getId().equals(id)) {
@@ -134,6 +137,7 @@ public class Identity {
         return textChannels;
     }
 
+    @Nullable
     public VoiceChannel getVoiceChannel(String id) {
         for (VoiceChannel vc : voiceChannels) {
             if (vc.getId().equals(id)) {
@@ -147,6 +151,7 @@ public class Identity {
         return voiceChannels;
     }
 
+    @Nullable
     public PrivateChannel getPrivateChannel(String id) {
         for (PrivateChannel dm : privateChannels) {
             if (dm.getId().equals(id)) {

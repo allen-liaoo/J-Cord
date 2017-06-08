@@ -31,8 +31,9 @@ public class EmbedMessage extends Message {
     private Image image = null;
     private Footer footer = null;
 
-    public EmbedMessage(Identity identity, String channelId, String id, User author, String timeStamp, List<User> mentions, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
-        super(identity, channelId, id, author, timeStamp, mentions, isTTs, mentionedEveryone, isPinned);
+    public EmbedMessage(Identity identity, String channelId, String id, User author, String content, String timeStamp,
+                        List<User> mentions, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
+        super(identity, channelId, id, author, content, timeStamp, mentions, isTTs, mentionedEveryone, isPinned);
     }
 
     public EmbedMessage setEmbed(String title, String description, String url, String embed_timestamp, int color) {

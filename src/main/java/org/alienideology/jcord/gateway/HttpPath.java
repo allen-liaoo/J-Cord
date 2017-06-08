@@ -136,10 +136,10 @@ public final class HttpPath {
     }
 
     public HttpRequest request(Identity identity, String... params) {
+        String processedPath;
         try {
-            String processedPath = path.replaceAll("\\{(.+?)}", "%s");
+            processedPath = path.replaceAll("\\{(.+?)}", "%s");
             processedPath = String.format(processedPath, (Object[]) params);
-            path = processedPath;
         } catch (IllegalFormatException ife) {
             throw new IllegalArgumentException("[INTERNAL] Cannot perform an HttpRequest due to unmatched parameters!");
         }
@@ -147,22 +147,23 @@ public final class HttpPath {
         HttpRequest request = null;
         switch (method) {
             case GET:
-                request = Unirest.get(path); break;
+                request = Unirest.get(processedPath); break;
             case HEAD:
-                request = Unirest.head(path); break;
+                request = Unirest.head(processedPath); break;
             case POST:
-                request = Unirest.post(path); break;
+                request = Unirest.post(processedPath); break;
             case PUT:
-                request = Unirest.put(path); break;
+                request = Unirest.put(processedPath); break;
             case PATCH:
-                request = Unirest.patch(path); break;
+                request = Unirest.patch(processedPath); break;
             case DELETE:
-                request = Unirest.delete(path); break;
+                request = Unirest.delete(processedPath); break;
             case OPTIONS:
-                request = Unirest.options(path); break;
+                request = Unirest.options(processedPath); break;
         }
+
         request.header("Authorization", identity.getToken())
-                .header("User-Agent", "DiscordBot ($"+path+", $"+ JCord.VERSION+")");
+                .header("User-Agent", "DiscordBot ($"+processedPath+", $"+ JCord.VERSION+")");
         return request;
     }
 
