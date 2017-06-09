@@ -1,20 +1,23 @@
 ### Description
  - [x] Done : Tested and working.
- - [ ] Half-Done : Not tested but written. (Half-Done)
+ - [ ] Half-Done : Missing stuff.
  - [ ] Not Done
 
 ### Discord Objects
  - [x] Guild
+  - [x] Member
+  - [x] Role
  - [x] User
- - [ ] Channel (Half-Done, Actions)
+ - [ ] Channel (Half-Done, Missing Actions)
   - [x] GuildChannel
       - [x] TextChannel
       - [x] VoiceChannel
   - [x] PrivateChannel
+  - [ ] Group
  - [x] Member
- - [ ] Message (Half-Done, Builders)
- - [ ] Role
- - [ ] Permission
+ - [x] Message
+ - [ ] Permission (Half-Done, Missing permissions overrides for channels)
+ - [x] Emoji
  - [ ] Invite
  - [ ] Webhook
 
