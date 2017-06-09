@@ -79,7 +79,16 @@ public class GuildEmoji extends DiscordObject implements SnowFlake, Mention {
     }
 
     @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + guild.hashCode();
+        result = 31 * result + id.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "ID: "+id+"\tName: "+name;
     }
+
 }

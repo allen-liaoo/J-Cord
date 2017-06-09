@@ -2,6 +2,7 @@ package org.alienideology.jcord;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.HttpRequest;
 import com.neovisionaries.ws.client.*;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.command.CommandFramework;
@@ -17,6 +18,7 @@ import org.alienideology.jcord.object.Guild;
 import org.alienideology.jcord.object.guild.Role;
 import org.alienideology.jcord.object.user.User;
 import org.apache.commons.logging.impl.SimpleLog;
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -39,6 +41,7 @@ public class Identity {
     private String token;
 
     private WebSocketFactory wsFactory;
+    private WebSocket socket;
     public Connection CONNECTION = Connection.OFFLINE;
 
     private List<DispatcherAdaptor> listeners = new ArrayList<>();
@@ -56,34 +59,9 @@ public class Identity {
         this.wsFactory = wsFactory;
     }
 
-    Identity login (String token) throws ErrorResponseException, IllegalArgumentException, IOException {
-        if (type == IdentityType.BOT) {
-            this.token = "Bot " + token;
-        } else {
-            this.token = token;
-        }
-
-        try {
-            URI url = new URI(Unirest.get(HttpPath.Gateway.GET_BOT.getPath()).header("Authorization", this.token)
-                    .asJson().getBody().getObject().getString("url") + "?encoding=json&v=" + GatewayAdaptor.GATEWAY_VERSION);
-
-            WebSocket socket = wsFactory.createSocket(url);
-            socket.addListener(new GatewayAdaptor(this, socket)).connect();
-        } catch (UnirestException ne) {
-            throw new ErrorResponseException(ErrorResponse.INVALID_AUTHENTICATION_TOKEN);
-        } catch (URISyntaxException urise) {
-            throw new ConnectException("Discord fail to provide a valid URI!");
-        } catch (IOException iow) {
-            throw new IOException("Fail to create WebSocket!");
-        } catch (WebSocketException wse) {
-            throw new ConnectException("Fail to connect to the Discord server!");
-        }
-
-        return this;
-    }
-
-    Identity addDispatchers(DispatcherAdaptor... dispatchers) {
-        this.listeners.addAll(Arrays.asList(dispatchers));
+    public Identity revive() throws IOException {
+        logout();
+        login(token);
         return this;
     }
 
@@ -195,7 +173,76 @@ public class Identity {
         return privateChannels;
     }
 
-    // TODO: Make these methods somehow private, unavailable for outside access
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Identity)) return false;
+
+        Identity identity = (Identity) o;
+
+        if (type != identity.type) return false;
+        if (!token.equals(identity.token)) return false;
+        return self.equals(identity.self);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + token.hashCode();
+        result = 31 * result + self.hashCode();
+        return result;
+    }
+
+    /*
+        --------------------
+            API Use Only
+        --------------------
+     */
+
+    Identity login (String token) throws ErrorResponseException, IllegalArgumentException, IOException {
+        if (type == IdentityType.BOT && !token.startsWith("Bot ")) {
+            this.token = "Bot " + token;
+        } else {
+            this.token = token;
+        }
+
+        try {
+            HttpRequest request = Unirest.get(HttpPath.Gateway.GET_BOT.getPath()).header("Authorization", this.token);
+            String uri = request.asJson().getBody().getObject().getString("url") + "?encoding=json&v=" + GatewayAdaptor.GATEWAY_VERSION;
+
+            URI url = new URI(uri);
+
+            socket = wsFactory.createSocket(url);
+            socket.addListener(new GatewayAdaptor(this, socket)).connect();
+        } catch (UnirestException | JSONException ne) {
+            throw new ErrorResponseException(ErrorResponse.INVALID_AUTHENTICATION_TOKEN);
+        } catch (URISyntaxException urise) {
+            throw new ConnectException("Discord fail to provide a valid URI!");
+        } catch (IOException iow) {
+            throw new IOException("Fail to create WebSocket!");
+        } catch (WebSocketException wse) {
+            throw new ConnectException("Fail to connect to the Discord server!");
+        }
+
+        return this;
+    }
+
+    Identity logout() {
+        socket.disconnect();
+        CONNECTION = Connection.OFFLINE;
+        users.clear();
+        guilds.clear();
+        textChannels.clear();
+        voiceChannels.clear();
+        privateChannels.clear();
+        socket.clearListeners();
+        return this;
+    }
+
+    Identity addDispatchers(DispatcherAdaptor... dispatchers) {
+        this.listeners.addAll(Arrays.asList(dispatchers));
+        return this;
+    }
 
     /**
      * [API Use Only]

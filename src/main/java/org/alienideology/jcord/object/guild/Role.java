@@ -127,6 +127,15 @@ public class Role extends DiscordObject implements Comparable<Role>, SnowFlake, 
     }
 
     @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + id.hashCode();
+        result = 31 * result + guild.hashCode();
+        result = 31 * result + (int) (permissionsLong ^ (permissionsLong >>> 32));
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "ID: "+id+"\tName: "+name+"  Position: "+position;
     }

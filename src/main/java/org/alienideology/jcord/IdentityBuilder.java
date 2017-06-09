@@ -4,17 +4,21 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.exception.ErrorResponseException;
+import org.alienideology.jcord.gateway.ErrorResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * The Identity Builder for constructing an Identity.
  * @author AlienIdeology
  */
 public class IdentityBuilder {
+
+    public final static Pattern TOKEN_PATTERN = Pattern.compile("(\\w{24})([.])(\\w{6})([.])(\\w{27})");
 
     private IdentityType type;
     private String token;
@@ -59,9 +63,7 @@ public class IdentityBuilder {
             while (!id.CONNECTION.isReady()) {
                 try {
                     Thread.sleep(100);
-                } catch (InterruptedException e) {
-
-                }
+                } catch (InterruptedException ignored) {}
             }
         }
 
@@ -91,8 +93,27 @@ public class IdentityBuilder {
     }
 
     /**
+     * Validate the current token.
+     * Note that if the {@link IdentityType} is not set, then this will always returns false.
+     * @return True if the token is valid.
+     */
+    public boolean isTokenValid() {
+        if (token == null || !token.matches(TOKEN_PATTERN.pattern())) return false;
+        try {
+            Identity test = build();
+            test.logout();
+        } catch (ErrorResponseException ere) {
+            if (ere.getResponse().equals(ErrorResponse.INVALID_AUTHENTICATION_TOKEN))
+                return false;
+        } catch (IOException ioe) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Register objects that extend DispatcherAdaptor, used to perform actions when a event is fired.
-     * @see #registerCommandFramework(CommandFramework...) for native command framework support.
+     * @see {@link #registerCommandFramework(CommandFramework...)} for native command framework support.
      * @param adaptors The adaptors to register
      * @return IdentityBuilder for chaining.
      */

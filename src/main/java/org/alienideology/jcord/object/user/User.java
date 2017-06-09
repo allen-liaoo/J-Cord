@@ -111,6 +111,14 @@ public class User extends DiscordObject implements SnowFlake, Mention {
     }
 
     @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + id.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "ID: "+id+"\tName: "+name;
     }

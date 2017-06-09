@@ -126,6 +126,14 @@ public class Member extends DiscordObject implements SnowFlake, Mention {
     }
 
     @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + guild.hashCode();
+        result = 31 * result + user.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "ID: "+user.getId()+"\tNickName: "+nickname;
     }

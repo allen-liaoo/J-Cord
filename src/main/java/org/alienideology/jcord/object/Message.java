@@ -151,6 +151,13 @@ public class Message extends DiscordObject implements SnowFlake {
     }
 
     @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + (author != null ? author.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "ID: "+id;
     }

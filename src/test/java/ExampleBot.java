@@ -14,12 +14,14 @@ import org.alienideology.jcord.object.Guild;
 public class ExampleBot {
 
     public static void main(String[] args) {
+
         try {
             Identity bot = new IdentityBuilder()
                     .setIdentityType(IdentityType.BOT)
                     .useToken(Token.TOP_SECRET)
                     .registerDispatchers(new ExampleDispatcher())
-                    .registerCommandFramework(new CommandFramework().setPrefixes("=").registerCommandResponder(new ExampleResponder()))
+                    .registerCommandFramework(new CommandFramework().setPrefixes("=")
+                            .registerCommandResponder(new ExampleResponder()))
                     .build(true);
 
             for (Guild guild : bot.getGuilds()) {

@@ -18,4 +18,19 @@ public class DiscordObject {
     public Identity getIdentity() {
         return identity;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DiscordObject)) return false;
+
+        DiscordObject that = (DiscordObject) o;
+
+        return identity != null ? identity.equals(that.identity) : that.identity == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return identity != null ? identity.hashCode() : 0;
+    }
 }

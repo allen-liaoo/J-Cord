@@ -256,6 +256,11 @@ public class Guild extends DiscordObject implements SnowFlake {
     }
 
     @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
     public String toString() {
         return "ID: "+id+"\tName: "+name;
     }

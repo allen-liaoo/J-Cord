@@ -52,6 +52,15 @@ public class Channel extends DiscordObject implements SnowFlake {
     }
 
     @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + id.hashCode();
+        result = 31 * result + type.hashCode();
+        result = 31 * result + (isPrivate ? 1 : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "ID: "+id;
     }
