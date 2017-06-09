@@ -29,7 +29,7 @@ public interface CommandResponder {
         public class HelpCommand implements CommandResponder {
             private final String help_msg = "WELP!!!";
 
-            @Command (aliases = {"help", "commands"}, guildOnly = true}
+            @Command (aliases = {"help", "commands", "list commands"}, guildOnly = true} // aliases support whitespaces in between.
             public EmbedMessageBuilder onHelpCommand(Guild guild, Member member) {
                 EmbedMessageBuilder embed = new EmbedMessageBuilder()
                     .setTitle(member.getName(), null)
@@ -39,13 +39,18 @@ public interface CommandResponder {
         }
 
         The parameters Guild and Member will be the MessageCreateEvent#getGuild and MessageCreateEvent#getMember, respectively.
+        See below for more information on parameters.
      */
 
     /* List of available parameters:
-        (Define "Event" as MessageCreateEvent)
+        (Note: "Event" is MessageCreateEvent)
 
         String : Message Content
-        String[] : Message Content split by white space characters, put into an array.
+        String[] : Message Content split by white space characters, put into an array. (Not including the prefix and alias)
+
+            Example Message: "?list help commands"
+                String[] args = new String[] {"help", "commands"}; // "?" is the prefix, and "list" is the alias
+
         Integer or int : Event Sequence
 
         Identity : Identity of the Event

@@ -18,6 +18,7 @@ import org.alienideology.jcord.object.user.User;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * CommandFramework - The core command framework of J-Cord.
@@ -105,7 +106,7 @@ public class CommandFramework {
     @SuppressWarnings("InstantiatingObjectToGetClassObject")
     private void handleCommand(Command command, CommandParser parser) {
         for (String alias : command.aliases()) {
-            if (alias.equals(parser.invoke)) {
+            if (alias.equals(parser.alias)) {
                 Method method = annotations.get(command).method;
 
                 MessageCreateEvent event = parser.event;
@@ -216,7 +217,14 @@ public class CommandFramework {
     }
 
     /**
-     * @return A list of {@code Command} annotations registered by registering CommandResponders.
+     * @return All aliases found in all CommandResponders.
+     */
+    private List<String> getAliases() {
+        return annotations.keySet().stream().flatMap(c -> Arrays.stream(c.aliases())).collect(Collectors.toList());
+    }
+
+    /**
+     * @return A list of {@link Command} annotations registered by CommandResponders.
      */
     public List<Command> getAnnotations() {
         return new ArrayList<>(annotations.keySet());
@@ -235,12 +243,14 @@ public class CommandFramework {
 
     private class CommandParser {
 
-        String invoke;
+        String alias;
         String[] args;
         MessageCreateEvent event;
 
         CommandParser(MessageCreateEvent event) {
             String content = event.getMessage().getContent();
+
+            /* Find Prefix */
             for (String prefix : prefixes) {
                 if (content.startsWith(prefix)) {
                     content = content.replaceFirst(prefix, "");
@@ -248,10 +258,34 @@ public class CommandFramework {
                 }
             }
 
+            /* Find Aliases */
+            List<String> aliases = getAliases();
+            aliases.sort((o1, o2) -> Integer.compare(o2.length(), o1.length())); // Put longer aliases at the front
+
+            for (int i = 0; i < aliases.size(); i++) {
+                String alias = aliases.get(i);
+                /* Find Match */
+                if (content.startsWith(alias)) {
+                    content = content.replaceFirst(alias, "");
+                    this.alias = alias;
+                    break;
+                }
+                /* No Match */
+                if (i == aliases.size() - 1) {
+                    content = content.replaceFirst(content.split("\\s+")[0], "");
+                }
+            }
+
             String[] split = content.split("\\s+");
-            this.invoke = split.length == 0 ? null : split[0];
-            this.args = split.length <= 1 ? new String[]{} : Arrays.copyOfRange(split, 1, split.length-1);
+
+            this.alias = alias != null ? // Initialized because has found match
+                    alias : split.length == 0 ? // Avoid ArrayIndexOutOfBound
+                            null : split[0];
+
+            this.args = split.length <= 1 ? new String[]{} : Arrays.copyOfRange(split, 1, split.length);
             this.event = event;
+            System.out.println(aliases);
+            System.out.println(Arrays.toString(args));
         }
     }
 
