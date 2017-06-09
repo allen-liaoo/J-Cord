@@ -1,5 +1,7 @@
 package org.alienideology.jcord.object.guild;
 
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.object.DiscordObject;
 import org.alienideology.jcord.object.Region;
@@ -10,7 +12,6 @@ import org.alienideology.jcord.object.channel.TextChannel;
 import org.alienideology.jcord.object.channel.VoiceChannel;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Guild - A collection of users and channels, often referred to in the UI as a server.
@@ -21,25 +22,25 @@ public class Guild extends DiscordObject implements SnowFlake {
     private final String id;
     private boolean isAvailable = false;
 
-    private final String name;
+    private String name;
 
     private final String icon;
     private final String splash;
 
-//    private final Member owner
-    private final Region region;
+    private Member owner;
+    private Region region;
 
-    private final AFK_Timeout afk_timeout;
-//    private final VoiceChannel afk_channel;
+    private AFK_Timeout afk_timeout;
+    private VoiceChannel afk_channel;
 
-    private final boolean embed_enabled;
-//    //private final Channel embed_channel;
-//
-    private final Verification verification_level;
-    private final Notification notifications_level;
-    private final MFA mfa_level;
+    private boolean embed_enabled;
+    private TextChannel embed_channel;
 
-//    private List<Role> roles;
+    private Verification verification_level;
+    private Notification notifications_level;
+    private MFA mfa_level;
+
+    private List<Role> roles;
 //    private List<Emote> emojis;
 
     private final List<Member> members;
@@ -88,7 +89,7 @@ public class Guild extends DiscordObject implements SnowFlake {
         this.verification_level = Verification.getByKey(verification_level);
         this.notifications_level = Notification.getByKey(notification_level);
         this.mfa_level = MFA.getByKey(mfa_level);
-//        roles = new ArrayList<Role>();
+        roles = new ArrayList<>();
 //        emojis = new ArrayList<Emote>();
         members = new ArrayList<>();
         textChannels = new ArrayList<>();
@@ -135,24 +136,18 @@ public class Guild extends DiscordObject implements SnowFlake {
         return mfa_level;
     }
 
-    public List<TextChannel> getTextChannels() {
-        return Collections.unmodifiableList(textChannels);
+    @Nullable
+    public VoiceChannel getAfkChannel() {
+        return afk_channel;
     }
 
-    public List<VoiceChannel> getVoiceChannels() {
-        return Collections.unmodifiableList(voiceChannels);
+    @Nullable
+    public TextChannel getEmbedChannel() {
+        return embed_channel;
     }
 
-    public List<Member> getMembers() {
-        return Collections.unmodifiableList(members);
-    }
-
-    public Member getMember(String id) {
-        for (Member member : members) {
-            if (member.getId().equals(id))
-                return member;
-        }
-        return null;
+    public Member getOwner() {
+        return owner;
     }
 
     public List<User> getUsers() {
@@ -164,10 +159,56 @@ public class Guild extends DiscordObject implements SnowFlake {
     }
 
     /**
+     * Get a member by id
+     * @param id The specified id
+     * @return a Member or null if no member is found.
+     */
+    @Nullable
+    public Member getMember(String id) {
+        for (Member member : members) {
+            if (member.getId().equals(id))
+                return member;
+        }
+        return null;
+    }
+
+    public List<Member> getMembers() {
+        return Collections.unmodifiableList(members);
+    }
+
+    /**
+     * Get a role by id.
+     * @param id The specified id
+     * @return a Role or null if no role is found.
+     */
+    @Nullable
+    public Role getRole(String id) {
+        for (Role role : roles) {
+            if (role.getId().equals(id))
+                return role;
+        }
+        return null;
+    }
+
+    @NotNull
+    public Role getEveryoneRole() {
+        for (Role role : roles) {
+            if (role.isEveryone())
+                return role;
+        }
+        return null;
+    }
+
+    public List<Role> getRoles() {
+        return Collections.unmodifiableList(roles);
+    }
+
+    /**
      * Get a text channel by id.
      * @param id The specified id
      * @return a TextChannel or null if no channel is found.
      */
+    @Nullable
     public TextChannel getTextChannel(String id) {
         for (TextChannel tc : textChannels) {
             if (tc.getId().equals(id)) {
@@ -177,11 +218,16 @@ public class Guild extends DiscordObject implements SnowFlake {
         return null;
     }
 
+    public List<TextChannel> getTextChannels() {
+        return Collections.unmodifiableList(textChannels);
+    }
+
     /**
      * Get a voice channel by id.
      * @param id The specified id
      * @return a VoiceChannel or null if no channel is found.
      */
+    @Nullable
     public VoiceChannel getVoiceChannel(String id) {
         for (VoiceChannel vc : voiceChannels) {
             if (vc.getId().equals(id)) {
@@ -189,6 +235,10 @@ public class Guild extends DiscordObject implements SnowFlake {
             }
         }
         return null;
+    }
+
+    public List<VoiceChannel> getVoiceChannels() {
+        return Collections.unmodifiableList(voiceChannels);
     }
 
     @Override
@@ -231,6 +281,46 @@ public class Guild extends DiscordObject implements SnowFlake {
      */
     public Guild addMember (Member... members) {
         this.members.addAll(Arrays.asList(members));
+        return this;
+    }
+
+    /**
+     * [API Use Only]
+     * Add roles.
+     * @param roles the varargs of roles to be added.
+     * @return this guild for chaining.
+     */
+    public Guild addRole (Role... roles) {
+        this.roles.addAll(Arrays.asList(roles));
+        return this;
+    }
+
+    /**
+     * [API Use Only]
+     * Set the owner of this guild.
+     * @param id the id of the owner.
+     * @return this guild for chaining.
+     */
+    public Guild setOwner (String id) {
+        for (Member mem : members) {
+            if (mem.getId().equals(id)) {
+                this.owner = mem;
+                break;
+            }
+        }
+        return this;
+    }
+
+    /**
+     * [API Use Only]
+     * Set the channels settings for this guild.
+     * @param afk the afk voice channel
+     * @param embed the embed text channel
+     * @return this guild for chaining.
+     */
+    public Guild setChannels (String afk, String embed) {
+        this.afk_channel = getVoiceChannel(afk);
+        this.embed_channel = getTextChannel(embed);
         return this;
     }
 

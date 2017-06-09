@@ -11,6 +11,7 @@ import org.alienideology.jcord.object.guild.Guild;
 import org.alienideology.jcord.object.guild.Member;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,7 +32,7 @@ public class Message extends DiscordObject implements SnowFlake {
     protected String content;
     private final OffsetDateTime createdTime;
 
-    private List<User> mentions;
+    protected List<User> mentions;
 //    private List<Role> mentionedRoles;
 //    private List<Attachment> attachments;
 //    private List<Embeds> embeds;
@@ -89,6 +90,7 @@ public class Message extends DiscordObject implements SnowFlake {
         return author.equals(identity.getSelf());
     }
 
+    @Nullable
     public Member getMember() {
         if (!channel.isPrivate()) {
             return getGuild().getMember(author.getId());
@@ -99,6 +101,20 @@ public class Message extends DiscordObject implements SnowFlake {
 
     public List<User> getMentionedUsers() {
         return mentions;
+    }
+
+    @Nullable
+    public List<Member> getMentionedMembers() {
+        if (channel.isPrivate()) {
+            return null;
+        } else {
+            List<Member> members = new ArrayList<>();
+            Guild guild = getGuild();
+            for (User user : mentions) {
+                members.add(guild.getMember(user.getId()));
+            }
+            return members;
+        }
     }
 
     public OffsetDateTime getCreatedTime() {

@@ -1,7 +1,6 @@
 package org.alienideology.jcord.object;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import jdk.internal.dynalink.linker.GuardingDynamicLinker;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.exception.ErrorResponseException;
@@ -10,12 +9,14 @@ import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.channel.*;
 import org.alienideology.jcord.object.guild.Guild;
 import org.alienideology.jcord.object.guild.Member;
+import org.alienideology.jcord.object.guild.Role;
 import org.alienideology.jcord.object.message.EmbedMessage;
 import org.alienideology.jcord.object.message.Message;
 import org.alienideology.jcord.object.message.StringMessage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,12 +54,12 @@ public final class ObjectBuilder {
             String name = json.getString("name");
             String icon = json.getString("icon");
             String splash = json.isNull("splash") ? null : json.getString("splash");
-//            String owner = identity.getMember(json.getString("owner_id"));
+            String owner = json.getString("owner_id");
             String region = json.getString("region");
             int afk_timeout = json.getInt("afk_timeout");
-//            VoiceChannel afk_channel = json.isNull("afk_channel_id") ? null : identity.getVoiceChannel(json.getString("afk_channel_id"));
+            String afk_channel = json.has("afk_channel_id") && !json.isNull("afk_channel_id") ? json.getString("afk_channel_id") : null;
             boolean embed_enabled = json.has("embed_enabled") && json.getBoolean("embed_enabled");
-//            GuildChannel embed_channel = json.has("embed_channel_id") ? : identity.getChannel(json.getString("embed_channel_id")) : null;
+            String embed_channel = json.has("embed_channel_id") && !json.isNull("embed_channel_id") ? json.getString("embed_channel_id") : null;
             int verification_level = json.getInt("verification_level");
             int notifications_level = json.getInt("default_message_notifications");
             int mfa_level = json.getInt("mfa_level");
@@ -68,8 +69,9 @@ public final class ObjectBuilder {
 //            json.getJSONArray("emojis").forEach(emoji -> emoji.add(new Role(identity, emoji.toString())));
 
             Guild guild = new Guild(identity, id, name, icon, splash, region, afk_timeout, embed_enabled, verification_level, notifications_level, mfa_level);
-//                .setAFKChannel(afk_channel).setEmbedChannel(embed_channel).addRoles(roles).addEmojis(emojis);
+//                .addRoles(roles).addEmojis(emojis);
 
+            // Add guilds first because channels, roles, and members have a guild field
             identity.addGuild(guild);
 
             /* Build Channels */
@@ -88,7 +90,17 @@ public final class ObjectBuilder {
                 identity.LOG.error("Building guild channels. (Guild: "+guild.toString()+")", e);
             }
 
+            /* Build Roles */
+            JSONArray roles = json.getJSONArray("roles");
+
+            for (int i = 0; i < roles.length(); i++) {
+                JSONObject roleJson = roles.getJSONObject(i);
+                Role role = buildRole(roleJson, guild);
+                guild.addRole(role);
+            }
+
             /* Build Members */
+            // Built after roles because members have roles field
             try {
                 JSONArray members = HttpPath.Guild.LIST_GUILD_MEMBERS.request(identity, id).queryString("limit", "1000")
                         .asJson().getBody().getArray();
@@ -102,12 +114,14 @@ public final class ObjectBuilder {
                 identity.LOG.error("Building guild members. (Guild: "+guild.toString()+")", e);
             }
 
+            guild.setOwner(owner).setChannels(afk_channel, embed_channel);
+
             return guild;
         }
     }
 
     /**
-     * Build a guild object just by an id.
+     * Build a guild object by an id.
      * @param id The id of the guild
      * @return The guild object
      */
@@ -153,7 +167,7 @@ public final class ObjectBuilder {
     }
 
     /**
-     * Build a guild channel object just by an id.
+     * Build a guild channel object by an id.
      * @param id The id of the channel
      * @return The GuildChannel object
      */
@@ -237,7 +251,19 @@ public final class ObjectBuilder {
         boolean isMute = json.getBoolean("mute");
         User user = buildUser(json.getJSONObject("user"));
 
-        return new Member(identity, guild, user, nick, joined_at, isDeaf, isMute);
+        List<Role> memberRoles = new ArrayList<>();
+
+        if (!json.isNull("roles")) {
+            JSONArray roles = json.getJSONArray("roles");
+            for (int i = 0; i < roles.length(); i++) {
+                String roleId = roles.getString(i);
+                Role newRole = guild.getRole(roleId);
+                if (newRole != null) memberRoles.add(newRole);
+            }
+            memberRoles.add(guild.getEveryoneRole());
+        }
+
+        return new Member(identity, guild, user, nick, joined_at, memberRoles, isDeaf, isMute);
     }
 
     /**
@@ -368,7 +394,7 @@ public final class ObjectBuilder {
     }
 
     /**
-     * Build a message object just by an id.
+     * Build a message object by an id.
      * @param channel_id The id of the channel
      * @param message_id The id of the message
      * @return The Message object
@@ -382,6 +408,26 @@ public final class ObjectBuilder {
             throw new IllegalArgumentException("Invalid ID!");
         }
         return buildMessage(message);
+    }
+
+    /**
+     * Build a role object base on provided json.
+     * @param json The role JSONObject
+     * @param guild The guild this role is in
+     * @return The Message object
+     */
+    public Role buildRole (JSONObject json, Guild guild) {
+        handleBuildError(json);
+
+        String id = json.getString("id");
+        String name = json.getString("name");
+        Color color = json.has("color") ? new Color(json.getInt("color")) : null;
+        int position = json.getInt("position");
+        long permissions = json.getLong("permissions");
+        boolean isSeparateListed = json.has("hoist") && json.getBoolean("hoist");
+        boolean canMention = json.has("mentionable")&& json.getBoolean("mentionable");
+
+        return new Role(identity, guild, id, name, color, position, permissions, isSeparateListed, canMention);
     }
 
     /**

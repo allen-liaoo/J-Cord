@@ -2,7 +2,9 @@ package org.alienideology.jcord.object.message;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.object.User;
+import org.alienideology.jcord.object.channel.Channel;
 import org.alienideology.jcord.object.channel.TextChannel;
+import org.alienideology.jcord.object.guild.Member;
 
 import java.util.List;
 
@@ -17,17 +19,37 @@ public class StringMessage extends Message {
         super(identity, channelId, id, author, content, timeStamp, mentions, isTTs, mentionedEveryone, isPinned);
     }
 
-    // TODO: Finish this method
     public String processContent(boolean noMention, boolean noMarkdown) {
         String process = content;
         if (noMention) {
-            // Replace user mentions
-            for (User user : identity.getUsers()) {
-                process = process.replaceAll(user.mention(), "@"+user.getName());
+
+            /* Message from TextChannel */
+            if (!channel.isPrivate()) {
+                /* Member Mentions */
+                for (Member member : getMentionedMembers()) {
+                    process = process.replaceAll(member.mention(), "@" +
+                            (member.getNickname().isEmpty()?member.getUser().getName():member.getNickname())
+                            +"#"+member.getUser().getDiscriminator());
+                }
+
+                /* TextChannel Mentions */
+                for (TextChannel tc : getGuild().getTextChannels()) {
+                    process = process.replaceAll(tc.mention(), "#"+tc.getName());
+                }
+
+                // TODO: Role Mentions
+                // TODO: GuildEmoji Mentions
+
+            /* Message from PrivateChannel */
+            } else {
+                /* User Mentions */
+                for (User user : mentions) {
+                    process = process.replaceAll(user.mention(), "@"+user.getName()+"#"+user.getDiscriminator());
+                }
             }
-            for (TextChannel tc : identity.getTextChannels()) {
-                process = process.replaceAll(tc.mention(), "#"+tc.getName());
-            }
+
+            // TODO: Emoji Mentions
+
         }
 
         if (noMarkdown) {

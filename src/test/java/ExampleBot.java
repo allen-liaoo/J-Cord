@@ -1,11 +1,15 @@
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
+import org.alienideology.jcord.object.Permission;
 import org.alienideology.jcord.object.channel.PrivateChannel;
 import org.alienideology.jcord.object.channel.TextChannel;
 import org.alienideology.jcord.object.channel.VoiceChannel;
 import org.alienideology.jcord.object.guild.Guild;
 import org.alienideology.jcord.object.message.StringMessage;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * A simple test bot for J-Cord
@@ -34,12 +38,6 @@ public class ExampleBot {
             for (PrivateChannel dm : bot.getPrivateChannels()) {
                 System.out.println("DM:\t"+dm.getRecipient().getName());
             }
-
-//            System.out.println(bot.getTextChannel("311250670068170752").getLastestMessage());
-//            StringMessage message = (StringMessage) bot.getTextChannel("311250670068170752").getLastestMessage();
-//            System.out.println("Msg: "+message.processContent(true, true));
-//
-//            bot.getTextChannel("311250670068170752").sendMessage("hi");
 
         } catch (Exception e) {
             e.printStackTrace();

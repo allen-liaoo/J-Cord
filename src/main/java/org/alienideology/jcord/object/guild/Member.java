@@ -1,13 +1,10 @@
 package org.alienideology.jcord.object.guild;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.object.DiscordObject;
-import org.alienideology.jcord.object.Mention;
-import org.alienideology.jcord.object.SnowFlake;
-import org.alienideology.jcord.object.User;
+import org.alienideology.jcord.object.*;
 
 import java.time.OffsetDateTime;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Member - A user representation in a guild.
@@ -20,18 +17,59 @@ public class Member extends DiscordObject implements SnowFlake, Mention {
     private String nickname;
     private OffsetDateTime joinedDate;
 
-//    private List<Role> roles;
+    private List<Role> roles;
+    private List<Permission> permissions;
     private boolean isDeafened;
     private boolean isMuted;
 
-    public Member(Identity identity, Guild guild, User user, String nickname, String joinedDate, boolean isDeafened, boolean isMuted) {
+    public Member(Identity identity, Guild guild, User user, String nickname, String joinedDate, List<Role> roles, boolean isDeafened, boolean isMuted) {
         super(identity);
         this.guild = guild;
         this.user = user;
         this.nickname = nickname;
         this.joinedDate = OffsetDateTime.parse(joinedDate);
+        this.roles = roles;
+        this.permissions = initPermissions();
         this.isDeafened = isDeafened;
         this.isMuted = isMuted;
+    }
+
+    /**
+     * Check if this member have all the given permissions
+     * @param permissions The varargs of permission enums to be checked
+     * @return True if the member have all given permissions
+     */
+    public boolean hasAllPermissions (Permission... permissions) {
+        for (Permission perm : permissions) {
+            if (!this.permissions.contains(perm))
+                return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if this member have one of the given permissions
+     * To check if this member have all the permissions, see #hasAllPermissions(Permission...)
+     * @param permissions The varargs of permission enums to be checked
+     * @return True if the member have one of the given permissions
+     */
+    public boolean hasPermissions (Permission... permissions) {
+        for (Role role : roles) {
+            if (role.hasPermissions(permissions))
+                return true;
+        }
+        return false;
+    }
+
+    private List<Permission> initPermissions() {
+        Set<Permission> allPerms = new TreeSet<>();
+        for (Role role : roles) {
+            allPerms.addAll(role.getPermissions());
+        }
+        List<Permission> permissions = new ArrayList<>();
+        permissions.addAll(allPerms);
+        return permissions;
     }
 
     public Guild getGuild() {
@@ -48,6 +86,14 @@ public class Member extends DiscordObject implements SnowFlake, Mention {
 
     public OffsetDateTime getJoinedDate() {
         return joinedDate;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
     }
 
     public boolean isDeafened() {
@@ -70,7 +116,7 @@ public class Member extends DiscordObject implements SnowFlake, Mention {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof User) && Objects.equals(user.getId(), ((User) obj).getId());
+        return (obj instanceof Member) && user.equals(((Member) obj).getUser()) && guild.equals(((Member) obj).getGuild());
     }
 
     @Override
