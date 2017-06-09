@@ -1,13 +1,12 @@
-package org.alienideology.jcord.object.message;
+package org.alienideology.jcord.object;
 
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.object.DiscordObject;
-import org.alienideology.jcord.object.SnowFlake;
-import org.alienideology.jcord.object.User;
+import org.alienideology.jcord.object.guild.Role;
+import org.alienideology.jcord.object.message.StringMessage;
+import org.alienideology.jcord.object.user.User;
 import org.alienideology.jcord.object.channel.Channel;
 import org.alienideology.jcord.object.channel.MessageChannel;
-import org.alienideology.jcord.object.guild.Guild;
 import org.alienideology.jcord.object.guild.Member;
 
 import java.time.OffsetDateTime;
@@ -33,25 +32,25 @@ public class Message extends DiscordObject implements SnowFlake {
     private final OffsetDateTime createdTime;
 
     protected List<User> mentions;
-//    private List<Role> mentionedRoles;
+    protected List<Role> mentionedRoles;
 //    private List<Attachment> attachments;
 //    private List<Embeds> embeds;
-//    private List<Emoji> reactions;
+//    private List<EmojiList> reactions;
 
     private boolean isTTS;
 
     private boolean mentionedEveryone;
     private boolean isPinned;
 
-    public Message (Identity identity, String channelId, String id, User author, String content, String createdTime, List<User> mentions,
-                    boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
+    public Message (Identity identity, String id, User author, String content, String createdTime,
+                    List<User> mentions, List<Role> mentionedRoles, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
         super(identity);
-        channel = identity.getTextChannel(channelId) == null ? identity.getPrivateChannel(channelId) : identity.getTextChannel(channelId);
         this.id = id;
         this.author = author;
         this.content = content;
         this.createdTime = createdTime == null ? null : OffsetDateTime.parse(createdTime);
         this.mentions = mentions;
+        this.mentionedRoles = mentionedRoles;
         this.isTTS = isTTs;
         this.mentionedEveryone = mentionedEveryone;
         this.isPinned = isPinned;
@@ -99,7 +98,7 @@ public class Message extends DiscordObject implements SnowFlake {
         }
     }
 
-    public List<User> getMentionedUsers() {
+    public List<User> getMentions() {
         return mentions;
     }
 
@@ -115,6 +114,10 @@ public class Message extends DiscordObject implements SnowFlake {
             }
             return members;
         }
+    }
+
+    public List<Role> getMentionedRoles() {
+        return mentionedRoles;
     }
 
     public OffsetDateTime getCreatedTime() {
@@ -150,6 +153,34 @@ public class Message extends DiscordObject implements SnowFlake {
     @Override
     public String toString() {
         return "ID: "+id;
+    }
+
+    protected Message setChannel(String channel) {
+        this.channel = identity.getTextChannel(channel) == null ?
+                identity.getPrivateChannel(channel) : identity.getTextChannel(channel);
+        return this;
+    }
+
+    public static class Attachment implements SnowFlake {
+
+        private final String id;
+
+        private String filename;
+        private int size;
+        private String url;
+
+        public Attachment(String id, String filename, int size, String url) {
+            this.id = id;
+            this.filename = filename;
+            this.size = size;
+            this.url = url;
+        }
+
+        @Override
+        public String getId() {
+            return id;
+        }
+
     }
 
 }

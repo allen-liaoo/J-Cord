@@ -7,13 +7,12 @@ import org.alienideology.jcord.exception.ErrorResponseException;
 import org.alienideology.jcord.gateway.ErrorResponse;
 import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.channel.*;
-import org.alienideology.jcord.object.guild.Guild;
 import org.alienideology.jcord.object.guild.GuildEmoji;
 import org.alienideology.jcord.object.guild.Member;
 import org.alienideology.jcord.object.guild.Role;
 import org.alienideology.jcord.object.message.EmbedMessage;
-import org.alienideology.jcord.object.message.Message;
 import org.alienideology.jcord.object.message.StringMessage;
+import org.alienideology.jcord.object.user.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -75,7 +74,15 @@ public final class ObjectBuilder {
             // Add guilds first because channels, roles, and members have a guild field
             identity.addGuild(guild);
 
+            /* Build Roles */
+            JSONArray roles = json.getJSONArray("roles");
+            for (int i = 0; i < roles.length(); i++) {
+                JSONObject roleJson = roles.getJSONObject(i);
+                guild.addRole(buildRole(roleJson, guild));
+            }
+
             /* Build Channels */
+            // LastMessage requires role field
             try {
                 JSONArray guildChannels = HttpPath.Guild.GET_GUILD_CHANNELS.request(identity, id).asJson().getBody().getArray();
 
@@ -89,13 +96,6 @@ public final class ObjectBuilder {
 
             } catch (UnirestException e) {
                 identity.LOG.error("Building guild channels. (Guild: "+guild.toString()+")", e);
-            }
-
-            /* Build Roles */
-            JSONArray roles = json.getJSONArray("roles");
-            for (int i = 0; i < roles.length(); i++) {
-                JSONObject roleJson = roles.getJSONObject(i);
-                guild.addRole(buildRole(roleJson, guild));
             }
 
             /* Build GuildEmojis */
@@ -162,6 +162,7 @@ public final class ObjectBuilder {
             Message lastMessage = last_msg == null ? null : buildMessageById(id, last_msg);
             TextChannel tc = new TextChannel(identity, guild_id, id, name, position, topic, lastMessage);
             identity.addTextChannel(tc);
+            if (lastMessage != null) lastMessage.setChannel(id);
             return tc;
         } else {
             int bitrate = json.getInt("bitrate");
@@ -203,6 +204,7 @@ public final class ObjectBuilder {
 
         PrivateChannel dm = new PrivateChannel(identity, id, recipient, lastMessage);
         identity.addPrivateChannel(dm);
+        if (lastMessage != null) lastMessage.setChannel(id);
         return dm;
     }
 
@@ -301,10 +303,19 @@ public final class ObjectBuilder {
 
         String content = json.getString("content");
         String timeStamp = json.getString("timestamp");
+
+        /* Mentioned User */
         List<User> mentions = new ArrayList<>();
         JSONArray mentionUser = json.getJSONArray("mentions");
         for (int i = 0; i < mentionUser.length(); i++) {
             mentions.add(identity.getUser(mentionUser.getJSONObject(i).getString("id")));
+        }
+
+        /* Mentioned Role (TextChannel only) */
+        List<Role> mentionsRole = new ArrayList<>();
+        JSONArray mentionRole = json.getJSONArray("mention_roles");
+        for (int i = 0; i < mentionRole.length(); i++) {
+            mentionsRole.add(identity.getRole(mentionRole.getString(i)));
         }
 
         boolean isTTS = json.getBoolean("tts");
@@ -313,7 +324,8 @@ public final class ObjectBuilder {
 
         /* StringMessage */
         if (!json.getString("content").isEmpty()) {
-            return new StringMessage(identity, channel_id, id, author, content, timeStamp, mentions, isTTS, mentionedEveryone, isPinned);
+            return new StringMessage(identity, id, author, content, timeStamp, mentions, mentionsRole, isTTS, mentionedEveryone, isPinned)
+                    .setChannel(channel_id); // Set channel may be null for MessageChannel's LastMessage
 
         /* EmbedMessage */
         } else {
@@ -326,7 +338,7 @@ public final class ObjectBuilder {
             String time_stamp = embed.has("timestamp") ? embed.getString("timestamp") : null;
             int color = embed.has("color") ? embed.getInt("color") : 0;
 
-            EmbedMessage embedMessage =  new EmbedMessage(identity, channel_id, id, author, content,  timeStamp, mentions, isTTS, mentionedEveryone, isPinned)
+            EmbedMessage embedMessage =  new EmbedMessage(identity, id, author, content,  timeStamp, mentions, mentionsRole, isTTS, mentionedEveryone, isPinned)
                     .setEmbed(title, description, embed_url, time_stamp, color);
 
             if (embed.has("author")) {
@@ -395,7 +407,7 @@ public final class ObjectBuilder {
                 embedMessage.setFooter(new EmbedMessage.Footer(name, icon_url, proxy_url));
             }
 
-            return embedMessage;
+            return embedMessage.setChannel(channel_id);  // Set channel may be null for MessageChannel's LastMessage
         }
     }
 

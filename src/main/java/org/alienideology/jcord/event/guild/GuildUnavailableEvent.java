@@ -1,7 +1,7 @@
 package org.alienideology.jcord.event.guild;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.object.guild.Guild;
+import org.alienideology.jcord.object.Guild;
 
 /**
  * @author AlienIdeology

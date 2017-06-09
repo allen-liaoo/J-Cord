@@ -7,7 +7,7 @@ import org.alienideology.jcord.exception.ErrorResponseException;
 import org.alienideology.jcord.gateway.ErrorResponse;
 import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.message.EmbedMessageBuilder;
-import org.alienideology.jcord.object.message.Message;
+import org.alienideology.jcord.object.Message;
 import org.alienideology.jcord.object.message.MessageBuilder;
 import org.json.JSONObject;
 

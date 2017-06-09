@@ -2,6 +2,7 @@ package org.alienideology.jcord.object.guild;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.object.*;
+import org.alienideology.jcord.object.user.User;
 
 import java.time.OffsetDateTime;
 import java.util.*;

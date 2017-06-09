@@ -4,8 +4,8 @@ import com.sun.istack.internal.NotNull;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.object.channel.MessageChannel;
 import org.alienideology.jcord.object.channel.TextChannel;
-import org.alienideology.jcord.object.guild.Guild;
-import org.alienideology.jcord.object.message.Message;
+import org.alienideology.jcord.object.Guild;
+import org.alienideology.jcord.object.Message;
 
 /**
  * @author AlienIdeology

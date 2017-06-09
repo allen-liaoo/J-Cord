@@ -2,8 +2,7 @@ package org.alienideology.jcord.event.guild;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.Event;
-import org.alienideology.jcord.object.guild.Guild;
-import org.json.JSONObject;
+import org.alienideology.jcord.object.Guild;
 
 /**
  * Guild Events - Any events that happens under a guild

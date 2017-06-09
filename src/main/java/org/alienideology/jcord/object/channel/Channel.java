@@ -2,9 +2,7 @@ package org.alienideology.jcord.object.channel;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.object.DiscordObject;
-import org.alienideology.jcord.object.Mention;
 import org.alienideology.jcord.object.SnowFlake;
-import org.alienideology.jcord.object.guild.Guild;
 
 import java.util.Objects;
 

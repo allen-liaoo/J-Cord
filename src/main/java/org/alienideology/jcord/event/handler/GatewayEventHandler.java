@@ -6,8 +6,6 @@ import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.gateway.ResumedEvent;
 import org.alienideology.jcord.gateway.GatewayAdaptor;
 import org.alienideology.jcord.gateway.HttpPath;
-import org.alienideology.jcord.object.ObjectBuilder;
-import org.alienideology.jcord.object.guild.Guild;
 import org.apache.commons.logging.impl.SimpleLog;
 import org.json.JSONArray;
 import org.json.JSONObject;

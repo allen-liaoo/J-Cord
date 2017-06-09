@@ -4,9 +4,8 @@
 ## Features
 - Events Handling and Dispatching
   - Exception Events and Handling
+- Native CommandFramework support (Using reflection tho...)
 - Native Emoji Support
-- Ugh... isn't this "another JDA but crappier"? <br />
-(Think about this as a not documented and hard coded JDA)
 - Not much static abuse... **yet**.
 
 ## More

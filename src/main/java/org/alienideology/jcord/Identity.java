@@ -4,6 +4,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.neovisionaries.ws.client.*;
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.exception.ErrorResponseException;
 import org.alienideology.jcord.gateway.ErrorResponse;
@@ -12,8 +13,9 @@ import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.channel.PrivateChannel;
 import org.alienideology.jcord.object.channel.TextChannel;
 import org.alienideology.jcord.object.channel.VoiceChannel;
-import org.alienideology.jcord.object.guild.Guild;
-import org.alienideology.jcord.object.User;
+import org.alienideology.jcord.object.Guild;
+import org.alienideology.jcord.object.guild.Role;
+import org.alienideology.jcord.object.user.User;
 import org.apache.commons.logging.impl.SimpleLog;
 
 import java.io.IOException;
@@ -40,6 +42,7 @@ public class Identity {
     public Connection CONNECTION = Connection.OFFLINE;
 
     private List<DispatcherAdaptor> listeners = new ArrayList<>();
+    private List<CommandFramework> frameworks = new ArrayList<>();
 
     private User self;
     private List<User> users = new ArrayList<>();
@@ -79,13 +82,22 @@ public class Identity {
         return this;
     }
 
-    Identity addListener (DispatcherAdaptor... listeners) {
-        this.listeners.addAll(Arrays.asList(listeners));
+    Identity addDispatchers(DispatcherAdaptor... dispatchers) {
+        this.listeners.addAll(Arrays.asList(dispatchers));
         return this;
     }
 
     public List<DispatcherAdaptor> getDispatchers () {
         return listeners;
+    }
+
+    Identity addCommandFrameworks(CommandFramework... frameworks) {
+        this.frameworks.addAll(Arrays.asList(frameworks));
+        return this;
+    }
+
+    public List<CommandFramework> getFrameworks() {
+        return frameworks;
     }
 
     public String getToken () {
@@ -110,6 +122,7 @@ public class Identity {
         return users;
     }
 
+    @Nullable
     public Guild getGuild(String id) {
         for (Guild guild : guilds) {
             if (guild.getId().equals(id)) {
@@ -121,6 +134,23 @@ public class Identity {
 
     public List<Guild> getGuilds() {
         return Collections.unmodifiableList(guilds);
+    }
+
+    @Nullable
+    public Role getRole(String id) {
+        for (Guild guild : guilds) {
+            Role role = guild.getRole(id);
+            if (role != null) return role;
+        }
+        return null;
+    }
+
+    public List<Role> getAllRoles() {
+        List<Role> roles = new ArrayList<>();
+        for (Guild guild : guilds) {
+            roles.addAll(guild.getRoles());
+        }
+        return Collections.unmodifiableList(roles);
     }
 
     @Nullable

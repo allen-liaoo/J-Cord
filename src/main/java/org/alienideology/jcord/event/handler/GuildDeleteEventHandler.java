@@ -3,7 +3,7 @@ package org.alienideology.jcord.event.handler;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.guild.GuildDeleteEvent;
 import org.alienideology.jcord.event.guild.GuildUnavailableEvent;
-import org.alienideology.jcord.object.guild.Guild;
+import org.alienideology.jcord.object.Guild;
 import org.json.JSONObject;
 
 import java.time.OffsetDateTime;

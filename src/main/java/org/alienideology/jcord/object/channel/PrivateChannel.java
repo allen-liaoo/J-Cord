@@ -1,8 +1,8 @@
 package org.alienideology.jcord.object.channel;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.object.User;
-import org.alienideology.jcord.object.message.Message;
+import org.alienideology.jcord.object.user.User;
+import org.alienideology.jcord.object.Message;
 
 import java.util.Objects;
 

@@ -1,6 +1,7 @@
 package org.alienideology.jcord;
 
 import com.neovisionaries.ws.client.WebSocketFactory;
+import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.exception.ErrorResponseException;
 
@@ -19,12 +20,14 @@ public class IdentityBuilder {
     private String token;
 
     private List<DispatcherAdaptor> dispatchers;
+    private List<CommandFramework> frameworks;
 
     /**
      * Default Constructor
      */
     public IdentityBuilder () {
         dispatchers = new ArrayList<>();
+        frameworks = new ArrayList<>();
     }
 
     /**
@@ -38,7 +41,8 @@ public class IdentityBuilder {
     public Identity build () throws IllegalArgumentException, ErrorResponseException, IOException {
         Identity id =  new Identity(type, new WebSocketFactory());
         id.login(token);
-        dispatchers.forEach(id::addListener);
+        dispatchers.forEach(id::addDispatchers);
+        frameworks.forEach(id::addCommandFrameworks);
         return id;
     }
 
@@ -88,11 +92,25 @@ public class IdentityBuilder {
 
     /**
      * Register objects that extend DispatcherAdaptor, used to perform actions when a event is fired.
+     * @see #registerCommandFramework(CommandFramework...) for native command framework support.
      * @param adaptors The adaptors to register
      * @return IdentityBuilder for chaining.
      */
     public IdentityBuilder registerDispatchers(DispatcherAdaptor... adaptors) {
         this.dispatchers.addAll(Arrays.asList(adaptors));
+        return this;
+    }
+
+    /**
+     * Register Native CommandFramework.
+     * @param frameworks The frameworks to register
+     * @return IdentityBuilder for chaining.
+     */
+    public IdentityBuilder registerCommandFramework(CommandFramework... frameworks) {
+        for (CommandFramework framework : frameworks) {
+            this.dispatchers.add(framework.getDispatcher());
+            this.frameworks.add(framework);
+        }
         return this;
     }
 }

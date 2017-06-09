@@ -1,7 +1,8 @@
 package org.alienideology.jcord.object.message;
 
-import org.alienideology.jcord.object.Emoji;
+import org.alienideology.jcord.object.EmojiList;
 import org.alienideology.jcord.object.Mention;
+import org.alienideology.jcord.object.Message;
 import org.alienideology.jcord.object.guild.GuildEmoji;
 import org.json.JSONObject;
 
@@ -10,6 +11,8 @@ import org.json.JSONObject;
  * @author AlienIdeology
  */
 public final class MessageBuilder {
+
+    private final EmojiList emojis = new EmojiList();
 
     private StringBuilder content;
     private boolean isTTS = false;
@@ -108,6 +111,7 @@ public final class MessageBuilder {
 
     /**
      * Append a guild mention to the content.
+     * @deprecated See {@link #appendMention(Mention)}
      * @param guildEmoji An GuildEmoji to be appended.
      * @return MessageBuilder for chaining.
      */
@@ -118,11 +122,23 @@ public final class MessageBuilder {
     }
 
     /**
-     * Append a emoji to the content.
+     * Append an Emoji to the content by its alias.
+     * @param alias An alias of an Emoji object.
+     * @return MessageBuilder for chaining.
+     */
+    public MessageBuilder appendEmoji(String alias) {
+        this.content.append(emojis.getByAlias(alias) != null ? emojis.getByAlias(alias).getUnicode() : "");
+        return this;
+    }
+
+    /**
+     * Append an Emoji to the content.
+     * @deprecated See {@link #appendEmoji(String)} for appending emoji by alias.
      * @param emoji An native Emoji object.
      * @return MessageBuilder for chaining.
      */
-    public MessageBuilder appendEmoji(Emoji emoji) {
+    @Deprecated
+    public MessageBuilder appendEmoji(EmojiList.Emoji emoji) {
         this.content.append(emoji.getUnicode());
         return this;
     }

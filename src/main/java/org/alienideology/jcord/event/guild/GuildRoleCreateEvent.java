@@ -1,8 +1,7 @@
 package org.alienideology.jcord.event.guild;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.object.guild.Guild;
-import org.json.JSONObject;
+import org.alienideology.jcord.object.Guild;
 
 /**
  * GuildRoleCreatedEvent - Fired whenever a role is created

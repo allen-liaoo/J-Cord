@@ -15,7 +15,7 @@
   - [x] PrivateChannel
   - [ ] Group
  - [x] Member
- - [x] Message
+ - [ ] Message (Half-Done, Missing fields)
  - [ ] Permission (Half-Done, Missing permissions overrides for channels)
  - [x] Emoji
  - [ ] Invite

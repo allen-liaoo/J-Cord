@@ -1,6 +1,6 @@
 package org.alienideology.jcord.object.channel;
 
-import org.alienideology.jcord.object.guild.Guild;
+import org.alienideology.jcord.object.Guild;
 
 /**
  * GuildChannel - A Channel that exist in a guild

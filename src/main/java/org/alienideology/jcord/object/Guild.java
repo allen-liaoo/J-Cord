@@ -1,12 +1,12 @@
-package org.alienideology.jcord.object.guild;
+package org.alienideology.jcord.object;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.object.DiscordObject;
-import org.alienideology.jcord.object.Region;
-import org.alienideology.jcord.object.SnowFlake;
-import org.alienideology.jcord.object.User;
+import org.alienideology.jcord.object.guild.GuildEmoji;
+import org.alienideology.jcord.object.guild.Member;
+import org.alienideology.jcord.object.guild.Role;
+import org.alienideology.jcord.object.user.User;
 import org.alienideology.jcord.object.channel.GuildChannel;
 import org.alienideology.jcord.object.channel.TextChannel;
 import org.alienideology.jcord.object.channel.VoiceChannel;
@@ -376,7 +376,7 @@ public class Guild extends DiscordObject implements SnowFlake {
      * @param channels the varargs of channels to be added.
      * @return this guild for chaining.
      */
-    public Guild addGuildChannel (GuildChannel... channels) {
+    Guild addGuildChannel (GuildChannel... channels) {
         for (GuildChannel channel : channels) {
             if (channel instanceof TextChannel) {
                 textChannels.add((TextChannel) channel);
@@ -393,7 +393,7 @@ public class Guild extends DiscordObject implements SnowFlake {
      * @param members the varargs of members to be added.
      * @return this guild for chaining.
      */
-    public Guild addMember (Member... members) {
+    Guild addMember (Member... members) {
         this.members.addAll(Arrays.asList(members));
         return this;
     }
@@ -404,7 +404,7 @@ public class Guild extends DiscordObject implements SnowFlake {
      * @param roles the varargs of roles to be added.
      * @return this guild for chaining.
      */
-    public Guild addRole (Role... roles) {
+    Guild addRole (Role... roles) {
         this.roles.addAll(Arrays.asList(roles));
         return this;
     }
@@ -415,7 +415,7 @@ public class Guild extends DiscordObject implements SnowFlake {
      * @param emojis the varargs of emojis to be added.
      * @return this guild for chaining.
      */
-    public Guild addGuildEmoji (GuildEmoji... emojis) {
+    Guild addGuildEmoji (GuildEmoji... emojis) {
         this.emojis.addAll(Arrays.asList(emojis));
         return this;
     }
@@ -426,7 +426,7 @@ public class Guild extends DiscordObject implements SnowFlake {
      * @param id the id of the owner.
      * @return this guild for chaining.
      */
-    public Guild setOwner (String id) {
+    Guild setOwner (String id) {
         for (Member mem : members) {
             if (mem.getId().equals(id)) {
                 this.owner = mem;
@@ -443,7 +443,7 @@ public class Guild extends DiscordObject implements SnowFlake {
      * @param embed the embed text channel
      * @return this guild for chaining.
      */
-    public Guild setChannels (String afk, String embed) {
+    Guild setChannels (String afk, String embed) {
         this.afk_channel = getVoiceChannel(afk);
         this.embed_channel = getTextChannel(embed);
         return this;

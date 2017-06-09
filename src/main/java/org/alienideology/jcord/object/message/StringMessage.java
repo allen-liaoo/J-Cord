@@ -1,8 +1,10 @@
 package org.alienideology.jcord.object.message;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.object.User;
-import org.alienideology.jcord.object.channel.Channel;
+import org.alienideology.jcord.object.Message;
+import org.alienideology.jcord.object.guild.GuildEmoji;
+import org.alienideology.jcord.object.guild.Role;
+import org.alienideology.jcord.object.user.User;
 import org.alienideology.jcord.object.channel.TextChannel;
 import org.alienideology.jcord.object.guild.Member;
 
@@ -14,9 +16,9 @@ import java.util.List;
  */
 public class StringMessage extends Message {
 
-    public StringMessage(Identity identity, String channelId, String id, User author, String content, String timeStamp,
-                         List<User> mentions, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
-        super(identity, channelId, id, author, content, timeStamp, mentions, isTTs, mentionedEveryone, isPinned);
+    public StringMessage(Identity identity, String id, User author, String content, String timeStamp,
+                         List<User> mentions, List<Role> mentionedRoles, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
+        super(identity, id, author, content, timeStamp, mentions, mentionedRoles, isTTs, mentionedEveryone, isPinned);
     }
 
     public String processContent(boolean noMention, boolean noMarkdown) {
@@ -37,8 +39,14 @@ public class StringMessage extends Message {
                     process = process.replaceAll(tc.mention(), "#"+tc.getName());
                 }
 
-                // TODO: Role Mentions
-                // TODO: GuildEmoji Mentions
+                /* Role Mentions */
+                for (Role role : mentionedRoles) {
+                    process = process.replaceAll(role.mention(), "@"+role.getName());
+                }
+
+                for (GuildEmoji emoji : getGuild().getGuildEmojis()) {
+                    process = process.replaceAll(emoji.mention(), ":"+emoji.getName()+":");
+                }
 
             /* Message from PrivateChannel */
             } else {
@@ -48,7 +56,7 @@ public class StringMessage extends Message {
                 }
             }
 
-            // TODO: Emoji Mentions
+            // TODO: EmojiList Mentions
 
         }
 
@@ -115,4 +123,5 @@ public class StringMessage extends Message {
     public String toString() {
         return "ID: "+id+"\tContent: "+content;
     }
+
 }

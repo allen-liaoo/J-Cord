@@ -20,7 +20,7 @@ public enum ErrorResponse {
     UNKNOWN_ROLE (10011, "Unknown role"),
     UNKNOWN_TOKEN (10012, "Unknown token"),
     UNKNOWN_USER (10013, "Unknown user"),
-    UNKNOWN_EMOJI (10014, "Unknown Emoji"),
+    UNKNOWN_EMOJI (10014, "Unknown EmojiList"),
 
     /* Invalid Endpoint */
     INVALID_ENDPOINT_FOR_BOT (20001, "Bots cannot use this endpoint"),
@@ -54,6 +54,7 @@ public enum ErrorResponse {
     INVALID_AMOUNT_OF_MESSAGES_TO_DELETE (50016, "Provided too few or too many messages to delete. " +
             "Must provide at least 2 and fewer than 100 messages to delete."),
     PINNED_MESSAGE_IN_DIFFERENT_CHANNEL (50019, "A message can only be pinned to the channel it was sent in"),
+    INVALID_ACTION_ON_SYSTEM_MESSAGE (50021, "Cannot execute action on a system message"),
     MESSAGE_PROVIDED_TOO_OLD_TO_BULK_DELETE (50034, "A message provided was too old to bulk delete"),
 
     REACTION_BLOCKED (90001, "Reaction Blocked"),

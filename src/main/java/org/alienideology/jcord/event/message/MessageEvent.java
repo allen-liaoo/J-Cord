@@ -3,16 +3,14 @@ package org.alienideology.jcord.event.message;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.Event;
-import org.alienideology.jcord.object.User;
+import org.alienideology.jcord.object.user.User;
 import org.alienideology.jcord.object.channel.Channel;
 import org.alienideology.jcord.object.channel.MessageChannel;
 import org.alienideology.jcord.object.channel.PrivateChannel;
 import org.alienideology.jcord.object.channel.TextChannel;
-import org.alienideology.jcord.object.guild.Guild;
+import org.alienideology.jcord.object.Guild;
 import org.alienideology.jcord.object.guild.Member;
-import org.alienideology.jcord.object.message.Message;
-
-import javax.xml.soap.Text;
+import org.alienideology.jcord.object.Message;
 
 /**
  * @author AlienIdeology

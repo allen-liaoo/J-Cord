@@ -17,8 +17,8 @@ Discord Objects - entities such as Guild, User, or Channel.
  - User - A base entity, can be a member of guild/private channel, and bot/human.
  - Region - Used for guild voice channel connection.
  - Permission - A way to limit and grant certain abilities to members.
- - Emojis - A list of Emoji objects. Used to get Emoji objects by alias or keyword.
- - Emoji - A emoji global default in Discord.
+ - EmojiList - A collection of Default Discord Emojis.
+   - Emoji - An emoji in Discord (Not GuildEmoji).
 
 #### Guild
 Guild - A collection of users and channels, often referred to in the UI as a server.
@@ -56,6 +56,11 @@ Event - Whenever a change happens to an entity, an event get fired.
 
 ## Exception
  - ErrorResponseException - An exception for Json Error Responses.
+
+## Command
+ - Command (Annotation) -  A command annotation used on methods for the native command framework.
+ - CommandFramework - The core command framework of J-Cord. Uses reflections to invoke methods.
+ - CommandResponder (Interface) - All command classes must implements CommandResponder in order to be added to the framework.
 
 ## Gateway
  ~~Internal Objects~~

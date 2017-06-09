@@ -1,7 +1,7 @@
 package org.alienideology.jcord.object.channel;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.object.guild.Guild;
+import org.alienideology.jcord.object.Guild;
 
 import java.util.Objects;
 
@@ -36,11 +36,6 @@ public class VoiceChannel extends Channel implements GuildChannel {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return (obj instanceof VoiceChannel) && Objects.equals(this.id, ((VoiceChannel) obj).getId());
-    }
-
-    @Override
     public Guild getGuild() {
         return guild;
     }
@@ -54,4 +49,15 @@ public class VoiceChannel extends Channel implements GuildChannel {
     public int getPosition() {
         return position;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof VoiceChannel) && Objects.equals(this.id, ((VoiceChannel) obj).getId());
+    }
+
+    @Override
+    public String toString() {
+        return "ID: "+id+"\tName: "+name;
+    }
+
 }
