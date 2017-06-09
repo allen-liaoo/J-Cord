@@ -8,7 +8,7 @@ import org.apache.commons.logging.impl.SimpleLog;
  */
 public class JCord {
 
-    public static String VERSION = "0.0.1";
+    public static String VERSION = "0.0.2";
     public static SimpleLog LOGGER = new SimpleLog("JCord");
 
 }
