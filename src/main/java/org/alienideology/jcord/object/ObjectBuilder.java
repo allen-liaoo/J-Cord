@@ -8,6 +8,7 @@ import org.alienideology.jcord.gateway.ErrorResponse;
 import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.channel.*;
 import org.alienideology.jcord.object.guild.Guild;
+import org.alienideology.jcord.object.guild.GuildEmoji;
 import org.alienideology.jcord.object.guild.Member;
 import org.alienideology.jcord.object.guild.Role;
 import org.alienideology.jcord.object.message.EmbedMessage;
@@ -92,22 +93,27 @@ public final class ObjectBuilder {
 
             /* Build Roles */
             JSONArray roles = json.getJSONArray("roles");
-
             for (int i = 0; i < roles.length(); i++) {
                 JSONObject roleJson = roles.getJSONObject(i);
-                Role role = buildRole(roleJson, guild);
-                guild.addRole(role);
+                guild.addRole(buildRole(roleJson, guild));
+            }
+
+            /* Build GuildEmojis */
+            // Build this after roles because emojis have roles field
+            JSONArray emojis = json.getJSONArray("emojis");
+            for (int i = 0; i < emojis.length(); i++) {
+                JSONObject emojiJson = emojis.getJSONObject(i);
+                guild.addGuildEmoji(buildEmoji(emojiJson, guild));
             }
 
             /* Build Members */
-            // Built after roles because members have roles field
+            // Build this after roles because members have roles field
             try {
                 JSONArray members = HttpPath.Guild.LIST_GUILD_MEMBERS.request(identity, id).queryString("limit", "1000")
                         .asJson().getBody().getArray();
                 for (int i = 0; i < members.length(); i++) {
                     JSONObject member = members.getJSONObject(i);
-                    Member mem = buildMember(member, guild);
-                    guild.addMember(mem);
+                    guild.addMember(buildMember(member, guild));
                 }
 
             } catch (UnirestException e) {
@@ -428,6 +434,27 @@ public final class ObjectBuilder {
         boolean canMention = json.has("mentionable")&& json.getBoolean("mentionable");
 
         return new Role(identity, guild, id, name, color, position, permissions, isSeparateListed, canMention);
+    }
+
+    /**
+     * Build a GuildEmoji object base on provided json.
+     * @param json The emoji JSONObject
+     * @param guild The guild this emoji is in
+     * @return The GuildEmoji object
+     */
+    public GuildEmoji buildEmoji (JSONObject json, Guild guild) {
+        handleBuildError(json);
+        String id = json.getString("id");
+        String name = json.getString("name");
+        boolean requireColon = json.has("require_colons") & json.getBoolean("require_colons");
+        List<Role> roles = new ArrayList<>();
+
+        JSONArray rolesJson = json.getJSONArray("roles");
+        for (int i = 0; i < rolesJson.length(); i++) {
+            Role role = guild.getRole(rolesJson.getString(i));
+            if (role != null) roles.add(role);
+        }
+        return new GuildEmoji(identity, guild, id, name, roles, requireColon);
     }
 
     /**

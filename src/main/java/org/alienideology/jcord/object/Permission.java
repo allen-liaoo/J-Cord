@@ -1,8 +1,5 @@
 package org.alienideology.jcord.object;
 
-import org.alienideology.jcord.object.guild.Member;
-import org.alienideology.jcord.object.guild.Role;
-
 import java.util.ArrayList;
 import java.util.List;
 

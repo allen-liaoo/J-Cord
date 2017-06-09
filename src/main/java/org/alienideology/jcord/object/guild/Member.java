@@ -28,6 +28,7 @@ public class Member extends DiscordObject implements SnowFlake, Mention {
         this.user = user;
         this.nickname = nickname;
         this.joinedDate = OffsetDateTime.parse(joinedDate);
+        Collections.sort(roles, (o1, o2) -> -1 * o1.compareTo(o2));
         this.roles = roles;
         this.permissions = initPermissions();
         this.isDeafened = isDeafened;
@@ -88,12 +89,16 @@ public class Member extends DiscordObject implements SnowFlake, Mention {
         return joinedDate;
     }
 
+    public Role getHighestRole() {
+        return roles.isEmpty() ? null : roles.get(0);
+    }
+
     public List<Role> getRoles() {
-        return roles;
+        return Collections.unmodifiableList(roles);
     }
 
     public List<Permission> getPermissions() {
-        return permissions;
+        return Collections.unmodifiableList(permissions);
     }
 
     public boolean isDeafened() {

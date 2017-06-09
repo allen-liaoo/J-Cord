@@ -41,7 +41,7 @@ public class Guild extends DiscordObject implements SnowFlake {
     private MFA mfa_level;
 
     private List<Role> roles;
-//    private List<Emote> emojis;
+    private List<GuildEmoji> emojis;
 
     private final List<Member> members;
     private final List<TextChannel> textChannels;
@@ -90,7 +90,7 @@ public class Guild extends DiscordObject implements SnowFlake {
         this.notifications_level = Notification.getByKey(notification_level);
         this.mfa_level = MFA.getByKey(mfa_level);
         roles = new ArrayList<>();
-//        emojis = new ArrayList<Emote>();
+        emojis = new ArrayList<>();
         members = new ArrayList<>();
         textChannels = new ArrayList<>();
         voiceChannels = new ArrayList<>();
@@ -203,6 +203,10 @@ public class Guild extends DiscordObject implements SnowFlake {
         return Collections.unmodifiableList(roles);
     }
 
+    public List<GuildEmoji> getGuildEmojis() {
+        return emojis;
+    }
+
     /**
      * Get a text channel by id.
      * @param id The specified id
@@ -256,73 +260,11 @@ public class Guild extends DiscordObject implements SnowFlake {
         return "ID: "+id+"\tName: "+name;
     }
 
-    /**
-     * [API Use Only]
-     * Add Text or Voice channels.
-     * @param channels the varargs of channels to be added.
-     * @return this guild for chaining.
+    /*
+        --------------------------
+            Guild Enumerations
+        --------------------------
      */
-    public Guild addGuildChannel (GuildChannel... channels) {
-        for (GuildChannel channel : channels) {
-            if (channel instanceof TextChannel) {
-                textChannels.add((TextChannel) channel);
-            } else if (channel instanceof VoiceChannel) {
-                voiceChannels.add((VoiceChannel) channel);
-            }
-        }
-        return this;
-    }
-
-    /**
-     * [API Use Only]
-     * Add Members.
-     * @param members the varargs of members to be added.
-     * @return this guild for chaining.
-     */
-    public Guild addMember (Member... members) {
-        this.members.addAll(Arrays.asList(members));
-        return this;
-    }
-
-    /**
-     * [API Use Only]
-     * Add roles.
-     * @param roles the varargs of roles to be added.
-     * @return this guild for chaining.
-     */
-    public Guild addRole (Role... roles) {
-        this.roles.addAll(Arrays.asList(roles));
-        return this;
-    }
-
-    /**
-     * [API Use Only]
-     * Set the owner of this guild.
-     * @param id the id of the owner.
-     * @return this guild for chaining.
-     */
-    public Guild setOwner (String id) {
-        for (Member mem : members) {
-            if (mem.getId().equals(id)) {
-                this.owner = mem;
-                break;
-            }
-        }
-        return this;
-    }
-
-    /**
-     * [API Use Only]
-     * Set the channels settings for this guild.
-     * @param afk the afk voice channel
-     * @param embed the embed text channel
-     * @return this guild for chaining.
-     */
-    public Guild setChannels (String afk, String embed) {
-        this.afk_channel = getVoiceChannel(afk);
-        this.embed_channel = getTextChannel(embed);
-        return this;
-    }
 
     /**
      * AFK Timeouts (second)
@@ -421,4 +363,90 @@ public class Guild extends DiscordObject implements SnowFlake {
         }
 
     }
+
+    /*
+        -----------------------
+            API Use Methods
+        -----------------------
+     */
+
+    /**
+     * [API Use Only]
+     * Add Text or Voice channels.
+     * @param channels the varargs of channels to be added.
+     * @return this guild for chaining.
+     */
+    public Guild addGuildChannel (GuildChannel... channels) {
+        for (GuildChannel channel : channels) {
+            if (channel instanceof TextChannel) {
+                textChannels.add((TextChannel) channel);
+            } else if (channel instanceof VoiceChannel) {
+                voiceChannels.add((VoiceChannel) channel);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * [API Use Only]
+     * Add Members.
+     * @param members the varargs of members to be added.
+     * @return this guild for chaining.
+     */
+    public Guild addMember (Member... members) {
+        this.members.addAll(Arrays.asList(members));
+        return this;
+    }
+
+    /**
+     * [API Use Only]
+     * Add roles.
+     * @param roles the varargs of roles to be added.
+     * @return this guild for chaining.
+     */
+    public Guild addRole (Role... roles) {
+        this.roles.addAll(Arrays.asList(roles));
+        return this;
+    }
+
+    /**
+     * [API Use Only]
+     * Add server emojis.
+     * @param emojis the varargs of emojis to be added.
+     * @return this guild for chaining.
+     */
+    public Guild addGuildEmoji (GuildEmoji... emojis) {
+        this.emojis.addAll(Arrays.asList(emojis));
+        return this;
+    }
+
+    /**
+     * [API Use Only]
+     * Set the owner of this guild.
+     * @param id the id of the owner.
+     * @return this guild for chaining.
+     */
+    public Guild setOwner (String id) {
+        for (Member mem : members) {
+            if (mem.getId().equals(id)) {
+                this.owner = mem;
+                break;
+            }
+        }
+        return this;
+    }
+
+    /**
+     * [API Use Only]
+     * Set the channels settings for this guild.
+     * @param afk the afk voice channel
+     * @param embed the embed text channel
+     * @return this guild for chaining.
+     */
+    public Guild setChannels (String afk, String embed) {
+        this.afk_channel = getVoiceChannel(afk);
+        this.embed_channel = getTextChannel(embed);
+        return this;
+    }
+
 }

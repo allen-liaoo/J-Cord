@@ -1,6 +1,8 @@
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
+import org.alienideology.jcord.object.Emoji;
+import org.alienideology.jcord.object.Emojis;
 import org.alienideology.jcord.object.Permission;
 import org.alienideology.jcord.object.channel.PrivateChannel;
 import org.alienideology.jcord.object.channel.TextChannel;
@@ -10,6 +12,7 @@ import org.alienideology.jcord.object.message.StringMessage;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A simple test bot for J-Cord
@@ -38,6 +41,9 @@ public class ExampleBot {
             for (PrivateChannel dm : bot.getPrivateChannels()) {
                 System.out.println("DM:\t"+dm.getRecipient().getName());
             }
+
+            Emojis emojiList = Emoji.loadEmoji();
+            System.out.println(emojiList.getByCategory(Emoji.Category.ACTIVITIES));
 
         } catch (Exception e) {
             e.printStackTrace();

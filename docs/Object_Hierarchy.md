@@ -12,12 +12,19 @@ IdentityType (Enumeration) - The types of identities available for building.
 
 ## Discord Objects
 Discord Objects - entities such as Guild, User, or Channel.
- - SnowFake (Interface) - Objects that has ID and mentionable.
+ - SnowFake (Interface) - Objects that has ID.
+ - Mention (Interface) - Objects that are mentionable.
+ - User - A base entity, can be a member of guild/private channel, and bot/human.
+ - Region - Used for guild voice channel connection.
+ - Permission - A way to limit and grant certain abilities to members.
+ - Emojis - A list of Emoji objects. Used to get Emoji objects by alias or keyword.
+ - Emoji - A emoji global default in Discord.
 
 #### Guild
 Guild - A collection of users and channels, often referred to in the UI as a server.
- - Region - Used for guild voice channel connection.
  - Member - A user representation in a guild.
+ - Role - A label that can be put on a set of guild members.
+ - GuildEmoji - A custom emoji that can be used within a guild.
 
 #### Channel
 Channel - A communication pipeline.

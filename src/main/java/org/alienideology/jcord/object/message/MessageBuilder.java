@@ -1,6 +1,8 @@
 package org.alienideology.jcord.object.message;
 
+import org.alienideology.jcord.object.Emoji;
 import org.alienideology.jcord.object.Mention;
+import org.alienideology.jcord.object.guild.GuildEmoji;
 import org.json.JSONObject;
 
 /**
@@ -101,6 +103,27 @@ public final class MessageBuilder {
      */
     public MessageBuilder appendMention(Mention mention) {
         this.content.append(mention.mention());
+        return this;
+    }
+
+    /**
+     * Append a guild mention to the content.
+     * @param guildEmoji An GuildEmoji to be appended.
+     * @return MessageBuilder for chaining.
+     */
+    @Deprecated
+    public MessageBuilder appendGuildEmoji(GuildEmoji guildEmoji) {
+        this.content.append(guildEmoji.mention());
+        return this;
+    }
+
+    /**
+     * Append a emoji to the content.
+     * @param emoji An native Emoji object.
+     * @return MessageBuilder for chaining.
+     */
+    public MessageBuilder appendEmoji(Emoji emoji) {
+        this.content.append(emoji.getUnicode());
         return this;
     }
 
