@@ -55,6 +55,7 @@ Event - Whenever a change happens to an entity, an event get fired.
    - GuildRoleCreatedEvent - Fired whenever a role is created.
 
 ## Exception
+ - ExceptionThrower - Handles JSON Error Response and Http Error Codes.
  - ErrorResponseException - An exception for Json Error Responses.
 
 ## Command
@@ -69,5 +70,6 @@ Gateway - The communication between J-Cord and Discord API.
  - GatewayAdaptor - Communication client for Discord GateWay.
  - OPCode (Enumeration) - OP Code sent by Discord GateWay server.
  - DisconnectionCode (Enumeration) - Disconnection Code sent when Discord gateway closed.
+ - ErrorCode (Enumeration) - HTTP Response/Error Codes.
  - ErrorResponse (Enumeration) - Json Error Responses.
  - HttpPath (Static) - Used to set HttpRequest Paths and request them.

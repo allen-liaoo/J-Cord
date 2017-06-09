@@ -10,10 +10,22 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 public @interface Command {
 
+    /**
+     * An array of aliases for this command.
+     * Different method can have different aliases.
+     */
     String[] aliases();
 
+    /**
+     * @return True if this method can only be triggered by GuildMessageCreateEvent.
+     * Default is false: Can be trigger by all events.
+     */
     boolean guildOnly() default false;
 
+    /**
+     * @return True if this method can only be triggered by PrivateMessageCreateEvent.
+     * Default is false: Can be trigger by all events.
+     */
     boolean privateOnly() default false;
 
 }

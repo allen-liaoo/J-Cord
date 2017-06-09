@@ -108,11 +108,12 @@ public class EmojiList {
     }
 
     public static class Emoji {
+
         private final Category category;
         private String name;
         private final String unicode;
-        private final List<String> keywords;
 
+        private final List<String> keywords;
         private final List<String> aliases;
 
         Emoji(Category category, String name, String unicode, List<String> keywords, List<String> aliases) {

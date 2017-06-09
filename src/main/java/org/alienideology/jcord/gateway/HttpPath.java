@@ -115,8 +115,8 @@ public final class HttpPath {
         public final static HttpPath DELETE_CHANNE_PERMISSION = new HttpPath(DELETE, "/channels/{channel.id}/permissions/{overwrite.id}");
 
         /* Invite Action */
-        public final static HttpPath GET_CHANNE_INVITES = new HttpPath(GET, "/channels/{channel.id}/invites");
-        public final static HttpPath CREATE_CHANNE_INVITE = new HttpPath(POST, "/channels/{channel.id}/invites");
+        public final static HttpPath GET_CHANNEL_INVITES = new HttpPath(GET, "/channels/{channel.id}/invites");
+        public final static HttpPath CREATE_CHANNEL_INVITE = new HttpPath(POST, "/channels/{channel.id}/invites");
 
         /* Pin Action */
         public final static HttpPath GET_PINNED_MESSAGES = new HttpPath(GET, "/channels/{channel.id}/pins");
@@ -141,7 +141,7 @@ public final class HttpPath {
         public final static HttpPath MODIFY_CURRENT_USER = new HttpPath(PATCH, "/users/@me");
         public final static HttpPath GET_CURRENT_USER_GUILDS = new HttpPath(GET, "/users/@me/guilds");
         public final static HttpPath LEAVE_GUILD = new HttpPath(DELETE, "/users/@me/guilds/{guild.id}");
-        public final static HttpPath GET_CURRENT_USER_DM = new HttpPath(DELETE, "/users/@me/channels");
+        public final static HttpPath CREATE_DM = new HttpPath(POST, "/users/@me/channels");
         public final static HttpPath GET_CURRENT_USER_CONNECTIONS = new HttpPath(GET, "/users/@me/connections");
 
         /* User Action */
@@ -158,13 +158,7 @@ public final class HttpPath {
     }
 
     public HttpRequest request(Identity identity, String... params) {
-        String processedPath;
-        try {
-            processedPath = path.replaceAll("\\{(.+?)}", "%s");
-            processedPath = String.format(processedPath, (Object[]) params);
-        } catch (IllegalFormatException ife) {
-            throw new IllegalArgumentException("[INTERNAL] Cannot perform an HttpRequest due to unmatched parameters!");
-        }
+        String processedPath = processPath(params);
 
         HttpRequest request = null;
         switch (method) {
@@ -183,10 +177,44 @@ public final class HttpPath {
             case OPTIONS:
                 request = Unirest.options(processedPath); break;
         }
-
-        request.header("Authorization", identity.getToken())
-                .header("User-Agent", "DiscordBot ($"+processedPath+", $"+ JCord.VERSION+")");
+        processRequest(request, identity, processedPath);
         return request;
+    }
+
+    public HttpRequestWithBody requestWithBody(Identity identity, String... params) {
+        String processedPath = processPath(params);
+
+        HttpRequestWithBody request = null;
+        switch (method) {
+            case POST:
+                request = Unirest.post(processedPath); break;
+            case PUT:
+                request = Unirest.put(processedPath); break;
+            case PATCH:
+                request = Unirest.patch(processedPath); break;
+            case DELETE:
+                request = Unirest.delete(processedPath); break;
+            case OPTIONS:
+                request = Unirest.options(processedPath); break;
+        }
+        processRequest(request, identity, processedPath);
+        return request;
+    }
+
+    private String processPath(String... params) {
+        String processedPath;
+        try {
+            processedPath = path.replaceAll("\\{(.+?)}", "%s");
+            processedPath = String.format(processedPath, (Object[]) params);
+        } catch (IllegalFormatException ife) {
+            throw new IllegalArgumentException("[INTERNAL] Cannot perform an HttpRequest due to unmatched parameters!");
+        }
+        return processedPath;
+    }
+
+    private void processRequest(HttpRequest request, Identity identity, String path) {
+        request.header("Authorization", identity.getToken())
+                .header("User-Agent", "DiscordBot ($"+path+", $"+ JCord.VERSION+")");
     }
 
     public HttpMethod getMethod() {

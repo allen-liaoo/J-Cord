@@ -1,9 +1,17 @@
 package org.alienideology.jcord.object.user;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.HttpRequestWithBody;
+import com.mashape.unirest.request.body.RequestBodyEntity;
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.DiscordObject;
 import org.alienideology.jcord.object.Mention;
+import org.alienideology.jcord.object.ObjectBuilder;
 import org.alienideology.jcord.object.SnowFlake;
+import org.alienideology.jcord.object.channel.PrivateChannel;
+import org.json.HTTP;
+import org.json.JSONObject;
 
 import java.util.Objects;
 
@@ -37,6 +45,22 @@ public class User extends DiscordObject implements SnowFlake, Mention {
         this.isWebHook = isWebHook;
         this.isVerified = isVerified;
         this.MFAEnabled = MFAEnabled;
+    }
+
+    public PrivateChannel getPrivateChannel() {
+        PrivateChannel dm = identity.getPrivateChannel(id);
+
+        // Private Channel has not exist
+        if (dm == null) {
+            RequestBodyEntity request = HttpPath.User.CREATE_DM.requestWithBody(identity)
+                    .body(new JSONObject().put("recipient_id", id));
+
+            try {
+                JSONObject json = request.asJson().getBody().getObject();
+                dm = new ObjectBuilder(identity).buildPrivateChannel(json);
+            } catch (UnirestException ignored) { }
+        }
+        return dm;
     }
 
     public String getName() {
