@@ -72,4 +72,5 @@ Gateway - The communication between J-Cord and Discord API.
  - DisconnectionCode (Enumeration) - Disconnection Code sent when Discord gateway closed.
  - ErrorCode (Enumeration) - HTTP Response/Error Codes.
  - ErrorResponse (Enumeration) - Json Error Responses.
+ - Requester - A Http Requester for HttpPath.
  - HttpPath (Static) - Used to set HttpRequest Paths and request them.

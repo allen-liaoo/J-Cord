@@ -157,66 +157,6 @@ public final class HttpPath {
         this.path = APIURL + path;
     }
 
-    public HttpRequest request(Identity identity, String... params) {
-        String processedPath = processPath(params);
-
-        HttpRequest request = null;
-        switch (method) {
-            case GET:
-                request = Unirest.get(processedPath); break;
-            case HEAD:
-                request = Unirest.head(processedPath); break;
-            case POST:
-                request = Unirest.post(processedPath); break;
-            case PUT:
-                request = Unirest.put(processedPath); break;
-            case PATCH:
-                request = Unirest.patch(processedPath); break;
-            case DELETE:
-                request = Unirest.delete(processedPath); break;
-            case OPTIONS:
-                request = Unirest.options(processedPath); break;
-        }
-        processRequest(request, identity, processedPath);
-        return request;
-    }
-
-    public HttpRequestWithBody requestWithBody(Identity identity, String... params) {
-        String processedPath = processPath(params);
-
-        HttpRequestWithBody request = null;
-        switch (method) {
-            case POST:
-                request = Unirest.post(processedPath); break;
-            case PUT:
-                request = Unirest.put(processedPath); break;
-            case PATCH:
-                request = Unirest.patch(processedPath); break;
-            case DELETE:
-                request = Unirest.delete(processedPath); break;
-            case OPTIONS:
-                request = Unirest.options(processedPath); break;
-        }
-        processRequest(request, identity, processedPath);
-        return request;
-    }
-
-    private String processPath(String... params) {
-        String processedPath;
-        try {
-            processedPath = path.replaceAll("\\{(.+?)}", "%s");
-            processedPath = String.format(processedPath, (Object[]) params);
-        } catch (IllegalFormatException ife) {
-            throw new IllegalArgumentException("[INTERNAL] Cannot perform an HttpRequest due to unmatched parameters!");
-        }
-        return processedPath;
-    }
-
-    private void processRequest(HttpRequest request, Identity identity, String path) {
-        request.header("Authorization", identity.getToken())
-                .header("User-Agent", "DiscordBot ($"+path+", $"+ JCord.VERSION+")");
-    }
-
     public HttpMethod getMethod() {
         return method;
     }

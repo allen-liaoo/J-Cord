@@ -1,6 +1,7 @@
 package org.alienideology.jcord.command;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.Internal;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.message.GuildMessageCreateEvent;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
@@ -15,6 +16,8 @@ import org.alienideology.jcord.object.message.EmbedMessageBuilder;
 import org.alienideology.jcord.object.message.MessageBuilder;
 import org.alienideology.jcord.object.user.User;
 
+import javax.xml.soap.Text;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -117,75 +120,39 @@ public class CommandFramework {
 
                 Object[] params = new Object[method.getParameterTypes().length];
 
+                HashMap<Type, Object> types = new HashMap<>();
+                types.put(String.class, message.getContent());
+                types.put(String[].class, parser.args);
+                types.put(int.class, event.getSequence());
+                types.put(Integer.TYPE, event.getSequence());
+                // DiscordObjects
+                types.put(Identity.class, identity);
+                types.put(User.class, event.getUser());
+                types.put(Message.class, message);
+                types.put(Guild.class, guild);
+                types.put(Member.class, member);
+                // Channels
+                types.put(Channel.class, event.getChannel());
+                types.put(MessageChannel.class, event.getChannel());
+                types.put(TextChannel.class, event.getTextChannel());
+                types.put(PrivateChannel.class, event.getPrivateChannel());
+
+                types.put(MessageCreateEvent.class, event);
+                if (event instanceof GuildMessageCreateEvent) {
+                    types.put(GuildMessageCreateEvent.class, event);
+                } else {
+                    types.put(PrivateMessageCreateEvent.class, event);
+                }
+
                 /* Initialize Parameters */
                 for (int i = 0; i < params.length; i++) {
                     Type type = method.getParameterTypes()[i];
-
-                    if (type == String.class) {
-                        params[i] = message.getContent();
-                    } else if (type == String[].class) {
-                        params[i] = parser.args;
-                    } else if (type == Integer.class || type == int.class) {
-                        params[i] = event.getSequence();
-                    } else if (type == Identity.class) {
-                        params[i] = identity;
-                    } else if (type == User.class) {
-                        params[i] = event.getUser();
-                    } else if (type == Message.class) {
-                        params[i] = message;
-                    } else if (type == Guild.class) {
-                        params[i] = guild;
-                    } else if (type == Guild.Verification.class) {
-                        params[i] = guild.getVerificationLevel();
-                    } else if (type == Guild.Notification.class) {
-                        params[i] = guild.getNotificationsLevel();
-                    } else if (type == Guild.AFK_Timeout.class) {
-                        params[i] = guild.getAfkTimeout();
-                    } else if (type == Member.class) {
-                        params[i] = member;
-                    } else if (type == Channel.class || type == MessageChannel.class) {
-                        params[i] = event.getChannel();
-                    } else if (type == TextChannel.class) {
-                        params[i] = event.getTextChannel();
-                    } else if (type == PrivateChannel.class) {
-                        params[i] = event.getPrivateChannel();
-                    } else if (type == MessageCreateEvent.class) {
-                        params[i] = event;
-                    } else if (type == GuildMessageCreateEvent.class && event instanceof GuildMessageCreateEvent) {
-                        params[i] = (GuildMessageCreateEvent) event;
-                    } else if (type == PrivateMessageCreateEvent.class && event instanceof PrivateMessageCreateEvent) {
-                        params[i] = (PrivateMessageCreateEvent) event;
-                    } else if (type == new ArrayList<Guild>().getClass()) {
-                        params[i] = identity.getGuilds();
-                    } else if (type == new ArrayList<Member>().getClass() && event instanceof GuildMessageCreateEvent) {
-                        params[i] = guild.getMembers();
-                    } else if (type == new ArrayList<User>().getClass()) {
-                        if (event instanceof GuildMessageCreateEvent) {
-                            params[i] = guild.getUsers();
-                        } else {
-                            params[i] = identity.getUsers();
-                        }
-                    } else if (type == new ArrayList<Role>().getClass()) {
-                        if (event instanceof GuildMessageCreateEvent) {
-                            params[i] = member.getRoles();
-                        } else {
-                            params[i] = identity.getAllRoles();
-                        }
-                    } else if (type == new ArrayList<GuildEmoji>().getClass() && event instanceof GuildMessageCreateEvent) {
-                        params[i] = guild.getGuildEmojis();
-                    } else if (type == new ArrayList<TextChannel>().getClass() && event instanceof GuildMessageCreateEvent) {
-                        params[i] = guild.getTextChannels();
-                    } else if (type == new ArrayList<VoiceChannel>().getClass() && event instanceof GuildMessageCreateEvent) {
-                        params[i] = guild.getVoiceChannels();
-                    } else if (type == new ArrayList<PrivateChannel>().getClass()) {
-                        params[i] = identity.getGuilds();
-                    } else {
-                        params[i] = null;
-                    }
+                    params[i] = types.get(type);
                 }
 
                 try {
                     Object invoked = method.invoke(annotations.get(command).responder, params);
+
 
                     /* Reply with return values */
                     if (invoked instanceof String) {
@@ -195,8 +162,10 @@ public class CommandFramework {
                     } else if (invoked instanceof EmbedMessageBuilder) {
                         event.getChannel().sendMessage((EmbedMessageBuilder) invoked);
                     }
+                } catch (IllegalAccessException | InvocationTargetException e1) {
+                    e1.printStackTrace();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    throw e;
                 }
             }
         }
@@ -284,8 +253,6 @@ public class CommandFramework {
 
             this.args = split.length <= 1 ? new String[]{} : Arrays.copyOfRange(split, 1, split.length);
             this.event = event;
-            System.out.println(aliases);
-            System.out.println(Arrays.toString(args));
         }
     }
 

@@ -10,6 +10,11 @@ import org.alienideology.jcord.event.message.MessageEvent;
 import org.alienideology.jcord.event.message.PrivateMessageCreateEvent;
 import org.alienideology.jcord.exception.ErrorResponseException;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+
 /**
  * Event Listener used to listen to events and perform actions
  * @author AlienIdeology
@@ -29,6 +34,7 @@ public class DispatcherAdaptor {
         } else if (event instanceof MessageEvent) {
             onMessageEvent((MessageEvent) event);
         }
+
     }
 
     private void onGatewayEvent (GatewayEvent event) {

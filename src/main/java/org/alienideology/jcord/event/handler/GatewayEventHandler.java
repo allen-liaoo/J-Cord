@@ -6,6 +6,7 @@ import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.gateway.ResumedEvent;
 import org.alienideology.jcord.gateway.GatewayAdaptor;
 import org.alienideology.jcord.gateway.HttpPath;
+import org.alienideology.jcord.gateway.Requester;
 import org.apache.commons.logging.impl.SimpleLog;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,10 +38,10 @@ public class GatewayEventHandler extends EventHandler {
             for (int i = 0; i < guilds.length(); i++) {
                 JSONObject guild = guilds.getJSONObject(i);
                 try {
-                    JSONObject get = HttpPath.Guild.GET_GUILD.request(identity, guild.getString("id")).asJson().getBody().getObject();
+                    JSONObject get = new Requester(identity, HttpPath.Guild.GET_GUILD).request(guild.getString("id")).getAsJSONObject();
                     builder.buildGuild(get); // Guild added to identity automatically
-                } catch (UnirestException ne) {
-                    LOG.error("Initializing Guilds", ne);
+                } catch (RuntimeException e) {
+                    LOG.error("Initializing Guilds", e);
                 }
             }
 

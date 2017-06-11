@@ -57,10 +57,7 @@ public interface CommandResponder {
         User : Author or the Event
         Message : The message of the Event
         Guild : The guild of the Event, may be null for PrivateChannels
-            Guild.Verification : The guild verification level.
-            Guild.Notification : The guild notification level.
-            Guild.AFK_Timeout : The guild afk timeout.
-        Member : The member object of the author.
+        Member : The member object of the author
 
         Channel or MessageChannel : The MessageChannel this event is sent in.
         TextChannel : The TextChannel this event is sent in. May be null.
@@ -70,17 +67,8 @@ public interface CommandResponder {
         GuildMessageCreateEvent : The GuildMessageCreateEvent. May be null.
         PrivateMessageCreateEvent ; The PrivateMessageCreateEvent. May be null.
 
-        List<T> when T is:
-            Guild : A list of guilds under the identity.
-            Member : A list of members under the guild. (Null for PrivateMessageCreateEvent)
-            User : A list of users under the guild. (Or under the identity for PrivateMessageCreateEvent)
-            Role : A list of roles under the guild. (All roles under the identity for PrivateMessageCreateEvent)
-            GuildEmoji : A list of guild emojis (Null for PrivateMessageCreateEvent)
-            TextChannel : A list of text channels under the guild. (Null for PrivateMessageCreateEvent)
-            VoiceChannel : A list of voice channels under the guild. (Null for PrivateMessageCreateEvent)
-            PrivateChannel : A list of private channels under the identity.
-
         Null : For all other parameters that the Framework did not recognize.
+        Note that primitives other than int will throw IllegalArgumentException.
 
      */
 

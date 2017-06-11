@@ -5,11 +5,7 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.event.handler.GuildDeleteEventHandler;
-import org.alienideology.jcord.event.handler.EventHandler;
-import org.alienideology.jcord.event.handler.GatewayEventHandler;
-import org.alienideology.jcord.event.handler.GuildCreateEventHandler;
-import org.alienideology.jcord.event.handler.MessageCreateEventHandler;
+import org.alienideology.jcord.event.handler.*;
 import org.alienideology.jcord.exception.ErrorResponseException;
 import org.apache.commons.logging.impl.SimpleLog;
 import org.json.JSONObject;
@@ -95,8 +91,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             decoded.append(new String(result, 0, length, "UTF-8"));
         }
 
-        JSONObject json = new JSONObject(decoded.toString());
-        handleEvent(json);
+        onTextMessage(websocket, decoded.toString());
     }
 
     @Override
@@ -150,7 +145,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
                 sendHeartBeat(4000);
             }
             default: {
-                LOG.error("Unknown OP Code");
+                LOG.error("Unknown OP Code | Message : " +message);
             }
         }
     }
@@ -275,6 +270,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
         /* Message Event */
         eventHandler.put("MESSAGE_CREATE", new MessageCreateEventHandler(identity));
+        eventHandler.put("MESSAGE_DELETE", new MessageDeleteEventHandler(identity));
     }
 
 }

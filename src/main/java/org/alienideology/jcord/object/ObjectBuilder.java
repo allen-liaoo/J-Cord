@@ -6,6 +6,7 @@ import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.exception.ErrorResponseException;
 import org.alienideology.jcord.gateway.ErrorResponse;
 import org.alienideology.jcord.gateway.HttpPath;
+import org.alienideology.jcord.gateway.Requester;
 import org.alienideology.jcord.object.channel.*;
 import org.alienideology.jcord.object.guild.GuildEmoji;
 import org.alienideology.jcord.object.guild.Member;
@@ -84,7 +85,7 @@ public final class ObjectBuilder {
             /* Build Channels */
             // LastMessage requires role field
             try {
-                JSONArray guildChannels = HttpPath.Guild.GET_GUILD_CHANNELS.request(identity, id).asJson().getBody().getArray();
+                JSONArray guildChannels = new Requester(identity, HttpPath.Guild.GET_GUILD_CHANNELS).request(id).getAsJSONArray();
 
                 for (int i = 0; i < guildChannels.length(); i++) {
 
@@ -94,7 +95,7 @@ public final class ObjectBuilder {
                     guild.addGuildChannel((GuildChannel) channel);
                 }
 
-            } catch (UnirestException e) {
+            } catch (RuntimeException e) {
                 identity.LOG.error("Building guild channels. (Guild: "+guild.toString()+")", e);
             }
 
@@ -109,14 +110,14 @@ public final class ObjectBuilder {
             /* Build Members */
             // Build this after roles because members have roles field
             try {
-                JSONArray members = HttpPath.Guild.LIST_GUILD_MEMBERS.request(identity, id).queryString("limit", "1000")
-                        .asJson().getBody().getArray();
+                JSONArray members = new Requester(identity, HttpPath.Guild.LIST_GUILD_MEMBERS).request(id)
+                        .updateGetRequest(r -> r.queryString("limit", "1000")).getAsJSONArray();
                 for (int i = 0; i < members.length(); i++) {
                     JSONObject member = members.getJSONObject(i);
                     guild.addMember(buildMember(member, guild));
                 }
 
-            } catch (UnirestException e) {
+            } catch (RuntimeException e) {
                 identity.LOG.error("Building guild members. (Guild: "+guild.toString()+")", e);
             }
 
@@ -134,8 +135,8 @@ public final class ObjectBuilder {
     public Guild buildGuildById (String id) {
         JSONObject guild = null;
         try {
-            guild = HttpPath.Guild.GET_GUILD.request(identity, id).asJson().getBody().getObject();
-        } catch (UnirestException e) {
+            guild = new Requester(identity, HttpPath.Guild.GET_GUILD).request(id).getAsJSONObject();
+        } catch (RuntimeException e) {
             identity.LOG.error("Building Guild By ID (ID: "+id+")", e);
             throw new IllegalArgumentException("Invalid ID!");
         }
@@ -181,8 +182,8 @@ public final class ObjectBuilder {
     public GuildChannel buildGuildChannelById (String id) {
         JSONObject gChannel = null;
         try {
-            gChannel = HttpPath.Channel.GET_CHANNEL.request(identity, id).asJson().getBody().getObject();
-        } catch (UnirestException e) {
+            gChannel = new Requester(identity, HttpPath.Channel.GET_CHANNEL).request(id).getAsJSONObject();
+        } catch (RuntimeException e) {
             identity.LOG.error("Building GuildChannel By ID (ID: "+id+")", e);
             throw new IllegalArgumentException("Invalid ID!");
         }
@@ -318,14 +319,29 @@ public final class ObjectBuilder {
             mentionsRole.add(identity.getRole(mentionRole.getString(i)));
         }
 
+        /* Attachments */
+        List<Message.Attachment> attachments = new ArrayList<>();
+        JSONArray attachs = json.getJSONArray("attachments");
+        for (int i = 0; i < mentionRole.length(); i++) {
+            JSONObject attachment = attachs.getJSONObject(i);
+            String attachmentId = attachment.getString("id");
+            String filename = attachment.has("filename") && !attachment.isNull("filename") ?
+                    attachment.getString("filename") : null;
+            int size = attachment.has("size") ? attachment.getInt("size") : 0;
+            String url = attachment.has("url") && !attachment.isNull("url") ?
+                    attachment.getString("url") : null;
+            attachments.add(new Message.Attachment(attachmentId, filename, size, url));
+        }
+
         boolean isTTS = json.getBoolean("tts");
         boolean mentionedEveryone = json.getBoolean("mention_everyone");
         boolean isPinned = json.has("pinned") && json.getBoolean("pinned");
 
+        Message message;
+
         /* StringMessage */
-        if (!json.getString("content").isEmpty()) {
-            return new StringMessage(identity, id, author, content, timeStamp, mentions, mentionsRole, isTTS, mentionedEveryone, isPinned)
-                    .setChannel(channel_id); // Set channel may be null for MessageChannel's LastMessage
+        if (!json.getString("content").isEmpty() || json.getJSONArray("embeds").length() == 0) {
+            message =  new StringMessage(identity, id, author, content, timeStamp, mentions, mentionsRole, attachments, isTTS, mentionedEveryone, isPinned);
 
         /* EmbedMessage */
         } else {
@@ -338,7 +354,7 @@ public final class ObjectBuilder {
             String time_stamp = embed.has("timestamp") ? embed.getString("timestamp") : null;
             int color = embed.has("color") ? embed.getInt("color") : 0;
 
-            EmbedMessage embedMessage =  new EmbedMessage(identity, id, author, content,  timeStamp, mentions, mentionsRole, isTTS, mentionedEveryone, isPinned)
+            EmbedMessage embedMessage =  new EmbedMessage(identity, id, author, content, timeStamp, mentions, mentionsRole, attachments, isTTS, mentionedEveryone, isPinned)
                     .setEmbed(title, description, embed_url, time_stamp, color);
 
             if (embed.has("author")) {
@@ -407,8 +423,11 @@ public final class ObjectBuilder {
                 embedMessage.setFooter(new EmbedMessage.Footer(name, icon_url, proxy_url));
             }
 
-            return embedMessage.setChannel(channel_id);  // Set channel may be null for MessageChannel's LastMessage
+            message = embedMessage;
         }
+        message.setChannel(channel_id);  // Set channel may be null for MessageChannel's LastMessage
+        if (message.getChannel()!=null) message.getChannel().cacheMessage(message);
+        return message;
     }
 
     /**
@@ -418,10 +437,10 @@ public final class ObjectBuilder {
      * @return The Message object
      */
     public Message buildMessageById (String channel_id, String message_id) {
-        JSONObject message = null;
+        JSONObject message;
         try {
-            message = HttpPath.Channel.GET_CHANNEL_MESSAGE.request(identity, channel_id, message_id).asJson().getBody().getObject();
-        } catch (UnirestException e) {
+            message = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(channel_id, message_id).getAsJSONObject();
+        } catch (RuntimeException e) {
             identity.LOG.error("Building Message By ID (ID: "+message_id+")", e);
             throw new IllegalArgumentException("Invalid ID!");
         }

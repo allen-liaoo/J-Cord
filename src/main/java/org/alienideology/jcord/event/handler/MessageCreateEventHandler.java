@@ -21,12 +21,14 @@ public class MessageCreateEventHandler extends EventHandler {
     public void dispatchEvent(JSONObject json, int sequence) {
         Message message = builder.buildMessage(json);
         MessageChannel channel = message.getChannel()
-                .setLastMessage(message);
+                .setLatestMessage(message);
 
-        if (message.fromType(Channel.Type.TEXT)) {
-            fireEvent(new GuildMessageCreateEvent(identity, sequence, channel, message));
-        } else {
-            fireEvent(new PrivateMessageCreateEvent(identity, sequence, channel, message));
+        if (!message.isFromSelf()) {
+            if (message.fromType(Channel.Type.TEXT)) {
+                fireEvent(new GuildMessageCreateEvent(identity, sequence, channel, message));
+            } else {
+                fireEvent(new PrivateMessageCreateEvent(identity, sequence, channel, message));
+            }
         }
 
     }

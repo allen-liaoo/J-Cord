@@ -2,6 +2,7 @@ package org.alienideology.jcord.object;
 
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.Internal;
 import org.alienideology.jcord.object.guild.Role;
 import org.alienideology.jcord.object.message.StringMessage;
 import org.alienideology.jcord.object.user.User;
@@ -33,7 +34,7 @@ public class Message extends DiscordObject implements SnowFlake {
 
     protected List<User> mentions;
     protected List<Role> mentionedRoles;
-//    private List<Attachment> attachments;
+    private List<Attachment> attachments;
 //    private List<Embeds> embeds;
 //    private List<EmojiList> reactions;
 
@@ -43,7 +44,7 @@ public class Message extends DiscordObject implements SnowFlake {
     private boolean isPinned;
 
     public Message (Identity identity, String id, User author, String content, String createdTime,
-                    List<User> mentions, List<Role> mentionedRoles, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
+                    List<User> mentions, List<Role> mentionedRoles, List<Attachment> attachments, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
         super(identity);
         this.id = id;
         this.author = author;
@@ -51,6 +52,7 @@ public class Message extends DiscordObject implements SnowFlake {
         this.createdTime = createdTime == null ? null : OffsetDateTime.parse(createdTime);
         this.mentions = mentions;
         this.mentionedRoles = mentionedRoles;
+        this.attachments = attachments;
         this.isTTS = isTTs;
         this.mentionedEveryone = mentionedEveryone;
         this.isPinned = isPinned;
@@ -162,6 +164,7 @@ public class Message extends DiscordObject implements SnowFlake {
         return "ID: "+id;
     }
 
+    @Internal
     protected Message setChannel(String channel) {
         this.channel = identity.getTextChannel(channel) == null ?
                 identity.getPrivateChannel(channel) : identity.getTextChannel(channel);

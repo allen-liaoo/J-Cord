@@ -11,6 +11,7 @@ import org.alienideology.jcord.exception.ErrorResponseException;
 import org.alienideology.jcord.gateway.ErrorResponse;
 import org.alienideology.jcord.gateway.GatewayAdaptor;
 import org.alienideology.jcord.gateway.HttpPath;
+import org.alienideology.jcord.object.channel.MessageChannel;
 import org.alienideology.jcord.object.channel.PrivateChannel;
 import org.alienideology.jcord.object.channel.TextChannel;
 import org.alienideology.jcord.object.channel.VoiceChannel;
@@ -132,6 +133,22 @@ public class Identity {
     }
 
     @Nullable
+    public MessageChannel getMessageChannel(String id) {
+        List<MessageChannel> channels = getMessageChannels();
+        for (MessageChannel channel : channels) {
+            if (channel.getId().equals(id))
+                return channel;
+        }
+        return null;
+    }
+
+    public List<MessageChannel> getMessageChannels() {
+        List<MessageChannel> channels = new ArrayList<>(textChannels);
+        channels.addAll(privateChannels);
+        return channels;
+    }
+
+    @Nullable
     public TextChannel getTextChannel(String id) {
         for (TextChannel tc : textChannels) {
             if (tc.getId().equals(id)) {
@@ -162,7 +179,7 @@ public class Identity {
     @Nullable
     public PrivateChannel getPrivateChannel(String id) {
         for (PrivateChannel dm : privateChannels) {
-            if (dm.getId().equals(id)) {
+            if (dm.getRecipient().getId().equals(id)) {
                 return dm;
             }
         }
@@ -194,11 +211,12 @@ public class Identity {
     }
 
     /*
-        --------------------
-            API Use Only
-        --------------------
+        ------------------------
+            Internal Methods
+        ------------------------
      */
 
+    @Internal
     Identity login (String token) throws ErrorResponseException, IllegalArgumentException, IOException {
         if (type == IdentityType.BOT && !token.startsWith("Bot ")) {
             this.token = "Bot " + token;
@@ -227,6 +245,7 @@ public class Identity {
         return this;
     }
 
+    @Internal
     Identity logout() {
         socket.disconnect();
         CONNECTION = Connection.OFFLINE;
@@ -239,6 +258,7 @@ public class Identity {
         return this;
     }
 
+    @Internal
     Identity addDispatchers(DispatcherAdaptor... dispatchers) {
         this.listeners.addAll(Arrays.asList(dispatchers));
         return this;
@@ -249,6 +269,7 @@ public class Identity {
      * Set the self (user) of this identity.
      * @param selfUser The self user
      */
+    @Internal
     public void setSelf (User selfUser) {
         this.self = selfUser;
     }
@@ -258,6 +279,7 @@ public class Identity {
      * Add an user to this identity
      * @param user The user to be added.
      */
+    @Internal
     public void addUser (User user) {
         if(users.contains(user)) return;
         this.users.add(user);
@@ -268,6 +290,7 @@ public class Identity {
      * Add a guild to this identity
      * @param guild The guild to be added.
      */
+    @Internal
     public void addGuild (Guild guild) {
         if(guilds.contains(guild)) return;
         this.guilds.add(guild);
@@ -278,6 +301,7 @@ public class Identity {
      * Add a TextChannel to this identity
      * @param textChannel The TextChannel to be added.
      */
+    @Internal
     public void addTextChannel (TextChannel textChannel) {
         if(textChannels.contains(textChannel)) return;
         this.textChannels.add(textChannel);
@@ -288,6 +312,7 @@ public class Identity {
      * Add a VoiceChannel to this identity
      * @param voiceChannel The VoiceChannel to be added.
      */
+    @Internal
     public void addVoiceChannel (VoiceChannel voiceChannel) {
         if(voiceChannels.contains(voiceChannel)) return;
         this.voiceChannels.add(voiceChannel);
@@ -298,6 +323,7 @@ public class Identity {
      * Add a PrivateChannel to this identity
      * @param privateChannel The PrivateChannel to be added.
      */
+    @Internal
     public void addPrivateChannel (PrivateChannel privateChannel) {
         if(privateChannels.contains(privateChannel)) return;
         this.privateChannels.add(privateChannel);

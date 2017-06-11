@@ -2,6 +2,8 @@ import org.alienideology.jcord.command.Command;
 import org.alienideology.jcord.command.CommandResponder;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 
+import java.util.Arrays;
+
 /**
  * @author AlienIdeology
  */
@@ -13,9 +15,10 @@ public class ExampleResponder implements CommandResponder {
         return "hi";
     }
 
-    @Command(aliases = "hey there")
+    @Command(aliases = "test")
     public String onHeyThere() {
-        return "hey";
+        return "test";
     }
+
 
 }

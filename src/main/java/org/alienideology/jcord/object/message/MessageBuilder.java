@@ -1,5 +1,6 @@
 package org.alienideology.jcord.object.message;
 
+import org.alienideology.jcord.Internal;
 import org.alienideology.jcord.object.EmojiList;
 import org.alienideology.jcord.object.Mention;
 import org.alienideology.jcord.object.Message;
@@ -37,7 +38,7 @@ public final class MessageBuilder {
     public JSONObject build() {
         JSONObject json = new JSONObject();
         json.put("content", content.toString());
-        json.put("tts", isTTS);
+        if (isTTS) json.put("tts", isTTS);
 
         if (embed != null) json.put("embed", embed.build());
 
@@ -160,6 +161,7 @@ public final class MessageBuilder {
      * @param builder The EmbedMessageBuilder
      * @return MessageBuilder for chaining.
      */
+    @Internal
     public MessageBuilder setAsEmbed(EmbedMessageBuilder builder) {
         embed = builder;
         return this;

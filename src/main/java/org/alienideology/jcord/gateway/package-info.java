@@ -11,4 +11,7 @@
  * @since 0.0.1
  * @author AlienIdeology
  */
+@Internal
 package org.alienideology.jcord.gateway;
+
+import org.alienideology.jcord.Internal;

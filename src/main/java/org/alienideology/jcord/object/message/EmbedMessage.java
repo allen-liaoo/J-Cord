@@ -34,8 +34,8 @@ public class EmbedMessage extends Message {
     private Footer footer = null;
 
     public EmbedMessage(Identity identity, String id, User author, String content, String timeStamp,
-                        List<User> mentions, List<Role> mentionedRoles, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
-        super(identity, id, author, content, timeStamp, mentions, mentionedRoles, isTTs, mentionedEveryone, isPinned);
+                        List<User> mentions, List<Role> mentionedRoles, List<Attachment> attachments, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
+        super(identity, id, author, content, timeStamp, mentions, mentionedRoles, attachments, isTTs, mentionedEveryone, isPinned);
     }
 
     public EmbedMessage setEmbed(String title, String description, String url, String embed_timestamp, int color) {
