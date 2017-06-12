@@ -64,7 +64,7 @@ public interface CommandResponder {
         PrivateChannel : The PrivateChannel this event is sent in. May be null.
 
         MessageCreateEvent : The MessageCreateEvent itself.
-        GuildMessageCreateEvent : The GuildMessageCreateEvent. May be null.
+        IGuildMessageCreateEvent : The IGuildMessageCreateEvent. May be null.
         PrivateMessageCreateEvent ; The PrivateMessageCreateEvent. May be null.
 
         Null : For all other parameters that the Framework did not recognize.

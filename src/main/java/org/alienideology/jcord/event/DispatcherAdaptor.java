@@ -1,24 +1,17 @@
 package org.alienideology.jcord.event;
 
-import org.alienideology.jcord.event.gateway.GatewayEvent;
-import org.alienideology.jcord.event.gateway.ReadyEvent;
-import org.alienideology.jcord.event.gateway.ResumedEvent;
+import org.alienideology.jcord.event.gateway.*;
 import org.alienideology.jcord.event.guild.*;
-import org.alienideology.jcord.event.message.GuildMessageCreateEvent;
-import org.alienideology.jcord.event.message.MessageCreateEvent;
-import org.alienideology.jcord.event.message.MessageEvent;
-import org.alienideology.jcord.event.message.PrivateMessageCreateEvent;
+import org.alienideology.jcord.event.message.*;
+import org.alienideology.jcord.event.message.dm.*;
+import org.alienideology.jcord.event.message.guild.*;
 import org.alienideology.jcord.exception.ErrorResponseException;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
-import java.util.HashMap;
 
 /**
  * Event Listener used to listen to events and perform actions
  * @author AlienIdeology
  */
+@SuppressWarnings("WeakerAccess")
 public class DispatcherAdaptor {
 
     /*
@@ -37,6 +30,9 @@ public class DispatcherAdaptor {
 
     }
 
+    /**
+     * Gateway Events
+     */
     private void onGatewayEvent (GatewayEvent event) {
         if (event instanceof ReadyEvent) {
             onReady((ReadyEvent) event);
@@ -49,6 +45,9 @@ public class DispatcherAdaptor {
 
     public void onResume (ResumedEvent event) {}
 
+    /**
+     * Guild Events
+     */
     private void onGuildEvent (GuildEvent event) {
         if (event instanceof GuildCreateEvent) {
             onGuildCreate((GuildCreateEvent) event);
@@ -69,6 +68,9 @@ public class DispatcherAdaptor {
 
     public void onGuildRoleCreate (GuildRoleCreateEvent event) {}
 
+    /**
+     * Message Events
+     */
     private void onMessageEvent (MessageEvent event) {
         if (event instanceof MessageCreateEvent) {
             onMessageCreate((MessageCreateEvent) event);
@@ -76,6 +78,20 @@ public class DispatcherAdaptor {
                 onGuildMessageCreate((GuildMessageCreateEvent) event);
             } else if (event instanceof PrivateMessageCreateEvent) {
                 onPrivateMessageCreate((PrivateMessageCreateEvent) event);
+            }
+        } else if (event instanceof MessageUpdateEvent) {
+            onMessageUpdate((MessageUpdateEvent) event);
+            if (event instanceof GuildMessageUpdateEvent) {
+                onGuildMessageUpdate((GuildMessageUpdateEvent) event);
+            } else if (event instanceof PrivateMessageUpdateEvent) {
+                onPrivateMessageUpdate((PrivateMessageUpdateEvent) event);
+            }
+        } else if (event instanceof MessageDeleteEvent) {
+            onMessageDelete((MessageDeleteEvent) event);
+            if (event instanceof GuildMessageDeleteEvent) {
+                onGuildMessageDelete((GuildMessageDeleteEvent) event);
+            } else if (event instanceof PrivateMessageDeleteEvent) {
+                onPrivateMessageDelete((PrivateMessageDeleteEvent) event);
             }
         }
     }
@@ -85,6 +101,18 @@ public class DispatcherAdaptor {
     public void onGuildMessageCreate (GuildMessageCreateEvent event) {}
 
     public void onPrivateMessageCreate (PrivateMessageCreateEvent event) {}
+
+    public void onMessageUpdate (MessageUpdateEvent event) {}
+
+    public void onGuildMessageUpdate (GuildMessageUpdateEvent event) {}
+
+    public void onPrivateMessageUpdate (PrivateMessageUpdateEvent event) {}
+
+    public void onMessageDelete (MessageDeleteEvent event) {}
+
+    public void onGuildMessageDelete (GuildMessageDeleteEvent event) {}
+
+    public void onPrivateMessageDelete (PrivateMessageDeleteEvent event) {}
 
     /*
         -----------------------

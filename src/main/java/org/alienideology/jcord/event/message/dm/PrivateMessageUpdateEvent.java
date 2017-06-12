@@ -1,17 +1,18 @@
-package org.alienideology.jcord.event.message;
+package org.alienideology.jcord.event.message.dm;
 
 import com.sun.istack.internal.NotNull;
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.event.message.MessageUpdateEvent;
+import org.alienideology.jcord.object.Message;
 import org.alienideology.jcord.object.channel.MessageChannel;
 import org.alienideology.jcord.object.channel.PrivateChannel;
-import org.alienideology.jcord.object.Message;
 
 /**
  * @author AlienIdeology
  */
-public class PrivateMessageCreateEvent extends MessageCreateEvent {
+public class PrivateMessageUpdateEvent extends MessageUpdateEvent implements IPrivateMessageEvent {
 
-    public PrivateMessageCreateEvent(Identity identity, int sequence, MessageChannel channel, Message message) {
+    public PrivateMessageUpdateEvent(Identity identity, int sequence, MessageChannel channel, Message message) {
         super(identity, sequence, channel, message);
     }
 
@@ -20,5 +21,4 @@ public class PrivateMessageCreateEvent extends MessageCreateEvent {
     public PrivateChannel getPrivateChannel() {
         return super.getPrivateChannel();
     }
-
 }

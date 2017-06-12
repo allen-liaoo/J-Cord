@@ -1,22 +1,18 @@
 package org.alienideology.jcord.command;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.Internal;
 import org.alienideology.jcord.event.DispatcherAdaptor;
-import org.alienideology.jcord.event.message.GuildMessageCreateEvent;
+import org.alienideology.jcord.event.message.guild.IGuildMessageCreateEvent;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
-import org.alienideology.jcord.event.message.PrivateMessageCreateEvent;
+import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
 import org.alienideology.jcord.object.Guild;
 import org.alienideology.jcord.object.Message;
 import org.alienideology.jcord.object.channel.*;
-import org.alienideology.jcord.object.guild.GuildEmoji;
 import org.alienideology.jcord.object.guild.Member;
-import org.alienideology.jcord.object.guild.Role;
 import org.alienideology.jcord.object.message.EmbedMessageBuilder;
 import org.alienideology.jcord.object.message.MessageBuilder;
 import org.alienideology.jcord.object.user.User;
 
-import javax.xml.soap.Text;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -42,7 +38,7 @@ public class CommandFramework {
         this.dispatcher = new DispatcherAdaptor() {
 
             @Override
-            public void onGuildMessageCreate(GuildMessageCreateEvent event) {
+            public void onGuildMessageCreate(IGuildMessageCreateEvent event) {
                 if(filterSource(event)) return;
                 for (Command command : annotations.keySet()) {
                     if (command.privateOnly()) return;
@@ -138,8 +134,8 @@ public class CommandFramework {
                 types.put(PrivateChannel.class, event.getPrivateChannel());
 
                 types.put(MessageCreateEvent.class, event);
-                if (event instanceof GuildMessageCreateEvent) {
-                    types.put(GuildMessageCreateEvent.class, event);
+                if (event instanceof IGuildMessageCreateEvent) {
+                    types.put(IGuildMessageCreateEvent.class, event);
                 } else {
                     types.put(PrivateMessageCreateEvent.class, event);
                 }

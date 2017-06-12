@@ -23,3 +23,4 @@
 
 ### Event
  - [ ] Events corresponding to Discord Objects.
+ - [ ] onNext?Event (A consumer method that get triggered when the next ?event are fired.

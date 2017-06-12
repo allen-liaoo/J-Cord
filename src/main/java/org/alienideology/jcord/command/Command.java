@@ -17,7 +17,7 @@ public @interface Command {
     String[] aliases();
 
     /**
-     * @return True if this method can only be triggered by GuildMessageCreateEvent.
+     * @return True if this method can only be triggered by IGuildMessageCreateEvent.
      * Default is false: Can be trigger by all events.
      */
     boolean guildOnly() default false;

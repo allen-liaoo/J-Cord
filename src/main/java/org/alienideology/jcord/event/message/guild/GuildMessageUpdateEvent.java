@@ -1,18 +1,19 @@
-package org.alienideology.jcord.event.message;
+package org.alienideology.jcord.event.message.guild;
 
 import com.sun.istack.internal.NotNull;
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.object.channel.MessageChannel;
-import org.alienideology.jcord.object.channel.TextChannel;
+import org.alienideology.jcord.event.message.MessageUpdateEvent;
 import org.alienideology.jcord.object.Guild;
 import org.alienideology.jcord.object.Message;
+import org.alienideology.jcord.object.channel.MessageChannel;
+import org.alienideology.jcord.object.channel.TextChannel;
 
 /**
  * @author AlienIdeology
  */
-public class GuildMessageCreateEvent extends MessageCreateEvent {
+public class GuildMessageUpdateEvent extends MessageUpdateEvent implements IGuildMessageEvent {
 
-    public GuildMessageCreateEvent(Identity identity, int sequence, MessageChannel channel, Message message) {
+    public GuildMessageUpdateEvent(Identity identity, int sequence, MessageChannel channel, Message message) {
         super(identity, sequence, channel, message);
     }
 
@@ -27,4 +28,5 @@ public class GuildMessageCreateEvent extends MessageCreateEvent {
     public TextChannel getTextChannel() {
         return super.getTextChannel();
     }
+
 }
