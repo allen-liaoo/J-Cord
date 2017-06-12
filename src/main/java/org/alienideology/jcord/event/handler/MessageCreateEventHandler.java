@@ -1,7 +1,7 @@
 package org.alienideology.jcord.event.handler;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.event.message.guild.IGuildMessageCreateEvent;
+import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
 import org.alienideology.jcord.object.channel.Channel;
 import org.alienideology.jcord.object.channel.MessageChannel;
@@ -25,7 +25,7 @@ public class MessageCreateEventHandler extends EventHandler {
 
         if (!message.isFromSelf()) {
             if (message.fromType(Channel.Type.TEXT)) {
-                fireEvent(new IGuildMessageCreateEvent(identity, sequence, channel, message));
+                fireEvent(new GuildMessageCreateEvent(identity, sequence, channel, message));
             } else {
                 fireEvent(new PrivateMessageCreateEvent(identity, sequence, channel, message));
             }

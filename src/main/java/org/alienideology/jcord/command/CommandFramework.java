@@ -2,9 +2,9 @@ package org.alienideology.jcord.command;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.DispatcherAdaptor;
-import org.alienideology.jcord.event.message.guild.IGuildMessageCreateEvent;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
+import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
 import org.alienideology.jcord.object.Guild;
 import org.alienideology.jcord.object.Message;
 import org.alienideology.jcord.object.channel.*;
@@ -38,7 +38,7 @@ public class CommandFramework {
         this.dispatcher = new DispatcherAdaptor() {
 
             @Override
-            public void onGuildMessageCreate(IGuildMessageCreateEvent event) {
+            public void onGuildMessageCreate(GuildMessageCreateEvent event) {
                 if(filterSource(event)) return;
                 for (Command command : annotations.keySet()) {
                     if (command.privateOnly()) return;
@@ -134,8 +134,8 @@ public class CommandFramework {
                 types.put(PrivateChannel.class, event.getPrivateChannel());
 
                 types.put(MessageCreateEvent.class, event);
-                if (event instanceof IGuildMessageCreateEvent) {
-                    types.put(IGuildMessageCreateEvent.class, event);
+                if (event instanceof GuildMessageCreateEvent) {
+                    types.put(GuildMessageCreateEvent.class, event);
                 } else {
                     types.put(PrivateMessageCreateEvent.class, event);
                 }
@@ -160,8 +160,6 @@ public class CommandFramework {
                     }
                 } catch (IllegalAccessException | InvocationTargetException e1) {
                     e1.printStackTrace();
-                } catch (Exception e) {
-                    throw e;
                 }
             }
         }

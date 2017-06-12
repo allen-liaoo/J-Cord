@@ -3,7 +3,7 @@ import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.guild.GuildCreateEvent;
 import org.alienideology.jcord.event.guild.GuildRoleCreateEvent;
-import org.alienideology.jcord.event.message.guild.IGuildMessageCreateEvent;
+import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
 import org.alienideology.jcord.object.EmojiList;
@@ -56,7 +56,7 @@ public class ExampleDispatcher extends DispatcherAdaptor {
     }
 
     @Override
-    public void onGuildMessageCreate(IGuildMessageCreateEvent event) {
+    public void onGuildMessageCreate(GuildMessageCreateEvent event) {
         System.out.println("------------\nGuild msg: \n"+event.getChannel());
         System.out.println(event.getMessage()+"\n------------");
     }
