@@ -70,7 +70,6 @@ public class EventManager {
         return this;
     }
 
-
     public List<DispatcherAdaptor> getDispatcherAdaptors() {
         return dispatchers;
     }
@@ -109,7 +108,7 @@ public class EventManager {
         public Object object;
         public Method method;
 
-        public ObjectContainer(Object object, Method method) {
+        ObjectContainer(Object object, Method method) {
             this.object = object;
             this.method = method;
         }

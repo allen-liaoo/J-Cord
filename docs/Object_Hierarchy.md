@@ -10,6 +10,11 @@ IdentityType (Enumeration) - The types of identities available for building.
  - Bot - A bot account (Can be either a not-sharded bot, a shard, or an application)
  - Human - A human account (Client side, selfbot)
 
+## Bot
+Bot - The core of a Discord Bot
+ - BotInviteBuilder - A builder for building bot invite URL.
+ - PostAgent - An agent used to post bot status to bots websites.
+
 ## Discord Objects
 Discord Objects - Entities such as Guild, User, or Channel.
  - SnowFake (Interface) - Objects that has ID.

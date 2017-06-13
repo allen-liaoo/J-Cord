@@ -73,6 +73,10 @@ public class Identity {
         return manager.getDispatcherAdaptors();
     }
 
+    public List<Object> getSubscribers() {
+        return manager.getEventSubscribers();
+    }
+
     public List<CommandFramework> getFrameworks() {
         return manager.getCommandFrameworks();
     }
