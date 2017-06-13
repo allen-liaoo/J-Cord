@@ -56,6 +56,16 @@ public class Cache <T extends SnowFlake> {
         return this;
     }
 
+    public Cache<T> cache(int index, T t) {
+        caches.add(index, new CacheNode(t));
+        return this;
+    }
+
+    public Cache<T> cacheFirst(T t) {
+        cache(0, t);
+        return this;
+    }
+
     public Cache<T> cacheAll(T... t) {
         for (T e : t) {
             caches.add(new CacheNode(e));
@@ -86,6 +96,14 @@ public class Cache <T extends SnowFlake> {
         return caches.stream().filter(cache -> cache.element.getId().equals(t.getId())).count() > 1;
     }
 
+    public List<T> toList() {
+        List<T> list = new ArrayList<>();
+        for (CacheNode node: caches) {
+            list.add(node.element);
+        }
+        return list;
+    }
+
     public int size() {
         return caches.size();
     }
@@ -112,7 +130,7 @@ public class Cache <T extends SnowFlake> {
 
         CacheNode(T element) {
             this.element = element;
-            this.time = OffsetDateTime.from(Instant.now());
+            this.time = OffsetDateTime.now();
         }
 
         public boolean isOlder(CacheNode node) {

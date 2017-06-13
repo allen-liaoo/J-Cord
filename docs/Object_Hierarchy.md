@@ -31,6 +31,7 @@ Channel - A communication pipeline.
  - MessageChannel - A channel that allows users to send message.
    - TextChannel - A GuildChannel for text messages. (GuildChannel)
    - PrivateChannel - A one-to-one channel between two users.
+   - MessageHistory - The history of a MessageChannel, used to get lists of messages.
 
  - VoiceChannel - A GuildChannel for audio connections. (GuildChannel)
  - GuildChannel (Interface) - A Channel that exist in a guild.

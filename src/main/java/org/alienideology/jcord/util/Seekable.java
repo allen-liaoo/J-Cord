@@ -29,11 +29,11 @@ public class Seekable<V> {
         return result;
     }
 
-    public void getAsync(Consumer<V> action) {
-        getAsync(action, Throwable::printStackTrace);
+    public void onAsync(Consumer<V> action) {
+        onAsync(action, Throwable::printStackTrace);
     }
 
-    public void getAsync(Consumer<V> action, Consumer<Throwable> failure) {
+    public void onAsync(Consumer<V> action, Consumer<Throwable> failure) {
         Thread thread = new Thread(() -> {
             try {
                 result = callable.call();

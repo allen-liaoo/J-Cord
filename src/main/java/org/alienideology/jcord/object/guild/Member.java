@@ -29,8 +29,8 @@ public class Member extends DiscordObject implements SnowFlake, Mention {
         this.user = user;
         this.nickname = nickname;
         this.joinedDate = OffsetDateTime.parse(joinedDate);
-        Collections.sort(roles, (o1, o2) -> -1 * o1.compareTo(o2));
         this.roles = roles;
+        this.roles.sort((o1, o2) -> -1 * o1.compareTo(o2));
         this.permissions = initPermissions();
         this.isDeafened = isDeafened;
         this.isMuted = isMuted;

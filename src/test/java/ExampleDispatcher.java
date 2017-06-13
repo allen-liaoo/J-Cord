@@ -48,7 +48,6 @@ public class ExampleDispatcher extends DispatcherAdaptor {
 
             // Do stuff
             if (event.getMessage().getContent().replaceFirst("\\?", "").equals("ping")) {
-                EmbedMessageBuilder builder = new EmbedMessageBuilder();
                 event.getChannel().sendMessage(new EmojiList().getByAlias("man_surfing_tone5").getUnicode());
             }
 
@@ -67,8 +66,4 @@ public class ExampleDispatcher extends DispatcherAdaptor {
         System.out.println(event.getMessage()+"\n------------");
     }
 
-    @Override
-    public void onException(Exception exception) {
-        JCord.LOGGER.fatal(exception);
-    }
 }

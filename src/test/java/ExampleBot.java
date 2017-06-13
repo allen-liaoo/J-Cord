@@ -6,10 +6,6 @@ import org.alienideology.jcord.object.channel.PrivateChannel;
 import org.alienideology.jcord.object.channel.TextChannel;
 import org.alienideology.jcord.object.channel.VoiceChannel;
 import org.alienideology.jcord.object.Guild;
-import org.alienideology.jcord.object.message.EmbedMessageBuilder;
-import org.alienideology.jcord.util.Seekable;
-
-import java.util.concurrent.Callable;
 
 /**
  * A simple test bot for J-Cord

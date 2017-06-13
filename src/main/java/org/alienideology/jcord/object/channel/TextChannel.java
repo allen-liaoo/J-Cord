@@ -49,6 +49,10 @@ public class TextChannel extends MessageChannel implements GuildChannel, Mention
         return id.equals(guild.getId());
     }
 
+    public boolean isNSFWChannel() {
+        return name.startsWith("nsfw-") || name.equals("nsfw");
+    }
+
     @Override
     public String mention() {
         return "<#"+id+">";

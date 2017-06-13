@@ -119,7 +119,7 @@ public class DispatcherAdaptor {
             Fire Exceptions
         -----------------------
      */
-    public void onException (Exception exception) {
+    public final void onException (Exception exception) {
         exception.printStackTrace();
 
         if (exception instanceof ErrorResponseException) {

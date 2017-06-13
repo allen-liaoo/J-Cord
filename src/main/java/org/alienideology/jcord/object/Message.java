@@ -18,7 +18,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-public class Message extends DiscordObject implements SnowFlake {
+public class Message extends DiscordObject implements SnowFlake, Comparable<Message> {
 
     /* Constant */
     public final static int MAX_CONTENT_LENGTH = 2000;
@@ -145,6 +145,11 @@ public class Message extends DiscordObject implements SnowFlake {
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public int compareTo(Message o) {
+        return createdTime.compareTo(o.getCreatedTime());
     }
 
     @Override

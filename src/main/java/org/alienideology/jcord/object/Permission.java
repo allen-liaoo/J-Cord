@@ -94,6 +94,11 @@ public enum Permission {
         return this.level == ALL || this.level == CHANNEL_ONLY;
     }
 
+    @Override
+    public String toString() {
+        return name().substring(0,1)+name().substring(1).toLowerCase();
+    }
+
     enum PermissionLevel {
         ALL,
         GUILD_ONLY,

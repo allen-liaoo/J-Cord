@@ -44,7 +44,7 @@ public final class ObjectBuilder {
      * @return The Guild object
      */
     public Guild buildGuild (JSONObject json) {
-        if(handleBuildError(json)) return null;
+        handleBuildError(json);
 
         String id = json.getString("id");
 
@@ -133,7 +133,7 @@ public final class ObjectBuilder {
      * @return The guild object
      */
     public Guild buildGuildById (String id) {
-        JSONObject guild = null;
+        JSONObject guild;
         try {
             guild = new Requester(identity, HttpPath.Guild.GET_GUILD).request(id).getAsJSONObject();
         } catch (RuntimeException e) {
@@ -149,7 +149,7 @@ public final class ObjectBuilder {
      * @return TextChannel or VoiceChannel, wrapped as a GuildChannel
      */
     public GuildChannel buildGuildChannel (JSONObject json) {
-        if(handleBuildError(json)) return null;
+        handleBuildError(json);
 
         String guild_id = json.getString("guild_id");
         String id = json.getString("id");
@@ -180,7 +180,7 @@ public final class ObjectBuilder {
      * @return The GuildChannel object
      */
     public GuildChannel buildGuildChannelById (String id) {
-        JSONObject gChannel = null;
+        JSONObject gChannel;
         try {
             gChannel = new Requester(identity, HttpPath.Channel.GET_CHANNEL).request(id).getAsJSONObject();
         } catch (RuntimeException e) {
@@ -196,7 +196,7 @@ public final class ObjectBuilder {
      * @return The PrivateChannel object
      */
     public PrivateChannel buildPrivateChannel (JSONObject json) {
-        if(handleBuildError(json)) return null;
+        handleBuildError(json);
 
         String id = json.getString("id");
         User recipient = buildUser(json.getJSONObject("recipient"));
@@ -215,7 +215,7 @@ public final class ObjectBuilder {
      * @return The User object
      */
     public User buildUser (JSONObject json) {
-        if(handleBuildError(json)) return null;
+        handleBuildError(json);
 
         /* Basic Information */
         String id = json.has("webhook_id") ? json.getString("webhook_id") : json.getString("id");
@@ -253,7 +253,7 @@ public final class ObjectBuilder {
      * @return The Member object
      */
     public Member buildMember (JSONObject json, Guild guild) {
-        if(handleBuildError(json)) return null;
+        handleBuildError(json);
         String nick = !json.has("nick") || json.isNull("nick") ? null : json.getString("nick");
         String joined_at = json.getString("joined_at");
         boolean isDeaf = json.getBoolean("deaf");
@@ -292,7 +292,7 @@ public final class ObjectBuilder {
      */
     // TODO: Add lists (See Message object)
     public Message buildMessage (JSONObject json) {
-        if(handleBuildError(json)) return null;
+        handleBuildError(json);
 
         String id = json.getString("id");
         String channel_id = json.getString("channel_id");
@@ -340,7 +340,7 @@ public final class ObjectBuilder {
         Message message;
 
         /* StringMessage */
-        if (!json.getString("content").isEmpty() || json.getJSONArray("embeds").length() == 0) {
+        if (!content.isEmpty() || json.getJSONArray("embeds").length() == 0) {
             message =  new StringMessage(identity, id, author, content, timeStamp, mentions, mentionsRole, attachments, isTTS, mentionedEveryone, isPinned);
 
         /* EmbedMessage */
@@ -426,7 +426,6 @@ public final class ObjectBuilder {
             message = embedMessage;
         }
         message.setChannel(channel_id);  // Set channel may be null for MessageChannel's LastMessage
-        if (message.getChannel()!=null) message.getChannel().cacheMessage(message);
         return message;
     }
 
@@ -489,17 +488,14 @@ public final class ObjectBuilder {
     }
 
     /**
-     * Handle Error Responses
+     * Handle Error Responses or Error Code
      * @param json The json to be check
-     * @return Returns true if there is an error.
      */
-    private boolean handleBuildError (JSONObject json) {
+    private void handleBuildError (JSONObject json) {
         if (json.has("code")) {
             identity.getDispatchers().forEach((DispatcherAdaptor dispatcher) ->
                     dispatcher.onException(new ErrorResponseException(ErrorResponse.getByKey(json.getInt("code")))));
-            return true;
         }
-        return false;
     }
 
 }
