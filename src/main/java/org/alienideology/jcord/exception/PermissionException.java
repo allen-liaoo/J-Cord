@@ -14,6 +14,11 @@ public class PermissionException extends RuntimeException {
         this.permission = permission;
     }
 
+    public PermissionException(String cause) {
+        super(cause);
+        this.permission = null;
+    }
+
     public Permission getMissingPermission() {
         return permission;
     }

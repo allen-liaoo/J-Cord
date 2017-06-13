@@ -12,6 +12,7 @@ import org.alienideology.jcord.object.Permission;
 import org.alienideology.jcord.object.message.EmbedMessageBuilder;
 import org.alienideology.jcord.object.Message;
 import org.alienideology.jcord.object.message.MessageBuilder;
+import org.alienideology.jcord.object.user.User;
 import org.json.JSONObject;
 
 /**
@@ -117,7 +118,7 @@ public class MessageChannel extends Channel {
     private Message send(JSONObject json) {
         checkContentLength(json.getString("content"));
         if (isPrivate) {
-        } else if (!getGuild().getMember(identity.getSelf().getId()).hasPermissions(Permission.SEND_MESSAGES)) {
+        } else if (!getGuild().getSelfMember().hasPermissions(true, Permission.SEND_MESSAGES)) {
             throw new PermissionException(Permission.SEND_MESSAGES);
         }
 
@@ -173,6 +174,18 @@ public class MessageChannel extends Channel {
     private Message edit(JSONObject json, String id) {
         checkContentLength(json.getString("content"));
 
+        User author = new ObjectBuilder(identity).buildMessageById(this.id, id).getAuthor();
+
+        if (isPrivate) {
+        } else if (!author.isSelf()) {
+            // Edit message from other people
+            if (!getGuild().getSelfMember().hasPermissions(true, Permission.MANAGE_MESSAGES))
+                throw new PermissionException(Permission.MANAGE_MESSAGES);
+            // Edit message from server owner
+            if (getGuild().getOwner().getUser().equals(author) && !getGuild().getSelfMember().isOwner())
+                throw new PermissionException("Can not edit a message sent by the server owner!");
+        }
+
         // The MessageUpdateEvent get fired by this, but will be ignored
         JSONObject msg = new Requester(identity, HttpPath.Channel.EDIT_MESSAGE).request(this.id, id)
                 .updateRequestWithBody(http -> http.header("Content-Type", "application/json").body(json)).getAsJSONObject();
@@ -209,17 +222,18 @@ public class MessageChannel extends Channel {
 
     @Internal
     private Message delete(String id) {
-        JSONObject msg = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(this.id, id).getAsJSONObject();
-        Message deleted = new ObjectBuilder(identity).buildMessage(msg);
-        if (!deleted.getAuthor().equals(identity.getSelf())) {  // Delete a message from others
+        User author = new ObjectBuilder(identity).buildMessageById(this.id, id).getAuthor();
+        if (!author.isSelf()) {  // Delete a message from others
             if (isPrivate) {
                 throw new IllegalArgumentException("Cannot delete the recipient's message in a PrivateChannel!");
             }
-            if (!guild.getMember(identity.getSelf().getId()).hasPermissions(Permission.MANAGE_MESSAGES)) {
+            if (!getGuild().getSelfMember().hasPermissions(true, Permission.MANAGE_MESSAGES)) {
                 throw new PermissionException(Permission.MANAGE_MESSAGES);
             }
         }
-        return deleted;
+
+        JSONObject msg = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(this.id, id).getAsJSONObject();
+        return new ObjectBuilder(identity).buildMessage(msg);
     }
 
     @Internal
@@ -229,6 +243,31 @@ public class MessageChannel extends Channel {
             exception.printStackTrace();
             throw new IllegalArgumentException();
         }
+    }
+
+    /**
+     * Pin a message by ID
+     * @param messageId The message id.
+     */
+    public void pinMessage(String messageId) {
+        pin(messageId);
+    }
+
+    /**
+     * Pin a message
+     * @param message The message object.
+     */
+    public void pinMessage(Message message) {
+        pin(message.getId());
+    }
+
+    private void pin(String id) {
+        if (isPrivate) {
+        } else if (!getGuild().getSelfMember().hasPermissions(true, Permission.MANAGE_MESSAGES)) {
+             throw new PermissionException(Permission.MANAGE_MESSAGES);
+        }
+
+        new Requester(identity, HttpPath.Channel.ADD_PINNED_MESSAGE).request(this.id, id).performRequest();
     }
 
     /**

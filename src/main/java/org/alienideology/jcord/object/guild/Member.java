@@ -51,14 +51,27 @@ public class Member extends DiscordObject implements SnowFlake, Mention {
     }
 
     /**
+     * Check if this member have one of the given permissions.
+     * @param checkAdmin If true, returns true if the member have administrator permission.
+     * @param permissions The varargs of permission enums to be checked.
+     * @return True if the member have one of the given permissions.
+     */
+    public boolean hasPermissions (boolean checkAdmin, Permission... permissions) {
+        if (checkAdmin && hasPermissions(Permission.ADMINISTRATOR)) return true;
+        return hasPermissions(permissions);
+    }
+
+    /**
      * Check if this member have one of the given permissions
-     * To check if this member have all the permissions, see #hasAllPermissions(Permission...)
+     * @deprecated #hasPermissions(boolean, Permission...) To check with the member having administrator permission.
+     * @see #hasAllPermissions(Permission...) To check if this member have all the permissions.
      * @param permissions The varargs of permission enums to be checked
      * @return True if the member have one of the given permissions
      */
+    @Deprecated
     public boolean hasPermissions (Permission... permissions) {
-        for (Role role : roles) {
-            if (role.hasPermissions(permissions))
+        for (Permission perm : permissions) {
+            if (this.permissions.contains(perm))
                 return true;
         }
         return false;
@@ -100,6 +113,10 @@ public class Member extends DiscordObject implements SnowFlake, Mention {
 
     public List<Permission> getPermissions() {
         return Collections.unmodifiableList(permissions);
+    }
+
+    public boolean isOwner() {
+        return guild.getOwner().equals(this);
     }
 
     public boolean isDeafened() {

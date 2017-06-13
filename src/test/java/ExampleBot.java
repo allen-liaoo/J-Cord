@@ -2,6 +2,7 @@ import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.command.CommandFramework;
+import org.alienideology.jcord.object.Permission;
 import org.alienideology.jcord.object.channel.PrivateChannel;
 import org.alienideology.jcord.object.channel.TextChannel;
 import org.alienideology.jcord.object.channel.VoiceChannel;
@@ -37,8 +38,6 @@ public class ExampleBot {
             for (PrivateChannel dm : bot.getPrivateChannels()) {
                 System.out.println("DM:\t"+dm.getRecipient().getName());
             }
-
-            System.out.println(bot.getTextChannel("311250670068170752").getLatestMessage().getReactions());
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -95,6 +95,10 @@ public class User extends DiscordObject implements SnowFlake, Mention {
         return MFAEnabled;
     }
 
+    public boolean isSelf() {
+        return identity.getSelf().getId().equals(id);
+    }
+
     @Override
     public String getId() {
         return id;

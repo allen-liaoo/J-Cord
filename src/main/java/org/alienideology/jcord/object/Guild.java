@@ -166,7 +166,7 @@ public class Guild extends DiscordObject implements SnowFlake {
     @NotNull
     public Member getSelfMember() {
         for (Member member : members) {
-            if (member.getId().equals(identity.getSelf().getId()))
+            if (member.getUser().isSelf())
                 return member;
         }
         return null;
