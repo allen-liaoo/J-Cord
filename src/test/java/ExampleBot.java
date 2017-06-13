@@ -2,6 +2,7 @@ import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.command.CommandFramework;
+import org.alienideology.jcord.event.EventManager;
 import org.alienideology.jcord.object.Permission;
 import org.alienideology.jcord.object.channel.PrivateChannel;
 import org.alienideology.jcord.object.channel.TextChannel;
@@ -20,9 +21,13 @@ public class ExampleBot {
             Identity bot = new IdentityBuilder()
                     .setIdentityType(IdentityType.BOT)
                     .useToken(Token.TOP_SECRET)
-                    .registerDispatchers(new ExampleDispatcher())
-                    .registerCommandFramework(new CommandFramework().setPrefixes("=")
-                            .registerCommandResponder(new ExampleResponder()))
+                    .setEventManager(
+                        new EventManager()
+                            .registerDispatchers(new ExampleDispatcher())
+                            .registerCommandFrameworks(new CommandFramework().setPrefixes("=")
+                                .registerCommandResponder(new ExampleResponder()))
+                            .registerEventSubscriber(new ExampleSubscriber())
+                    )
                     .build(true);
 
             for (Guild guild : bot.getGuilds()) {

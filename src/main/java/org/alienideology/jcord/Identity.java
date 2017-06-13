@@ -7,6 +7,7 @@ import com.neovisionaries.ws.client.*;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
+import org.alienideology.jcord.event.EventManager;
 import org.alienideology.jcord.exception.ErrorResponseException;
 import org.alienideology.jcord.gateway.ErrorResponse;
 import org.alienideology.jcord.gateway.GatewayAdaptor;
@@ -26,7 +27,6 @@ import java.net.ConnectException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,8 +45,7 @@ public class Identity {
     private WebSocket socket;
     public Connection CONNECTION = Connection.OFFLINE;
 
-    private List<DispatcherAdaptor> listeners = new ArrayList<>();
-    private List<CommandFramework> frameworks = new ArrayList<>();
+    private EventManager manager;
 
     private User self;
     private List<User> users = new ArrayList<>();
@@ -66,17 +65,16 @@ public class Identity {
         return this;
     }
 
-    public List<DispatcherAdaptor> getDispatchers () {
-        return listeners;
+    public EventManager getEventManager() {
+        return manager;
     }
 
-    Identity addCommandFrameworks(CommandFramework... frameworks) {
-        this.frameworks.addAll(Arrays.asList(frameworks));
-        return this;
+    public List<DispatcherAdaptor> getDispatchers () {
+        return manager.getDispatcherAdaptors();
     }
 
     public List<CommandFramework> getFrameworks() {
-        return frameworks;
+        return manager.getCommandFrameworks();
     }
 
     public String getToken () {
@@ -259,8 +257,8 @@ public class Identity {
     }
 
     @Internal
-    Identity addDispatchers(DispatcherAdaptor... dispatchers) {
-        this.listeners.addAll(Arrays.asList(dispatchers));
+    Identity setEventManager(EventManager manager) {
+        this.manager = manager;
         return this;
     }
 

@@ -1,8 +1,7 @@
 package org.alienideology.jcord.object;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.event.DispatcherAdaptor;
+import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.exception.ErrorResponseException;
 import org.alienideology.jcord.gateway.ErrorResponse;
 import org.alienideology.jcord.gateway.HttpPath;
@@ -524,8 +523,8 @@ public final class ObjectBuilder {
      */
     private void handleBuildError (JSONObject json) {
         if (json.has("code")) {
-            identity.getDispatchers().forEach((DispatcherAdaptor dispatcher) ->
-                    dispatcher.onException(new ErrorResponseException(ErrorResponse.getByKey(json.getInt("code")))));
+            identity.getEventManager().onEvent(new ExceptionEvent(identity,
+                    new ErrorResponseException(ErrorResponse.getByKey(json.getInt("code")))));
         }
     }
 

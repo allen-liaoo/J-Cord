@@ -19,6 +19,8 @@
  - [ ] Permission (Half-Done, Missing permissions overrides for channels)
  - [x] Emoji
  - [ ] Invite
+ - [ ] InviteBuilder
+ - [ ] BotInviteBuilder
  - [ ] Webhook
 
 ### Event

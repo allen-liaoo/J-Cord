@@ -8,7 +8,7 @@ import org.alienideology.jcord.event.message.guild.*;
 import org.alienideology.jcord.exception.ErrorResponseException;
 
 /**
- * Event Listener used to listen to events and perform actions
+ * DispatcherAdaptor - Event listener used to listen to events and perform actions
  * @author AlienIdeology
  */
 @SuppressWarnings("WeakerAccess")
@@ -19,21 +19,25 @@ public class DispatcherAdaptor {
             Fire Events
         -------------------
      */
-    public final void onEvent (Event event) {
-        if (event instanceof GatewayEvent) {
-            onGatewayEvent((GatewayEvent) event);
+    final void dispatchEvent(Event event) {
+        onEvent(event);
+        if (event instanceof ExceptionEvent) {
+            dispatchException((ExceptionEvent) event);
+        } else if (event instanceof GatewayEvent) {
+            dispatchGatewayEvent((GatewayEvent) event);
         } else if (event instanceof GuildEvent) {
-            onGuildEvent((GuildEvent) event);
+            dispatchGuildEvent((GuildEvent) event);
         } else if (event instanceof MessageEvent) {
-            onMessageEvent((MessageEvent) event);
+            dispatchMessageEvent((MessageEvent) event);
         }
-
     }
+
+    public void onEvent (Event event) {}
 
     /**
      * Gateway Events
      */
-    private void onGatewayEvent (GatewayEvent event) {
+    private void dispatchGatewayEvent(GatewayEvent event) {
         if (event instanceof ReadyEvent) {
             onReady((ReadyEvent) event);
         } else if (event instanceof ResumedEvent) {
@@ -48,7 +52,7 @@ public class DispatcherAdaptor {
     /**
      * Guild Events
      */
-    private void onGuildEvent (GuildEvent event) {
+    private void dispatchGuildEvent(GuildEvent event) {
         if (event instanceof GuildCreateEvent) {
             onGuildCreate((GuildCreateEvent) event);
         } else if (event instanceof GuildDeleteEvent) {
@@ -71,7 +75,7 @@ public class DispatcherAdaptor {
     /**
      * Message Events
      */
-    private void onMessageEvent (MessageEvent event) {
+    private void dispatchMessageEvent(MessageEvent event) {
         if (event instanceof MessageCreateEvent) {
             onMessageCreate((MessageCreateEvent) event);
             if (event instanceof GuildMessageCreateEvent) {
@@ -119,13 +123,14 @@ public class DispatcherAdaptor {
             Fire Exceptions
         -----------------------
      */
-    public final void onException (Exception exception) {
-        exception.printStackTrace();
-
-        if (exception instanceof ErrorResponseException) {
-            onErrorResponseException((ErrorResponseException) exception);
+    private void dispatchException (ExceptionEvent event) {
+        onException(event);
+        if (event.getException() instanceof ErrorResponseException) {
+            onErrorResponseException((ErrorResponseException) event.getException());
         }
     }
+
+    public void onException (ExceptionEvent event) {}
 
     public void onErrorResponseException (ErrorResponseException exception) {}
 

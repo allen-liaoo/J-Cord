@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
  * @author AlienIdeology
  * @since 0.0.2
  */
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 public @interface Internal {
 
     Type type() default Type.SETTER;

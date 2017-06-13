@@ -32,7 +32,7 @@ public abstract class EventHandler {
      * @param event The event to get fired
      */
     public void fireEvent (Event event) {
-        identity.getDispatchers().forEach(dispatcher -> dispatcher.onEvent(event));
+        identity.getEventManager().onEvent(event);
     }
 
     /**

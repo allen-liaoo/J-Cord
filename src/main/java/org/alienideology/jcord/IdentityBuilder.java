@@ -3,6 +3,7 @@ package org.alienideology.jcord;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
+import org.alienideology.jcord.event.EventManager;
 import org.alienideology.jcord.exception.ErrorResponseException;
 import org.alienideology.jcord.gateway.ErrorResponse;
 
@@ -23,15 +24,12 @@ public class IdentityBuilder {
     private IdentityType type;
     private String token;
 
-    private List<DispatcherAdaptor> dispatchers;
-    private List<CommandFramework> frameworks;
+    private EventManager manager;
 
     /**
      * Default Constructor
      */
     public IdentityBuilder () {
-        dispatchers = new ArrayList<>();
-        frameworks = new ArrayList<>();
     }
 
     /**
@@ -44,9 +42,7 @@ public class IdentityBuilder {
     @Deprecated
     public Identity build () throws IllegalArgumentException, ErrorResponseException, IOException {
         Identity id =  new Identity(type, new WebSocketFactory());
-        id.login(token);
-        dispatchers.forEach(id::addDispatchers);
-        frameworks.forEach(id::addCommandFrameworks);
+        id.login(token).setEventManager(manager);
         return id;
     }
 
@@ -112,26 +108,12 @@ public class IdentityBuilder {
     }
 
     /**
-     * Register objects that extend DispatcherAdaptor, used to perform actions when a event is fired.
-     * @see {@link #registerCommandFramework(CommandFramework...)} for native command framework support.
-     * @param adaptors The adaptors to register
+     * Set the event manager of this identity
+     * @param manager The event manager
      * @return IdentityBuilder for chaining.
      */
-    public IdentityBuilder registerDispatchers(DispatcherAdaptor... adaptors) {
-        this.dispatchers.addAll(Arrays.asList(adaptors));
-        return this;
-    }
-
-    /**
-     * Register Native CommandFramework.
-     * @param frameworks The frameworks to register
-     * @return IdentityBuilder for chaining.
-     */
-    public IdentityBuilder registerCommandFramework(CommandFramework... frameworks) {
-        for (CommandFramework framework : frameworks) {
-            this.dispatchers.add(framework.getDispatcher());
-            this.frameworks.add(framework);
-        }
+    public IdentityBuilder setEventManager(EventManager manager) {
+        this.manager = manager;
         return this;
     }
 }

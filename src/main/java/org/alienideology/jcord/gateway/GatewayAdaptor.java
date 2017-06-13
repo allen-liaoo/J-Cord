@@ -5,6 +5,7 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.event.handler.*;
 import org.alienideology.jcord.exception.ErrorResponseException;
 import org.apache.commons.logging.impl.SimpleLog;
@@ -198,7 +199,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
      * @param exception The exception being caught
      */
     private void handleError(Exception exception) {
-        identity.getDispatchers().forEach(listener -> listener.onException(exception));
+        identity.getEventManager().onEvent(new ExceptionEvent(identity, exception));
     }
 
     private void sendHeartBeat(long interval) {
