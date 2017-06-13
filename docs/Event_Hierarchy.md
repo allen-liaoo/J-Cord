@@ -1,8 +1,4 @@
 Event - Whenever a change happens to an entity, an event get fired.
- - EventManager - The manager of DispatcherAdaptors, EvenSubscribers and CommandFrameworks.
-   - DispatcherAdaptor - Event listener used to listen to events and perform actions.
-   - EventSubscriber - An annotation used to annotate methods that subscribe an event.
-   - CommandFramework - See Command section.
  - GatewayEvent - Events that are fired at connection.
    - ReadyEvent - Event that fired when the Discord server is ready.
    - ResumedEvent - Event fired when reconnect to the Discord server.

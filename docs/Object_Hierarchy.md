@@ -47,6 +47,11 @@ Message - A text bubble some user just said.
      embed messages and send in channels.
 
 ## Event
+Event - Whenever a change happens to an entity, an event get fired.
+ - EventManager - The manager of DispatcherAdaptors, EvenSubscribers and CommandFrameworks.
+   - DispatcherAdaptor - Event listener used to listen to events and perform actions.
+   - EventSubscriber - An annotation used to annotate methods that subscribe an event.
+   - CommandFramework - See Command section. <br />
 See [Event_Hierarchy.md](/docs/Event_Hierarchy.md) for more information.
 
 ## Exception
