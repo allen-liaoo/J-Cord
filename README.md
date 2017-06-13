@@ -13,7 +13,9 @@ Identity bot = new IdentityBuilder()
     .setIdentityType(IdentityType.BOT)
     .useToken(Token.TOP_SECRET)
     .setEventManager(
-        new EventManager().registerDispatchers(new ExampleDispatcher()))
+        new EventManager().registerDispatchers(
+            new ExampleDispatcher())
+        )
     .build(true);
 ```
 - EventManager (Ways to subscribe to events):
@@ -49,14 +51,16 @@ Identity bot = new IdentityBuilder()
     ```
     When building identity:
     ```java
-    new EventManager().registerEventSubscriber(new ExampleSubscriber())
+    new EventManager().registerEventSubscriber(
+        new ExampleSubscriber()
+    )
     ```
 - CommandFramework
  1. Create classes that implements CommandResponder (Empty interface)
  2. Annotate methods as @Command
     ```java
-    public class ExampleResponder {
-        @Command (aliases = {"ping", "pong", "thump"}
+    public class ExampleResponder implements CommandResponder {
+        @Command (aliases = {"ping", "pong", "thump"})
         public String onPingCommand (String[] args, MessageCreateEvent event) {
             return event.getUser().mention()+" pong!";
         }
@@ -67,7 +71,9 @@ Identity bot = new IdentityBuilder()
     ```java
     new EventManager().registerCommandFrameworks(
         new CommandFramework()
-            .setPrefixes("=").registerCommandResponder(new ExampleResponder())
+            .setPrefixes("=").registerCommandResponder(
+                new ExampleResponder()
+            )
     )
     ```
 - PostAgent (Post bot status to websites): <br />
