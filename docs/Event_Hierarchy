@@ -1,0 +1,17 @@
+Event - Whenever a change happens to an entity, an event get fired.
+ - EventManager - The manager of DispatcherAdaptors, EvenSubscribers and CommandFrameworks.
+   - DispatcherAdaptor - Event listener used to listen to events and perform actions.
+   - EventSubscriber - An annotation used to annotate methods that subscribe an event.
+   - CommandFramework - See Command section.
+ - GatewayEvent - Events that are fired at connection.
+   - ReadyEvent - Event that fired when the Discord server is ready.
+   - ResumedEvent - Event fired when reconnect to the Discord server.
+ - GuildEvent - Any events that happens under a guild.
+   - GuildCreateEvent - Fired whenever a guild is detected.
+   - GuildDeleteEvent - Fired whenever the identity left a guild, or the user deletes a guild.
+   - GuildUnavailableEvent - Fired when a guild became unavailable.
+   - GuildRoleCreatedEvent - Fired whenever a role is created.
+ - MessageEvent - Events that are related to a message.
+   - MessageCreateEvent - Fired when a message was sent.
+   - MessageUpdateEvent - Fired when a message was edited.
+   - MessageDeleteEvent - Fired when a message was deleted.

@@ -35,8 +35,7 @@
     <br /> When building identity:
     ```java
         new EventManager().registerDispatchers(
-            new CommandAdaptor(),
-            new GuildAdaptor)
+            new ExampleDispatcher())
         )
     ```
  2. Use `EventSubscriber` annotation: <br />

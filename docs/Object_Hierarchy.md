@@ -11,7 +11,7 @@ IdentityType (Enumeration) - The types of identities available for building.
  - Human - A human account (Client side, selfbot)
 
 ## Discord Objects
-Discord Objects - entities such as Guild, User, or Channel.
+Discord Objects - Entities such as Guild, User, or Channel.
  - SnowFake (Interface) - Objects that has ID.
  - Mention (Interface) - Objects that are mentionable.
  - User - A base entity, can be a member of guild/private channel, and bot/human.
@@ -41,27 +41,15 @@ Message - A text bubble some user just said.
  - StringMessage - Normal messages that only contains string.
  - EmbedMessage - Embed messages that can by sent by bot.
  - Reaction - A emoji that users reacted under a message.
- <br /><br />
  - Builders
    - MessageBuilder - Build a message, can be StringMessage or EmbedMessage.
    - EmbedMessageBuilder - Build a JSONObject of an embed, used to build
      embed messages and send in channels.
 
 ## Event
-Event - Whenever a change happens to an entity, an event get fired.
- - EventManager - The manager of DispatcherAdaptors, EvenSubscribers and CommandFrameworks.
-   - DispatcherAdaptor - Event listener used to listen to events and perform actions.
-   - EventSubscriber - An annotation used to annotate methods that subscribe an event.
-   - CommandFramework - See Command section.
- - GatewayEvent - Events that are fired at connection.
-   - ReadyEvent - Event that fired when the Discord server is ready.
-   - ResumedEvent - Event fired when reconnect to the Discord server.
- - GuildEvent - Any events that happens under a guild.
-   - GuildCreateEvent - Fired whenever a guild is detected.
-   - GuildRoleCreatedEvent - Fired whenever a role is created.
+See [Event_Hierarchy.md](/docs/Event_Hierarchy.md) for more information.
 
 ## Exception
- - ExceptionThrower - Handles JSON Error Response and Http Error Codes.
  - ErrorResponseException - An exception for Json Error Responses.
 
 ## Command
