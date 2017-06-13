@@ -4,6 +4,7 @@ import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.Internal;
 import org.alienideology.jcord.object.guild.Role;
+import org.alienideology.jcord.object.message.Reaction;
 import org.alienideology.jcord.object.message.StringMessage;
 import org.alienideology.jcord.object.user.User;
 import org.alienideology.jcord.object.channel.Channel;
@@ -35,8 +36,7 @@ public class Message extends DiscordObject implements SnowFlake, Comparable<Mess
     protected List<User> mentions;
     protected List<Role> mentionedRoles;
     private List<Attachment> attachments;
-//    private List<Embeds> embeds;
-//    private List<EmojiList> reactions;
+    private List<Reaction> reactions;
 
     private boolean isTTS;
 
@@ -53,6 +53,7 @@ public class Message extends DiscordObject implements SnowFlake, Comparable<Mess
         this.mentions = mentions;
         this.mentionedRoles = mentionedRoles;
         this.attachments = attachments;
+        this.reactions = new ArrayList<>();
         this.isTTS = isTTs;
         this.mentionedEveryone = mentionedEveryone;
         this.isPinned = isPinned;
@@ -80,6 +81,7 @@ public class Message extends DiscordObject implements SnowFlake, Comparable<Mess
     }
 
     public boolean fromType(Channel.Type type) {
+        if (channel == null) return false;
         return channel.getType().equals(type);
     }
 
@@ -124,6 +126,14 @@ public class Message extends DiscordObject implements SnowFlake, Comparable<Mess
 
     public OffsetDateTime getCreatedTime() {
         return createdTime;
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public List<Reaction> getReactions() {
+        return reactions;
     }
 
     public boolean isEmbed() {
@@ -174,6 +184,11 @@ public class Message extends DiscordObject implements SnowFlake, Comparable<Mess
         this.channel = identity.getTextChannel(channel) == null ?
                 identity.getPrivateChannel(channel) : identity.getTextChannel(channel);
         return this;
+    }
+
+    @Internal
+    protected void setReactions(List<Reaction> reactions) {
+        this.reactions = reactions;
     }
 
     public static class Attachment implements SnowFlake {

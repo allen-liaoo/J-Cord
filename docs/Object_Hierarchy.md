@@ -40,6 +40,7 @@ Channel - A communication pipeline.
 Message - A text bubble some user just said.
  - StringMessage - Normal messages that only contains string.
  - EmbedMessage - Embed messages that can by sent by bot.
+ - Reaction - A emoji that users reacted under a message.
  <br /><br />
  - Builders
    - MessageBuilder - Build a message, can be StringMessage or EmbedMessage.

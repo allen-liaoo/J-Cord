@@ -38,6 +38,8 @@ public class ExampleBot {
                 System.out.println("DM:\t"+dm.getRecipient().getName());
             }
 
+            System.out.println(bot.getTextChannel("311250670068170752").getLatestMessage().getReactions());
+
         } catch (Exception e) {
             e.printStackTrace();
         }

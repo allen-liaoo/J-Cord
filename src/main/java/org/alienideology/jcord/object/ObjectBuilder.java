@@ -12,6 +12,7 @@ import org.alienideology.jcord.object.guild.GuildEmoji;
 import org.alienideology.jcord.object.guild.Member;
 import org.alienideology.jcord.object.guild.Role;
 import org.alienideology.jcord.object.message.EmbedMessage;
+import org.alienideology.jcord.object.message.Reaction;
 import org.alienideology.jcord.object.message.StringMessage;
 import org.alienideology.jcord.object.user.User;
 import org.json.JSONArray;
@@ -82,6 +83,15 @@ public final class ObjectBuilder {
                 guild.addRole(buildRole(roleJson, guild));
             }
 
+            /* Build GuildEmojis */
+            // Build this after roles because emojis have roles field
+            // Build this before channels because channel latest messages requires GuildEmoji
+            JSONArray emojis = json.getJSONArray("emojis");
+            for (int i = 0; i < emojis.length(); i++) {
+                JSONObject emojiJson = emojis.getJSONObject(i);
+                guild.addGuildEmoji(buildEmoji(emojiJson, guild));
+            }
+
             /* Build Channels */
             // LastMessage requires role field
             try {
@@ -97,14 +107,6 @@ public final class ObjectBuilder {
 
             } catch (RuntimeException e) {
                 identity.LOG.error("Building guild channels. (Guild: "+guild.toString()+")", e);
-            }
-
-            /* Build GuildEmojis */
-            // Build this after roles because emojis have roles field
-            JSONArray emojis = json.getJSONArray("emojis");
-            for (int i = 0; i < emojis.length(); i++) {
-                JSONObject emojiJson = emojis.getJSONObject(i);
-                guild.addGuildEmoji(buildEmoji(emojiJson, guild));
             }
 
             /* Build Members */
@@ -293,6 +295,7 @@ public final class ObjectBuilder {
     // TODO: Add lists (See Message object)
     public Message buildMessage (JSONObject json) {
         handleBuildError(json);
+        Message message;
 
         String id = json.getString("id");
         String channel_id = json.getString("channel_id");
@@ -322,7 +325,7 @@ public final class ObjectBuilder {
         /* Attachments */
         List<Message.Attachment> attachments = new ArrayList<>();
         JSONArray attachs = json.getJSONArray("attachments");
-        for (int i = 0; i < mentionRole.length(); i++) {
+        for (int i = 0; i < attachs.length(); i++) {
             JSONObject attachment = attachs.getJSONObject(i);
             String attachmentId = attachment.getString("id");
             String filename = attachment.has("filename") && !attachment.isNull("filename") ?
@@ -336,8 +339,6 @@ public final class ObjectBuilder {
         boolean isTTS = json.getBoolean("tts");
         boolean mentionedEveryone = json.getBoolean("mention_everyone");
         boolean isPinned = json.has("pinned") && json.getBoolean("pinned");
-
-        Message message;
 
         /* StringMessage */
         if (!content.isEmpty() || json.getJSONArray("embeds").length() == 0) {
@@ -422,10 +423,40 @@ public final class ObjectBuilder {
                 String proxy_url = footer.has("proxy_icon_url") ? footer.getString("proxy_icon_url") : null;
                 embedMessage.setFooter(new EmbedMessage.Footer(name, icon_url, proxy_url));
             }
-
             message = embedMessage;
         }
         message.setChannel(channel_id);  // Set channel may be null for MessageChannel's LastMessage
+
+        /* Reactions */
+        // Build this at last because GuildEmoji requires Message#getGuild, which can only be called after setting channel
+        List<Reaction> reactions = new ArrayList<>();
+        if (json.has("reactions")) {
+            boolean isFromGuild = message.fromType(Channel.Type.TEXT);
+            EmojiList emojis = new EmojiList();
+            JSONArray reacts = json.getJSONArray("reactions");
+
+            for (int i = 0; i < reacts.length(); i++) {
+                JSONObject react = reacts.getJSONObject(i);
+                int reactedTimes = react.getInt("count");
+                boolean selfReacted = react.has("me") && react.getBoolean("me");
+
+                Reaction reaction;
+                JSONObject emoji = react.getJSONObject("emoji");
+
+                if (emoji.has("id") && !emoji.isNull("id")) {
+                    if (isFromGuild && message.getGuild() != null) {  // From recognized guild
+                        reaction = new Reaction(identity, reactedTimes, selfReacted, message.getGuild().getGuildEmoji(emoji.getString("id")));
+                    } else {    // Global guild emoji
+                        reaction = new Reaction(identity, reactedTimes, selfReacted, new GuildEmoji(identity, emoji.getString("id"), emoji.getString("name")));
+                    }
+                } else {
+                    reaction = new Reaction(identity, reactedTimes, selfReacted, emojis.getByUnicode(emoji.getString("name")));
+                }
+                reactions.add(reaction);
+            }
+        }
+        message.setReactions(reactions);
+
         return message;
     }
 

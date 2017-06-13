@@ -6,6 +6,7 @@ import org.alienideology.jcord.object.Guild;
 import org.alienideology.jcord.object.Mention;
 import org.alienideology.jcord.object.SnowFlake;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,6 +23,16 @@ public class GuildEmoji extends DiscordObject implements SnowFlake, Mention {
     private List<Role> roles;
     private boolean requireColon;
 
+    /**
+     * Constructor for global guild emojis
+     */
+    public GuildEmoji(Identity identity, String id, String name) {
+        this(identity, null, id, name, new ArrayList<>(), false);
+    }
+
+    /**
+     * Default Constructor
+     */
     public GuildEmoji(Identity identity, Guild guild, String id, String name, List<Role> roles, boolean requireColon) {
         super(identity);
         this.guild = guild;

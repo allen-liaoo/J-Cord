@@ -175,7 +175,7 @@ public class Guild extends DiscordObject implements SnowFlake {
     /**
      * Get a member by id
      * @param id The specified id
-     * @return a Member or null if no member is found.
+     * @return a Member or null if no member was found.
      */
     @Nullable
     public Member getMember(String id) {
@@ -193,7 +193,7 @@ public class Guild extends DiscordObject implements SnowFlake {
     /**
      * Get a role by id.
      * @param id The specified id
-     * @return a Role or null if no role is found.
+     * @return a Role or null if no role was found.
      */
     @Nullable
     public Role getRole(String id) {
@@ -217,6 +217,21 @@ public class Guild extends DiscordObject implements SnowFlake {
         return Collections.unmodifiableList(roles);
     }
 
+    /**
+     * Get a guild emoji by id.
+     * @param id The specified id
+     * @return a GuildEmoji or null if no emoji was found.
+     */
+    @Nullable
+    public GuildEmoji getGuildEmoji(String id) {
+        for (GuildEmoji emoji : emojis) {
+            if (emoji.getId().equals(id)) {
+                return emoji;
+            }
+        }
+        return null;
+    }
+
     public List<GuildEmoji> getGuildEmojis() {
         return emojis;
     }
@@ -224,7 +239,7 @@ public class Guild extends DiscordObject implements SnowFlake {
     /**
      * Get a text channel by id.
      * @param id The specified id
-     * @return a TextChannel or null if no channel is found.
+     * @return a TextChannel or null if no channel was found.
      */
     @Nullable
     public TextChannel getTextChannel(String id) {
