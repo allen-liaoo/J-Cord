@@ -99,6 +99,7 @@ Identity bot = new IdentityBuilder()
     Note: You must create an account and get a token from one of the websites first!
 
 ## More
+- Javadocs: [AlienIdeology.Github.io/J-Cord/](https://alienideology.github.io/J-Cord/)
 - For seeing into the future, read [Todo.md](/docs/Todo.md)
 - Also read [Object_Hierarchy.md](/docs/Object_Hierarchy.md)
 for more information about this project's structure.
