@@ -28,7 +28,7 @@ public class EventManager {
      * @param dispatchers The dispatchers to register
      * @return EventManager for chaining.
      */
-    public EventManager registerDispatchers(DispatcherAdaptor... dispatchers) {
+    public EventManager registerDispatcherAdaptors(DispatcherAdaptor... dispatchers) {
         this.dispatchers.addAll(Arrays.asList(dispatchers));
         return this;
     }
@@ -39,7 +39,7 @@ public class EventManager {
      * @return EventManager for chaining.
      */
     @SuppressWarnings("unchecked")
-    public EventManager registerEventSubscriber(Object... subscribers) {
+    public EventManager registerEventSubscribers(Object... subscribers) {
         this.subscribers.addAll(Arrays.asList(subscribers));
         for (Object obj : subscribers) {
             for (Method method : obj.getClass().getMethods()) {

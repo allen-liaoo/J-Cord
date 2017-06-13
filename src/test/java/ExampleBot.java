@@ -3,7 +3,6 @@ import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.EventManager;
-import org.alienideology.jcord.object.Permission;
 import org.alienideology.jcord.object.channel.PrivateChannel;
 import org.alienideology.jcord.object.channel.TextChannel;
 import org.alienideology.jcord.object.channel.VoiceChannel;
@@ -23,10 +22,10 @@ public class ExampleBot {
                     .useToken(Token.TOP_SECRET)
                     .setEventManager(
                         new EventManager()
-                            .registerDispatchers(new ExampleDispatcher())
+                            .registerDispatcherAdaptors(new ExampleDispatcher())
                             .registerCommandFrameworks(new CommandFramework().setPrefixes("=")
                                 .registerCommandResponder(new ExampleResponder()))
-                            .registerEventSubscriber(new ExampleSubscriber())
+                            .registerEventSubscribers(new ExampleSubscriber())
                     )
                     .build(true);
 

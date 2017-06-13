@@ -49,7 +49,9 @@ public final class ObjectBuilder {
         String id = json.getString("id");
 
         if (json.has("unavailable") && json.getBoolean("unavailable")) {
-            return new Guild(identity, id);
+            Guild guild = new Guild(identity, id);
+            identity.addGuild(guild);
+            return guild;
         } else {
             /* Basic Information */
             String name = json.getString("name");

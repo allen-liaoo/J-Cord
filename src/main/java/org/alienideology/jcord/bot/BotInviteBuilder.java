@@ -28,7 +28,7 @@ public class BotInviteBuilder {
      * Set the ID of the invite link.
      * @return BotInviteBuilder for chaining.
      */
-    public BotInviteBuilder setBotId() {
+    public BotInviteBuilder setBotId(String id) {
         this.id = id;
         return this;
     }

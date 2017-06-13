@@ -266,65 +266,39 @@ public class Identity {
         return this;
     }
 
-    /**
-     * [API Use Only]
-     * Set the self (user) of this identity.
-     * @param selfUser The self user
-     */
     @Internal
     public void setSelf (User selfUser) {
         this.self = selfUser;
     }
 
-    /**
-     * [API Use Only]
-     * Add an user to this identity
-     * @param user The user to be added.
-     */
     @Internal
     public void addUser (User user) {
         if(users.contains(user)) return;
         this.users.add(user);
     }
 
-    /**
-     * [API Use Only]
-     * Add a guild to this identity
-     * @param guild The guild to be added.
-     */
     @Internal
     public void addGuild (Guild guild) {
         if(guilds.contains(guild)) return;
         this.guilds.add(guild);
     }
 
-    /**
-     * [API Use Only]
-     * Add a TextChannel to this identity
-     * @param textChannel The TextChannel to be added.
-     */
+    public void updateGuild (Guild guild) {
+        this.guilds.set(guilds.indexOf(guild), guild);
+    }
+
     @Internal
     public void addTextChannel (TextChannel textChannel) {
         if(textChannels.contains(textChannel)) return;
         this.textChannels.add(textChannel);
     }
 
-    /**
-     * [API Use Only]
-     * Add a VoiceChannel to this identity
-     * @param voiceChannel The VoiceChannel to be added.
-     */
     @Internal
     public void addVoiceChannel (VoiceChannel voiceChannel) {
         if(voiceChannels.contains(voiceChannel)) return;
         this.voiceChannels.add(voiceChannel);
     }
 
-    /**
-     * [API Use Only]
-     * Add a PrivateChannel to this identity
-     * @param privateChannel The PrivateChannel to be added.
-     */
     @Internal
     public void addPrivateChannel (PrivateChannel privateChannel) {
         if(privateChannels.contains(privateChannel)) return;

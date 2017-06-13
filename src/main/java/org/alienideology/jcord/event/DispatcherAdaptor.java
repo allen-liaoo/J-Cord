@@ -2,6 +2,8 @@ package org.alienideology.jcord.event;
 
 import org.alienideology.jcord.event.gateway.*;
 import org.alienideology.jcord.event.guild.*;
+import org.alienideology.jcord.event.guild.role.GuildRoleCreateEvent;
+import org.alienideology.jcord.event.guild.update.*;
 import org.alienideology.jcord.event.message.*;
 import org.alienideology.jcord.event.message.dm.*;
 import org.alienideology.jcord.event.message.guild.*;
@@ -55,6 +57,25 @@ public class DispatcherAdaptor {
     private void dispatchGuildEvent(GuildEvent event) {
         if (event instanceof GuildCreateEvent) {
             onGuildCreate((GuildCreateEvent) event);
+        } else if (event instanceof GuildUpdateEvent) {
+            onGuildUpdate((GuildUpdateEvent) event);
+            if (event instanceof GuildOwnerUpdateEvent) {
+                onGuildOwnerUpdate((GuildOwnerUpdateEvent) event);
+            } else if (event instanceof GuildRegionUpdateEvent) {
+                onGuildRegionUpdate((GuildRegionUpdateEvent) event);
+            } else if (event instanceof GuildIconUpdateEvent) {
+                onGuildIconUpdate((GuildIconUpdateEvent) event);
+            } else if (event instanceof GuildSplashUpdateEvent) {
+                onGuildSplashUpdate((GuildSplashUpdateEvent) event);
+            } else if (event instanceof GuildAFKTimeoutUpdateEvent) {
+                onGuildAFKTimeoutUpdate((GuildAFKTimeoutUpdateEvent) event);
+            } else if (event instanceof GuildVerificationUpdateEvent) {
+                onGuildVerificationUpdate((GuildVerificationUpdateEvent) event);
+            } else if (event instanceof GuildNotificationUpdateEvent) {
+                onGuildNotificationUpdate((GuildNotificationUpdateEvent) event);
+            } else if (event instanceof GuildMFAUpdateEvent) {
+                onGuildMFAUpdate((GuildMFAUpdateEvent) event);
+            }
         } else if (event instanceof GuildDeleteEvent) {
             onGuildDelete((GuildDeleteEvent) event);
         } else if (event instanceof GuildUnavailableEvent) {
@@ -67,6 +88,24 @@ public class DispatcherAdaptor {
     public void onGuildCreate (GuildCreateEvent event) {}
 
     public void onGuildDelete (GuildDeleteEvent event) {}
+
+    public void onGuildUpdate (GuildUpdateEvent event) {}
+
+    public void onGuildOwnerUpdate (GuildOwnerUpdateEvent event) {}
+
+    public void onGuildRegionUpdate (GuildRegionUpdateEvent event) {}
+
+    public void onGuildIconUpdate (GuildIconUpdateEvent event) {}
+
+    public void onGuildSplashUpdate (GuildSplashUpdateEvent event) {}
+
+    public void onGuildAFKTimeoutUpdate (GuildAFKTimeoutUpdateEvent event) {}
+
+    public void onGuildVerificationUpdate (GuildVerificationUpdateEvent event) {}
+
+    public void onGuildNotificationUpdate (GuildNotificationUpdateEvent event) {}
+
+    public void onGuildMFAUpdate (GuildMFAUpdateEvent event) {}
 
     public void onGuildUnavailable (GuildUnavailableEvent event) {}
 

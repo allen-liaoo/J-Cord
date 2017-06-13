@@ -1,13 +1,11 @@
-import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.guild.GuildCreateEvent;
-import org.alienideology.jcord.event.guild.GuildRoleCreateEvent;
+import org.alienideology.jcord.event.guild.role.GuildRoleCreateEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
 import org.alienideology.jcord.object.EmojiList;
-import org.alienideology.jcord.object.message.EmbedMessageBuilder;
 
 /**
  * @author AlienIdeology
