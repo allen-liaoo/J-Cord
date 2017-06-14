@@ -22,5 +22,4 @@ public interface IChannel extends ISnowFlake {
     @Override
     String getId();
 
-
 }

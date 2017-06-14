@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public interface IMessage extends ISnowFlake, Comparable<Message> {
+ interface IMessage extends ISnowFlake, Comparable<Message> {
 
     /**
      * Edit this message
@@ -25,7 +25,7 @@ public interface IMessage extends ISnowFlake, Comparable<Message> {
      * @param content The new content
      * @return The message edited.
      */
-    public Message edit(String content);
+    Message edit(String content);
 
     /**
      * Delete this message
@@ -38,53 +38,53 @@ public interface IMessage extends ISnowFlake, Comparable<Message> {
      * Pin this message
      * @see MessageChannel#pinMessage(String)
      */
-    public void pin();
+    void pin();
 
-    public String getContent();
-
-    @Nullable
-    public Guild getGuild();
-
-    public MessageChannel getChannel();
-
-    public Channel.Type getFromType();
-
-    public boolean fromType(Channel.Type type);
-
-    public User getAuthor();
-
-    public boolean isFromSelf();
+    String getContent();
 
     @Nullable
-    public Member getMember();
+    Guild getGuild();
 
-    public List<User> getMentions();
+    MessageChannel getChannel();
+
+    Channel.Type getFromType();
+
+    boolean fromType(Channel.Type type);
+
+    User getAuthor();
+
+    boolean isFromSelf();
 
     @Nullable
-    public List<Member> getMentionedMembers();
+    Member getMember();
 
-    public List<Role> getMentionedRoles();
+    List<User> getMentions();
 
-    public OffsetDateTime getCreatedTime();
+    @Nullable
+    List<Member> getMentionedMembers();
 
-    public List<Message.Attachment> getAttachments();
+    List<Role> getMentionedRoles();
 
-    public List<Reaction> getReactions();
+    OffsetDateTime getCreatedTime();
+
+    List<Message.Attachment> getAttachments();
+
+    List<Reaction> getReactions();
 
     default boolean isEmbed() {
-        return !(this instanceof StringMessage);
+    return !(this instanceof StringMessage);
     }
 
-    public boolean isTTS();
+    boolean isTTS();
 
-    public boolean isMentionedEveryone();
+    boolean isMentionedEveryone();
 
-    public boolean isPinned();
-
-    @Override
-    public String getId();
+    boolean isPinned();
 
     @Override
-    public int compareTo(Message o);
+    String getId();
+
+    @Override
+    int compareTo(Message o);
 
 }
