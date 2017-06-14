@@ -1,13 +1,12 @@
 package org.alienideology.jcord.internal.object.user;
 
+import org.alienideology.jcord.handle.IUser;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.Mention;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
-import org.alienideology.jcord.internal.object.SnowFlake;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.json.JSONObject;
 
@@ -17,7 +16,7 @@ import java.util.Objects;
  * User - A base entity, can be a member of guild/private channel, and bot/human.
  * @author AlienIdeology
  */
-public class User extends DiscordObject implements SnowFlake, Mention {
+public class User extends DiscordObject implements IUser {
 
     private final String id;
 
@@ -46,10 +45,7 @@ public class User extends DiscordObject implements SnowFlake, Mention {
         this.MFAEnabled = MFAEnabled;
     }
 
-    /**
-     * Get or open a PrivateChannel with this user
-     * @return The PrivateChannel with this user
-     */
+    @Override
     public PrivateChannel getPrivateChannel() {
         PrivateChannel dm = identity.getPrivateChannel(id);
 
@@ -65,38 +61,47 @@ public class User extends DiscordObject implements SnowFlake, Mention {
         return dm;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getDiscriminator() {
         return discriminator;
     }
 
+    @Override
     public String getAvatar() {
         return avatar;
     }
 
+    @Override
     public String getEmail() {
         return email;
     }
 
+    @Override
     public boolean isBot() {
         return isBot;
     }
 
+    @Override
     public boolean isWebHook() {
         return isWebHook;
     }
 
+    @Override
     public boolean isVerified() {
         return isVerified;
     }
 
+    @Override
     public boolean isMFAEnabled() {
         return MFAEnabled;
     }
 
+    @Override
     public boolean isSelf() {
         return identity.getSelf().getId().equals(id);
     }
@@ -109,6 +114,11 @@ public class User extends DiscordObject implements SnowFlake, Mention {
     @Override
     public String mention() {
         return "<@"+id+">";
+    }
+
+    @Override
+    public String mention(boolean val) {
+        return "<!@"+id+">";
     }
 
     @Override

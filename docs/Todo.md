@@ -4,6 +4,7 @@
  - [ ] Not Done
 
 ### Discord Objects
+ - [ ] Add interfaces for all Discord Objects!!!
  - [x] Guild
   - [x] Member
   - [x] Role

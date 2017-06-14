@@ -2,6 +2,7 @@ package org.alienideology.jcord.internal.object;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.IGuild;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.gateway.HttpPath;
@@ -19,7 +20,7 @@ import java.util.*;
  * Guild - A collection of users and channels, often referred to in the UI as a server.
  * @author AlienIdeology
  */
-public class Guild extends DiscordObject implements SnowFlake {
+public class Guild extends DiscordObject implements IGuild {
 
     private final String id;
     private boolean isAvailable = false;
@@ -99,60 +100,74 @@ public class Guild extends DiscordObject implements SnowFlake {
         voiceChannels = new ArrayList<>();
     }
 
+    @Override
     public boolean isAvailable() {
         return isAvailable;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getIcon() {
         return icon;
     }
 
+    @Override
     public String getSplash() {
         return splash;
     }
 
+    @Override
     public Region getRegion() {
         return region;
     }
 
+    @Override
     public AFK_Timeout getAfkTimeout() {
         return afk_timeout;
     }
 
+    @Override
     public boolean isEmbedEnabled() {
         return embed_enabled;
     }
 
+    @Override
     public Verification getVerificationLevel() {
         return verification_level;
     }
 
+    @Override
     public Notification getNotificationsLevel() {
         return notifications_level;
     }
 
+    @Override
     public MFA getMFALevel() {
         return mfa_level;
     }
 
+    @Override
     @Nullable
     public VoiceChannel getAfkChannel() {
         return afk_channel;
     }
 
+    @Override
     @Nullable
     public TextChannel getEmbedChannel() {
         return embed_channel;
     }
 
+    @Override
     public Member getOwner() {
         return owner;
     }
 
+    @Override
     public List<User> getUsers() {
         List<User> users = new ArrayList<>();
         for (Member mem : members) {
@@ -161,10 +176,7 @@ public class Guild extends DiscordObject implements SnowFlake {
         return Collections.unmodifiableList(users);
     }
 
-    /**
-     * Get the member instance of the identity.
-     * @return The member instance
-     */
+    @Override
     @NotNull
     public Member getSelfMember() {
         for (Member member : members) {
@@ -174,11 +186,7 @@ public class Guild extends DiscordObject implements SnowFlake {
         return null;
     }
 
-    /**
-     * Get a member by id
-     * @param id The specified id
-     * @return a Member or null if no member was found.
-     */
+    @Override
     @Nullable
     public Member getMember(String id) {
         for (Member member : members) {
@@ -188,15 +196,12 @@ public class Guild extends DiscordObject implements SnowFlake {
         return null;
     }
 
+    @Override
     public List<Member> getMembers() {
         return Collections.unmodifiableList(members);
     }
 
-    /**
-     * Get a role by id.
-     * @param id The specified id
-     * @return a Role or null if no role was found.
-     */
+    @Override
     @Nullable
     public Role getRole(String id) {
         for (Role role : roles) {
@@ -206,6 +211,7 @@ public class Guild extends DiscordObject implements SnowFlake {
         return null;
     }
 
+    @Override
     @NotNull
     public Role getEveryoneRole() {
         for (Role role : roles) {
@@ -215,15 +221,12 @@ public class Guild extends DiscordObject implements SnowFlake {
         return null;
     }
 
+    @Override
     public List<Role> getRoles() {
         return Collections.unmodifiableList(roles);
     }
 
-    /**
-     * Get a guild emoji by id.
-     * @param id The specified id
-     * @return a GuildEmoji or null if no emoji was found.
-     */
+    @Override
     @Nullable
     public GuildEmoji getGuildEmoji(String id) {
         for (GuildEmoji emoji : emojis) {
@@ -234,15 +237,12 @@ public class Guild extends DiscordObject implements SnowFlake {
         return null;
     }
 
+    @Override
     public List<GuildEmoji> getGuildEmojis() {
         return emojis;
     }
 
-    /**
-     * Get a text channel by id.
-     * @param id The specified id
-     * @return a TextChannel or null if no channel was found.
-     */
+    @Override
     @Nullable
     public TextChannel getTextChannel(String id) {
         for (TextChannel tc : textChannels) {
@@ -253,15 +253,12 @@ public class Guild extends DiscordObject implements SnowFlake {
         return null;
     }
 
+    @Override
     public List<TextChannel> getTextChannels() {
         return Collections.unmodifiableList(textChannels);
     }
 
-    /**
-     * Get a voice channel by id.
-     * @param id The specified id
-     * @return a VoiceChannel or null if no channel is found.
-     */
+    @Override
     @Nullable
     public VoiceChannel getVoiceChannel(String id) {
         for (VoiceChannel vc : voiceChannels) {
@@ -272,6 +269,7 @@ public class Guild extends DiscordObject implements SnowFlake {
         return null;
     }
 
+    @Override
     public List<VoiceChannel> getVoiceChannels() {
         return Collections.unmodifiableList(voiceChannels);
     }
@@ -301,6 +299,8 @@ public class Guild extends DiscordObject implements SnowFlake {
             Guild Enumerations
         --------------------------
      */
+
+    // TODO: Move to IGuild
 
     /**
      * AFK Timeouts (second)
