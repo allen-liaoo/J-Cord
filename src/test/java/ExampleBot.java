@@ -1,8 +1,12 @@
-import org.alienideology.jcord.internal.Identity;
-import org.alienideology.jcord.internal.IdentityBuilder;
-import org.alienideology.jcord.internal.IdentityType;
+import org.alienideology.jcord.handle.channel.IPrivateChannel;
+import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.channel.IVoiceChannel;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.IdentityBuilder;
+import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.command.CommandFramework;
-import org.alienideology.jcord.internal.event.EventManager;
+import org.alienideology.jcord.event.EventManager;
 import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
@@ -30,17 +34,17 @@ public class ExampleBot {
                     )
                     .build(true);
 
-            for (Guild guild : bot.getGuilds()) {
+            for (IGuild guild : bot.getGuilds()) {
                 System.out.println("Guild:\t" + guild.getName());
-                for (TextChannel tc : guild.getTextChannels()) {
+                for (ITextChannel tc : guild.getTextChannels()) {
                     System.out.println("\t--TC: " + tc.getName());
                 }
-                for (VoiceChannel vc : guild.getVoiceChannels()) {
+                for (IVoiceChannel vc : guild.getVoiceChannels()) {
                     System.out.println("\t--VC: " + vc.getName());
                 }
             }
 
-            for (PrivateChannel dm : bot.getPrivateChannels()) {
+            for (IPrivateChannel dm : bot.getPrivateChannels()) {
                 System.out.println("DM:\t" + dm.getRecipient().getName());
             }
 

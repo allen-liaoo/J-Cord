@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface IGuildEmoji extends IDiscordObject, ISnowFlake, IMention {
 
-    Guild getGuild();
+    IGuild getGuild();
 
     String getName();
 
@@ -23,11 +23,11 @@ public interface IGuildEmoji extends IDiscordObject, ISnowFlake, IMention {
 
     boolean isRequireColon();
 
-    List<Role> getUsableRoles();
+    List<IRole> getUsableRoles();
 
-    boolean canBeUseBy(Member member);
+    boolean canBeUseBy(IMember member);
 
-    boolean canBeUseBy(Role role);
+    boolean canBeUseBy(IRole role);
     
     @Override
     default String mention() {

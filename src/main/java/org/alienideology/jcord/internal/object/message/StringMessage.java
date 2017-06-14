@@ -1,6 +1,10 @@
 package org.alienideology.jcord.internal.object.message;
 
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.guild.IGuildEmoji;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.message.IStringMessage;
+import org.alienideology.jcord.internal.object.Identity;
 import org.alienideology.jcord.internal.object.Message;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 import org.alienideology.jcord.internal.object.guild.Role;
@@ -11,10 +15,9 @@ import org.alienideology.jcord.internal.object.guild.Member;
 import java.util.List;
 
 /**
- * StringMessage - Normal messages that only contains string.
  * @author AlienIdeology
  */
-public class StringMessage extends Message {
+public class StringMessage extends Message implements IStringMessage {
 
     public StringMessage(Identity identity, String id, User author, String content, String timeStamp,
                          List<User> mentions, List<Role> mentionedRoles, List<Attachment> attachments, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
@@ -28,14 +31,14 @@ public class StringMessage extends Message {
             /* Message from TextChannel */
             if (!channel.isPrivate()) {
                 /* Member Mentions */
-                for (Member member : getMentionedMembers()) {
+                for (IMember member : getMentionedMembers()) {
                     process = process.replaceAll(member.mention(), "@" +
                             (member.getNickname().isEmpty()?member.getUser().getName():member.getNickname())
                             +"#"+member.getUser().getDiscriminator());
                 }
 
                 /* TextChannel Mentions */
-                for (TextChannel tc : getGuild().getTextChannels()) {
+                for (ITextChannel tc : getGuild().getTextChannels()) {
                     process = process.replaceAll(tc.mention(), "#"+tc.getName());
                 }
 
@@ -44,7 +47,7 @@ public class StringMessage extends Message {
                     process = process.replaceAll(role.mention(), "@"+role.getName());
                 }
 
-                for (GuildEmoji emoji : getGuild().getGuildEmojis()) {
+                for (IGuildEmoji emoji : getGuild().getGuildEmojis()) {
                     process = process.replaceAll(emoji.mention(), ":"+emoji.getName()+":");
                 }
 

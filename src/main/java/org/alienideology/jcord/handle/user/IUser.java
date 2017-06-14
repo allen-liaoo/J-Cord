@@ -2,6 +2,7 @@ package org.alienideology.jcord.handle.user;
 
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 
 /**
@@ -14,7 +15,7 @@ public interface IUser extends ISnowFlake, IMention {
      * Get or open a PrivateChannel with this user
      * @return The PrivateChannel with this user
      */
-    PrivateChannel getPrivateChannel();
+    IPrivateChannel getPrivateChannel();
 
     String getName();
 

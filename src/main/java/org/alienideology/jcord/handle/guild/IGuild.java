@@ -4,6 +4,9 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.channel.IVoiceChannel;
+import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.internal.object.Region;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
@@ -42,21 +45,21 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     Guild.MFA getMFALevel();
 
     @Nullable
-    VoiceChannel getAfkChannel();
+    IVoiceChannel getAfkChannel();
 
     @Nullable
-    TextChannel getEmbedChannel();
+    ITextChannel getEmbedChannel();
 
-    Member getOwner();
+    IMember getOwner();
 
-    List<User> getUsers();
+    List<IUser> getUsers();
 
     /**
     * Get the member instance of the identity.
     * @return The member instance
     */
     @NotNull
-    Member getSelfMember();
+    IMember getSelfMember();
 
     /**
     * Get a member by id
@@ -64,9 +67,9 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     * @return a Member or null if no member was found.
     */
     @Nullable
-    Member getMember(String id);
+    IMember getMember(String id);
 
-    List<Member> getMembers();
+    List<IMember> getMembers();
 
     /**
     * Get a role by id.
@@ -74,12 +77,12 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     * @return a Role or null if no role was found.
     */
     @Nullable
-    Role getRole(String id);
+    IRole getRole(String id);
 
     @NotNull
-    Role getEveryoneRole();
+    IRole getEveryoneRole();
 
-    List<Role> getRoles();
+    List<IRole> getRoles();
 
     /**
     * Get a guild emoji by id.
@@ -87,9 +90,9 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     * @return a GuildEmoji or null if no emoji was found.
     */
     @Nullable
-    GuildEmoji getGuildEmoji(String id);
+    IGuildEmoji getGuildEmoji(String id);
 
-    List<GuildEmoji> getGuildEmojis();
+    List<IGuildEmoji> getGuildEmojis();
 
     /**
     * Get a text channel by id.
@@ -97,9 +100,9 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     * @return a TextChannel or null if no channel was found.
     */
     @Nullable
-    TextChannel getTextChannel(String id);
+    ITextChannel getTextChannel(String id);
 
-    List<TextChannel> getTextChannels();
+    List<ITextChannel> getTextChannels();
 
     /**
     * Get a voice channel by id.
@@ -107,8 +110,8 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     * @return a VoiceChannel or null if no channel is found.
     */
     @Nullable
-    VoiceChannel getVoiceChannel(String id);
+    IVoiceChannel getVoiceChannel(String id);
 
-    List<VoiceChannel> getVoiceChannels();
+    List<IVoiceChannel> getVoiceChannels();
     
 }

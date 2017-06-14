@@ -6,14 +6,15 @@ import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.handle.Permission;
 
-import java.awt.*;
+import java.util.List;
+import java.awt.Color;
 
 /**
  * @author AlienIdeology
  */
 public interface IRole extends IDiscordObject, ISnowFlake, IMention, Comparable<IRole> {
 
-    Guild getGuild();
+    IGuild getGuild();
 
     String getName();
 
@@ -40,7 +41,7 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, Comparable<
 
     long getPermissionsLong();
 
-    java.util.List<Permission> getPermissions();
+    List<Permission> getPermissions();
 
     boolean isSeparateListed();
 

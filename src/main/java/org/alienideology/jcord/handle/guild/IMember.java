@@ -3,10 +3,8 @@ package org.alienideology.jcord.handle.guild;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
-import org.alienideology.jcord.internal.object.Guild;
+import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.Permission;
-import org.alienideology.jcord.internal.object.guild.Role;
-import org.alienideology.jcord.internal.object.user.User;
 
 import java.time.OffsetDateTime;
 import java.util.*;
@@ -41,17 +39,17 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
     @Deprecated
     boolean hasPermissions (Permission... permissions);
 
-    Guild getGuild();
+    IGuild getGuild();
 
-    User getUser();
+    IUser getUser();
 
     String getNickname();
 
     OffsetDateTime getJoinedDate();
 
-    Role getHighestRole();
+    IRole getHighestRole();
 
-    List<Role> getRoles();
+    List<IRole> getRoles();
 
     List<Permission> getPermissions();
 

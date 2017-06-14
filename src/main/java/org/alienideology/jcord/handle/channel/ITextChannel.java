@@ -8,11 +8,11 @@ import org.alienideology.jcord.handle.IMention;
  */
 public interface ITextChannel extends IMessageChannel, IGuildChannel, IMention {
 
-     String getTopic();
+    String getTopic();
 
-     boolean isDefaultChannel();
+    boolean isDefaultChannel();
 
-     boolean isNSFWChannel();
+    boolean isNSFWChannel();
 
     @Override
     default String mention() {

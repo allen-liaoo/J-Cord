@@ -1,9 +1,12 @@
 package org.alienideology.jcord.handle.channel;
 
+import org.alienideology.jcord.IIdentity;
 import org.alienideology.jcord.handle.IDiscordObject;
+import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
+import org.alienideology.jcord.internal.object.Identity;
 import org.alienideology.jcord.internal.object.Message;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
@@ -27,7 +30,7 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
     private Cache<Message> history = new Cache<>();
 
     public MessageHistory(MessageChannel channel) {
-        super(channel.getIdentity());
+        super((Identity) channel.getIdentity());
         this.channel = channel;
     }
 
@@ -40,11 +43,11 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
         return history;
     }
 
-    public Message getMessage(String id) {
+    public IMessage getMessage(String id) {
         return channel.getMessage(id);
     }
 
-    public Message getLatestMessage() {
+    private IMessage getLatestMessage() {
         return channel.getLatestMessage();
     }
 
@@ -57,7 +60,7 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
     public List<Message> getLatestMessages(int amount) {
         List<Message> messageList = getMessagesAfter(channel.getLatestMessage().getId(), amount);
         if (!messageList.isEmpty()) messageList.remove(messageList.get(0)); // Remove oldest message. Add latest message.
-        messageList.add(channel.getLatestMessage());
+        messageList.add((Message) channel.getLatestMessage());
         return messageList.subList(messageList.size()-amount > 0 ? messageList.size()-amount : 0, messageList.size());
     }
 

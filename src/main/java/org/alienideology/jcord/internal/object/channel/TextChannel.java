@@ -1,10 +1,9 @@
 package org.alienideology.jcord.internal.object.channel;
 
 import com.sun.istack.internal.NotNull;
-import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
-import org.alienideology.jcord.internal.Identity;
-import org.alienideology.jcord.handle.IMention;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.internal.object.Identity;
 import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.internal.object.Message;
 
@@ -22,7 +21,7 @@ public class TextChannel extends MessageChannel implements ITextChannel {
 
     public TextChannel(Identity identity, String guild_id, String id, String name, int position, String topic, Message lastMessagt) {
         super(identity, id, Channel.Type.TEXT, lastMessagt);
-        this.guild = identity.getGuild(guild_id);
+        this.guild = (Guild) identity.getGuild(guild_id);
         this.name = name;
         this.position = position;
         this.topic = topic;
@@ -30,7 +29,7 @@ public class TextChannel extends MessageChannel implements ITextChannel {
 
     @Override
     @NotNull
-    public Guild getGuild() {
+    public IGuild getGuild() {
         return guild;
     }
 

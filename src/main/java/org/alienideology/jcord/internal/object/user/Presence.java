@@ -1,6 +1,6 @@
 package org.alienideology.jcord.internal.object.user;
 
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.internal.object.Identity;
 import org.alienideology.jcord.internal.object.DiscordObject;
 
 /**

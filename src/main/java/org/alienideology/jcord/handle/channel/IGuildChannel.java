@@ -1,6 +1,7 @@
 package org.alienideology.jcord.handle.channel;
 
 import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.internal.object.Guild;
 
 /**
@@ -14,7 +15,7 @@ public interface IGuildChannel extends IChannel, ISnowFlake {
      *
      * @return The guild
      */
-    Guild getGuild();
+    IGuild getGuild();
 
     /**
      * Ge the name of this channel.

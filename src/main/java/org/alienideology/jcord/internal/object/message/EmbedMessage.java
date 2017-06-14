@@ -1,6 +1,7 @@
 package org.alienideology.jcord.internal.object.message;
 
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.handle.message.IEmbedMessage;
+import org.alienideology.jcord.internal.object.Identity;
 import org.alienideology.jcord.internal.object.Message;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.user.User;
@@ -12,11 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * EmbedMessage - A message that can only be sent by a bot or webhook.
- * The message have a special block embed surround it.
  * @author AlienIdeology
  */
-public class EmbedMessage extends Message {
+public class EmbedMessage extends Message implements IEmbedMessage {
 
     private String title;
     private String description;
@@ -47,50 +46,62 @@ public class EmbedMessage extends Message {
         return this;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
+    @Override
     public String getUrl() {
         return url;
     }
 
+    @Override
     public OffsetDateTime getTimeStamp() {
         return TimeStamp;
     }
 
+    @Override
     public Color getColor() {
         return color;
     }
 
+    @Override
     public Author getAuthorField() {
         return author;
     }
 
+    @Override
     public List<Field> getFields() {
         return fields;
     }
 
+    @Override
     public Thumbnail getThumbnail() {
         return thumbnail;
     }
 
+    @Override
     public Video getVideo() {
         return video;
     }
 
+    @Override
     public Provider getProvider() {
         return provider;
     }
 
+    @Override
     public Image getImage() {
         return image;
     }
 
+    @Override
     public Footer getFooter() {
         return footer;
     }

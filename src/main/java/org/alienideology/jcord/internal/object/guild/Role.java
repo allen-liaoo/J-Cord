@@ -1,8 +1,9 @@
 package org.alienideology.jcord.internal.object.guild;
 
 import org.alienideology.jcord.handle.Permission;
+import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.internal.object.Identity;
 import org.alienideology.jcord.internal.object.*;
 
 import java.awt.Color;
@@ -39,7 +40,7 @@ public class Role extends DiscordObject implements IRole {
         this.canMention = canMention;
     }
 
-    public Guild getGuild() {
+    public IGuild getGuild() {
         return guild;
     }
 

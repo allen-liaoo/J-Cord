@@ -2,8 +2,13 @@ package org.alienideology.jcord.internal.object;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.handle.guild.IGuildEmoji;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
@@ -167,17 +172,17 @@ public class Guild extends DiscordObject implements IGuild {
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<IUser> getUsers() {
         List<User> users = new ArrayList<>();
         for (Member mem : members) {
-            users.add(mem.getUser());
+            users.add((User) mem.getUser());
         }
         return Collections.unmodifiableList(users);
     }
 
     @Override
     @NotNull
-    public Member getSelfMember() {
+    public IMember getSelfMember() {
         for (Member member : members) {
             if (member.getUser().isSelf())
                 return member;
@@ -187,7 +192,7 @@ public class Guild extends DiscordObject implements IGuild {
 
     @Override
     @Nullable
-    public Member getMember(String id) {
+    public IMember getMember(String id) {
         for (Member member : members) {
             if (member.getId().equals(id))
                 return member;
@@ -196,13 +201,13 @@ public class Guild extends DiscordObject implements IGuild {
     }
 
     @Override
-    public List<Member> getMembers() {
+    public List<IMember> getMembers() {
         return Collections.unmodifiableList(members);
     }
 
     @Override
     @Nullable
-    public Role getRole(String id) {
+    public IRole getRole(String id) {
         for (Role role : roles) {
             if (role.getId().equals(id))
                 return role;
@@ -212,7 +217,7 @@ public class Guild extends DiscordObject implements IGuild {
 
     @Override
     @NotNull
-    public Role getEveryoneRole() {
+    public IRole getEveryoneRole() {
         for (Role role : roles) {
             if (role.isEveryone())
                 return role;
@@ -221,13 +226,13 @@ public class Guild extends DiscordObject implements IGuild {
     }
 
     @Override
-    public List<Role> getRoles() {
+    public List<IRole> getRoles() {
         return Collections.unmodifiableList(roles);
     }
 
     @Override
     @Nullable
-    public GuildEmoji getGuildEmoji(String id) {
+    public IGuildEmoji getGuildEmoji(String id) {
         for (GuildEmoji emoji : emojis) {
             if (emoji.getId().equals(id)) {
                 return emoji;
@@ -237,13 +242,13 @@ public class Guild extends DiscordObject implements IGuild {
     }
 
     @Override
-    public List<GuildEmoji> getGuildEmojis() {
-        return emojis;
+    public List<IGuildEmoji> getGuildEmojis() {
+        return Collections.unmodifiableList(emojis);
     }
 
     @Override
     @Nullable
-    public TextChannel getTextChannel(String id) {
+    public ITextChannel getTextChannel(String id) {
         for (TextChannel tc : textChannels) {
             if (tc.getId().equals(id)) {
                 return tc;
@@ -253,13 +258,13 @@ public class Guild extends DiscordObject implements IGuild {
     }
 
     @Override
-    public List<TextChannel> getTextChannels() {
+    public List<ITextChannel> getTextChannels() {
         return Collections.unmodifiableList(textChannels);
     }
 
     @Override
     @Nullable
-    public VoiceChannel getVoiceChannel(String id) {
+    public IVoiceChannel getVoiceChannel(String id) {
         for (VoiceChannel vc : voiceChannels) {
             if (vc.getId().equals(id)) {
                 return vc;
@@ -269,7 +274,7 @@ public class Guild extends DiscordObject implements IGuild {
     }
 
     @Override
-    public List<VoiceChannel> getVoiceChannels() {
+    public List<IVoiceChannel> getVoiceChannels() {
         return Collections.unmodifiableList(voiceChannels);
     }
 
@@ -485,8 +490,8 @@ public class Guild extends DiscordObject implements IGuild {
      */
     @Internal
     Guild setChannels (String afk, String embed) {
-        this.afk_channel = getVoiceChannel(afk);
-        this.embed_channel = getTextChannel(embed);
+        this.afk_channel = (VoiceChannel) getVoiceChannel(afk);
+        this.embed_channel = (TextChannel) getTextChannel(embed);
         return this;
     }
 

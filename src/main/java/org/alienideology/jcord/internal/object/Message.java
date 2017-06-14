@@ -1,12 +1,18 @@
 package org.alienideology.jcord.internal.object;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.channel.IMessageChannel;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.ISnowFlake;
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.object.channel.Channel;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
+import org.alienideology.jcord.internal.object.channel.PrivateChannel;
+import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.guild.Member;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.message.Reaction;
@@ -15,6 +21,7 @@ import org.alienideology.jcord.internal.object.user.User;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -62,12 +69,12 @@ public class Message extends DiscordObject implements IMessage {
     }
 
     @Override
-    public Message edit(String content) {
+    public IMessage edit(String content) {
         return channel.editMessage(id, content);
     }
 
     @Override
-    public Message delete() {
+    public IMessage delete() {
         return channel.deleteMessage(id);
     }
 
@@ -83,7 +90,7 @@ public class Message extends DiscordObject implements IMessage {
 
     @Override
     @Nullable
-    public Guild getGuild() {
+    public IGuild getGuild() {
         if(!channel.isPrivate()) {
             return identity.getTextChannel(channel.getId()).getGuild();
         } else {
@@ -92,7 +99,7 @@ public class Message extends DiscordObject implements IMessage {
     }
 
     @Override
-    public MessageChannel getChannel() {
+    public IMessageChannel getChannel() {
         return channel;
     }
 
@@ -119,7 +126,7 @@ public class Message extends DiscordObject implements IMessage {
 
     @Override
     @Nullable
-    public Member getMember() {
+    public IMember getMember() {
         if (!channel.isPrivate()) {
             return getGuild().getMember(author.getId());
         } else {
@@ -128,18 +135,18 @@ public class Message extends DiscordObject implements IMessage {
     }
 
     @Override
-    public List<User> getMentions() {
-        return mentions;
+    public List<IUser> getMentions() {
+        return Collections.unmodifiableList(mentions);
     }
 
     @Override
     @Nullable
-    public List<Member> getMentionedMembers() {
+    public List<IMember> getMentionedMembers() {
         if (channel.isPrivate()) {
             return null;
         } else {
-            List<Member> members = new ArrayList<>();
-            Guild guild = getGuild();
+            List<IMember> members = new ArrayList<>();
+            IGuild guild = getGuild();
             for (User user : mentions) {
                 members.add(guild.getMember(user.getId()));
             }
@@ -148,8 +155,8 @@ public class Message extends DiscordObject implements IMessage {
     }
 
     @Override
-    public List<Role> getMentionedRoles() {
-        return mentionedRoles;
+    public List<IRole> getMentionedRoles() {
+        return Collections.unmodifiableList(mentionedRoles);
     }
 
     @Override
@@ -217,7 +224,7 @@ public class Message extends DiscordObject implements IMessage {
     @Internal
     protected Message setChannel(String channel) {
         this.channel = identity.getTextChannel(channel) == null ?
-                identity.getPrivateChannel(channel) : identity.getTextChannel(channel);
+                (PrivateChannel) identity.getPrivateChannel(channel) : (TextChannel) identity.getTextChannel(channel);
         return this;
     }
 

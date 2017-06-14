@@ -1,10 +1,13 @@
 package org.alienideology.jcord.command;
 
-import org.alienideology.jcord.internal.Identity;
-import org.alienideology.jcord.internal.event.DispatcherAdaptor;
-import org.alienideology.jcord.internal.event.message.MessageCreateEvent;
-import org.alienideology.jcord.internal.event.message.dm.PrivateMessageCreateEvent;
-import org.alienideology.jcord.internal.event.message.guild.GuildMessageCreateEvent;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.message.IMessage;
+import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.event.DispatcherAdaptor;
+import org.alienideology.jcord.event.message.MessageCreateEvent;
+import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
+import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
 import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.internal.object.Message;
 import org.alienideology.jcord.internal.object.channel.*;
@@ -110,9 +113,9 @@ public class CommandFramework {
 
                 MessageCreateEvent event = parser.event;
                 Identity identity = event.getIdentity();
-                Message message = event.getMessage();
-                Guild guild = event.getGuild();
-                Member member = event.getMember();
+                IMessage message = event.getMessage();
+                IGuild guild = event.getGuild();
+                IMember member = event.getMember();
 
                 Object[] params = new Object[method.getParameterTypes().length];
 

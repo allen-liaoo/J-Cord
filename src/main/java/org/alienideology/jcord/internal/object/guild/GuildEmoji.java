@@ -1,9 +1,9 @@
 package org.alienideology.jcord.internal.object.guild;
 
-import org.alienideology.jcord.handle.IMention;
-import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.internal.object.Identity;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.Guild;
@@ -68,22 +68,22 @@ public class GuildEmoji extends DiscordObject implements IGuildEmoji {
     }
 
     @Override
-    public List<Role> getUsableRoles() {
+    public List<IRole> getUsableRoles() {
         return Collections.unmodifiableList(roles);
     }
 
     @Override
-    public boolean canBeUseBy(Member member) {
-        for (Role role : member.getRoles()) {
-            if (roles.contains(role))
+    public boolean canBeUseBy(IMember member) {
+        for (IRole role : member.getRoles()) {
+            if (roles.contains((Role) role))
                 return true;
         }
         return false;
     }
 
     @Override
-    public boolean canBeUseBy(Role role) {
-        if (roles.contains(role)) {
+    public boolean canBeUseBy(IRole role) {
+        if (roles.contains((Role) role)) {
             return true;
         } else {
             return false;

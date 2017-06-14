@@ -1,6 +1,8 @@
 package org.alienideology.jcord.handle.channel;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.internal.object.Message;
@@ -14,9 +16,9 @@ import org.alienideology.jcord.internal.object.message.MessageBuilder;
 public interface IMessageChannel extends IChannel {
 
     @Nullable
-    Guild getGuild();
+    IGuild getGuild();
 
-    Message getLatestMessage();
+    IMessage getLatestMessage();
 
     MessageHistory getHistory();
 
@@ -25,7 +27,7 @@ public interface IMessageChannel extends IChannel {
     * @param id The id of the message
     * @return The message object
     */
-    Message getMessage(String id);
+    IMessage getMessage(String id);
 
     /**
     * Send a string message.
@@ -34,7 +36,7 @@ public interface IMessageChannel extends IChannel {
     * @exception PermissionException If the user lack Send Messages permission
     * @return The message sent.
     */
-    Message sendMessage(String message);
+    IMessage sendMessage(String message);
 
     /**
     * Send a string message.
@@ -44,7 +46,7 @@ public interface IMessageChannel extends IChannel {
     * @exception PermissionException If the user lack Send Messages permission
     * @return The message sent.
     */
-    Message sendMessageFormat(String format, Object... args);
+    IMessage sendMessageFormat(String format, Object... args);
 
     /**
     * Send a message built by MessageBuilder
@@ -52,7 +54,7 @@ public interface IMessageChannel extends IChannel {
     * @exception PermissionException If the user lack Send Messages permission
     * @return The message sent.
     */
-    Message sendMessage(MessageBuilder message);
+    IMessage sendMessage(MessageBuilder message);
 
     /**
     * Send an embed message.
@@ -61,7 +63,7 @@ public interface IMessageChannel extends IChannel {
     * @exception PermissionException If the user lack Send Messages permission
     * @return The message sent.
     */
-    Message sendMessage(EmbedMessageBuilder embed);
+    IMessage sendMessage(EmbedMessageBuilder embed);
 
     /**
     * Edit a string message by ID
@@ -69,7 +71,7 @@ public interface IMessageChannel extends IChannel {
     * @param message The new string content of the message
     * @return The message edited
     */
-    Message editMessage(String messageId, String message);
+    IMessage editMessage(String messageId, String message);
 
     /**
     * Format a string message by ID
@@ -78,7 +80,7 @@ public interface IMessageChannel extends IChannel {
     * @param args The arguments referenced by the format string.
     * @return The message edited
     */
-    Message editMessageFormat(String messageId, String format, Object... args);
+    IMessage editMessageFormat(String messageId, String format, Object... args);
 
     /**
     * Edit a message by ID
@@ -86,7 +88,7 @@ public interface IMessageChannel extends IChannel {
     * @param message The message builder
     * @return The message edited
     */
-    Message editMessage(String messageId, MessageBuilder message);
+    IMessage editMessage(String messageId, MessageBuilder message);
 
     /**
     * Edit an embed message by ID
@@ -94,7 +96,7 @@ public interface IMessageChannel extends IChannel {
     * @param message The new embed of the message
     * @return The message edited
     */
-    Message editMessage(String messageId, EmbedMessageBuilder message);
+    IMessage editMessage(String messageId, EmbedMessageBuilder message);
 
     /**
     * Delete a message by ID.
@@ -105,7 +107,7 @@ public interface IMessageChannel extends IChannel {
     *
     * @return The message deleted.
     */
-    Message deleteMessage(String messageId);
+    IMessage deleteMessage(String messageId);
 
     /**
     * Delete a message.
@@ -116,7 +118,7 @@ public interface IMessageChannel extends IChannel {
     *
     * @return The message deleted.
     */
-    Message deleteMessage(Message message);
+    IMessage deleteMessage(IMessage message);
 
     /**
     * Pin a message by ID.
@@ -128,6 +130,6 @@ public interface IMessageChannel extends IChannel {
     * Pin a message.
     * @param message The message object.
     */
-    void pinMessage(Message message);
+    void pinMessage(IMessage message);
 
 }

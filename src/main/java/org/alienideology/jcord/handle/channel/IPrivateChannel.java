@@ -1,6 +1,6 @@
 package org.alienideology.jcord.handle.channel;
 
-import org.alienideology.jcord.internal.object.user.User;
+import org.alienideology.jcord.handle.user.IUser;
 
 /**
  * PrivateChannel - A one-to-one channel between two users
@@ -8,6 +8,6 @@ import org.alienideology.jcord.internal.object.user.User;
  */
 public interface IPrivateChannel extends IMessageChannel {
 
-    User getRecipient();
+    IUser getRecipient();
 
 }

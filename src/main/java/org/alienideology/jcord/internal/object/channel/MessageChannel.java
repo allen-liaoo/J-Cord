@@ -3,7 +3,9 @@ package org.alienideology.jcord.internal.object.channel;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.channel.MessageHistory;
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.message.IMessage;
+import org.alienideology.jcord.internal.object.Identity;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.gateway.HttpPath;
@@ -45,12 +47,12 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     @Override
     @Nullable
-    public Guild getGuild() {
+    public IGuild getGuild() {
         return guild;
     }
 
     @Override
-    public Message getLatestMessage() {
+    public IMessage getLatestMessage() {
         return latestMessage;
     }
 
@@ -65,7 +67,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @return The message object
      */
     @Override
-    public Message getMessage(String id) {
+    public IMessage getMessage(String id) {
         if (!isPrivate)
         if (latestMessage.getId().equals(id)) return latestMessage;
 
@@ -81,7 +83,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @return The message sent.
      */
     @Override
-    public Message sendMessage(String message) {
+    public IMessage sendMessage(String message) {
         send(new MessageBuilder().setContent(message).build());
         return latestMessage;
     }
@@ -95,7 +97,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @return The message sent.
      */
     @Override
-    public Message sendMessageFormat(String format, Object... args) {
+    public IMessage sendMessageFormat(String format, Object... args) {
         sendMessage(new MessageBuilder().appendContentFormat(format, args));
         return latestMessage;
     }
@@ -107,7 +109,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @return The message sent.
      */
     @Override
-    public Message sendMessage(MessageBuilder message) {
+    public IMessage sendMessage(MessageBuilder message) {
         return send(message.build());
     }
 
@@ -119,7 +121,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @return The message sent.
      */
     @Override
-    public Message sendMessage(EmbedMessageBuilder embed) {
+    public IMessage sendMessage(EmbedMessageBuilder embed) {
         return sendMessage(new MessageBuilder().setAsEmbed(embed));
     }
 
@@ -145,7 +147,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @return The message edited
      */
     @Override
-    public Message editMessage(String messageId, String message) {
+    public IMessage editMessage(String messageId, String message) {
         return edit(new MessageBuilder().setContent(message).build(), messageId);
     }
 
@@ -157,7 +159,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @return The message edited
      */
     @Override
-    public Message editMessageFormat(String messageId, String format, Object... args) {
+    public IMessage editMessageFormat(String messageId, String format, Object... args) {
         return edit(new MessageBuilder().appendContentFormat(format, args).build(), messageId);
     }
 
@@ -168,7 +170,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @return The message edited
      */
     @Override
-    public Message editMessage(String messageId, MessageBuilder message) {
+    public IMessage editMessage(String messageId, MessageBuilder message) {
         return edit(message.build(), messageId);
     }
 
@@ -179,7 +181,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @return The message edited
      */
     @Override
-    public Message editMessage(String messageId, EmbedMessageBuilder message) {
+    public IMessage editMessage(String messageId, EmbedMessageBuilder message) {
         return edit(new MessageBuilder().setAsEmbed(message).build(), messageId);
     }
 
@@ -217,7 +219,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @return The message deleted.
      */
     @Override
-    public Message deleteMessage(String messageId) {
+    public IMessage deleteMessage(String messageId) {
         return delete(messageId);
     }
 
@@ -231,7 +233,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @return The message deleted.
      */
     @Override
-    public Message deleteMessage(Message message) {
+    public IMessage deleteMessage(IMessage message) {
         return delete(message.getId());
     }
 
@@ -274,7 +276,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @param message The message object.
      */
     @Override
-    public void pinMessage(Message message) {
+    public void pinMessage(IMessage message) {
         pin(message.getId());
     }
 
@@ -293,8 +295,8 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @return MessageChannel for chaining.
      */
     @Internal
-    public MessageChannel setLatestMessage(Message latestMessage) {
-        this.latestMessage = latestMessage;
+    public MessageChannel setLatestMessage(IMessage latestMessage) {
+        this.latestMessage = (Message) latestMessage;
         return this;
     }
 

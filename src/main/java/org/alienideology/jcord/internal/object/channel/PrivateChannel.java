@@ -1,6 +1,8 @@
 package org.alienideology.jcord.internal.object.channel;
 
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.handle.channel.IPrivateChannel;
+import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.internal.object.Identity;
 import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.internal.object.Message;
 
@@ -9,7 +11,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-public class PrivateChannel extends MessageChannel {
+public class PrivateChannel extends MessageChannel implements IPrivateChannel {
 
     private final User recipient;
 
@@ -18,7 +20,8 @@ public class PrivateChannel extends MessageChannel {
         this.recipient = recipient;
     }
 
-    public User getRecipient() {
+    @Override
+    public IUser getRecipient() {
         return recipient;
     }
 

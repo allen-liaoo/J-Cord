@@ -1,7 +1,7 @@
 package org.alienideology.jcord.internal.object.user;
 
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.internal.object.Identity;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
@@ -46,7 +46,7 @@ public class User extends DiscordObject implements IUser {
 
     @Override
     public PrivateChannel getPrivateChannel() {
-        PrivateChannel dm = identity.getPrivateChannel(id);
+        PrivateChannel dm = (PrivateChannel) identity.getPrivateChannel(id);
 
         // Private Channel has not exist
         if (dm == null) {

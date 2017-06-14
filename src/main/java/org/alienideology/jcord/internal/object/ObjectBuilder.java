@@ -2,8 +2,7 @@ package org.alienideology.jcord.internal.object;
 
 import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
-import org.alienideology.jcord.internal.Identity;
-import org.alienideology.jcord.internal.event.ExceptionEvent;
+import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.HttpPath;
@@ -16,6 +15,7 @@ import org.alienideology.jcord.internal.object.message.EmbedMessage;
 import org.alienideology.jcord.internal.object.message.Reaction;
 import org.alienideology.jcord.internal.object.message.StringMessage;
 import org.alienideology.jcord.internal.object.user.User;
+import org.alienideology.jcord.event.ExceptionEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -271,10 +271,10 @@ public final class ObjectBuilder {
             JSONArray roles = json.getJSONArray("roles");
             for (int i = 0; i < roles.length(); i++) {
                 String roleId = roles.getString(i);
-                Role newRole = guild.getRole(roleId);
+                Role newRole = (Role) guild.getRole(roleId);
                 if (newRole != null) memberRoles.add(newRole);
             }
-            memberRoles.add(guild.getEveryoneRole());
+            memberRoles.add((Role) guild.getEveryoneRole());
         }
 
         return new Member(identity, guild, user, nick, joined_at, memberRoles, isDeaf, isMute);
@@ -286,7 +286,7 @@ public final class ObjectBuilder {
      * @return The Member object
      */
     public Member buildMemberById (JSONObject json, String guild_id) {
-        Guild guild = identity.getGuild(guild_id);
+        Guild guild = (Guild) identity.getGuild(guild_id);
         return buildMember(json, guild);
     }
 
@@ -315,14 +315,14 @@ public final class ObjectBuilder {
         List<User> mentions = new ArrayList<>();
         JSONArray mentionUser = json.getJSONArray("mentions");
         for (int i = 0; i < mentionUser.length(); i++) {
-            mentions.add(identity.getUser(mentionUser.getJSONObject(i).getString("id")));
+            mentions.add((User)identity.getUser(mentionUser.getJSONObject(i).getString("id")));
         }
 
         /* Mentioned Role (TextChannel only) */
         List<Role> mentionsRole = new ArrayList<>();
         JSONArray mentionRole = json.getJSONArray("mention_roles");
         for (int i = 0; i < mentionRole.length(); i++) {
-            mentionsRole.add(identity.getRole(mentionRole.getString(i)));
+            mentionsRole.add((Role) identity.getRole(mentionRole.getString(i)));
         }
 
         /* Attachments */
@@ -515,7 +515,7 @@ public final class ObjectBuilder {
 
         JSONArray rolesJson = json.getJSONArray("roles");
         for (int i = 0; i < rolesJson.length(); i++) {
-            Role role = guild.getRole(rolesJson.getString(i));
+            Role role = (Role) guild.getRole(rolesJson.getString(i));
             if (role != null) roles.add(role);
         }
         return new GuildEmoji(identity, guild, id, name, roles, requireColon);

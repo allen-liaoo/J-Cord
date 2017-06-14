@@ -1,7 +1,7 @@
 package org.alienideology.jcord.internal.object;
 
+import org.alienideology.jcord.IIdentity;
 import org.alienideology.jcord.handle.IDiscordObject;
-import org.alienideology.jcord.internal.Identity;
 
 /**
  * Generic Discord Objects
@@ -16,7 +16,8 @@ public class DiscordObject implements IDiscordObject {
         this.identity = identity;
     }
 
-    public Identity getIdentity() {
+    @Override
+    public IIdentity getIdentity() {
         return identity;
     }
 

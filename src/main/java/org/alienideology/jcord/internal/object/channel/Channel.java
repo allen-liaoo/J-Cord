@@ -1,9 +1,8 @@
 package org.alienideology.jcord.internal.object.channel;
 
 import org.alienideology.jcord.handle.channel.IChannel;
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.internal.object.Identity;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.handle.ISnowFlake;
 
 import java.util.Objects;
 
