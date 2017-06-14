@@ -1,12 +1,10 @@
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.guild.GuildCreateEvent;
-import org.alienideology.jcord.event.guild.role.GuildRoleCreateEvent;
-import org.alienideology.jcord.event.guild.update.GuildRegionUpdateEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
-import org.alienideology.jcord.object.EmojiList;
+import org.alienideology.jcord.object.EmojiTable;
 
 /**
  * @author AlienIdeology
@@ -42,7 +40,7 @@ public class ExampleDispatcher extends DispatcherAdaptor {
 
             // Do stuff
             if (event.getMessage().getContent().replaceFirst("\\?", "").equals("ping")) {
-                event.getChannel().sendMessage(new EmojiList().getByAlias("man_surfing_tone5").getUnicode());
+                event.getChannel().sendMessage(new EmojiTable().getByAlias("man_surfing_tone5").getUnicode());
             }
 
         }

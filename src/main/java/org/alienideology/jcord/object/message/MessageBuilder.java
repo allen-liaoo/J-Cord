@@ -1,7 +1,7 @@
 package org.alienideology.jcord.object.message;
 
 import org.alienideology.jcord.Internal;
-import org.alienideology.jcord.object.EmojiList;
+import org.alienideology.jcord.object.EmojiTable;
 import org.alienideology.jcord.object.Mention;
 import org.alienideology.jcord.object.Message;
 import org.alienideology.jcord.object.guild.GuildEmoji;
@@ -13,7 +13,7 @@ import org.json.JSONObject;
  */
 public final class MessageBuilder {
 
-    private final EmojiList emojis = new EmojiList();
+    private final EmojiTable emojis = new EmojiTable();
 
     private StringBuilder content;
     private boolean isTTS = false;
@@ -139,7 +139,7 @@ public final class MessageBuilder {
      * @return MessageBuilder for chaining.
      */
     @Deprecated
-    public MessageBuilder appendEmoji(EmojiList.Emoji emoji) {
+    public MessageBuilder appendEmoji(EmojiTable.Emoji emoji) {
         this.content.append(emoji.getUnicode());
         return this;
     }

@@ -1,6 +1,7 @@
 package org.alienideology.jcord.object.guild;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.DiscordObject;
 import org.alienideology.jcord.object.Guild;
 import org.alienideology.jcord.object.Mention;
@@ -18,7 +19,9 @@ public class GuildEmoji extends DiscordObject implements SnowFlake, Mention {
 
     private final Guild guild;
     private final String id;
+
     private String name;
+    private final String image;
 
     private List<Role> roles;
     private boolean requireColon;
@@ -38,6 +41,7 @@ public class GuildEmoji extends DiscordObject implements SnowFlake, Mention {
         this.guild = guild;
         this.id = id;
         this.name = name;
+        this.image = String.format(HttpPath.EndPoint.EMOJI_ICON, id);
         this.roles = roles;
         this.requireColon = requireColon;
     }
@@ -48,6 +52,10 @@ public class GuildEmoji extends DiscordObject implements SnowFlake, Mention {
 
     public String getName() {
         return name;
+    }
+
+    public String getImage() {
+        return image;
     }
 
     public boolean isRequireColon() {

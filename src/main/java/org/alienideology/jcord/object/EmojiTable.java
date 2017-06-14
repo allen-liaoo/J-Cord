@@ -1,6 +1,7 @@
 package org.alienideology.jcord.object;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.gateway.HttpPath;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -10,22 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * EmojiList - A collection of Default Discord Emojis.
+ * EmojiTable - A collection of Default Discord Emojis.
  * See a full this of emojis here:
  * https://raw.githubusercontent.com/emojione/emojione/master/emoji.json
  * @author AlienIdeology
  */
-public class EmojiList {
-
-    public final static String EMOJI_URL = "https://raw.githubusercontent.com/emojione/emojione/master/emoji.json";
+public class EmojiTable {
 
     private final List<Emoji> emojis;
 
-    public EmojiList() {
+    public EmojiTable() {
         this.emojis = new ArrayList<>();
 
         try {
-            JSONTokener tokener = new JSONTokener(new InputStreamReader(new URL(EMOJI_URL).openStream()));
+            JSONTokener tokener = new JSONTokener(new InputStreamReader(new URL(HttpPath.EndPoint.EMOJI_URL).openStream()));
             JSONObject json = new JSONObject(tokener);
 
             for (String key : json.keySet()) {
@@ -57,7 +56,7 @@ public class EmojiList {
         return emojis;
     }
 
-    public List<Emoji> getByCategory(EmojiList.Category category) {
+    public List<Emoji> getByCategory(EmojiTable.Category category) {
         List<Emoji> emojisList = new ArrayList<>();
         for (Emoji emoji : emojis) {
             if (emoji.getCategory().equals(category))

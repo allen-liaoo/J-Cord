@@ -59,6 +59,33 @@ public class Message extends DiscordObject implements SnowFlake, Comparable<Mess
         this.isPinned = isPinned;
     }
 
+    /**
+     * Edit this message
+     * @see MessageChannel#editMessage(String, String)
+     * @param content The new content
+     * @return The message edited.
+     */
+    public Message edit(String content) {
+        return channel.editMessage(id, content);
+    }
+
+    /**
+     * Delete this message
+     * @see MessageChannel#deleteMessage(String)
+     * @return The message deleted.
+     */
+    public Message delete() {
+        return channel.deleteMessage(id);
+    }
+
+    /**
+     * Pin this message
+     * @see MessageChannel#pinMessage(String)
+     */
+    public void pin() {
+        channel.pinMessage(id);
+    }
+
     public String getContent() {
         return content;
     }

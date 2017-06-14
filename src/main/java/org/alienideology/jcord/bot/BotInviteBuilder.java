@@ -1,5 +1,6 @@
 package org.alienideology.jcord.bot;
 
+import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.Permission;
 
 import java.net.MalformedURLException;
@@ -10,8 +11,6 @@ import java.net.URL;
  * @author AlienIdeology
  */
 public class BotInviteBuilder {
-
-    private final String inviteLink = "https://discordapp.com/oauth2/authorize";
 
     private String id;
     private Permission[] permissions;
@@ -61,7 +60,7 @@ public class BotInviteBuilder {
             throw new IllegalStateException("Cannot build an invite when there is no bot ID set!");
         }
 
-        String invite = inviteLink;
+        String invite = HttpPath.EndPoint.AUTHORIZE;
         invite += "?client_id=" + id + "&scope=bot";
 
         if (permissions != null) {

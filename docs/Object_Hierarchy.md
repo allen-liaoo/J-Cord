@@ -22,7 +22,7 @@ Discord Objects - Entities such as Guild, User, or Channel.
  - User - A base entity, can be a member of guild/private channel, and bot/human.
  - Region - Used for guild voice channel connection.
  - Permission - A way to limit and grant certain abilities to members.
- - EmojiList - A collection of Default Discord Emojis.
+ - EmojiTable - A collection of Default Discord Emojis.
    - Emoji - An emoji in Discord (Not GuildEmoji).
 
 #### Guild

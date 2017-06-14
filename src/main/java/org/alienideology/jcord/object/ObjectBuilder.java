@@ -55,7 +55,7 @@ public final class ObjectBuilder {
         } else {
             /* Basic Information */
             String name = json.getString("name");
-            String icon = json.getString("icon");
+            String icon = json.isNull("icon") ? null : json.getString("icon");
             String splash = json.isNull("splash") ? null : json.getString("splash");
             String owner = json.getString("owner_id");
             String region = json.getString("region");
@@ -433,7 +433,7 @@ public final class ObjectBuilder {
         List<Reaction> reactions = new ArrayList<>();
         if (json.has("reactions")) {
             boolean isFromGuild = message.fromType(Channel.Type.TEXT);
-            EmojiList emojis = new EmojiList();
+            EmojiTable emojis = new EmojiTable();
             JSONArray reacts = json.getJSONArray("reactions");
 
             for (int i = 0; i < reacts.length(); i++) {

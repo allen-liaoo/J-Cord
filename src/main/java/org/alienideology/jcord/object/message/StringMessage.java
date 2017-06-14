@@ -56,7 +56,7 @@ public class StringMessage extends Message {
                 }
             }
 
-            // TODO: EmojiList Mentions
+            // TODO: EmojiTable Mentions
 
         }
 

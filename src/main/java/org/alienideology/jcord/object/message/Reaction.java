@@ -2,7 +2,7 @@ package org.alienideology.jcord.object.message;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.object.DiscordObject;
-import org.alienideology.jcord.object.EmojiList;
+import org.alienideology.jcord.object.EmojiTable;
 import org.alienideology.jcord.object.guild.GuildEmoji;
 
 /**
@@ -14,13 +14,13 @@ public class Reaction extends DiscordObject {
     private int reactedTimes;
     private boolean selfReacted;
 
-    private EmojiList.Emoji emoji;
+    private EmojiTable.Emoji emoji;
     private GuildEmoji guildEmoji;
 
     /**
      * Constructor for Emoji
      */
-    public Reaction(Identity identity, int reactedTimes, boolean selfReacted, EmojiList.Emoji emoji) {
+    public Reaction(Identity identity, int reactedTimes, boolean selfReacted, EmojiTable.Emoji emoji) {
         super(identity);
         this.reactedTimes = reactedTimes;
         this.selfReacted = selfReacted;

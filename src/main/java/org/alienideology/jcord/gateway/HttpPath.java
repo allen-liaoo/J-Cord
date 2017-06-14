@@ -1,14 +1,6 @@
 package org.alienideology.jcord.gateway;
 
 import com.mashape.unirest.http.HttpMethod;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.request.HttpRequest;
-import com.mashape.unirest.request.HttpRequestWithBody;
-import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.JCord;
-import org.json.JSONObject;
-
-import java.util.IllegalFormatException;
 
 import static com.mashape.unirest.http.HttpMethod.*;
 
@@ -18,7 +10,37 @@ import static com.mashape.unirest.http.HttpMethod.*;
  */
 public final class HttpPath {
 
-    public final static String APIURL = "https://discordapp.com/api";
+    public final static String DISCORD_URL = "https://discordapp.com/";
+    public final static String DISCORD_API_URL = DISCORD_URL+"api";
+    public final static String DISCORD_CDN_URL = "https://cdn.discordapp.com/";
+
+    public static class EndPoint {
+
+        public final static String AUTHORIZE = DISCORD_URL+"oauth2/authorize";
+
+        /**
+         * Avatar - Parameters: ID, Avatar Hash
+         */
+        public final static String AVATAR = DISCORD_CDN_URL+"avatars/%s/%s.%s";
+
+        /**
+         * Default Avatar - Parameter: Avatar Hash
+         */
+        public final static String DEFAULT_AVATAR = DISCORD_CDN_URL+"embed/avatars/%s.png";
+
+        /**
+         * Guild Icon - Parameters: ID, Icon Hash
+         */
+        public final static String GUILD_ICON = DISCORD_CDN_URL+"icons/%s/%s.png";
+
+        /**
+         * GuildEmoji Icon - Parameter: ID
+         */
+        public final static String EMOJI_ICON = DISCORD_CDN_URL+"emojis/%s.png";
+
+        public final static String EMOJI_URL = "https://raw.githubusercontent.com/emojione/emojione/master/emoji.json";
+
+    }
 
     public static class Gateway {
         public final static HttpPath GET_BOT = new HttpPath(GET, "/gateway/bot");
@@ -154,7 +176,7 @@ public final class HttpPath {
 
     public HttpPath(HttpMethod method, String path) {
         this.method = method;
-        this.path = APIURL + path;
+        this.path = DISCORD_API_URL + path;
     }
 
     public HttpMethod getMethod() {

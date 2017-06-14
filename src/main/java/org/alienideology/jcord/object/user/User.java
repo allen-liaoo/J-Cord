@@ -4,6 +4,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import com.mashape.unirest.request.body.RequestBodyEntity;
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.Internal;
 import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.gateway.Requester;
 import org.alienideology.jcord.object.DiscordObject;
@@ -41,6 +42,7 @@ public class User extends DiscordObject implements SnowFlake, Mention {
         this.name = name;
         this.discriminator = discriminator;
         this.avatar = avatar;
+        setAvatar();
         this.email = email;
         this.isBot = isBot;
         this.isWebHook = isWebHook;
@@ -48,6 +50,10 @@ public class User extends DiscordObject implements SnowFlake, Mention {
         this.MFAEnabled = MFAEnabled;
     }
 
+    /**
+     * Get or open a PrivateChannel with this user
+     * @return The PrivateChannel with this user
+     */
     public PrivateChannel getPrivateChannel() {
         PrivateChannel dm = identity.getPrivateChannel(id);
 
@@ -125,6 +131,13 @@ public class User extends DiscordObject implements SnowFlake, Mention {
     @Override
     public String toString() {
         return "ID: "+id+"\tName: "+name;
+    }
+
+    @Internal
+    private void setAvatar() {
+        this.avatar = avatar == null ?
+                String.format(HttpPath.EndPoint.DEFAULT_AVATAR, String.valueOf(Integer.parseInt(discriminator) % 5)) :
+                String.format(HttpPath.EndPoint.AVATAR, id, avatar, (avatar.startsWith("a_") ? ".gif" : ".png"));
     }
 
 }

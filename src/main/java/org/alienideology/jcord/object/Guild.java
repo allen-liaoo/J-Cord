@@ -4,6 +4,7 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.Internal;
+import org.alienideology.jcord.gateway.HttpPath;
 import org.alienideology.jcord.object.guild.GuildEmoji;
 import org.alienideology.jcord.object.guild.Member;
 import org.alienideology.jcord.object.guild.Role;
@@ -25,8 +26,8 @@ public class Guild extends DiscordObject implements SnowFlake {
 
     private String name;
 
-    private final String icon;
-    private final String splash;
+    private String icon;
+    private String splash;
 
     private Member owner;
     private Region region;
@@ -80,6 +81,7 @@ public class Guild extends DiscordObject implements SnowFlake {
         isAvailable = true;
         this.name = name;
         this.icon = icon;
+        setIcon();
         this.splash = splash;
 //         this.owner = owner;
         this.region = Region.getByKey(region);
@@ -487,6 +489,11 @@ public class Guild extends DiscordObject implements SnowFlake {
         this.afk_channel = getVoiceChannel(afk);
         this.embed_channel = getTextChannel(embed);
         return this;
+    }
+
+    private void setIcon() {
+        this.icon = icon == null ?
+                null : String.format(HttpPath.EndPoint.GUILD_ICON, id, icon);
     }
 
 }
