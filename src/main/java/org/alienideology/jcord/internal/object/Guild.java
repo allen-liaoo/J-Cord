@@ -6,11 +6,11 @@ import org.alienideology.jcord.handle.IGuild;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 import org.alienideology.jcord.internal.object.guild.Member;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.user.User;
-import org.alienideology.jcord.internal.object.channel.GuildChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 
@@ -412,8 +412,8 @@ public class Guild extends DiscordObject implements IGuild {
      * @return this guild for chaining.
      */
     @Internal
-    Guild addGuildChannel (GuildChannel... channels) {
-        for (GuildChannel channel : channels) {
+    Guild addGuildChannel (IGuildChannel... channels) {
+        for (IGuildChannel channel : channels) {
             if (channel instanceof TextChannel) {
                 textChannels.add((TextChannel) channel);
             } else if (channel instanceof VoiceChannel) {

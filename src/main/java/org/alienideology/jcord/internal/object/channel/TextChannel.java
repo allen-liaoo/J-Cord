@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.channel;
 
+import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.internal.object.Guild;
@@ -8,10 +9,10 @@ import org.alienideology.jcord.internal.object.Message;
 import java.util.Objects;
 
 /**
- * TextChannel - A GuildChannel for text messages.
+ * TextChannel - A IGuildChannel for text messages.
  * @author AlienIdeology
  */
-public class TextChannel extends MessageChannel implements GuildChannel, IMention {
+public class TextChannel extends MessageChannel implements IGuildChannel, IMention {
 
     private Guild guild;
     private String name;

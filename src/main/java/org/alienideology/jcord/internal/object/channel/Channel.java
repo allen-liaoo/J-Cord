@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.channel;
 
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
@@ -8,10 +9,10 @@ import java.util.Objects;
 
 /**
  * Channel - A communication pipeline
- * Can be GuildChannel, VoiceChannel or PrivateChannel
+ * Can be IGuildChannel, VoiceChannel or PrivateChannel
  * @author AlienIdeology
  */
-public class Channel extends DiscordObject implements ISnowFlake {
+public class Channel extends DiscordObject implements IChannel {
 
     protected final String id;
     protected final Type type;
@@ -29,14 +30,12 @@ public class Channel extends DiscordObject implements ISnowFlake {
         this.isPrivate = (type == Type.PRIVATE);
     }
 
+    @Override
     public Type getType() {
         return type;
     }
 
-    public boolean isType(Type type) {
-        return this.type.equals(type);
-    }
-
+    @Override
     public boolean isPrivate() {
         return isPrivate;
     }
@@ -64,6 +63,8 @@ public class Channel extends DiscordObject implements ISnowFlake {
     public String toString() {
         return "ID: "+id;
     }
+
+    // TODO: Move Channel.Type to IChannel
 
     /**
      * Channel Types

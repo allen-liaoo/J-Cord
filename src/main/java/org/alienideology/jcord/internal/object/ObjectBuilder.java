@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object;
 
+import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.event.ExceptionEvent;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -101,9 +102,9 @@ public final class ObjectBuilder {
                 for (int i = 0; i < guildChannels.length(); i++) {
 
                     JSONObject newChannel = guildChannels.getJSONObject(i);
-                    GuildChannel channel = buildGuildChannel(newChannel);
+                    IGuildChannel channel = buildGuildChannel(newChannel);
 
-                    guild.addGuildChannel((GuildChannel) channel);
+                    guild.addGuildChannel((IGuildChannel) channel);
                 }
 
             } catch (RuntimeException e) {
@@ -148,10 +149,10 @@ public final class ObjectBuilder {
 
     /**
      * Build a guild channel object base on provided json.
-     * @param json The GuildChannel JSONObject
-     * @return TextChannel or VoiceChannel, wrapped as a GuildChannel
+     * @param json The IGuildChannel JSONObject
+     * @return TextChannel or VoiceChannel, wrapped as a IGuildChannel
      */
-    public GuildChannel buildGuildChannel (JSONObject json) {
+    public IGuildChannel buildGuildChannel (JSONObject json) {
         handleBuildError(json);
 
         String guild_id = json.getString("guild_id");
@@ -180,14 +181,14 @@ public final class ObjectBuilder {
     /**
      * Build a guild channel object by an id.
      * @param id The id of the channel
-     * @return The GuildChannel object
+     * @return The IGuildChannel object
      */
-    public GuildChannel buildGuildChannelById (String id) {
+    public IGuildChannel buildGuildChannelById (String id) {
         JSONObject gChannel;
         try {
             gChannel = new Requester(identity, HttpPath.Channel.GET_CHANNEL).request(id).getAsJSONObject();
         } catch (RuntimeException e) {
-            identity.LOG.error("Building GuildChannel By ID (ID: "+id+")", e);
+            identity.LOG.error("Building IGuildChannel By ID (ID: "+id+")", e);
             throw new IllegalArgumentException("Invalid ID!");
         }
         return buildGuildChannel(gChannel);

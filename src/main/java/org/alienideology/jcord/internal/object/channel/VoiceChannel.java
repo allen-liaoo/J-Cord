@@ -1,15 +1,16 @@
 package org.alienideology.jcord.internal.object.channel;
 
+import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.object.Guild;
 
 import java.util.Objects;
 
 /**
- * VoiceChannel - A GuildChannel for audio connections.
+ * VoiceChannel - A IGuildChannel for audio connections.
  * @author AlienIdeology
  */
-public class VoiceChannel extends Channel implements GuildChannel {
+public class VoiceChannel extends Channel implements IGuildChannel {
 
     private Guild guild;
 
