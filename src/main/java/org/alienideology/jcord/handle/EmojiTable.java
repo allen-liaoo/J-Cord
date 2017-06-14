@@ -1,4 +1,4 @@
-package org.alienideology.jcord.internal.object;
+package org.alienideology.jcord.handle;
 
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.internal.gateway.HttpPath;

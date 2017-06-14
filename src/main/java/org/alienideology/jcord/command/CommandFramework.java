@@ -91,7 +91,7 @@ public class CommandFramework {
      * @param commands The varargs of command objects
      * @return The CommandFramework for chaining.
      */
-    public CommandFramework registerCommandResponder(CommandResponder... commands) {
+    public CommandFramework registerCommandResponders(CommandResponder... commands) {
         for (CommandResponder responder : commands) {
             for (Method method : responder.getClass().getMethods()) {
                 if (method.isAnnotationPresent(Command.class)) {

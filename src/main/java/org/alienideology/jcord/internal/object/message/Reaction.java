@@ -2,7 +2,7 @@ package org.alienideology.jcord.internal.object.message;
 
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.EmojiTable;
+import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 
 /**

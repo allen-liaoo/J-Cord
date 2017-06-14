@@ -1,7 +1,9 @@
-package org.alienideology.jcord.handle;
+package org.alienideology.jcord.handle.guild;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.IDiscordObject;
+import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.internal.object.Region;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
@@ -17,7 +19,7 @@ import java.util.List;
  * Guild - A collection of users and channels, often referred to in the UI as a server.
  * @author AlienIdeology
  */
-public interface IGuild extends ISnowFlake {
+public interface IGuild extends IDiscordObject, ISnowFlake {
 
     boolean isAvailable();
 

@@ -1,7 +1,7 @@
 package org.alienideology.jcord.internal.object.guild;
 
-import org.alienideology.jcord.handle.IMention;
-import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.Permission;
+import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.object.*;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * Role - A label that can be put on a set of guild members.
  * @author AlienIdeology
  */
-public class Role extends DiscordObject implements Comparable<Role>, ISnowFlake, IMention {
+public class Role extends DiscordObject implements IRole {
 
     private final String id;
     private final Guild guild;
@@ -109,8 +109,8 @@ public class Role extends DiscordObject implements Comparable<Role>, ISnowFlake,
     }
 
     @Override
-    public int compareTo(Role o) {
-        return (o.position > this.position) ? -1 : ((o.position == this.position) ? 0 : 1);
+    public int compareTo(IRole o) {
+        return (o.getPosition() > this.position) ? -1 : ((o.getPosition() == this.position) ? 0 : 1);
     }
 
     @Override

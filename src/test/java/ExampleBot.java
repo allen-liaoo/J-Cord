@@ -18,16 +18,14 @@ public class ExampleBot {
     public static void main(String[] args) {
 
         try {
-            if (args.length == 0)
-                throw new RuntimeException("You must add a token!");
             Identity bot = new IdentityBuilder()
                     .setIdentityType(IdentityType.BOT)
-                    .useToken(args[0])
+                    .useToken(Token.YOUR_SECRET_TOKEN_HERE) // Remember to keep this secret
                     .setEventManager(
                             new EventManager()
                                     .registerDispatcherAdaptors(new ExampleDispatcher())
                                     .registerCommandFrameworks(new CommandFramework().setPrefixes("=")
-                                            .registerCommandResponder(new ExampleResponder()))
+                                            .registerCommandResponders(new ExampleResponder()))
                                     .registerEventSubscribers(new ExampleSubscriber())
                     )
                     .build(true);

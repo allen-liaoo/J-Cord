@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object;
 
+import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.event.ExceptionEvent;

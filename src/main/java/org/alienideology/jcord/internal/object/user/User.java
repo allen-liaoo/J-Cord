@@ -1,6 +1,6 @@
 package org.alienideology.jcord.internal.object.user;
 
-import org.alienideology.jcord.handle.IUser;
+import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.gateway.HttpPath;

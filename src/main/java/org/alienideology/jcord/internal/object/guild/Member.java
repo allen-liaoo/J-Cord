@@ -1,7 +1,7 @@
 package org.alienideology.jcord.internal.object.guild;
 
-import org.alienideology.jcord.handle.IMention;
-import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.Permission;
+import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.object.*;
 import org.alienideology.jcord.internal.object.user.User;
@@ -13,7 +13,7 @@ import java.util.*;
  * Member - A user representation in a guild.
  * @author AlienIdeology
  */
-public class Member extends DiscordObject implements ISnowFlake, IMention {
+public class Member extends DiscordObject implements IMember {
 
     private final Guild guild;
     private final User user;
@@ -38,11 +38,7 @@ public class Member extends DiscordObject implements ISnowFlake, IMention {
         this.isMuted = isMuted;
     }
 
-    /**
-     * Check if this member have all the given permissions
-     * @param permissions The varargs of permission enums to be checked
-     * @return True if the member have all given permissions
-     */
+    @Override
     public boolean hasAllPermissions (Permission... permissions) {
         for (Permission perm : permissions) {
             if (!this.permissions.contains(perm))
@@ -52,24 +48,13 @@ public class Member extends DiscordObject implements ISnowFlake, IMention {
         return true;
     }
 
-    /**
-     * Check if this member have one of the given permissions.
-     * @param checkAdmin If true, returns true if the member have administrator permission.
-     * @param permissions The varargs of permission enums to be checked.
-     * @return True if the member have one of the given permissions.
-     */
+    @Override
     public boolean hasPermissions (boolean checkAdmin, Permission... permissions) {
         if (checkAdmin && hasPermissions(Permission.ADMINISTRATOR)) return true;
         return hasPermissions(permissions);
     }
 
-    /**
-     * Check if this member have one of the given permissions
-     * @deprecated #hasPermissions(boolean, Permission...) To check with the member having administrator permission.
-     * @see #hasAllPermissions(Permission...) To check if this member have all the permissions.
-     * @param permissions The varargs of permission enums to be checked
-     * @return True if the member have one of the given permissions
-     */
+    @Override
     @Deprecated
     public boolean hasPermissions (Permission... permissions) {
         for (Permission perm : permissions) {
@@ -89,42 +74,52 @@ public class Member extends DiscordObject implements ISnowFlake, IMention {
         return permissions;
     }
 
+    @Override
     public Guild getGuild() {
         return guild;
     }
 
+    @Override
     public User getUser() {
         return user;
     }
 
+    @Override
     public String getNickname() {
         return nickname;
     }
 
+    @Override
     public OffsetDateTime getJoinedDate() {
         return joinedDate;
     }
 
+    @Override
     public Role getHighestRole() {
         return roles.isEmpty() ? null : roles.get(0);
     }
 
+    @Override
     public List<Role> getRoles() {
         return Collections.unmodifiableList(roles);
     }
 
+    @Override
     public List<Permission> getPermissions() {
         return Collections.unmodifiableList(permissions);
     }
 
+    @Override
     public boolean isOwner() {
         return guild.getOwner().equals(this);
     }
 
+    @Override
     public boolean isDeafened() {
         return isDeafened;
     }
 
+    @Override
     public boolean isMuted() {
         return isMuted;
     }

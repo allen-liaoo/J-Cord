@@ -4,7 +4,7 @@ import org.alienideology.jcord.internal.event.guild.GuildCreateEvent;
 import org.alienideology.jcord.internal.event.message.guild.GuildMessageCreateEvent;
 import org.alienideology.jcord.internal.event.message.MessageCreateEvent;
 import org.alienideology.jcord.internal.event.message.dm.PrivateMessageCreateEvent;
-import org.alienideology.jcord.internal.object.EmojiTable;
+import org.alienideology.jcord.handle.EmojiTable;
 
 /**
  * @author AlienIdeology

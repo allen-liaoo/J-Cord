@@ -2,7 +2,7 @@ package org.alienideology.jcord.internal.object;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
-import org.alienideology.jcord.handle.IGuild;
+import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.gateway.HttpPath;

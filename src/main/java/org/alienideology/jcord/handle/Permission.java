@@ -1,9 +1,9 @@
-package org.alienideology.jcord.internal.object;
+package org.alienideology.jcord.handle;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.alienideology.jcord.internal.object.Permission.PermissionLevel.*;
+import static org.alienideology.jcord.handle.Permission.PermissionLevel.*;
 
 /**
  * Permission - A way to limit and grant certain abilities to members.

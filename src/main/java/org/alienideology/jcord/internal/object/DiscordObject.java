@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object;
 
+import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.internal.Identity;
 
 /**
@@ -7,7 +8,7 @@ import org.alienideology.jcord.internal.Identity;
  * Such as Guild, User, Channel
  * @author AlienIdeology
  */
-public class DiscordObject {
+public class DiscordObject implements IDiscordObject {
 
     protected final Identity identity;
 

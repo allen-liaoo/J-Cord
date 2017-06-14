@@ -1,6 +1,8 @@
-package org.alienideology.jcord.handle;
+package org.alienideology.jcord.handle.message;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.IDiscordObject;
+import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.internal.object.Message;
 import org.alienideology.jcord.internal.object.channel.Channel;
@@ -17,7 +19,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
- interface IMessage extends ISnowFlake, Comparable<Message> {
+public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<Message> {
 
     /**
      * Edit this message

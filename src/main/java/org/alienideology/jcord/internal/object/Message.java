@@ -1,7 +1,7 @@
 package org.alienideology.jcord.internal.object;
 
 import com.sun.istack.internal.Nullable;
-import org.alienideology.jcord.handle.IMessage;
+import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.Internal;

@@ -1,6 +1,7 @@
 package org.alienideology.jcord.internal.object.channel;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.exception.PermissionException;
@@ -8,7 +9,7 @@ import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
-import org.alienideology.jcord.internal.object.Permission;
+import org.alienideology.jcord.handle.Permission;
 import org.alienideology.jcord.internal.object.message.EmbedMessageBuilder;
 import org.alienideology.jcord.internal.object.Message;
 import org.alienideology.jcord.internal.object.message.MessageBuilder;
@@ -19,7 +20,7 @@ import org.json.JSONObject;
  * MessageChannel - A channel that allows users to send message.
  * @author AlienIdeology
  */
-public class MessageChannel extends Channel {
+public class MessageChannel extends Channel implements IMessageChannel {
 
     private Guild guild;
     private MessageHistory history;

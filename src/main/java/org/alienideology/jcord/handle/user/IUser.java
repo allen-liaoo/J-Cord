@@ -1,5 +1,7 @@
-package org.alienideology.jcord.handle;
+package org.alienideology.jcord.handle.user;
 
+import org.alienideology.jcord.handle.IMention;
+import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 
 /**

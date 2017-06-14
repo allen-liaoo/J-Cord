@@ -1,6 +1,6 @@
 package org.alienideology.jcord.internal.exception;
 
-import org.alienideology.jcord.internal.object.Permission;
+import org.alienideology.jcord.handle.Permission;
 
 /**
  * @author AlienIdeology
