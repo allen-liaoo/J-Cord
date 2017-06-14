@@ -1,9 +1,8 @@
 package org.alienideology.jcord.util;
 
 import com.sun.istack.internal.Nullable;
-import org.alienideology.jcord.object.SnowFlake;
+import org.alienideology.jcord.internal.object.SnowFlake;
 
-import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.function.Consumer;

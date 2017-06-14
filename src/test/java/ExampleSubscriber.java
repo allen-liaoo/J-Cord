@@ -1,5 +1,5 @@
-import org.alienideology.jcord.event.EventSubscriber;
-import org.alienideology.jcord.event.message.MessageCreateEvent;
+import org.alienideology.jcord.internal.event.EventSubscriber;
+import org.alienideology.jcord.internal.event.message.MessageCreateEvent;
 
 /**
  * @author AlienIdeology
