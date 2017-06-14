@@ -43,7 +43,9 @@ public interface IUser extends ISnowFlake, IMention {
      * @return The formatted String.
      */
     @Override
-    String mention();
+    default String mention() {
+        return "<@"+getId()+">";
+    }
 
     /**
      * Gets the formatted mention of the user
@@ -51,5 +53,7 @@ public interface IUser extends ISnowFlake, IMention {
      * @param val Include the nickname or not
      * @return The formatted String.
      */
-    String mention(boolean val);
+    default String mention(boolean val) {
+        return val ? "<!@"+getId()+">" : "<@"+getId()+">";
+    }
 }

@@ -111,16 +111,6 @@ public class User extends DiscordObject implements IUser {
     }
 
     @Override
-    public String mention() {
-        return "<@"+id+">";
-    }
-
-    @Override
-    public String mention(boolean val) {
-        return "<!@"+id+">";
-    }
-
-    @Override
     public boolean equals(Object obj) {
         return (obj instanceof User) && Objects.equals(this.id, ((User) obj).getId());
     }

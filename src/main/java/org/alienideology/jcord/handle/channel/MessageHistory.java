@@ -1,10 +1,12 @@
-package org.alienideology.jcord.internal.object.channel;
+package org.alienideology.jcord.handle.channel;
 
+import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.Message;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
+import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.util.Cache;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,7 +17,7 @@ import java.util.*;
  * MessageHistory - The history of a MessageChannel, used to get lists of messages.
  * @author AlienIdeology
  */
-public class MessageHistory extends DiscordObject {
+public class MessageHistory extends DiscordObject implements IDiscordObject {
 
     private MessageChannel channel;
 

@@ -114,11 +114,6 @@ public class Role extends DiscordObject implements IRole {
     }
 
     @Override
-    public String mention() {
-        return "<@&"+id+">";
-    }
-
-    @Override
     public String getId() {
         return id;
     }

@@ -8,8 +8,6 @@ import org.alienideology.jcord.handle.ISnowFlake;
 import java.util.Objects;
 
 /**
- * Channel - A communication pipeline
- * Can be IGuildChannel, VoiceChannel or PrivateChannel
  * @author AlienIdeology
  */
 public class Channel extends DiscordObject implements IChannel {

@@ -107,11 +107,8 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     * @return a VoiceChannel or null if no channel is found.
     */
     @Nullable
-    public VoiceChannel getVoiceChannel(String id);
+    VoiceChannel getVoiceChannel(String id);
 
     List<VoiceChannel> getVoiceChannels();
-
-    @Override
-    String getId();
     
 }

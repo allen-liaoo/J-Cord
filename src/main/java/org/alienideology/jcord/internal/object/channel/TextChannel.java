@@ -1,6 +1,8 @@
 package org.alienideology.jcord.internal.object.channel;
 
+import com.sun.istack.internal.NotNull;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.internal.object.Guild;
@@ -9,10 +11,9 @@ import org.alienideology.jcord.internal.object.Message;
 import java.util.Objects;
 
 /**
- * TextChannel - A IGuildChannel for text messages.
  * @author AlienIdeology
  */
-public class TextChannel extends MessageChannel implements IGuildChannel, IMention {
+public class TextChannel extends MessageChannel implements ITextChannel {
 
     private Guild guild;
     private String name;
@@ -28,6 +29,7 @@ public class TextChannel extends MessageChannel implements IGuildChannel, IMenti
     }
 
     @Override
+    @NotNull
     public Guild getGuild() {
         return guild;
     }
@@ -42,21 +44,19 @@ public class TextChannel extends MessageChannel implements IGuildChannel, IMenti
         return position;
     }
 
+    @Override
     public String getTopic() {
         return topic;
     }
 
+    @Override
     public boolean isDefaultChannel() {
         return id.equals(guild.getId());
     }
 
+    @Override
     public boolean isNSFWChannel() {
         return name.startsWith("nsfw-") || name.equals("nsfw");
-    }
-
-    @Override
-    public String mention() {
-        return "<#"+id+">";
     }
 
     @Override

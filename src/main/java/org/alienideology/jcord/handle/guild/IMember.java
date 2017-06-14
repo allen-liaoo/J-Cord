@@ -62,9 +62,8 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
     boolean isMuted();
 
     @Override
-    String mention();
-
-    @Override
-    String getId();
+    default String mention() {
+        return "<!@"+getId()+">";
+    }
 
 }

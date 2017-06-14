@@ -1,16 +1,15 @@
 package org.alienideology.jcord.internal.object.channel;
 
-import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.object.Guild;
 
 import java.util.Objects;
 
 /**
- * VoiceChannel - A IGuildChannel for audio connections.
  * @author AlienIdeology
  */
-public class VoiceChannel extends Channel implements IGuildChannel {
+public class VoiceChannel extends Channel implements IVoiceChannel {
 
     private Guild guild;
 
@@ -20,7 +19,7 @@ public class VoiceChannel extends Channel implements IGuildChannel {
     private int user_limit;
 
     public VoiceChannel(Identity identity, String guild_id, String id, String name, int position, int bitrate, int user_limit) {
-        super(identity, id, Type.VOICE);
+        super(identity, id, Channel.Type.VOICE);
         this.guild = identity.getGuild(guild_id);
         this.name = name;
         this.position = position;
@@ -28,11 +27,13 @@ public class VoiceChannel extends Channel implements IGuildChannel {
         this.user_limit = user_limit;
     }
 
+    @Override
     public int getBitrate() {
         return bitrate;
     }
 
-    public int getUser_limit() {
+    @Override
+    public int getUserLimit() {
         return user_limit;
     }
 

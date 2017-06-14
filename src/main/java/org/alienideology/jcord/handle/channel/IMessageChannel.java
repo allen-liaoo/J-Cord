@@ -1,13 +1,9 @@
 package org.alienideology.jcord.handle.channel;
 
 import com.sun.istack.internal.Nullable;
-import org.alienideology.jcord.handle.IDiscordObject;
-import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.internal.object.Message;
-import org.alienideology.jcord.internal.object.channel.Channel;
-import org.alienideology.jcord.internal.object.channel.MessageHistory;
 import org.alienideology.jcord.internal.object.message.EmbedMessageBuilder;
 import org.alienideology.jcord.internal.object.message.MessageBuilder;
 
@@ -15,16 +11,7 @@ import org.alienideology.jcord.internal.object.message.MessageBuilder;
  * MessageChannel - A channel that allows users to send message.
  * @author AlienIdeology
  */
-public interface IMessageChannel extends IDiscordObject, IChannel {
-
-    @Override
-    Channel.Type getType();
-
-    @Override
-    boolean isPrivate();
-
-    @Override
-    String getId();
+public interface IMessageChannel extends IChannel {
 
     @Nullable
     Guild getGuild();
@@ -132,13 +119,13 @@ public interface IMessageChannel extends IDiscordObject, IChannel {
     Message deleteMessage(Message message);
 
     /**
-    * Pin a message by ID
+    * Pin a message by ID.
     * @param messageId The message id.
     */
     void pinMessage(String messageId);
 
     /**
-    * Pin a message
+    * Pin a message.
     * @param message The message object.
     */
     void pinMessage(Message message);

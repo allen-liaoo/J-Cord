@@ -7,7 +7,6 @@ import org.alienideology.jcord.internal.object.Message;
 import java.util.Objects;
 
 /**
- * PrivateChannel - A one-to-one channel between two users
  * @author AlienIdeology
  */
 public class PrivateChannel extends MessageChannel {

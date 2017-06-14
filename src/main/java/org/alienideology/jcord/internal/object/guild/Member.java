@@ -125,11 +125,6 @@ public class Member extends DiscordObject implements IMember {
     }
 
     @Override
-    public String mention() {
-        return "<@!"+user.getId()+">";
-    }
-
-    @Override
     public String getId() {
         return user.getId();
     }

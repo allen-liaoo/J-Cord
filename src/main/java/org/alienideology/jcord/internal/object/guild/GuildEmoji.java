@@ -2,6 +2,7 @@ package org.alienideology.jcord.internal.object.guild;
 
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.DiscordObject;
@@ -15,7 +16,7 @@ import java.util.List;
  * GuildEmoji - A custom emoji that can be used within a guild.
  * @author AlienIdeology
  */
-public class GuildEmoji extends DiscordObject implements ISnowFlake, IMention {
+public class GuildEmoji extends DiscordObject implements IGuildEmoji {
 
     private final Guild guild;
     private final String id;
@@ -46,26 +47,32 @@ public class GuildEmoji extends DiscordObject implements ISnowFlake, IMention {
         this.requireColon = requireColon;
     }
 
+    @Override
     public Guild getGuild() {
         return guild;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getImage() {
         return image;
     }
 
+    @Override
     public boolean isRequireColon() {
         return requireColon;
     }
 
+    @Override
     public List<Role> getUsableRoles() {
         return Collections.unmodifiableList(roles);
     }
 
+    @Override
     public boolean canBeUseBy(Member member) {
         for (Role role : member.getRoles()) {
             if (roles.contains(role))
@@ -74,17 +81,13 @@ public class GuildEmoji extends DiscordObject implements ISnowFlake, IMention {
         return false;
     }
 
+    @Override
     public boolean canBeUseBy(Role role) {
         if (roles.contains(role)) {
             return true;
         } else {
             return false;
         }
-    }
-
-    @Override
-    public String mention() {
-        return "<:"+name+":"+id+">";
     }
 
     @Override

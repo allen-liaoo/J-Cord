@@ -52,9 +52,8 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, Comparable<
     int compareTo(IRole o);
 
     @Override
-    String mention();
-
-    @Override
-    String getId();
+    default String mention(){
+        return "<#"+getId()+">";
+    }
     
 }

@@ -2,6 +2,7 @@ package org.alienideology.jcord.internal.object.channel;
 
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
+import org.alienideology.jcord.handle.channel.MessageHistory;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.exception.PermissionException;
@@ -17,7 +18,6 @@ import org.alienideology.jcord.internal.object.user.User;
 import org.json.JSONObject;
 
 /**
- * MessageChannel - A channel that allows users to send message.
  * @author AlienIdeology
  */
 public class MessageChannel extends Channel implements IMessageChannel {
@@ -43,15 +43,18 @@ public class MessageChannel extends Channel implements IMessageChannel {
         this.latestMessage = latestMessage;
     }
 
+    @Override
     @Nullable
     public Guild getGuild() {
         return guild;
     }
 
+    @Override
     public Message getLatestMessage() {
         return latestMessage;
     }
 
+    @Override
     public MessageHistory getHistory() {
         return history;
     }
@@ -61,6 +64,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @param id The id of the message
      * @return The message object
      */
+    @Override
     public Message getMessage(String id) {
         if (!isPrivate)
         if (latestMessage.getId().equals(id)) return latestMessage;
@@ -76,6 +80,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @exception PermissionException If the user lack Send Messages permission
      * @return The message sent.
      */
+    @Override
     public Message sendMessage(String message) {
         send(new MessageBuilder().setContent(message).build());
         return latestMessage;
@@ -89,6 +94,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @exception PermissionException If the user lack Send Messages permission
      * @return The message sent.
      */
+    @Override
     public Message sendMessageFormat(String format, Object... args) {
         sendMessage(new MessageBuilder().appendContentFormat(format, args));
         return latestMessage;
@@ -100,6 +106,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @exception PermissionException If the user lack Send Messages permission
      * @return The message sent.
      */
+    @Override
     public Message sendMessage(MessageBuilder message) {
         return send(message.build());
     }
@@ -111,6 +118,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @exception PermissionException If the user lack Send Messages permission
      * @return The message sent.
      */
+    @Override
     public Message sendMessage(EmbedMessageBuilder embed) {
         return sendMessage(new MessageBuilder().setAsEmbed(embed));
     }
@@ -136,6 +144,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @param message The new string content of the message
      * @return The message edited
      */
+    @Override
     public Message editMessage(String messageId, String message) {
         return edit(new MessageBuilder().setContent(message).build(), messageId);
     }
@@ -147,6 +156,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @param args The arguments referenced by the format string.
      * @return The message edited
      */
+    @Override
     public Message editMessageFormat(String messageId, String format, Object... args) {
         return edit(new MessageBuilder().appendContentFormat(format, args).build(), messageId);
     }
@@ -157,6 +167,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @param message The message builder
      * @return The message edited
      */
+    @Override
     public Message editMessage(String messageId, MessageBuilder message) {
         return edit(message.build(), messageId);
     }
@@ -167,6 +178,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * @param message The new embed of the message
      * @return The message edited
      */
+    @Override
     public Message editMessage(String messageId, EmbedMessageBuilder message) {
         return edit(new MessageBuilder().setAsEmbed(message).build(), messageId);
     }
@@ -204,6 +216,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      *
      * @return The message deleted.
      */
+    @Override
     public Message deleteMessage(String messageId) {
         return delete(messageId);
     }
@@ -217,6 +230,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      *
      * @return The message deleted.
      */
+    @Override
     public Message deleteMessage(Message message) {
         return delete(message.getId());
     }
@@ -250,6 +264,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * Pin a message by ID
      * @param messageId The message id.
      */
+    @Override
     public void pinMessage(String messageId) {
         pin(messageId);
     }
@@ -258,6 +273,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
      * Pin a message
      * @param message The message object.
      */
+    @Override
     public void pinMessage(Message message) {
         pin(message.getId());
     }

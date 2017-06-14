@@ -20,7 +20,4 @@ public interface IChannel extends IDiscordObject, ISnowFlake {
 
     boolean isPrivate();
 
-    @Override
-    String getId();
-
 }

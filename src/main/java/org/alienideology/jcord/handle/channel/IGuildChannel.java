@@ -1,13 +1,13 @@
 package org.alienideology.jcord.handle.channel;
 
-import org.alienideology.jcord.handle.IDiscordObject;
+import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.internal.object.Guild;
 
 /**
  * IGuildChannel - A Channel that exist in a guild
  * @author AlienIdeology
  */
-public interface IGuildChannel extends IDiscordObject {
+public interface IGuildChannel extends IChannel, ISnowFlake {
 
     /**
      * Get the guild this channel belongs to.
