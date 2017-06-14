@@ -103,24 +103,8 @@ public class Message extends DiscordObject implements IMessage {
     }
 
     @Override
-    public IChannel.Type getFromType() {
-        return channel.getType();
-    }
-
-    @Override
-    public boolean fromType(IChannel.Type type) {
-        if (channel == null) return false;
-        return channel.getType().equals(type);
-    }
-
-    @Override
     public User getAuthor() {
         return author;
-    }
-
-    @Override
-    public boolean isFromSelf() {
-        return author.equals(identity.getSelf());
     }
 
     @Override
