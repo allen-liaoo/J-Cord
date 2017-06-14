@@ -1,6 +1,6 @@
 package org.alienideology.jcord.bot;
 
-import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.internal.Identity;
 
 /**
  * Bot - The core of a Discord Bot

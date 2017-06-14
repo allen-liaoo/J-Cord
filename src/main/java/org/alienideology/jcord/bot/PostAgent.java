@@ -2,7 +2,7 @@ package org.alienideology.jcord.bot;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.internal.Identity;
 import org.apache.commons.logging.impl.SimpleLog;
 
 /**
