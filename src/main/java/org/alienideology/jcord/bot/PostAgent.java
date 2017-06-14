@@ -2,7 +2,7 @@ package org.alienideology.jcord.bot;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.apache.commons.logging.impl.SimpleLog;
 
 /**
@@ -13,7 +13,7 @@ public class PostAgent {
 
     public static SimpleLog LOG = new SimpleLog("Post-Agent");
 
-    private Identity identity;
+    private IdentityImpl identity;
     private final String id;
     private int serverCount;
 
@@ -26,7 +26,7 @@ public class PostAgent {
     /* DiscordList Bots */
     private final String DiscordListBots;
 
-    public PostAgent(Identity identity) {
+    public PostAgent(IdentityImpl identity) {
         this.identity = identity;
         this.id = identity.getSelf().getId();
         this.serverCount = identity.getGuilds().size();

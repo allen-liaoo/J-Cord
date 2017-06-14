@@ -7,19 +7,18 @@ import org.alienideology.jcord.event.EventManager;
 import org.alienideology.jcord.handle.channel.*;
 import org.alienideology.jcord.handle.guild.*;
 import org.alienideology.jcord.handle.user.*;
-import org.alienideology.jcord.internal.object.Identity;
-import org.alienideology.jcord.internal.object.user.User;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 
 import java.io.IOException;
 import java.util.List;
 
 /**
- * Identity - The identity of a bot (without shards), a shard, or a human (client)
+ * IdentityImpl - The identity of a bot (without shards), a shard, or a human (client)
  * @author AlienIdeology
  */
-public interface IIdentity {
+public interface Identity {
 
-    Identity revive() throws IOException;
+    IdentityImpl revive() throws IOException;
 
     EventManager getEventManager();
 

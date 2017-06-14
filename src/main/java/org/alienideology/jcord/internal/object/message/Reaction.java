@@ -1,10 +1,9 @@
 package org.alienideology.jcord.internal.object.message;
 
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.handle.EmojiTable;
-import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 
 /**
  * Reaction - A emoji that users reacted under a message.
@@ -21,7 +20,7 @@ public class Reaction extends DiscordObject {
     /**
      * Constructor for Emoji
      */
-    public Reaction(Identity identity, int reactedTimes, boolean selfReacted, EmojiTable.Emoji emoji) {
+    public Reaction(IdentityImpl identity, int reactedTimes, boolean selfReacted, EmojiTable.Emoji emoji) {
         super(identity);
         this.reactedTimes = reactedTimes;
         this.selfReacted = selfReacted;
@@ -32,7 +31,7 @@ public class Reaction extends DiscordObject {
     /**
      * Constructor for GuildEmoji
      */
-    public Reaction(Identity identity, int reactedTimes, boolean selfReacted, IGuildEmoji guildEmoji) {
+    public Reaction(IdentityImpl identity, int reactedTimes, boolean selfReacted, IGuildEmoji guildEmoji) {
         super(identity);
         this.reactedTimes = reactedTimes;
         this.selfReacted = selfReacted;

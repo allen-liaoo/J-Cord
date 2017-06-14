@@ -8,15 +8,12 @@ import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.Event;
-import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.internal.object.channel.Channel;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
-import org.alienideology.jcord.internal.object.Guild;
-import org.alienideology.jcord.internal.object.guild.Member;
 import org.alienideology.jcord.internal.object.Message;
 
 /**
@@ -27,7 +24,7 @@ public class MessageEvent extends Event {
     private final IMessageChannel channel;
     private final IMessage message;
 
-    public MessageEvent(Identity identity, int sequence, MessageChannel channel, Message message) {
+    public MessageEvent(IdentityImpl identity, int sequence, MessageChannel channel, Message message) {
         super(identity, sequence);
         this.channel = channel;
         this.message = message;

@@ -2,7 +2,7 @@ package org.alienideology.jcord.internal.object.channel;
 
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.internal.object.Message;
 
@@ -15,7 +15,7 @@ public class PrivateChannel extends MessageChannel implements IPrivateChannel {
 
     private final User recipient;
 
-    public PrivateChannel(Identity identity, String id, User recipient, Message lastMessage) {
+    public PrivateChannel(IdentityImpl identity, String id, User recipient, Message lastMessage) {
         super(identity, id, Type.PRIVATE, lastMessage);
         this.recipient = recipient;
     }

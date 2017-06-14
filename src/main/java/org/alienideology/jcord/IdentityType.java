@@ -1,7 +1,7 @@
 package org.alienideology.jcord;
 
 /**
- * Identity types (Bot or Human)
+ * IdentityImpl types (Bot or Human)
  * @author AlienIdeology
  */
 public enum IdentityType {

@@ -3,7 +3,7 @@ package org.alienideology.jcord.internal.object.guild;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.Guild;
@@ -30,14 +30,14 @@ public class GuildEmoji extends DiscordObject implements IGuildEmoji {
     /**
      * Constructor for global guild emojis
      */
-    public GuildEmoji(Identity identity, String id, String name) {
+    public GuildEmoji(IdentityImpl identity, String id, String name) {
         this(identity, null, id, name, new ArrayList<>(), false);
     }
 
     /**
      * Default Constructor
      */
-    public GuildEmoji(Identity identity, Guild guild, String id, String name, List<Role> roles, boolean requireColon) {
+    public GuildEmoji(IdentityImpl identity, Guild guild, String id, String name, List<Role> roles, boolean requireColon) {
         super(identity);
         this.guild = guild;
         this.id = id;

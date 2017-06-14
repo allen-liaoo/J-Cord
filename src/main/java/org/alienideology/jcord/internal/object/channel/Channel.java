@@ -1,7 +1,7 @@
 package org.alienideology.jcord.internal.object.channel;
 
 import org.alienideology.jcord.handle.channel.IChannel;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.DiscordObject;
 
 import java.util.Objects;
@@ -20,7 +20,7 @@ public class Channel extends DiscordObject implements IChannel {
      * @param id The id of this channel
      * @param type The type of channel
      */
-    public Channel (Identity identity, String id, Type type) {
+    public Channel (IdentityImpl identity, String id, Type type) {
         super(identity);
         this.id = id;
         this.type = type;

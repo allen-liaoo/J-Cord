@@ -1,7 +1,7 @@
 package org.alienideology.jcord.internal.object.user;
 
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
@@ -29,7 +29,7 @@ public class User extends DiscordObject implements IUser {
     private boolean isVerified;
     private boolean MFAEnabled;
 
-    public User (Identity identity, String id, String name, String discriminator, String avatar, String email,
+    public User (IdentityImpl identity, String id, String name, String discriminator, String avatar, String email,
                  boolean isBot, boolean isWebHook, boolean isVerified, boolean MFAEnabled) {
         super(identity);
         this.id = id;

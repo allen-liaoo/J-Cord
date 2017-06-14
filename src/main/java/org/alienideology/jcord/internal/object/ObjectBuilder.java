@@ -2,7 +2,6 @@ package org.alienideology.jcord.internal.object;
 
 import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
-import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.HttpPath;
@@ -29,13 +28,13 @@ import java.util.List;
  */
 public final class ObjectBuilder {
 
-    private Identity identity;
+    private IdentityImpl identity;
 
     /**
      * Default Constructor
      * @param identity The identity this built DiscordObject belongs to.
      */
-    public ObjectBuilder(Identity identity) {
+    public ObjectBuilder(IdentityImpl identity) {
         this.identity = identity;
     }
 

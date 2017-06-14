@@ -1,7 +1,7 @@
 package org.alienideology.jcord.event.handler;
 
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.guild.GuildDeleteEvent;
 import org.alienideology.jcord.event.guild.GuildUnavailableEvent;
 import org.alienideology.jcord.internal.object.Guild;
@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
  */
 public class GuildDeleteEventHandler extends EventHandler {
 
-    public GuildDeleteEventHandler(Identity identity) {
+    public GuildDeleteEventHandler(IdentityImpl identity) {
         super(identity);
     }
 

@@ -3,7 +3,7 @@ package org.alienideology.jcord.internal.object.channel;
 import com.sun.istack.internal.NotNull;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.internal.object.Message;
 
@@ -19,7 +19,7 @@ public class TextChannel extends MessageChannel implements ITextChannel {
     private int position;
     private String topic;
 
-    public TextChannel(Identity identity, String guild_id, String id, String name, int position, String topic, Message lastMessagt) {
+    public TextChannel(IdentityImpl identity, String guild_id, String id, String name, int position, String topic, Message lastMessagt) {
         super(identity, id, Channel.Type.TEXT, lastMessagt);
         this.guild = (Guild) identity.getGuild(guild_id);
         this.name = name;

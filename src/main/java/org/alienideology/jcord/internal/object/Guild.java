@@ -56,10 +56,10 @@ public class Guild extends DiscordObject implements IGuild {
 
     /**
      * Unavailable Guild
-     * @param identity The Identity this guild belongs to.
+     * @param identity The IdentityImpl this guild belongs to.
      * @param id The ID of this guild
      */
-    public Guild (Identity identity, String id) {
+    public Guild (IdentityImpl identity, String id) {
         this(identity, id, null, null, null, null,
                 -1, false, -1, -1, -1);
     }
@@ -67,7 +67,7 @@ public class Guild extends DiscordObject implements IGuild {
 
     /**
      * Available Guild
-     * @param identity The Identity this guild belongs to.
+     * @param identity The IdentityImpl this guild belongs to.
      * @param id The ID of this guild
      * @param icon The icon of this guild
      * @param splash The splash hash of this guild
@@ -79,7 +79,7 @@ public class Guild extends DiscordObject implements IGuild {
      * @param mfa_level Required MFA level
      */
     // TODO: Add Owner Field
-    public Guild (Identity identity, String id, String name, String icon, String splash, String region,
+    public Guild (IdentityImpl identity, String id, String name, String icon, String splash, String region,
                   int afk_timeout, boolean embed_enabled, int verification_level, int notification_level, int mfa_level) {
         super(identity);
         this.id = id;

@@ -4,7 +4,7 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.event.handler.*;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -23,7 +23,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     public static int GATEWAY_VERSION = 5;
     public SimpleLog LOG = new SimpleLog("Gateway");
 
-    private Identity identity;
+    private IdentityImpl identity;
     private WebSocket webSocket;
     private Thread heart;
 
@@ -40,7 +40,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
      * @param identity The identity this gateway belongs to.
      * @param webSocket The WebSocket where events are fired.
      */
-    public GatewayAdaptor(Identity identity, WebSocket webSocket) {
+    public GatewayAdaptor(IdentityImpl identity, WebSocket webSocket) {
         this.identity = identity;
         this.webSocket = webSocket;
         LOG.setLevel(SimpleLog.LOG_LEVEL_ALL);
@@ -50,7 +50,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         LOG.info("Connected");
-        identity.CONNECTION = Identity.Connection.CONNECTED;
+        identity.CONNECTION = IdentityImpl.Connection.CONNECTED;
 
         if (session_id == null || session_id.isEmpty()) {
             sendIdentification();
@@ -108,7 +108,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
     @Override
     public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
-        identity.CONNECTION = Identity.Connection.OFFLINE;
+        identity.CONNECTION = IdentityImpl.Connection.OFFLINE;
         DisconnectionCode code = DisconnectionCode.getCode(serverCloseFrame.getCloseCode());
         if(closedByServer) handleError(new RuntimeException("Connection closed: "+code.code+"\tBy reason: "+code.message));
         LOG.error(code+"\t"+code.message);
@@ -245,7 +245,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     }
 
     private void sendResume() {
-        identity.CONNECTION = Identity.Connection.RESUMING;
+        identity.CONNECTION = IdentityImpl.Connection.RESUMING;
         JSONObject resume = new JSONObject()
             .put("op", OPCode.RESUME.key)
             .put("d", new JSONObject()

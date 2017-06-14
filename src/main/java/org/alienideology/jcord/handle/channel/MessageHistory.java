@@ -1,12 +1,10 @@
 package org.alienideology.jcord.handle.channel;
 
-import org.alienideology.jcord.IIdentity;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.Identity;
 import org.alienideology.jcord.internal.object.Message;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;

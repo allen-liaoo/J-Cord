@@ -5,12 +5,10 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 import com.neovisionaries.ws.client.*;
 import com.sun.istack.internal.Nullable;
-import org.alienideology.jcord.IIdentity;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.EventManager;
-import org.alienideology.jcord.event.message.dm.IPrivateMessageEvent;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -19,7 +17,6 @@ import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.handle.channel.*;
 import org.alienideology.jcord.handle.guild.*;
-import org.alienideology.jcord.handle.user.*;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
@@ -38,9 +35,9 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public class Identity implements IIdentity {
+public class IdentityImpl implements org.alienideology.jcord.Identity {
 
-    public SimpleLog LOG = new SimpleLog("Identity");
+    public SimpleLog LOG = new SimpleLog("IdentityImpl");
 
     private IdentityType type;
     private String token;
@@ -58,12 +55,12 @@ public class Identity implements IIdentity {
     private List<IVoiceChannel> voiceChannels = new ArrayList<>();
     private List<IPrivateChannel> privateChannels = new ArrayList<>();
 
-    public Identity (IdentityType type,  WebSocketFactory wsFactory) {
+    public IdentityImpl(IdentityType type, WebSocketFactory wsFactory) {
         this.type = type;
         this.wsFactory = wsFactory;
     }
 
-    public Identity revive() throws IOException {
+    public IdentityImpl revive() throws IOException {
         logout();
         login(token);
         return this;
@@ -199,9 +196,9 @@ public class Identity implements IIdentity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Identity)) return false;
+        if (!(o instanceof IdentityImpl)) return false;
 
-        Identity identity = (Identity) o;
+        IdentityImpl identity = (IdentityImpl) o;
 
         if (type != identity.type) return false;
         if (!token.equals(identity.token)) return false;
@@ -223,7 +220,7 @@ public class Identity implements IIdentity {
      */
 
     @Internal
-    public Identity login (String token) throws ErrorResponseException, IllegalArgumentException, IOException {
+    public IdentityImpl login (String token) throws ErrorResponseException, IllegalArgumentException, IOException {
         if (type == IdentityType.BOT && !token.startsWith("Bot ")) {
             this.token = "Bot " + token;
         } else {
@@ -252,7 +249,7 @@ public class Identity implements IIdentity {
     }
 
     @Internal
-    public Identity logout() {
+    public IdentityImpl logout() {
         socket.disconnect();
         CONNECTION = Connection.OFFLINE;
         users.clear();
@@ -265,7 +262,7 @@ public class Identity implements IIdentity {
     }
 
     @Internal
-    public Identity setEventManager(EventManager manager) {
+    public IdentityImpl setEventManager(EventManager manager) {
         this.manager = manager;
         return this;
     }

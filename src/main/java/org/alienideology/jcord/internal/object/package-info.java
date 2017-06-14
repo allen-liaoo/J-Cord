@@ -1,7 +1,7 @@
 /**
  * Discord Objects
  * <p>
- *     {@link org.alienideology.jcord.internal.object.DiscordObject} are any objects that are under a {@link org.alienideology.jcord.internal.object.Identity}.
+ *     {@link org.alienideology.jcord.internal.object.DiscordObject} are any objects that are under a {@link org.alienideology.jcord.internal.object.IdentityImpl}.
  *     This package is full of Discord Objects and their builders.
  * </p>
  * @since 0.0.1

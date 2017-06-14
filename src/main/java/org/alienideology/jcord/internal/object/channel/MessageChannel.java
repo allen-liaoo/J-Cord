@@ -5,7 +5,7 @@ import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.channel.MessageHistory;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.message.IMessage;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.gateway.HttpPath;
@@ -31,14 +31,14 @@ public class MessageChannel extends Channel implements IMessageChannel {
     /**
      * Constructor for PrivateChannel
      */
-    public MessageChannel(Identity identity, String id, Type type, Message latestMessage) {
+    public MessageChannel(IdentityImpl identity, String id, Type type, Message latestMessage) {
         this(identity, id, type, null, latestMessage);
     }
 
     /**
      * Constructor for TextChannel
      */
-    public MessageChannel(Identity identity, String id, Type type, Guild guild, Message latestMessage) {
+    public MessageChannel(IdentityImpl identity, String id, Type type, Guild guild, Message latestMessage) {
         super(identity, id, type);
         this.guild = guild;
         this.history = new MessageHistory(this);

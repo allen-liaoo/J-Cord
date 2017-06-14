@@ -4,13 +4,13 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import org.alienideology.jcord.event.EventManager;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
 
 /**
- * The Identity Builder for constructing an Identity.
+ * The IdentityImpl Builder for constructing an IdentityImpl.
  * @author AlienIdeology
  */
 public class IdentityBuilder {
@@ -29,30 +29,30 @@ public class IdentityBuilder {
     }
 
     /**
-     * Build the Identity
+     * Build the IdentityImpl
      * This is deprecated, see build(boolean useBlocking)
-     * @return The Identity
+     * @return The IdentityImpl
      * @throws IllegalArgumentException If the provided token is not valid.
      * @throws IOException If there is any connection issue.
      */
     @Deprecated
     public Identity build () throws IllegalArgumentException, ErrorResponseException, IOException {
-        Identity id =  new Identity(type, new WebSocketFactory());
+        IdentityImpl id =  new IdentityImpl(type, new WebSocketFactory());
         id.login(token).setEventManager(manager);
         return id;
     }
 
     /**
-     * Build the Identity (Can choose blocking or not)
+     * Build the IdentityImpl (Can choose blocking or not)
      * @param useBlocking To block the thread or not
-     * @return The Identity
+     * @return The IdentityImpl
      * @throws IllegalArgumentException If the provided token is not valid.
      * @throws IOException If there is any connection issue.
      */
     public Identity build (boolean useBlocking) throws IllegalArgumentException, ErrorResponseException, IOException {
         Identity id = build();
         if (useBlocking) {
-            while (!id.CONNECTION.isReady()) {
+            while (!((IdentityImpl)id).CONNECTION.isReady()) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ignored) {}
@@ -92,7 +92,7 @@ public class IdentityBuilder {
     public boolean isTokenValid() {
         if (token == null || !token.matches(TOKEN_PATTERN.pattern())) return false;
         try {
-            Identity test = build();
+            IdentityImpl test = (IdentityImpl) build();
             test.logout();
         } catch (ErrorResponseException ere) {
             if (ere.getResponse().equals(ErrorResponse.INVALID_AUTHENTICATION_TOKEN))

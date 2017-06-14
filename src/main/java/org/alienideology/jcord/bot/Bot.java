@@ -1,6 +1,6 @@
 package org.alienideology.jcord.bot;
 
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 
 /**
  * Bot - The core of a Discord Bot
@@ -8,20 +8,20 @@ import org.alienideology.jcord.internal.object.Identity;
  */
 public class Bot {
 
-    private Identity identity;
+    private IdentityImpl identity;
     private final String id;
 
     private final PostAgent postAgent;
     private final BotInviteBuilder inviteBuilder;
 
-    public Bot(Identity identity) {
+    public Bot(IdentityImpl identity) {
         this.identity = identity;
         this.id = identity.getSelf().getId();
         this.postAgent = new PostAgent(identity);
         this.inviteBuilder = new BotInviteBuilder(identity.getSelf().getId());
     }
 
-    public Identity getIdentity() {
+    public IdentityImpl getIdentity() {
         return identity;
     }
 

@@ -1,6 +1,6 @@
 package org.alienideology.jcord.event.gateway;
 
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
 
 /**
@@ -9,7 +9,7 @@ import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
  */
 public class ResumedEvent extends GatewayEvent {
 
-    public ResumedEvent(Identity identity, GatewayAdaptor gateway, int sequence) {
+    public ResumedEvent(IdentityImpl identity, GatewayAdaptor gateway, int sequence) {
         super(identity, gateway, sequence);
     }
 

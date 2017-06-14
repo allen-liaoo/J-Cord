@@ -1,6 +1,6 @@
 package org.alienideology.jcord.internal.object.user;
 
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.DiscordObject;
 
 import java.util.regex.Pattern;
@@ -16,14 +16,14 @@ public class Game extends DiscordObject {
 
     private final Pattern TWITCH_URL = Pattern.compile("(http|https)(://)(www\\.|)(twitch)(\\.tv/)");
 
-    public Game(Identity identity, String name) {
+    public Game(IdentityImpl identity, String name) {
         super(identity);
         this.name = name;
         this.type = Type.PLAYING;
         this.url = null;
     }
 
-    public Game(Identity identity, String name, String url) {
+    public Game(IdentityImpl identity, String name, String url) {
         super(identity);
         this.name = name;
         this.type = Type.STREAMING;

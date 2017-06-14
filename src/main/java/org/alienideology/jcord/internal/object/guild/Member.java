@@ -5,7 +5,7 @@ import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.*;
 import org.alienideology.jcord.internal.object.user.User;
 
@@ -28,7 +28,7 @@ public class Member extends DiscordObject implements IMember {
     private boolean isDeafened;
     private boolean isMuted;
 
-    public Member(Identity identity, Guild guild, User user, String nickname, String joinedDate, List<Role> roles, boolean isDeafened, boolean isMuted) {
+    public Member(IdentityImpl identity, Guild guild, User user, String nickname, String joinedDate, List<Role> roles, boolean isDeafened, boolean isMuted) {
         super(identity);
         this.guild = guild;
         this.user = user;

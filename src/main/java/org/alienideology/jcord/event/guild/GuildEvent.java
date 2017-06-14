@@ -1,6 +1,6 @@
 package org.alienideology.jcord.event.guild;
 
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.Event;
 import org.alienideology.jcord.internal.object.Guild;
 
@@ -12,7 +12,7 @@ public abstract class GuildEvent extends Event {
 
     protected Guild guild;
 
-    public GuildEvent(Identity identity, Guild guild, int sequence) {
+    public GuildEvent(IdentityImpl identity, Guild guild, int sequence) {
         super(identity, sequence);
         this.guild = guild;
     }

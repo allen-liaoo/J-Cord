@@ -1,6 +1,6 @@
 package org.alienideology.jcord.event.handler;
 
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.message.dm.PrivateMessageDeleteEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageDeleteEvent;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
  */
 public class MessageDeleteEventHandler extends EventHandler {
 
-    public MessageDeleteEventHandler(Identity identity) {
+    public MessageDeleteEventHandler(IdentityImpl identity) {
         super(identity);
     }
 

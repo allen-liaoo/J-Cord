@@ -1,6 +1,6 @@
 package org.alienideology.jcord.handle;
 
-import org.alienideology.jcord.IIdentity;
+import org.alienideology.jcord.Identity;
 
 /**
  * Generic Discord Objects
@@ -9,6 +9,6 @@ import org.alienideology.jcord.IIdentity;
  */
 public interface IDiscordObject {
 
-    IIdentity getIdentity();
+    Identity getIdentity();
 
 }

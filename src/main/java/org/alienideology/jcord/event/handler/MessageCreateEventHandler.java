@@ -1,7 +1,6 @@
 package org.alienideology.jcord.event.handler;
 
-import org.alienideology.jcord.handle.channel.IMessageChannel;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
@@ -13,7 +12,7 @@ import org.json.JSONObject;
  */
 public class MessageCreateEventHandler extends EventHandler {
 
-    public MessageCreateEventHandler(Identity identity) {
+    public MessageCreateEventHandler(IdentityImpl identity) {
         super(identity);
     }
 

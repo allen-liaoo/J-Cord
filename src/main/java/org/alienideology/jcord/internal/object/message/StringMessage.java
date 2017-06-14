@@ -4,13 +4,10 @@ import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.message.IStringMessage;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.Message;
-import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.user.User;
-import org.alienideology.jcord.internal.object.channel.TextChannel;
-import org.alienideology.jcord.internal.object.guild.Member;
 
 import java.util.List;
 
@@ -19,7 +16,7 @@ import java.util.List;
  */
 public class StringMessage extends Message implements IStringMessage {
 
-    public StringMessage(Identity identity, String id, User author, String content, String timeStamp,
+    public StringMessage(IdentityImpl identity, String id, User author, String content, String timeStamp,
                          List<User> mentions, List<Role> mentionedRoles, List<Attachment> attachments, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
         super(identity, id, author, content, timeStamp, mentions, mentionedRoles, attachments, isTTs, mentionedEveryone, isPinned);
     }

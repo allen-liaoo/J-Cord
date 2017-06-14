@@ -7,7 +7,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.json.JSONArray;
@@ -24,10 +24,10 @@ import java.util.function.Consumer;
 public class Requester {
 
     private HttpPath path;
-    private Identity identity;
+    private IdentityImpl identity;
     private HttpRequest request;
 
-    public Requester(Identity identity, HttpPath path) {
+    public Requester(IdentityImpl identity, HttpPath path) {
         this.identity = identity;
         this.path = path;
     }

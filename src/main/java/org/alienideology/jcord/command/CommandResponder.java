@@ -53,7 +53,7 @@ public interface CommandResponder {
 
         Integer or int : Event Sequence
 
-        Identity : Identity of the Event
+        IdentityImpl : IdentityImpl of the Event
         User : Author or the Event
         Message : The message of the Event
         Guild : The guild of the Event, may be null for PrivateChannels

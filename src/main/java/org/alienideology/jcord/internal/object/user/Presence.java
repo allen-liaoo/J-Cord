@@ -1,6 +1,6 @@
 package org.alienideology.jcord.internal.object.user;
 
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.DiscordObject;
 
 /**
@@ -12,7 +12,7 @@ public class Presence extends DiscordObject {
     private Game game;
     private Status status;
 
-    public Presence(Identity identity, User user, Game game, Status status) {
+    public Presence(IdentityImpl identity, User user, Game game, Status status) {
         super(identity);
         this.user = user;
         this.game = game;

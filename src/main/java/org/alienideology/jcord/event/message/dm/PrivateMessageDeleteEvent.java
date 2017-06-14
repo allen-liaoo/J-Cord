@@ -2,10 +2,9 @@ package org.alienideology.jcord.event.message.dm;
 
 import com.sun.istack.internal.NotNull;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.message.MessageDeleteEvent;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
-import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 
 import java.time.OffsetDateTime;
 
@@ -14,7 +13,7 @@ import java.time.OffsetDateTime;
  */
 public class PrivateMessageDeleteEvent extends MessageDeleteEvent implements IPrivateMessageEvent {
 
-    public PrivateMessageDeleteEvent(Identity identity, int sequence, MessageChannel channel, String id, OffsetDateTime deleteTimStamp) {
+    public PrivateMessageDeleteEvent(IdentityImpl identity, int sequence, MessageChannel channel, String id, OffsetDateTime deleteTimStamp) {
         super(identity, sequence, channel, id, deleteTimStamp);
     }
 

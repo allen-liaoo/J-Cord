@@ -1,6 +1,6 @@
 package org.alienideology.jcord.event.handler;
 
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.guild.update.*;
 import org.alienideology.jcord.internal.object.Guild;
 import org.json.JSONObject;
@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 public class GuildUpdateEventHandler extends EventHandler {
 
-    public GuildUpdateEventHandler(Identity identity) {
+    public GuildUpdateEventHandler(IdentityImpl identity) {
         super(identity);
     }
 
@@ -20,7 +20,7 @@ public class GuildUpdateEventHandler extends EventHandler {
     public void dispatchEvent(JSONObject json, int sequence) {
         String id = json.getString("id");
         Guild oldGuild = (Guild) identity.getGuild(id);
-        Guild newGuild = builder.buildGuildById(id); // This guild will not be added to identity, since Identity#addGuild rejects repeated guilds
+        Guild newGuild = builder.buildGuildById(id); // This guild will not be added to identity, since IdentityImpl#addGuild rejects repeated guilds
 
         identity.updateGuild(newGuild);
 

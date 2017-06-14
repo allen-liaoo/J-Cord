@@ -1,6 +1,6 @@
 package org.alienideology.jcord.event.handler;
 
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.guild.GuildCreateEvent;
 import org.alienideology.jcord.internal.object.Guild;
 import org.json.JSONObject;
@@ -10,7 +10,7 @@ import org.json.JSONObject;
  */
 public class GuildCreateEventHandler extends EventHandler {
 
-    public GuildCreateEventHandler(Identity identity) {
+    public GuildCreateEventHandler(IdentityImpl identity) {
         super(identity);
     }
 

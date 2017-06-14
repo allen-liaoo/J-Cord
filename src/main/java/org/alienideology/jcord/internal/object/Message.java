@@ -13,7 +13,6 @@ import org.alienideology.jcord.internal.object.channel.Channel;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
-import org.alienideology.jcord.internal.object.guild.Member;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.message.Reaction;
 import org.alienideology.jcord.internal.object.message.StringMessage;
@@ -52,7 +51,7 @@ public class Message extends DiscordObject implements IMessage {
     private boolean mentionedEveryone;
     private boolean isPinned;
 
-    public Message (Identity identity, String id, User author, String content, String createdTime,
+    public Message (IdentityImpl identity, String id, User author, String content, String createdTime,
                     List<User> mentions, List<Role> mentionedRoles, List<Attachment> attachments, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
         super(identity);
         this.id = id;

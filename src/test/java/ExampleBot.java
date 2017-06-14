@@ -1,16 +1,13 @@
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.EventManager;
-import org.alienideology.jcord.internal.object.Guild;
-import org.alienideology.jcord.internal.object.channel.PrivateChannel;
-import org.alienideology.jcord.internal.object.channel.TextChannel;
-import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 
 /**
  * A simple test bot for J-Cord

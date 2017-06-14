@@ -3,7 +3,7 @@ package org.alienideology.jcord.command;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.message.IMessage;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
@@ -112,7 +112,7 @@ public class CommandFramework {
                 Method method = annotations.get(command).method;
 
                 MessageCreateEvent event = parser.event;
-                Identity identity = event.getIdentity();
+                IdentityImpl identity = event.getIdentity();
                 IMessage message = event.getMessage();
                 IGuild guild = event.getGuild();
                 IMember member = event.getMember();
@@ -125,7 +125,7 @@ public class CommandFramework {
                 types.put(int.class, event.getSequence());
                 types.put(Integer.TYPE, event.getSequence());
                 // DiscordObjects
-                types.put(Identity.class, identity);
+                types.put(IdentityImpl.class, identity);
                 types.put(User.class, event.getUser());
                 types.put(Message.class, message);
                 types.put(Guild.class, guild);

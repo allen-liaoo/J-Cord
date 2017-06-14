@@ -1,7 +1,7 @@
 package org.alienideology.jcord.internal.object.message;
 
 import org.alienideology.jcord.handle.message.IEmbedMessage;
-import org.alienideology.jcord.internal.object.Identity;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.Message;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.user.User;
@@ -32,7 +32,7 @@ public class EmbedMessage extends Message implements IEmbedMessage {
     private Image image = null;
     private Footer footer = null;
 
-    public EmbedMessage(Identity identity, String id, User author, String content, String timeStamp,
+    public EmbedMessage(IdentityImpl identity, String id, User author, String content, String timeStamp,
                         List<User> mentions, List<Role> mentionedRoles, List<Attachment> attachments, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
         super(identity, id, author, content, timeStamp, mentions, mentionedRoles, attachments, isTTs, mentionedEveryone, isPinned);
     }
