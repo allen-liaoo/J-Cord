@@ -1,15 +1,15 @@
 package org.alienideology.jcord.internal.object;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IMessage;
-import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.Internal;
-import org.alienideology.jcord.internal.object.channel.Channel;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
@@ -44,7 +44,7 @@ public class Message extends DiscordObject implements IMessage {
     protected List<User> mentions;
     protected List<Role> mentionedRoles;
     private List<Attachment> attachments;
-    private List<Reaction> reactions;
+    private List<IReaction> reactions;
 
     private boolean isTTS;
 
@@ -103,12 +103,12 @@ public class Message extends DiscordObject implements IMessage {
     }
 
     @Override
-    public Channel.Type getFromType() {
+    public IChannel.Type getFromType() {
         return channel.getType();
     }
 
     @Override
-    public boolean fromType(Channel.Type type) {
+    public boolean fromType(IChannel.Type type) {
         if (channel == null) return false;
         return channel.getType().equals(type);
     }
@@ -169,7 +169,7 @@ public class Message extends DiscordObject implements IMessage {
     }
 
     @Override
-    public List<Reaction> getReactions() {
+    public List<IReaction> getReactions() {
         return reactions;
     }
 
@@ -228,32 +228,8 @@ public class Message extends DiscordObject implements IMessage {
     }
 
     @Internal
-    protected void setReactions(List<Reaction> reactions) {
+    protected void setReactions(List<IReaction> reactions) {
         this.reactions = reactions;
-    }
-
-    // TODO: Move inner class to IMessage
-
-    public static class Attachment implements ISnowFlake {
-
-        private final String id;
-
-        private String filename;
-        private int size;
-        private String url;
-
-        public Attachment(String id, String filename, int size, String url) {
-            this.id = id;
-            this.filename = filename;
-            this.size = size;
-            this.url = url;
-        }
-
-        @Override
-        public String getId() {
-            return id;
-        }
-
     }
 
 }

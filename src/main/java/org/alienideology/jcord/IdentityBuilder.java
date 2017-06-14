@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * The IdentityImpl Builder for constructing an IdentityImpl.
  * @author AlienIdeology
  */
-public class IdentityBuilder {
+public final class IdentityBuilder {
 
     public final static Pattern TOKEN_PATTERN = Pattern.compile("(\\w{24})([.])(\\w{6})([.])(\\w{27})");
 

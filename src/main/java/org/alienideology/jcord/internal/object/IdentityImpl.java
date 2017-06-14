@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public class IdentityImpl implements org.alienideology.jcord.Identity {
+public final class IdentityImpl implements org.alienideology.jcord.Identity {
 
     public SimpleLog LOG = new SimpleLog("IdentityImpl");
 

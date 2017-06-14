@@ -6,7 +6,7 @@ import org.alienideology.jcord.internal.object.DiscordObject;
 /**
  * @author AlienIdeology
  */
-public class Presence extends DiscordObject {
+public final class Presence extends DiscordObject {
 
     private final User user;
     private Game game;

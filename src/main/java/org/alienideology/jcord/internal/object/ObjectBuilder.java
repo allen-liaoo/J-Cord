@@ -1,7 +1,9 @@
 package org.alienideology.jcord.internal.object;
 
 import org.alienideology.jcord.handle.EmojiTable;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.HttpPath;
@@ -431,9 +433,9 @@ public final class ObjectBuilder {
 
         /* Reactions */
         // Build this at last because GuildEmoji requires Message#getGuild, which can only be called after setting channel
-        List<Reaction> reactions = new ArrayList<>();
+        List<IReaction> reactions = new ArrayList<>();
         if (json.has("reactions")) {
-            boolean isFromGuild = message.fromType(Channel.Type.TEXT);
+            boolean isFromGuild = message.fromType(IChannel.Type.TEXT);
             EmojiTable emojis = new EmojiTable();
             JSONArray reacts = json.getJSONArray("reactions");
 
@@ -454,7 +456,7 @@ public final class ObjectBuilder {
                 } else {
                     reaction = new Reaction(identity, reactedTimes, selfReacted, emojis.getByUnicode(emoji.getString("name")));
                 }
-                reactions.add(reaction);
+                reactions.add((IReaction) reaction);
             }
         }
         message.setReactions(reactions);

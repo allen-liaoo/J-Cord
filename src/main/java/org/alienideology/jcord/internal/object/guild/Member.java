@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.guild;
 
+import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.Permission;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
@@ -13,10 +14,9 @@ import java.time.OffsetDateTime;
 import java.util.*;
 
 /**
- * Member - A user representation in a guild.
  * @author AlienIdeology
  */
-public class Member extends DiscordObject implements IMember {
+public final class Member extends DiscordObject implements IMember {
 
     private final Guild guild;
     private final User user;
@@ -88,6 +88,7 @@ public class Member extends DiscordObject implements IMember {
     }
 
     @Override
+    @Nullable
     public String getNickname() {
         return nickname;
     }
@@ -110,11 +111,6 @@ public class Member extends DiscordObject implements IMember {
     @Override
     public List<Permission> getPermissions() {
         return Collections.unmodifiableList(permissions);
-    }
-
-    @Override
-    public boolean isOwner() {
-        return guild.getOwner().equals(this);
     }
 
     @Override

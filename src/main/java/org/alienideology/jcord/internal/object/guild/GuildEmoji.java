@@ -13,10 +13,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * GuildEmoji - A custom emoji that can be used within a guild.
  * @author AlienIdeology
  */
-public class GuildEmoji extends DiscordObject implements IGuildEmoji {
+public final class GuildEmoji extends DiscordObject implements IGuildEmoji {
 
     private final Guild guild;
     private final String id;
@@ -70,24 +69,6 @@ public class GuildEmoji extends DiscordObject implements IGuildEmoji {
     @Override
     public List<IRole> getUsableRoles() {
         return Collections.unmodifiableList(roles);
-    }
-
-    @Override
-    public boolean canBeUseBy(IMember member) {
-        for (IRole role : member.getRoles()) {
-            if (roles.contains((Role) role))
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean canBeUseBy(IRole role) {
-        if (roles.contains((Role) role)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     @Override

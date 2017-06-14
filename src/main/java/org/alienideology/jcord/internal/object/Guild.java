@@ -2,6 +2,7 @@ package org.alienideology.jcord.internal.object;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
@@ -24,7 +25,7 @@ import java.util.*;
 /**
  * @author AlienIdeology
  */
-public class Guild extends DiscordObject implements IGuild {
+public final class Guild extends DiscordObject implements IGuild {
 
     private final String id;
     private boolean isAvailable = false;
@@ -297,118 +298,6 @@ public class Guild extends DiscordObject implements IGuild {
     public String toString() {
         return "ID: "+id+"\tName: "+name;
     }
-
-    /*
-        --------------------------
-            Guild Enumerations
-        --------------------------
-     */
-
-    // TODO: Move enums to IGuild
-
-    /**
-     * AFK Timeouts (second)
-     */
-    public enum AFK_Timeout {
-        MINUTE_1 (60),
-        MINUTES_5 (300),
-        MINUTES_10 (600),
-        MINUTES_30 (1800),
-        HOUR_1 (3600),
-        UNKNOWN (-1);
-
-        public int timeout;
-
-        AFK_Timeout (int timeout) {
-            this.timeout = timeout;
-        }
-
-        public static AFK_Timeout getByTimeout (int timeout) {
-            if (Arrays.stream(values()).anyMatch(afk -> afk.timeout == timeout)) {
-                return Arrays.stream(values()).filter(afk -> afk.timeout == timeout).findFirst().get();
-            } else {
-                return UNKNOWN;
-            }
-        }
-    }
-
-    /**
-     * Guild Verification Level
-     */
-    public enum Verification {
-        NONE (0),
-        LOW (1),
-        MEDIUM (2),
-        HIGH (3),
-        SUPER (4),
-        UNKNOWN (-1);
-
-        public final int key;
-
-        Verification (int key) {
-            this.key = key;
-        }
-
-        public static Verification getByKey(int key) {
-            for (Verification verify : values()) {
-                if (verify.key == key) return verify;
-            }
-            return UNKNOWN;
-        }
-
-    }
-
-    /**
-     * Guild Notification Level
-     */
-    public enum Notification {
-        ALL_MESSAGE (0),
-        ONLY_MENTIONS (1),
-        UNKNOWN (-1);
-
-        public final int key;
-
-        Notification (int key) {
-            this.key = key;
-        }
-
-        public static Notification getByKey(int key) {
-            for (Notification notif : values()) {
-                if (notif.key == key) return notif;
-            }
-            return UNKNOWN;
-        }
-
-    }
-
-    /**
-     * Guild MFA Level
-     */
-    public enum MFA {
-        NONE (0),
-        TWO_FACTOR (1),
-        UNKNOWN (-1);
-
-        public final int key;
-
-        MFA (int key) {
-            this.key = key;
-        }
-
-        public static MFA getByKey(int key) {
-            for (MFA mfa : values()) {
-                if (mfa.key == key) return mfa;
-            }
-            return UNKNOWN;
-        }
-
-    }
-
-    /*
-        ------------------------
-            Internal Methods
-        ------------------------
-     */
 
     /**
      * [API Use Only]

@@ -61,27 +61,4 @@ public class Channel extends DiscordObject implements IChannel {
         return "ID: "+id;
     }
 
-    // TODO: Move Channel.Type to IChannel
-
-    /**
-     * Channel Types
-     */
-    public enum Type {
-
-        TEXT,
-        VOICE,
-        PRIVATE,
-        GROUP,
-        UNKNOWN;
-
-        public static Type getByKey (String key) {
-            for (Type type : values()) {
-                if (type.name().toLowerCase().equals(key)) {
-                    return type;
-                }
-            }
-            return UNKNOWN;
-        }
-    }
-
 }

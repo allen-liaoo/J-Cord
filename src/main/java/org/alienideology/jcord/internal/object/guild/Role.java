@@ -10,10 +10,9 @@ import java.awt.Color;
 import java.util.List;
 
 /**
- * Role - A label that can be put on a set of guild members.
  * @author AlienIdeology
  */
-public class Role extends DiscordObject implements IRole {
+public final class Role extends DiscordObject implements IRole {
 
     private final String id;
     private final Guild guild;
@@ -40,31 +39,33 @@ public class Role extends DiscordObject implements IRole {
         this.canMention = canMention;
     }
 
+    @Override
     public IGuild getGuild() {
         return guild;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Color getColor() {
         return color;
     }
 
+    @Override
     public int getPosition() {
         return position;
     }
 
+    @Override
+    @Deprecated
     public boolean hasPermission (Permission permission) {
         return Permission.hasPermission (permissionsLong, permission);
     }
 
-    /**
-     * Check if this role have all the given permissions
-     * @param permissions The varargs of permission enums to be checked
-     * @return True if the role have all given permissions
-     */
+    @Override
     public boolean hasAllPermissions (Permission... permissions) {
         for (Permission perm : permissions) {
             if (!hasPermission(perm)) {
@@ -74,12 +75,7 @@ public class Role extends DiscordObject implements IRole {
         return true;
     }
 
-    /**
-     * Check if this role have one of the given permissions
-     * To check if this member have all the permissions, see #hasAllPermissions(Permission...)
-     * @param permissions The varargs of permission enums to be checked
-     * @return True if the role have one of the given permissions
-     */
+    @Override
     public boolean hasPermissions (Permission... permissions) {
         for (Permission perm : permissions) {
             if (hasPermission(perm)) {
@@ -89,24 +85,24 @@ public class Role extends DiscordObject implements IRole {
         return false;
     }
 
+    @Override
     public long getPermissionsLong() {
         return permissionsLong;
     }
 
+    @Override
     public List<Permission> getPermissions() {
         return permissions;
     }
 
+    @Override
     public boolean isSeparateListed() {
         return isSeparateListed;
     }
 
+    @Override
     public boolean canMention() {
         return canMention;
-    }
-
-    public boolean isEveryone() {
-        return position == 0;
     }
 
     @Override

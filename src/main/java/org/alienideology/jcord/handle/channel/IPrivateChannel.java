@@ -8,6 +8,11 @@ import org.alienideology.jcord.handle.user.IUser;
  */
 public interface IPrivateChannel extends IMessageChannel {
 
+    /**
+     * Get the recipient of this private channel.
+     *
+     * @return The recipient user object.
+     */
     IUser getRecipient();
 
 }

@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.channel;
 
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.internal.object.IdentityImpl;
@@ -10,7 +11,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-public class VoiceChannel extends Channel implements IVoiceChannel {
+public final class VoiceChannel extends Channel implements IVoiceChannel {
 
     private Guild guild;
 
@@ -20,7 +21,7 @@ public class VoiceChannel extends Channel implements IVoiceChannel {
     private int user_limit;
 
     public VoiceChannel(IdentityImpl identity, String guild_id, String id, String name, int position, int bitrate, int user_limit) {
-        super(identity, id, Channel.Type.VOICE);
+        super(identity, id, IChannel.Type.VOICE);
         this.guild = (Guild) identity.getGuild(guild_id);
         this.name = name;
         this.position = position;

@@ -15,15 +15,31 @@ import org.alienideology.jcord.internal.object.message.MessageBuilder;
  */
 public interface IMessageChannel extends IChannel {
 
+    /**
+     * Get the guild this channel belongs to. May be null for private channels.
+     *
+     * @return The guild (Nullable)
+     */
     @Nullable
     IGuild getGuild();
 
+    /**
+     * Get the latest message of this channel.
+     *
+     * @return The latest message.
+     */
     IMessage getLatestMessage();
 
+    /**
+     * Get the message history of this channel.
+     *
+     * @return The message history.
+     */
     MessageHistory getHistory();
 
     /**
     * Get a message by id
+     *
     * @param id The id of the message
     * @return The message object
     */
@@ -31,6 +47,7 @@ public interface IMessageChannel extends IChannel {
 
     /**
     * Send a string message.
+     *
     * @param message The message to be sent.
     * @throws IllegalArgumentException If the message is more than 2000 characters.
     * @exception PermissionException If the user lack Send Messages permission
@@ -40,6 +57,7 @@ public interface IMessageChannel extends IChannel {
 
     /**
     * Send a string message.
+     *
     * @param format The string to be formatted and send.
     * @param args The arguments referenced by the format string.
     * @exception  IllegalArgumentException If the message is more than 2000 characters.
@@ -50,6 +68,7 @@ public interface IMessageChannel extends IChannel {
 
     /**
     * Send a message built by MessageBuilder
+     *
     * @param message The builder
     * @exception PermissionException If the user lack Send Messages permission
     * @return The message sent.
@@ -58,6 +77,7 @@ public interface IMessageChannel extends IChannel {
 
     /**
     * Send an embed message.
+     *
     * @param embed The EmbedMessageBuilder
     * @exception  IllegalStateException If the embed message is built but the embed is empty.
     * @exception PermissionException If the user lack Send Messages permission
@@ -67,6 +87,7 @@ public interface IMessageChannel extends IChannel {
 
     /**
     * Edit a string message by ID
+     *
     * @param messageId The message ID
     * @param message The new string content of the message
     * @return The message edited
@@ -75,6 +96,7 @@ public interface IMessageChannel extends IChannel {
 
     /**
     * Format a string message by ID
+     *
     * @param messageId The message ID
     * @param format The string to be formatted.
     * @param args The arguments referenced by the format string.
@@ -84,6 +106,7 @@ public interface IMessageChannel extends IChannel {
 
     /**
     * Edit a message by ID
+     *
     * @param messageId The message ID
     * @param message The message builder
     * @return The message edited
@@ -92,6 +115,7 @@ public interface IMessageChannel extends IChannel {
 
     /**
     * Edit an embed message by ID
+     *
     * @param messageId The message ID
     * @param message The new embed of the message
     * @return The message edited
@@ -100,6 +124,7 @@ public interface IMessageChannel extends IChannel {
 
     /**
     * Delete a message by ID.
+     *
     * @param messageId The Id of the message.
     *
     * @exception IllegalArgumentException If this channel is a PrivateChannel and the message is from another user.
@@ -111,6 +136,7 @@ public interface IMessageChannel extends IChannel {
 
     /**
     * Delete a message.
+     *
     * @param message The the message.
     *
     * @exception IllegalArgumentException If this channel is a PrivateChannel and the message is from another user.
@@ -122,12 +148,14 @@ public interface IMessageChannel extends IChannel {
 
     /**
     * Pin a message by ID.
+     *
     * @param messageId The message id.
     */
     void pinMessage(String messageId);
 
     /**
     * Pin a message.
+     *
     * @param message The message object.
     */
     void pinMessage(IMessage message);

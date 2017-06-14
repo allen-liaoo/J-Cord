@@ -1,6 +1,7 @@
 package org.alienideology.jcord.internal.object.channel;
 
 import com.sun.istack.internal.NotNull;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.internal.object.IdentityImpl;
@@ -12,7 +13,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-public class TextChannel extends MessageChannel implements ITextChannel {
+public final class TextChannel extends MessageChannel implements ITextChannel {
 
     private Guild guild;
     private String name;
@@ -20,7 +21,7 @@ public class TextChannel extends MessageChannel implements ITextChannel {
     private String topic;
 
     public TextChannel(IdentityImpl identity, String guild_id, String id, String name, int position, String topic, Message lastMessagt) {
-        super(identity, id, Channel.Type.TEXT, lastMessagt);
+        super(identity, id, IChannel.Type.TEXT, lastMessagt);
         this.guild = (Guild) identity.getGuild(guild_id);
         this.name = name;
         this.position = position;
@@ -28,7 +29,6 @@ public class TextChannel extends MessageChannel implements ITextChannel {
     }
 
     @Override
-    @NotNull
     public IGuild getGuild() {
         return guild;
     }
@@ -46,16 +46,6 @@ public class TextChannel extends MessageChannel implements ITextChannel {
     @Override
     public String getTopic() {
         return topic;
-    }
-
-    @Override
-    public boolean isDefaultChannel() {
-        return id.equals(guild.getId());
-    }
-
-    @Override
-    public boolean isNSFWChannel() {
-        return name.startsWith("nsfw-") || name.equals("nsfw");
     }
 
     @Override

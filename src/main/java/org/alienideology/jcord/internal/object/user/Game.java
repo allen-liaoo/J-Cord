@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 /**
  * @author AlienIdeology
  */
-public class Game extends DiscordObject {
+public final class Game extends DiscordObject {
 
     private String name;
     private Type type;

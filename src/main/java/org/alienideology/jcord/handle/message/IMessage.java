@@ -3,20 +3,16 @@ package org.alienideology.jcord.handle.message;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.internal.object.Message;
-import org.alienideology.jcord.internal.object.channel.Channel;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
-import org.alienideology.jcord.internal.object.guild.Member;
-import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.message.Reaction;
 import org.alienideology.jcord.internal.object.message.StringMessage;
-import org.alienideology.jcord.internal.object.user.User;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -54,9 +50,9 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<Message
 
     IMessageChannel getChannel();
 
-    Channel.Type getFromType();
+    IChannel.Type getFromType();
 
-    boolean fromType(Channel.Type type);
+    boolean fromType(IChannel.Type type);
 
     IUser getAuthor();
 
@@ -76,7 +72,7 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<Message
 
     List<Message.Attachment> getAttachments();
 
-    List<Reaction> getReactions();
+    List<IReaction> getReactions();
 
     default boolean isEmbed() {
     return !(this instanceof StringMessage);
@@ -94,4 +90,25 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<Message
     @Override
     int compareTo(Message o);
 
+    class Attachment implements ISnowFlake {
+
+        private final String id;
+
+        private String filename;
+        private int size;
+        private String url;
+
+        public Attachment(String id, String filename, int size, String url) {
+            this.id = id;
+            this.filename = filename;
+            this.size = size;
+            this.url = url;
+        }
+
+        @Override
+        public String getId() {
+            return id;
+        }
+
+    }
 }

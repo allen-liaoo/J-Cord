@@ -1,4 +1,4 @@
-package org.alienideology.jcord.internal.object;
+package org.alienideology.jcord.handle;
 
 import java.util.Locale;
 

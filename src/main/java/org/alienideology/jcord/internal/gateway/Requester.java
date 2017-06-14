@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  * Requester - A Http Requester for HttpPath.
  * @author AlienIdeology
  */
-public class Requester {
+public final class Requester {
 
     private HttpPath path;
     private IdentityImpl identity;

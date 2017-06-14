@@ -5,6 +5,7 @@ import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.Message;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
@@ -28,29 +29,52 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
     private Cache<Message> history = new Cache<>();
 
     public MessageHistory(MessageChannel channel) {
-        super((Identity) channel.getIdentity());
+        super((IdentityImpl) channel.getIdentity());
         this.channel = channel;
     }
 
+    /**
+     * @return The channel this MessageHistory is about.
+     */
     public MessageChannel getChannel() {
         return channel;
     }
 
+    /**
+     * Get total cached messages this identity have.
+     *
+     * @return The cached messages. They may or may not be in chronological order.
+     */
     public Cache<Message> getCachedMessages() {
         Collections.sort(history.toList());
         return history;
     }
 
+    /**
+     * Get a message by ID.
+     * @see MessageChannel#getMessage(String)
+     *
+     * @param id The string id of the message.
+     * @return The message, or null if no message is found.
+     */
     public IMessage getMessage(String id) {
         return channel.getMessage(id);
     }
 
-    private IMessage getLatestMessage() {
+    /**
+     * Get the latest message of this channel.
+     * @deprecated  MessageChannel#getLatestMessage()
+     *
+     * @return The latest message
+     */
+    @Deprecated
+    public IMessage getLatestMessage() {
         return channel.getLatestMessage();
     }
 
     /**
      * Get the latest messages of this channel.
+     *
      * @see #getMessagesBefore(String, int). This is equivilant to {@code #getMessagesBefore(MessageChannel#getLatestMessage#getId, int)}.
      * @param amount The integer amounts of messages to get.
      * @return A list of messages sorted from old to new.
@@ -64,6 +88,7 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
 
     /**
      * Get the messages sent after a message. (Does not includes the message itself)
+     *
      * @param messageId The ID of the message.
      * @param amount The integer amounts of message to get.
      * @exception IllegalArgumentException If the amount is <= 0 or > 100.
@@ -87,6 +112,7 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
 
     /**
      * Get the messages sent before a message. (Does not includes the message itself)
+     *
      * @param messageId The ID of the message.
      * @param amount The integer amounts of message to get.
      * @exception IllegalArgumentException If the amount is <= 0 or > 100.
@@ -110,6 +136,7 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
 
     /**
      * Get the messages sent before and after a message. (Includes the message itself)
+     *
      * For example, getMessagesAround(amount = 5) returns a list of 6 messages, includes the message itself.
      * @param messageId The ID of the message.
      * @param amount The integer amounts of message to get (before plus after).
@@ -134,6 +161,7 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
 
     /**
      * Get a list of all pinned messages of a channel.
+     *
      * @return the list of messages, list size without limits.
      */
     public List<Message> getPinnedMessages() {

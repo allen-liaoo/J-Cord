@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-public class PrivateChannel extends MessageChannel implements IPrivateChannel {
+public final class PrivateChannel extends MessageChannel implements IPrivateChannel {
 
     private final User recipient;
 

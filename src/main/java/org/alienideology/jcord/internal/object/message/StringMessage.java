@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public class StringMessage extends Message implements IStringMessage {
+public final class StringMessage extends Message implements IStringMessage {
 
     public StringMessage(IdentityImpl identity, String id, User author, String content, String timeStamp,
                          List<User> mentions, List<Role> mentionedRoles, List<Attachment> attachments, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {

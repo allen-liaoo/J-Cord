@@ -1,6 +1,7 @@
 package org.alienideology.jcord.event.message;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
@@ -46,11 +47,11 @@ public class MessageEvent extends Event {
         return channel;
     }
 
-    public Channel.Type getType() {
+    public IChannel.Type getType() {
         return channel.getType();
     }
 
-    public boolean fromType(Channel.Type type) {
+    public boolean fromType(IChannel.Type type) {
         return channel.isType(type);
     }
 
