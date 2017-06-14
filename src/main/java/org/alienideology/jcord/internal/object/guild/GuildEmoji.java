@@ -1,11 +1,11 @@
 package org.alienideology.jcord.internal.object.guild;
 
+import org.alienideology.jcord.handle.IMention;
+import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.Guild;
-import org.alienideology.jcord.internal.object.Mention;
-import org.alienideology.jcord.internal.object.SnowFlake;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +15,7 @@ import java.util.List;
  * GuildEmoji - A custom emoji that can be used within a guild.
  * @author AlienIdeology
  */
-public class GuildEmoji extends DiscordObject implements SnowFlake, Mention {
+public class GuildEmoji extends DiscordObject implements ISnowFlake, IMention {
 
     private final Guild guild;
     private final String id;

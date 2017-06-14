@@ -1,5 +1,7 @@
 package org.alienideology.jcord.internal.object.guild;
 
+import org.alienideology.jcord.handle.IMention;
+import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.object.*;
 
@@ -10,7 +12,7 @@ import java.util.List;
  * Role - A label that can be put on a set of guild members.
  * @author AlienIdeology
  */
-public class Role extends DiscordObject implements Comparable<Role>, SnowFlake, Mention {
+public class Role extends DiscordObject implements Comparable<Role>, ISnowFlake, IMention {
 
     private final String id;
     private final Guild guild;

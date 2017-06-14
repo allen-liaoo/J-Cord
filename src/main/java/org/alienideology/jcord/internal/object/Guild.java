@@ -17,7 +17,6 @@ import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import java.util.*;
 
 /**
- * Guild - A collection of users and channels, often referred to in the UI as a server.
  * @author AlienIdeology
  */
 public class Guild extends DiscordObject implements IGuild {
@@ -300,7 +299,7 @@ public class Guild extends DiscordObject implements IGuild {
         --------------------------
      */
 
-    // TODO: Move to IGuild
+    // TODO: Move enums to IGuild
 
     /**
      * AFK Timeouts (second)

@@ -1,10 +1,12 @@
 package org.alienideology.jcord.handle;
 
-import org.alienideology.jcord.internal.object.Mention;
-import org.alienideology.jcord.internal.object.SnowFlake;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 
-public interface IUser extends SnowFlake, Mention {
+/**
+ * User - A base entity, can be a member of guild/private channel, and bot/human.
+ * @author AlienIdeology
+ */
+public interface IUser extends ISnowFlake, IMention {
 
     /**
      * Get or open a PrivateChannel with this user

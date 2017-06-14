@@ -1,15 +1,17 @@
 package org.alienideology.jcord.internal.object;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.IMessage;
+import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.Internal;
+import org.alienideology.jcord.internal.object.channel.Channel;
+import org.alienideology.jcord.internal.object.channel.MessageChannel;
+import org.alienideology.jcord.internal.object.guild.Member;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.message.Reaction;
 import org.alienideology.jcord.internal.object.message.StringMessage;
 import org.alienideology.jcord.internal.object.user.User;
-import org.alienideology.jcord.internal.object.channel.Channel;
-import org.alienideology.jcord.internal.object.channel.MessageChannel;
-import org.alienideology.jcord.internal.object.guild.Member;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-public class Message extends DiscordObject implements SnowFlake, Comparable<Message> {
+public class Message extends DiscordObject implements IMessage {
 
     /* Constant */
     public final static int MAX_CONTENT_LENGTH = 2000;
@@ -59,37 +61,27 @@ public class Message extends DiscordObject implements SnowFlake, Comparable<Mess
         this.isPinned = isPinned;
     }
 
-    /**
-     * Edit this message
-     * @see MessageChannel#editMessage(String, String)
-     * @param content The new content
-     * @return The message edited.
-     */
+    @Override
     public Message edit(String content) {
         return channel.editMessage(id, content);
     }
 
-    /**
-     * Delete this message
-     * @see MessageChannel#deleteMessage(String)
-     * @return The message deleted.
-     */
+    @Override
     public Message delete() {
         return channel.deleteMessage(id);
     }
 
-    /**
-     * Pin this message
-     * @see MessageChannel#pinMessage(String)
-     */
+    @Override
     public void pin() {
         channel.pinMessage(id);
     }
 
+    @Override
     public String getContent() {
         return content;
     }
 
+    @Override
     @Nullable
     public Guild getGuild() {
         if(!channel.isPrivate()) {
@@ -99,27 +91,33 @@ public class Message extends DiscordObject implements SnowFlake, Comparable<Mess
         }
     }
 
+    @Override
     public MessageChannel getChannel() {
         return channel;
     }
 
+    @Override
     public Channel.Type getFromType() {
         return channel.getType();
     }
 
+    @Override
     public boolean fromType(Channel.Type type) {
         if (channel == null) return false;
         return channel.getType().equals(type);
     }
 
+    @Override
     public User getAuthor() {
         return author;
     }
 
+    @Override
     public boolean isFromSelf() {
         return author.equals(identity.getSelf());
     }
 
+    @Override
     @Nullable
     public Member getMember() {
         if (!channel.isPrivate()) {
@@ -129,10 +127,12 @@ public class Message extends DiscordObject implements SnowFlake, Comparable<Mess
         }
     }
 
+    @Override
     public List<User> getMentions() {
         return mentions;
     }
 
+    @Override
     @Nullable
     public List<Member> getMentionedMembers() {
         if (channel.isPrivate()) {
@@ -147,34 +147,42 @@ public class Message extends DiscordObject implements SnowFlake, Comparable<Mess
         }
     }
 
+    @Override
     public List<Role> getMentionedRoles() {
         return mentionedRoles;
     }
 
+    @Override
     public OffsetDateTime getCreatedTime() {
         return createdTime;
     }
 
+    @Override
     public List<Attachment> getAttachments() {
         return attachments;
     }
 
+    @Override
     public List<Reaction> getReactions() {
         return reactions;
     }
 
+    @Override
     public boolean isEmbed() {
         return !(this instanceof StringMessage);
     }
 
+    @Override
     public boolean isTTS() {
         return isTTS;
     }
 
+    @Override
     public boolean isMentionedEveryone() {
         return mentionedEveryone;
     }
 
+    @Override
     public boolean isPinned() {
         return isPinned;
     }
@@ -218,7 +226,9 @@ public class Message extends DiscordObject implements SnowFlake, Comparable<Mess
         this.reactions = reactions;
     }
 
-    public static class Attachment implements SnowFlake {
+    // TODO: Move inner class to IMessage
+
+    public static class Attachment implements ISnowFlake {
 
         private final String id;
 

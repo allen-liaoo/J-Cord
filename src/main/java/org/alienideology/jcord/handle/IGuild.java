@@ -4,7 +4,6 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.internal.object.Region;
-import org.alienideology.jcord.internal.object.SnowFlake;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
@@ -14,7 +13,11 @@ import org.alienideology.jcord.internal.object.user.User;
 
 import java.util.List;
 
-public interface IGuild extends SnowFlake {
+/**
+ * Guild - A collection of users and channels, often referred to in the UI as a server.
+ * @author AlienIdeology
+ */
+public interface IGuild extends ISnowFlake {
 
     boolean isAvailable();
 

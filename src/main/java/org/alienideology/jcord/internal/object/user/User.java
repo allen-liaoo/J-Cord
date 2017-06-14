@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 /**
- * User - A base entity, can be a member of guild/private channel, and bot/human.
  * @author AlienIdeology
  */
 public class User extends DiscordObject implements IUser {

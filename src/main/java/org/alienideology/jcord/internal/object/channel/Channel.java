@@ -2,7 +2,7 @@ package org.alienideology.jcord.internal.object.channel;
 
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.SnowFlake;
+import org.alienideology.jcord.handle.ISnowFlake;
 
 import java.util.Objects;
 
@@ -11,7 +11,7 @@ import java.util.Objects;
  * Can be GuildChannel, VoiceChannel or PrivateChannel
  * @author AlienIdeology
  */
-public class Channel extends DiscordObject implements SnowFlake {
+public class Channel extends DiscordObject implements ISnowFlake {
 
     protected final String id;
     protected final Type type;

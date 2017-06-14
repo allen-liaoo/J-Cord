@@ -1,5 +1,7 @@
 package org.alienideology.jcord.internal.object.guild;
 
+import org.alienideology.jcord.handle.IMention;
+import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.internal.Identity;
 import org.alienideology.jcord.internal.object.*;
 import org.alienideology.jcord.internal.object.user.User;
@@ -11,7 +13,7 @@ import java.util.*;
  * Member - A user representation in a guild.
  * @author AlienIdeology
  */
-public class Member extends DiscordObject implements SnowFlake, Mention {
+public class Member extends DiscordObject implements ISnowFlake, IMention {
 
     private final Guild guild;
     private final User user;

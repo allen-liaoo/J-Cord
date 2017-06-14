@@ -2,7 +2,7 @@ package org.alienideology.jcord.internal.object.message;
 
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.object.EmojiTable;
-import org.alienideology.jcord.internal.object.Mention;
+import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.internal.object.Message;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 import org.json.JSONObject;
@@ -102,17 +102,17 @@ public final class MessageBuilder {
 
     /**
      * Append a mention to the content.
-     * @param mention An object that implements Mention.
+     * @param mention An object that implements IMention.
      * @return MessageBuilder for chaining.
      */
-    public MessageBuilder appendMention(Mention mention) {
+    public MessageBuilder appendMention(IMention mention) {
         this.content.append(mention.mention());
         return this;
     }
 
     /**
      * Append a guild mention to the content.
-     * @deprecated See {@link #appendMention(Mention)}
+     * @deprecated See {@link #appendMention(IMention)}
      * @param guildEmoji An GuildEmoji to be appended.
      * @return MessageBuilder for chaining.
      */

@@ -1,7 +1,7 @@
 package org.alienideology.jcord.util;
 
 import com.sun.istack.internal.Nullable;
-import org.alienideology.jcord.internal.object.SnowFlake;
+import org.alienideology.jcord.handle.ISnowFlake;
 
 import java.time.OffsetDateTime;
 import java.util.*;
@@ -11,7 +11,7 @@ import java.util.function.Consumer;
  * Cache - Cache objects into a customized list.
  * @author AlienIdeology
  */
-public class Cache <T extends SnowFlake> {
+public class Cache <T extends ISnowFlake> {
 
     private List<CacheNode> caches = new ArrayList<>();
 
