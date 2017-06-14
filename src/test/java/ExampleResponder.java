@@ -1,8 +1,5 @@
 import org.alienideology.jcord.command.Command;
 import org.alienideology.jcord.command.CommandResponder;
-import org.alienideology.jcord.event.message.MessageCreateEvent;
-
-import java.util.Arrays;
 
 /**
  * @author AlienIdeology

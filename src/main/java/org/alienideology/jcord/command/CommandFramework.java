@@ -1,17 +1,17 @@
 package org.alienideology.jcord.command;
 
-import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.event.DispatcherAdaptor;
-import org.alienideology.jcord.event.message.MessageCreateEvent;
-import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
-import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
-import org.alienideology.jcord.object.Guild;
-import org.alienideology.jcord.object.Message;
-import org.alienideology.jcord.object.channel.*;
-import org.alienideology.jcord.object.guild.Member;
-import org.alienideology.jcord.object.message.EmbedMessageBuilder;
-import org.alienideology.jcord.object.message.MessageBuilder;
-import org.alienideology.jcord.object.user.User;
+import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.internal.event.DispatcherAdaptor;
+import org.alienideology.jcord.internal.event.message.MessageCreateEvent;
+import org.alienideology.jcord.internal.event.message.dm.PrivateMessageCreateEvent;
+import org.alienideology.jcord.internal.event.message.guild.GuildMessageCreateEvent;
+import org.alienideology.jcord.internal.object.Guild;
+import org.alienideology.jcord.internal.object.Message;
+import org.alienideology.jcord.internal.object.channel.*;
+import org.alienideology.jcord.internal.object.guild.Member;
+import org.alienideology.jcord.internal.object.message.EmbedMessageBuilder;
+import org.alienideology.jcord.internal.object.message.MessageBuilder;
+import org.alienideology.jcord.internal.object.user.User;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

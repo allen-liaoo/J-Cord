@@ -1,15 +1,16 @@
-import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.IdentityBuilder;
-import org.alienideology.jcord.IdentityType;
+import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.internal.IdentityBuilder;
+import org.alienideology.jcord.internal.IdentityType;
 import org.alienideology.jcord.command.CommandFramework;
-import org.alienideology.jcord.event.EventManager;
-import org.alienideology.jcord.object.channel.PrivateChannel;
-import org.alienideology.jcord.object.channel.TextChannel;
-import org.alienideology.jcord.object.channel.VoiceChannel;
-import org.alienideology.jcord.object.Guild;
+import org.alienideology.jcord.internal.event.EventManager;
+import org.alienideology.jcord.internal.object.Guild;
+import org.alienideology.jcord.internal.object.channel.PrivateChannel;
+import org.alienideology.jcord.internal.object.channel.TextChannel;
+import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 
 /**
  * A simple test bot for J-Cord
+ *
  * @author AlienIdeology
  */
 public class ExampleBot {
@@ -17,30 +18,32 @@ public class ExampleBot {
     public static void main(String[] args) {
 
         try {
+            if (args.length == 0)
+                throw new RuntimeException("You must add a token!");
             Identity bot = new IdentityBuilder()
                     .setIdentityType(IdentityType.BOT)
-                    .useToken(Token.TOP_SECRET)
+                    .useToken(args[0])
                     .setEventManager(
-                        new EventManager()
-                            .registerDispatcherAdaptors(new ExampleDispatcher())
-                            .registerCommandFrameworks(new CommandFramework().setPrefixes("=")
-                                .registerCommandResponder(new ExampleResponder()))
-                            .registerEventSubscribers(new ExampleSubscriber())
+                            new EventManager()
+                                    .registerDispatcherAdaptors(new ExampleDispatcher())
+                                    .registerCommandFrameworks(new CommandFramework().setPrefixes("=")
+                                            .registerCommandResponder(new ExampleResponder()))
+                                    .registerEventSubscribers(new ExampleSubscriber())
                     )
                     .build(true);
 
             for (Guild guild : bot.getGuilds()) {
-                System.out.println("Guild:\t"+guild.getName());
+                System.out.println("Guild:\t" + guild.getName());
                 for (TextChannel tc : guild.getTextChannels()) {
-                    System.out.println("\t--TC: "+tc.getName());
+                    System.out.println("\t--TC: " + tc.getName());
                 }
                 for (VoiceChannel vc : guild.getVoiceChannels()) {
-                    System.out.println("\t--VC: "+vc.getName());
+                    System.out.println("\t--VC: " + vc.getName());
                 }
             }
 
             for (PrivateChannel dm : bot.getPrivateChannels()) {
-                System.out.println("DM:\t"+dm.getRecipient().getName());
+                System.out.println("DM:\t" + dm.getRecipient().getName());
             }
 
         } catch (Exception e) {
