@@ -20,10 +20,19 @@ public class ErrorResponseException extends RuntimeException {
     /**
      * Constructor for custom message.
      */
-    public ErrorResponseException(int key, ErrorResponse response, String message) {
-        super("[Custom] [Response Code "+ key + "] " + message);
-        this.key = key;
+    public ErrorResponseException(ErrorResponse response, String message) {
+        super("[Custom] [Response Code "+ response.key + "] " + message);
+        this.key = response.key;
         this.response = response;
+    }
+
+    /**
+     * Constructor for unknown response.
+     */
+    public ErrorResponseException(int key, String message) {
+        super("[Unknown] [Response Code "+ key + "] " + message);
+        this.key = key;
+        this.response = ErrorResponse.UNKNOWN;
     }
 
     public int getKey() {

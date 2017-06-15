@@ -18,10 +18,19 @@ public class HttpErrorException extends RuntimeException {
     /**
      * Constructor for custom message.
      */
-    public HttpErrorException(int key, HttpCode code, String message) {
-        super("[Custom] [Http Code "+key+"] "+message);
-        this.key = key;
+    public HttpErrorException(HttpCode code, String message) {
+        super("[Custom] [Http Code "+code.key+"] "+message);
+        this.key = code.key;
         this.code = code;
+    }
+
+    /**
+     * Constructor for unknown code.
+     */
+    public HttpErrorException(int key, String message) {
+        super("[Unknown] [Http Code "+key+"] "+message);
+        this.key = key;
+        this.code = HttpCode.UNKNOWN;
     }
 
     public int getKey() {

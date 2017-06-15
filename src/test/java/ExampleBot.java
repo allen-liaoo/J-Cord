@@ -53,7 +53,7 @@ public class ExampleBot {
                 System.out.println("DM:\t" + dm.getRecipient().getName());
             }
 
-            bot.getGuild("311250670068170752").getGuildManager().banMember("324966765123862529");
+            bot.getGuild("311250670068170752").getGuildManager().kickMember("313790979700162561");
 
         } catch (Exception e) {
             e.printStackTrace();

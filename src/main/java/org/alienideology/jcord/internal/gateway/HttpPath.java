@@ -77,8 +77,8 @@ public final class HttpPath {
 
         /* Ban Action */
         public final static HttpPath GET_GUILD_BANS = new HttpPath(GET, "/guilds/{guild.id}/bans");
-        public final static HttpPath CREATE_GUILD_BANS = new HttpPath(PUT, "/guilds/{guild.id}/bans/{user.id}");
-        public final static HttpPath REMOVE_GUILD_BANS = new HttpPath(DELETE, "/guilds/{guild.id}/bans/{user.id}");
+        public final static HttpPath CREATE_GUILD_BAN = new HttpPath(PUT, "/guilds/{guild.id}/bans/{user.id}");
+        public final static HttpPath REMOVE_GUILD_BAN = new HttpPath(DELETE, "/guilds/{guild.id}/bans/{user.id}");
 
         /* Prune Action */
         public final static HttpPath GET_GUILD_PRUNE_COUNT = new HttpPath(GET, "/guilds/{guild.id}/prune?days={days}");

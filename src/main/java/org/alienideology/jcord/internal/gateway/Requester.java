@@ -95,7 +95,7 @@ public final class Requester {
 
     /**
      * Performs requests
-     * @return integer status
+     * @return HttpCode, the response status
      */
     public HttpCode performRequest() {
         try {
@@ -214,7 +214,7 @@ public final class Requester {
             if (errorResponse != ErrorResponse.UNKNOWN) {
                 throw new ErrorResponseException(errorResponse);
             } else {
-                throw new ErrorResponseException(response.getInt("code"), ErrorResponse.UNKNOWN, response.getString("message"));
+                throw new ErrorResponseException(response.getInt("code"), response.getString("message"));
             }
         }
     }
@@ -224,7 +224,7 @@ public final class Requester {
         if (error.isServerError() || error.isFailure()) {
             throw new HttpErrorException(error);
         } else if (error == HttpCode.UNKNOWN){
-            throw new HttpErrorException(response.getStatus(), HttpCode.UNKNOWN, response.getStatusText());
+            throw new HttpErrorException(response.getStatus(), response.getStatusText());
         }
     }
 
