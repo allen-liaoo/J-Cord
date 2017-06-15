@@ -13,6 +13,7 @@ import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 import org.alienideology.jcord.internal.object.guild.Member;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.message.EmbedMessage;
+import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.Reaction;
 import org.alienideology.jcord.internal.object.message.StringMessage;
 import org.alienideology.jcord.internal.object.user.User;
@@ -21,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -360,7 +362,11 @@ public final class ObjectBuilder {
             int color = embed.has("color") ? embed.getInt("color") : 0;
 
             EmbedMessage embedMessage =  new EmbedMessage(identity, id, author, content, timeStamp, mentions, mentionsRole, attachments, isTTS, mentionedEveryone, isPinned)
-                    .setEmbed(title, description, embed_url, time_stamp, color);
+                    .setTitle(title)
+                    .setDescription(description)
+                    .setUrl(embed_url)
+                    .setTimeStamp(time_stamp == null ? null : OffsetDateTime.parse(time_stamp))
+                    .setColor(new Color(color));
 
             if (embed.has("author")) {
                 JSONObject emAuthor = embed.getJSONObject("author");

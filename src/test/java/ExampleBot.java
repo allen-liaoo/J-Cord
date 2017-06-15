@@ -3,11 +3,14 @@ import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.message.EmbedMessageBuilder;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.EventManager;
+
+import java.awt.*;
 
 /**
  * A simple test bot for J-Cord

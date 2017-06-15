@@ -5,7 +5,7 @@ import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.message.MessageUpdateEvent;
-import org.alienideology.jcord.internal.object.Message;
+import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 
 /**

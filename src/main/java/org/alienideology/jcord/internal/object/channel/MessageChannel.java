@@ -4,7 +4,7 @@ import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.channel.MessageHistory;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.handle.message.IMessage;
+import org.alienideology.jcord.handle.message.*;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.exception.PermissionException;
@@ -13,9 +13,9 @@ import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.handle.Permission;
-import org.alienideology.jcord.internal.object.message.EmbedMessageBuilder;
-import org.alienideology.jcord.internal.object.Message;
-import org.alienideology.jcord.internal.object.message.MessageBuilder;
+import org.alienideology.jcord.internal.object.message.EmbedMessage;
+import org.alienideology.jcord.internal.object.message.Message;
+import org.alienideology.jcord.internal.object.message.StringMessage;
 import org.alienideology.jcord.internal.object.user.User;
 import org.json.JSONObject;
 
@@ -61,11 +61,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
         return history;
     }
 
-    /**
-     * Get a message by id
-     * @param id The id of the message
-     * @return The message object
-     */
     @Override
     public IMessage getMessage(String id) {
         if (!isPrivate)
@@ -75,54 +70,26 @@ public class MessageChannel extends Channel implements IMessageChannel {
         return new ObjectBuilder(identity).buildMessage(msg);
     }
 
-    /**
-     * Send a string message.
-     * @param message The message to be sent.
-     * @throws IllegalArgumentException If the message is more than 2000 characters.
-     * @exception PermissionException If the user lack Send Messages permission
-     * @return The message sent.
-     */
     @Override
     public IMessage sendMessage(String message) {
-        send(new MessageBuilder().setContent(message).build());
+        send(((StringMessage) new StringMessageBuilder().setContent(message).build()).toJson());
         return latestMessage;
     }
 
-    /**
-     * Send a string message.
-     * @param format The string to be formatted and send.
-     * @param args The arguments referenced by the format string.
-     * @exception  IllegalArgumentException If the message is more than 2000 characters.
-     * @exception PermissionException If the user lack Send Messages permission
-     * @return The message sent.
-     */
     @Override
     public IMessage sendMessageFormat(String format, Object... args) {
-        sendMessage(new MessageBuilder().appendContentFormat(format, args));
+        sendMessage(new StringMessageBuilder().appendContentFormat(format, args).build().toString());
         return latestMessage;
     }
 
-    /**
-     * Send a message built by MessageBuilder
-     * @param message The builder
-     * @exception PermissionException If the user lack Send Messages permission
-     * @return The message sent.
-     */
     @Override
-    public IMessage sendMessage(MessageBuilder message) {
-        return send(message.build());
+    public IMessage sendMessage(IStringMessage message) {
+        return send(((StringMessage)message).toJson());
     }
 
-    /**
-     * Send an embed message.
-     * @param embed The EmbedMessageBuilder
-     * @exception  IllegalStateException If the embed message is built but the embed is empty.
-     * @exception PermissionException If the user lack Send Messages permission
-     * @return The message sent.
-     */
     @Override
-    public IMessage sendMessage(EmbedMessageBuilder embed) {
-        return sendMessage(new MessageBuilder().setAsEmbed(embed));
+    public IMessage sendMessage(IEmbedMessage embed) {
+        return send(((EmbedMessage) embed).toJson());
     }
 
     @Internal
@@ -140,49 +107,24 @@ public class MessageChannel extends Channel implements IMessageChannel {
         return message;
     }
 
-    /**
-     * Edit a string message by ID
-     * @param messageId The message ID
-     * @param message The new string content of the message
-     * @return The message edited
-     */
     @Override
     public IMessage editMessage(String messageId, String message) {
-        return edit(new MessageBuilder().setContent(message).build(), messageId);
+        return edit(((StringMessage) new StringMessageBuilder().setContent(message).build()).toJson(), messageId);
     }
 
-    /**
-     * Format a string message by ID
-     * @param messageId The message ID
-     * @param format The string to be formatted.
-     * @param args The arguments referenced by the format string.
-     * @return The message edited
-     */
     @Override
     public IMessage editMessageFormat(String messageId, String format, Object... args) {
-        return edit(new MessageBuilder().appendContentFormat(format, args).build(), messageId);
+        return edit(((StringMessage)new StringMessageBuilder().appendContentFormat(format, args).build()).toJson(), messageId);
     }
 
-    /**
-     * Edit a message by ID
-     * @param messageId The message ID
-     * @param message The message builder
-     * @return The message edited
-     */
     @Override
-    public IMessage editMessage(String messageId, MessageBuilder message) {
-        return edit(message.build(), messageId);
+    public IMessage editMessage(String messageId, IStringMessage message) {
+        return edit(((StringMessage) message).toJson(), messageId);
     }
 
-    /**
-     * Edit an embed message by ID
-     * @param messageId The message ID
-     * @param message The new embed of the message
-     * @return The message edited
-     */
     @Override
-    public IMessage editMessage(String messageId, EmbedMessageBuilder message) {
-        return edit(new MessageBuilder().setAsEmbed(message).build(), messageId);
+    public IMessage editMessage(String messageId, IEmbedMessage message) {
+        return edit(((EmbedMessage) message).toJson(), messageId);
     }
 
     @Internal
@@ -209,29 +151,11 @@ public class MessageChannel extends Channel implements IMessageChannel {
         return edited;
     }
 
-    /**
-     * Delete a message by ID.
-     * @param messageId The Id of the message.
-     *
-     * @exception IllegalArgumentException If this channel is a PrivateChannel and the message is from another user.
-     * @exception PermissionException If this channel is a TextChannel and the user lack Manage Messages permission to delete other's message.
-     *
-     * @return The message deleted.
-     */
     @Override
     public IMessage deleteMessage(String messageId) {
         return delete(messageId);
     }
 
-    /**
-     * Delete a message.
-     * @param message The the message.
-     *
-     * @exception IllegalArgumentException If this channel is a PrivateChannel and the message is from another user.
-     * @exception PermissionException If this channel is a TextChannel and the user lack Manage Messages permission to delete other's message.
-     *
-     * @return The message deleted.
-     */
     @Override
     public IMessage deleteMessage(IMessage message) {
         return delete(message.getId());
@@ -262,19 +186,11 @@ public class MessageChannel extends Channel implements IMessageChannel {
         }
     }
 
-    /**
-     * Pin a message by ID
-     * @param messageId The message id.
-     */
     @Override
     public void pinMessage(String messageId) {
         pin(messageId);
     }
 
-    /**
-     * Pin a message
-     * @param message The message object.
-     */
     @Override
     public void pinMessage(IMessage message) {
         pin(message.getId());
@@ -289,11 +205,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
         new Requester(identity, HttpPath.Channel.ADD_PINNED_MESSAGE).request(this.id, id).performRequest();
     }
 
-    /**
-     * [API Use Only]
-     * @param latestMessage The last message of this channel.
-     * @return MessageChannel for chaining.
-     */
     @Internal
     public MessageChannel setLatestMessage(IMessage latestMessage) {
         this.latestMessage = (Message) latestMessage;

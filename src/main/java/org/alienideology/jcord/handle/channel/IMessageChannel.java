@@ -2,12 +2,8 @@ package org.alienideology.jcord.handle.channel;
 
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.handle.message.IMessage;
+import org.alienideology.jcord.handle.message.*;
 import org.alienideology.jcord.internal.exception.PermissionException;
-import org.alienideology.jcord.internal.object.Guild;
-import org.alienideology.jcord.internal.object.Message;
-import org.alienideology.jcord.internal.object.message.EmbedMessageBuilder;
-import org.alienideology.jcord.internal.object.message.MessageBuilder;
 
 /**
  * MessageChannel - A channel that allows users to send message.
@@ -38,52 +34,52 @@ public interface IMessageChannel extends IChannel {
     MessageHistory getHistory();
 
     /**
-    * Get a message by id
+     * Get a message by id
      *
-    * @param id The id of the message
-    * @return The message object
-    */
+     * @param id The id of the message
+     * @return The message object
+     */
     IMessage getMessage(String id);
 
     /**
-    * Send a string message.
+     * Send a string message.
      *
-    * @param message The message to be sent.
-    * @throws IllegalArgumentException If the message is more than 2000 characters.
-    * @exception PermissionException If the user lack Send Messages permission
-    * @return The message sent.
-    */
+     * @param message The message to be sent.
+     * @throws IllegalArgumentException If the message is more than 2000 characters.
+     * @exception PermissionException If the user lack Send Messages permission
+     * @return The message sent.
+     */
     IMessage sendMessage(String message);
 
     /**
-    * Send a string message.
+     * Send a string message.
      *
-    * @param format The string to be formatted and send.
-    * @param args The arguments referenced by the format string.
-    * @exception  IllegalArgumentException If the message is more than 2000 characters.
-    * @exception PermissionException If the user lack Send Messages permission
-    * @return The message sent.
-    */
+     * @param format The string to be formatted and send.
+     * @param args The arguments referenced by the format string.
+     * @exception  IllegalArgumentException If the message is more than 2000 characters.
+     * @exception PermissionException If the user lack Send Messages permission
+     * @return The message sent.
+     */
     IMessage sendMessageFormat(String format, Object... args);
 
     /**
-    * Send a message built by MessageBuilder
+     * Send a message built by StringMessageBuilder
      *
-    * @param message The builder
-    * @exception PermissionException If the user lack Send Messages permission
-    * @return The message sent.
-    */
-    IMessage sendMessage(MessageBuilder message);
+     * @param message The StringMessage built by {@link StringMessageBuilder}.
+     * @exception PermissionException If the user lack Send Messages permission
+     * @return The message sent.
+     */
+    IMessage sendMessage(IStringMessage message);
 
     /**
-    * Send an embed message.
+     * Send an embed message.
      *
-    * @param embed The EmbedMessageBuilder
-    * @exception  IllegalStateException If the embed message is built but the embed is empty.
-    * @exception PermissionException If the user lack Send Messages permission
-    * @return The message sent.
-    */
-    IMessage sendMessage(EmbedMessageBuilder embed);
+     * @param embed The EmbedMessage built by {@link EmbedMessageBuilder}.
+     * @exception  IllegalStateException If the embed message is built but the embed is empty.
+     * @exception PermissionException If the user lack Send Messages permission
+     * @return The message sent.
+     */
+    IMessage sendMessage(IEmbedMessage embed);
 
     /**
     * Edit a string message by ID
@@ -95,32 +91,32 @@ public interface IMessageChannel extends IChannel {
     IMessage editMessage(String messageId, String message);
 
     /**
-    * Format a string message by ID
+     * Format a string message by ID
      *
-    * @param messageId The message ID
-    * @param format The string to be formatted.
-    * @param args The arguments referenced by the format string.
-    * @return The message edited
-    */
+     * @param messageId The message ID
+     * @param format The string to be formatted.
+     * @param args The arguments referenced by the format string.
+     * @return The message edited
+     */
     IMessage editMessageFormat(String messageId, String format, Object... args);
 
     /**
-    * Edit a message by ID
+     * Edit a message by ID
      *
-    * @param messageId The message ID
-    * @param message The message builder
-    * @return The message edited
-    */
-    IMessage editMessage(String messageId, MessageBuilder message);
+     * @param messageId The message ID
+     * @param message The IStringMessage built by {@link StringMessageBuilder}.
+     * @return The message edited
+     */
+    IMessage editMessage(String messageId, IStringMessage message);
 
     /**
-    * Edit an embed message by ID
+     * Edit an embed message by ID
      *
-    * @param messageId The message ID
-    * @param message The new embed of the message
-    * @return The message edited
-    */
-    IMessage editMessage(String messageId, EmbedMessageBuilder message);
+     * @param messageId The message ID
+     * @param message The IEmbedMessage built by {@link EmbedMessageBuilder}.
+     * @return The message edited
+     */
+    IMessage editMessage(String messageId, IEmbedMessage message);
 
     /**
     * Delete a message by ID.

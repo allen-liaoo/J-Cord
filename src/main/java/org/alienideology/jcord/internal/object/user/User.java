@@ -101,11 +101,6 @@ public final class User extends DiscordObject implements IUser {
     }
 
     @Override
-    public boolean isSelf() {
-        return identity.getSelf().getId().equals(id);
-    }
-
-    @Override
     public String getId() {
         return id;
     }

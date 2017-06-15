@@ -1,5 +1,6 @@
-package org.alienideology.jcord.internal.object.message;
+package org.alienideology.jcord.handle.message;
 
+import org.alienideology.jcord.internal.object.message.EmbedMessage;
 import org.alienideology.jcord.util.MessageUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -9,6 +10,8 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,67 +22,41 @@ public final class EmbedMessageBuilder {
 
     private String title;
     private String url;
-    private String description;
+    private String description = "";
     private OffsetDateTime timeStamp;
     private Color color;
 
-    private EmbedMessage.Author author = null;
-    private List<EmbedMessage.Field> fields = new ArrayList<>();
-    private EmbedMessage.Thumbnail thumbnail = null;
-    private EmbedMessage.Image image = null;
-    private EmbedMessage.Footer footer = null;
+    private IEmbedMessage.Author author = null;
+    private List<IEmbedMessage.Field> fields = new ArrayList<>();
+    private IEmbedMessage.Thumbnail thumbnail = null;
+    private IEmbedMessage.Image image = null;
+    private IEmbedMessage.Footer footer = null;
 
     public EmbedMessageBuilder() {
     }
 
-    JSONObject build() throws IllegalStateException {
+    /**
+     * Build an embed message.
+     *
+     * @return The embed message.
+     * @throws IllegalStateException If the empty is empty. See {@link #isEmpty()}.
+     */
+    public EmbedMessage build() throws IllegalStateException {
         if (this.isEmpty()) {
             IllegalStateException exception = new IllegalStateException("Embed message may not be empty!");
             exception.printStackTrace();
             throw exception;
         }
 
-        JSONObject json = new JSONObject();
-        if (title != null) json.put("title", title);
-        if (url != null) json.put("url", url);
-        if (description != null) json.put("description", description);
-        if (timeStamp != null) {
-            json.put("timestamp", timeStamp.format(DateTimeFormatter.ISO_DATE_TIME));
-        }
-        if (color != null) json.put("color", color.getRGB() & 0xFFFFFF);
-        if (author != null) {
-            JSONObject authorJson = new JSONObject();
-            authorJson.put("name", author.getName());   // NonNull
-            if (author.getUrl() != null) authorJson.put("url", author.getUrl());
-            if (author.getIconUrl() != null) authorJson.put("icon_url", author.getIconUrl());
-            json.put("author", authorJson);
-        }
-        if (!fields.isEmpty()) {
-            JSONArray array = new JSONArray();
-            for (EmbedMessage.Field field : fields) {
-                array.put(new JSONObject()
-                    .put("name", field.getName())   // NonNull
-                    .put("value", field.getValue())   // NonNull
-                    .put("inline", field.isInline()));   // NonNull
-            }
-            if (array.length() != 0) json.put("fields", array);
-        }
-        if (thumbnail != null) {
-            json.put("thumbnail", new JSONObject()
-                .put("url", thumbnail.getUrl()));   // NonNull
-        }
-        if (image != null) {
-            json.put("image", new JSONObject()
-                    .put("url", image.getUrl()));   // NonNull
-        }
-        if (footer != null) {
-            JSONObject footerJson = new JSONObject()
-                .put("text", footer.getText());   // NonNull
-            if (footer.getIconUrl() != null) footerJson.put("icon_url", footer.getIconUrl());
-            json.put("footer", footerJson);
-        }
+        EmbedMessage embed = new EmbedMessage(null, null, null, "", timeStamp == null ? null : timeStamp.toString(),
+                null, null, null, false, false, false)
+            .setColor(color)
+            .addFields(fields.toArray(new IEmbedMessage.Field[fields.size()]))
+            .setThumbnail(thumbnail)
+            .setImage(image)
+            .setFooter(footer);
 
-        return json;
+        return embed;
     }
 
     /**
@@ -179,7 +156,7 @@ public final class EmbedMessageBuilder {
         nonNull("author name", name);
         validateUrl("author url", url);
         validateUrl("author icon url", iconUrl);
-        this.author = new EmbedMessage.Author(name, url, iconUrl, null);
+        this.author = new IEmbedMessage.Author(name, url, iconUrl, null);
         return this;
     }
 
@@ -199,7 +176,7 @@ public final class EmbedMessageBuilder {
     public EmbedMessageBuilder addField(String name, String value, boolean inline) {
         nonNull("field name", name);
         nonNull("field value", value);
-        this.fields.add(new EmbedMessage.Field(name, value, inline));
+        this.fields.add(new IEmbedMessage.Field(name, value, inline));
         return this;
     }
 
@@ -217,7 +194,7 @@ public final class EmbedMessageBuilder {
     public EmbedMessageBuilder setThumbnail(String url) {
         nonNull("thumbnail url", url);
         validateUrl("thumbnail", url);
-        this.thumbnail = new EmbedMessage.Thumbnail(url, null, 0, 0);
+        this.thumbnail = new IEmbedMessage.Thumbnail(url, null, 0, 0);
         return this;
     }
 
@@ -234,7 +211,7 @@ public final class EmbedMessageBuilder {
     public EmbedMessageBuilder setImage(String url) {
         nonNull("image url", url);
         validateUrl("image", url);
-        this.image = new EmbedMessage.Image(url, null, 0, 0);
+        this.image = new IEmbedMessage.Image(url, null, 0, 0);
         return this;
     }
 
@@ -304,7 +281,7 @@ public final class EmbedMessageBuilder {
     public EmbedMessageBuilder setFooter(String text, String icon_url) {
         nonNull("footer text", text);
         validateUrl("footer url", icon_url);
-        this.footer = new EmbedMessage.Footer(text, icon_url, null);
+        this.footer = new IEmbedMessage.Footer(text, icon_url, null);
         return this;
     }
 

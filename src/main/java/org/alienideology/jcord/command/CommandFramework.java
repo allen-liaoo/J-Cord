@@ -2,18 +2,16 @@ package org.alienideology.jcord.command;
 
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
-import org.alienideology.jcord.handle.message.IMessage;
+import org.alienideology.jcord.handle.message.*;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
 import org.alienideology.jcord.internal.object.Guild;
-import org.alienideology.jcord.internal.object.Message;
+import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.channel.*;
 import org.alienideology.jcord.internal.object.guild.Member;
-import org.alienideology.jcord.internal.object.message.EmbedMessageBuilder;
-import org.alienideology.jcord.internal.object.message.MessageBuilder;
 import org.alienideology.jcord.internal.object.user.User;
 
 import java.lang.reflect.InvocationTargetException;
@@ -156,10 +154,10 @@ public class CommandFramework {
                     /* Reply with return values */
                     if (invoked instanceof String) {
                         event.getChannel().sendMessage((String) invoked);
-                    } else if (invoked instanceof MessageBuilder) {
-                        event.getChannel().sendMessage((MessageBuilder) invoked);
-                    } else if (invoked instanceof EmbedMessageBuilder) {
-                        event.getChannel().sendMessage((EmbedMessageBuilder) invoked);
+                    } else if (invoked instanceof IStringMessage) {
+                        event.getChannel().sendMessage((IStringMessage) invoked);
+                    } else if (invoked instanceof IEmbedMessage) {
+                        event.getChannel().sendMessage((IEmbedMessage) invoked);
                     }
                 } catch (IllegalAccessException | InvocationTargetException e1) {
                     e1.printStackTrace();

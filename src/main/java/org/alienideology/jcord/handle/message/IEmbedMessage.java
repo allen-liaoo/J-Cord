@@ -12,28 +12,86 @@ import java.time.OffsetDateTime;
  */
 public interface IEmbedMessage extends IMessage {
 
+    /**
+     * Get the title of the embed.
+     *
+     * @return The string title.
+     */
     String getTitle();
 
+    /**
+     * Get the description of the embed.
+     *
+     * @return The string description.
+     */
     String getDescription();
 
+    /**
+     * Get the URL of the title.
+     *
+     * @return The url.
+     */
     String getUrl();
 
+    /**
+     * Get the timestamp of this embed. This is not the message created time.
+     *
+     * @return The offset datetime.
+     */
     OffsetDateTime getTimeStamp();
 
+    /**
+     * Get the color of this embed.
+     *
+     * @return The embed's color.
+     */
     Color getColor();
 
+    /**
+     * Get the author field of this embed.
+     *
+     * @return The author field.
+     */
     EmbedMessage.Author getAuthorField();
 
+    /**
+     * @return A list of fields of this embed.
+     */
     java.util.List<EmbedMessage.Field> getFields();
 
+    /**
+     * Get the thumbnail of this embed.
+     *
+     * @return The thumbnail.
+     */
     EmbedMessage.Thumbnail getThumbnail();
 
+    /**
+     * Get the video field of this embed.
+     *
+     * @return The video.
+     */
     EmbedMessage.Video getVideo();
 
+    /**
+     * Get the provider field of this embed.
+     *
+     * @return The provider.
+     */
     EmbedMessage.Provider getProvider();
 
+    /**
+     * Get the image of this embed.
+     *
+     * @return The image.
+     */
     EmbedMessage.Image getImage();
 
+    /**
+     * Get the footer of this embed.
+     *
+     * @return The footer.
+     */
     EmbedMessage.Footer getFooter();
 
     class Author {

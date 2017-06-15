@@ -4,7 +4,7 @@ import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.user.User;
-import org.alienideology.jcord.internal.object.Message;
+import org.alienideology.jcord.internal.object.message.Message;
 
 import java.util.Objects;
 

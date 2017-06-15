@@ -6,7 +6,7 @@ import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.Message;
+import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.util.Cache;

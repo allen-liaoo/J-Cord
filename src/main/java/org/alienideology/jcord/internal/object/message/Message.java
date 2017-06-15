@@ -1,7 +1,6 @@
-package org.alienideology.jcord.internal.object;
+package org.alienideology.jcord.internal.object.message;
 
 import com.sun.istack.internal.Nullable;
-import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
@@ -10,13 +9,14 @@ import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.Internal;
+import org.alienideology.jcord.internal.object.DiscordObject;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.guild.Role;
-import org.alienideology.jcord.internal.object.message.Reaction;
-import org.alienideology.jcord.internal.object.message.StringMessage;
 import org.alienideology.jcord.internal.object.user.User;
+import org.json.JSONObject;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class Message extends DiscordObject implements IMessage {
     private List<Attachment> attachments;
     private List<IReaction> reactions;
 
-    private boolean isTTS;
+    protected boolean isTTS;
 
     private boolean mentionedEveryone;
     private boolean isPinned;
@@ -65,21 +65,6 @@ public class Message extends DiscordObject implements IMessage {
         this.isTTS = isTTs;
         this.mentionedEveryone = mentionedEveryone;
         this.isPinned = isPinned;
-    }
-
-    @Override
-    public IMessage edit(String content) {
-        return channel.editMessage(id, content);
-    }
-
-    @Override
-    public IMessage delete() {
-        return channel.deleteMessage(id);
-    }
-
-    @Override
-    public void pin() {
-        channel.pinMessage(id);
     }
 
     @Override
@@ -205,14 +190,14 @@ public class Message extends DiscordObject implements IMessage {
     }
 
     @Internal
-    protected Message setChannel(String channel) {
+    public Message setChannel(String channel) {
         this.channel = identity.getTextChannel(channel) == null ?
                 (PrivateChannel) identity.getPrivateChannel(channel) : (TextChannel) identity.getTextChannel(channel);
         return this;
     }
 
     @Internal
-    protected void setReactions(List<IReaction> reactions) {
+    public void setReactions(List<IReaction> reactions) {
         this.reactions = reactions;
     }
 

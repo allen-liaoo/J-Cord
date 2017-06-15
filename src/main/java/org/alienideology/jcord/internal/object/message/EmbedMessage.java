@@ -1,13 +1,16 @@
 package org.alienideology.jcord.internal.object.message;
 
+import org.alienideology.jcord.handle.Buildable;
 import org.alienideology.jcord.handle.message.IEmbedMessage;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.Message;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.user.User;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.awt.Color;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,10 +18,10 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public final class EmbedMessage extends Message implements IEmbedMessage {
+public final class EmbedMessage extends Message implements IEmbedMessage, Buildable {
 
     private String title;
-    private String description;
+    private String description = "";
     private String url;
 
     private OffsetDateTime TimeStamp;
@@ -37,13 +40,54 @@ public final class EmbedMessage extends Message implements IEmbedMessage {
         super(identity, id, author, content, timeStamp, mentions, mentionedRoles, attachments, isTTs, mentionedEveryone, isPinned);
     }
 
-    public EmbedMessage setEmbed(String title, String description, String url, String embed_timestamp, int color) {
-        this.title = title;
-        this.description = description;
-        this.url = url;
-        this.TimeStamp = embed_timestamp == null ? null : OffsetDateTime.parse(embed_timestamp);
-        this.color = new Color(color);
-        return this;
+    @Override
+    public JSONObject toJson() {
+
+        JSONObject json = new JSONObject();
+        if (title != null) json.put("title", title);
+        if (url != null) json.put("url", url);
+        if (!description.isEmpty()) json.put("description", description);
+        if (TimeStamp != null) {
+            json.put("timestamp", TimeStamp.format(DateTimeFormatter.ISO_DATE_TIME));
+        }
+        if (color != null) json.put("color", color.getRGB() & 0xFFFFFF);
+        if (author != null) {
+            JSONObject authorJson = new JSONObject();
+            authorJson.put("name", author.getName());   // NonNull
+            if (author.getUrl() != null) authorJson.put("url", author.getUrl());
+            if (author.getIconUrl() != null) authorJson.put("icon_url", author.getIconUrl());
+            json.put("author", authorJson);
+        }
+        if (!fields.isEmpty()) {
+            JSONArray array = new JSONArray();
+            for (IEmbedMessage.Field field : fields) {
+                array.put(new JSONObject()
+                        .put("name", field.getName())   // NonNull
+                        .put("value", field.getValue())   // NonNull
+                        .put("inline", field.isInline()));   // NonNull
+            }
+            if (array.length() != 0) json.put("fields", array);
+        }
+        if (thumbnail != null) {
+            json.put("thumbnail", new JSONObject()
+                    .put("url", thumbnail.getUrl()));   // NonNull
+        }
+        if (image != null) {
+            json.put("image", new JSONObject()
+                    .put("url", image.getUrl()));   // NonNull
+        }
+        if (footer != null) {
+            JSONObject footerJson = new JSONObject()
+                    .put("text", footer.getText());   // NonNull
+            if (footer.getIconUrl() != null) footerJson.put("icon_url", footer.getIconUrl());
+            json.put("footer", footerJson);
+        }
+
+        JSONObject msg = new JSONObject()
+            .put("content", "")
+            .put("embed", json);
+
+        return msg;
     }
 
     @Override
@@ -104,6 +148,31 @@ public final class EmbedMessage extends Message implements IEmbedMessage {
     @Override
     public Footer getFooter() {
         return footer;
+    }
+
+    public EmbedMessage setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public EmbedMessage setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public EmbedMessage setUrl(String url) {
+        this.url = url;
+        return this;
+    }
+
+    public EmbedMessage setTimeStamp(OffsetDateTime timeStamp) {
+        TimeStamp = timeStamp;
+        return this;
+    }
+
+    public EmbedMessage setColor(Color color) {
+        this.color = color;
+        return this;
     }
 
     public EmbedMessage setAuthor(Author author) {

@@ -2,7 +2,7 @@ package org.alienideology.jcord.event.message;
 
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
-import org.alienideology.jcord.internal.object.Message;
+import org.alienideology.jcord.internal.object.message.Message;
 
 /**
  * @author AlienIdeology

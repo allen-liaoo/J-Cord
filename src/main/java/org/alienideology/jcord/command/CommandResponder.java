@@ -20,7 +20,7 @@ public interface CommandResponder {
             }
         }
 
-        Returning String, MessageBuilder, or EmbedMessageBuilder will automatically be sent back to the
+        Returning String, StringMessageBuilder, or EmbedMessageBuilder will automatically be sent back to the
         MessageChannel (MessageCreateEvent#getChannel)
      */
 

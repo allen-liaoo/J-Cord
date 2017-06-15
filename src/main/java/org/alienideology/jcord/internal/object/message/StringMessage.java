@@ -1,24 +1,33 @@
 package org.alienideology.jcord.internal.object.message;
 
+import org.alienideology.jcord.handle.Buildable;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.message.IStringMessage;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.Message;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.user.User;
+import org.json.JSONObject;
 
 import java.util.List;
 
 /**
  * @author AlienIdeology
  */
-public final class StringMessage extends Message implements IStringMessage {
+public final class StringMessage extends Message implements IStringMessage, Buildable {
 
     public StringMessage(IdentityImpl identity, String id, User author, String content, String timeStamp,
                          List<User> mentions, List<Role> mentionedRoles, List<Attachment> attachments, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
         super(identity, id, author, content, timeStamp, mentions, mentionedRoles, attachments, isTTs, mentionedEveryone, isPinned);
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject()
+            .put("content", content);
+        if (isTTS) json.put("tts", isTTS);
+        return json;
     }
 
     public String processContent(boolean noMention, boolean noMarkdown) {

@@ -9,89 +9,124 @@ import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.object.Message;
-import org.alienideology.jcord.internal.object.channel.MessageChannel;
-import org.alienideology.jcord.internal.object.message.EmbedMessageBuilder;
-import org.alienideology.jcord.internal.object.message.MessageBuilder;
-import org.alienideology.jcord.internal.object.message.Reaction;
+import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.StringMessage;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
+ * Message - A recorded communication sent in MessageChannel.
  * @author AlienIdeology
  */
 public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<Message> {
 
     /**
-     * Reply to this message
-     * @see MessageChannel#sendMessage(String)
+     * Reply to this message, starting with mentioning the message's author
+     * @see IMessageChannel#sendMessage(String)
      *
      * @param content The reply content
      * @return The message sent.
      */
     default IMessage reply(String content) {
-        return getChannel().sendMessage(content);
+        return getChannel().sendMessage(getMember().mention()+" "+content);
     }
 
     /**
-     * Reply to this message
-     * @see MessageChannel#sendMessageFormat(String, Object...)
+     * Reply to this message, starting with mentioning the message's author
+     * @see IMessageChannel#sendMessageFormat(String, Object...)
      *
      * @param format The content string to be formatted
      * @param args The arguments referenced by the format string.
      * @return The message sent.
      */
     default IMessage replyFormat(String format, Object... args) {
-        return getChannel().sendMessageFormat(format, args);
+        return getChannel().sendMessageFormat("%s "+format, getMember().mention(), args);
     }
 
     /**
      * Reply to this message
-     * @see MessageChannel#sendMessage(MessageBuilder)
+     * @see IMessageChannel#sendMessage(IStringMessage)
      *
-     * @param builder The string message builder
+     * @param message The StringMessage built by {@link StringMessageBuilder}
      * @return The message sent.
      */
-    default IMessage reply(MessageBuilder builder) {
-        return getChannel().sendMessage(builder);
+    default IMessage reply(IStringMessage message) {
+        return getChannel().sendMessage(message);
     }
 
     /**
      * Reply to this message
-     * @see MessageChannel#sendMessage(EmbedMessageBuilder)
+     * @see IMessageChannel#sendMessage(IEmbedMessage)
      *
-     * @param builder The embed message builder
+     * @param message The EmbedMessage built by {@link EmbedMessageBuilder}
      * @return The message sent.
      */
-    default IMessage reply(EmbedMessageBuilder builder) {
-        return getChannel().sendMessage(builder);
+    default IMessage reply(IEmbedMessage message) {
+        return getChannel().sendMessage(message);
     }
 
     /**
      * Edit this message
      *
-     * @see MessageChannel#editMessage(String, String)
+     * @see IMessageChannel#editMessage(String, String)
      * @param content The new content
      * @return The message edited.
      */
-    IMessage edit(String content);
+    default IMessage edit(String content) {
+        return getChannel().editMessage(getId(), content);
+    }
+
+    /**
+     * Edit this message
+     *
+     * @see IMessageChannel#editMessageFormat(String, String, Object...)
+     * @param format The string to be formatted.
+     * @param args The arguments referenced by the format string.
+     * @return The message edited.
+     */
+    default IMessage editFormat(String format, Object... args) {
+        return getChannel().editMessageFormat(getId(), format, args);
+    }
+
+    /**
+     * Edit this message
+     *
+     * @param message The IStringMessage built by {@link StringMessageBuilder}.
+     * @return The message edited
+     */
+    default IMessage edit(IStringMessage message) {
+        return getChannel().editMessage(getId(), message);
+    }
+
+    /**
+     * Edit an embed message by ID
+     *
+     * @param message The IEmbedMessage built by {@link EmbedMessageBuilder}.
+     * @return The message edited
+     */
+    default IMessage edit(IEmbedMessage message) {
+        return getChannel().editMessage(getId(), message);
+    }
 
     /**
      * Delete this message
      *
-     * @see MessageChannel#deleteMessage(String)
+     * @see IMessageChannel#deleteMessage(String)
      * @return The message deleted.
      */
-    IMessage delete();
+    default IMessage delete() {
+        return getChannel().deleteMessage(getId());
+    }
 
     /**
      * Pin this message
      *
-     * @see MessageChannel#pinMessage(String)
+     * @see IMessageChannel#pinMessage(String)
      */
-    void pin();
+    default void pin() {
+        getChannel().pinMessage(getId());
+    }
 
     /**
      * Get the string content of this message.
@@ -271,4 +306,5 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<Message
         }
 
     }
+
 }

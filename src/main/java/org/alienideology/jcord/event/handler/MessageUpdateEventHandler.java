@@ -3,7 +3,7 @@ package org.alienideology.jcord.event.handler;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.message.dm.PrivateMessageUpdateEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageUpdateEvent;
-import org.alienideology.jcord.internal.object.Message;
+import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.json.JSONObject;
 

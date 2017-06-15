@@ -11,11 +11,10 @@ import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.Event;
-import org.alienideology.jcord.internal.object.channel.Channel;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
-import org.alienideology.jcord.internal.object.Message;
+import org.alienideology.jcord.internal.object.message.Message;
 
 /**
  * @author AlienIdeology

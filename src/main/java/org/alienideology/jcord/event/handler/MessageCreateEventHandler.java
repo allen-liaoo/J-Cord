@@ -4,7 +4,7 @@ import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
-import org.alienideology.jcord.internal.object.Message;
+import org.alienideology.jcord.internal.object.message.Message;
 import org.json.JSONObject;
 
 /**
