@@ -18,6 +18,29 @@ import java.util.*;
 public interface IMember extends IDiscordObject, ISnowFlake, IMention {
 
     /**
+     * Ban this member.
+     *
+     * @return True if the member is banned successfully.
+     */
+    default boolean ban() {
+        return getGuild().getGuildManager().banMember(this);
+    }
+
+    /**
+     * Ban this member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
+     * @exception IllegalArgumentException If the days are smaller than 0 or greater than 7.
+     *
+     * @param days The number of days to delete the member's message. Only valid between 0 and 7.
+     * @return True if the member is banned successfully.
+     */
+    default boolean ban(int days) {
+        return getGuild().getGuildManager().banMember(this, days);
+    }
+
+    /**
     * Check if this member have all the given permissions
      *
     * @param permissions The varargs of permission enums to be checked

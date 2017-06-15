@@ -1,10 +1,10 @@
 package org.alienideology.jcord.internal.gateway;
 
 /**
- * ErrorCode - HTTP Response/Error Codes
+ * HttpCode - HTTP Response/Error Codes
  * @author AlienIdeology
  */
-public enum ErrorCode {
+public enum HttpCode {
 
     /* Success */
     OK (200, "The request completed successfully"),
@@ -31,13 +31,13 @@ public enum ErrorCode {
     public int key;
     public String meaning;
 
-    ErrorCode(int key, String meaning) {
+    HttpCode(int key, String meaning) {
         this.key = key;
         this.meaning = meaning;
     }
 
-    public static ErrorCode getByKey(int key) {
-        for (ErrorCode code : values()) {
+    public static HttpCode getByKey(int key) {
+        for (HttpCode code : values()) {
             if (code.key == key) return code;
             if (key > 502) return SERVER_ERROR;
         }

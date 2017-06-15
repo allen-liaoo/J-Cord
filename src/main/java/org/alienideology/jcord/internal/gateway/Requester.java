@@ -7,7 +7,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
-import org.alienideology.jcord.internal.exception.ErrorCodeException;
+import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -94,16 +94,18 @@ public final class Requester {
      */
 
     /**
-     * Performs requests ignoring the returning values.
+     * Performs requests
+     * @return integer status
      */
-    public void performRequest() {
+    public HttpCode performRequest() {
         try {
             HttpResponse<JsonNode> response = request.asJson();
             handleErrorCode(response);
             JsonNode node = response.getBody();
-            if (!node.isArray()) {
+            if (node != null && !node.isArray()) {
                 handleErrorResponse(node.getObject());
             }
+            return HttpCode.getByKey(response.getStatus());
         } catch (UnirestException e) {
             throw new RuntimeException("Fail to perform http request!");
         }
@@ -202,7 +204,8 @@ public final class Requester {
 
     private void processRequest(HttpRequest request, String path) {
         request.header("Authorization", identity.getToken())
-                .header("User-Agent", "DiscordBot ($"+path+", $"+ JCord.VERSION+")");
+                .header("User-Agent", "DiscordBot ($"+path+", $"+ JCord.VERSION+")")
+                .header("Content-Type", "application/json");
     }
 
     private void handleErrorResponse(JSONObject response) {
@@ -217,11 +220,11 @@ public final class Requester {
     }
 
     private void handleErrorCode(HttpResponse response) {
-        ErrorCode error = ErrorCode.getByKey(response.getStatus());
+        HttpCode error = HttpCode.getByKey(response.getStatus());
         if (error.isServerError() || error.isFailure()) {
-            throw new ErrorCodeException(error);
-        } else if (error == ErrorCode.UNKNOWN){
-            throw new ErrorCodeException(response.getStatus(), ErrorCode.UNKNOWN, response.getStatusText());
+            throw new HttpErrorException(error);
+        } else if (error == HttpCode.UNKNOWN){
+            throw new HttpErrorException(response.getStatus(), HttpCode.UNKNOWN, response.getStatusText());
         }
     }
 

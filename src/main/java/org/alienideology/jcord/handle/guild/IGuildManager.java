@@ -3,6 +3,7 @@ package org.alienideology.jcord.handle.guild;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
+import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.object.guild.Guild;
 
 import java.awt.image.BufferedImage;
@@ -57,7 +58,7 @@ public interface IGuildManager {
      * Modify the guild's region.
      * {@link Region#UNKNOWN} will be ignored.
      *
-     * @exception org.alienideology.jcord.internal.exception.ErrorCodeException
+     * @exception HttpErrorException
      *          if the region is vip, but the guild is not. See {@link Region#isVIP}
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
@@ -164,5 +165,55 @@ public interface IGuildManager {
      * @param imagePath The image file path.
      */
     void modifySplash(String imagePath) throws IOException;
+
+    /**
+     * Ban a member.
+     * The number of days to delete messages is 7 by default.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
+     *
+     * @param member The member.
+     * @return True if the member is banned successfully.
+     */
+    boolean banMember(IMember member);
+
+    /**
+     * Ban a member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
+     * @exception IllegalArgumentException If the days are smaller than 0 or greater than 7.
+     *
+     * @param member The member.
+     * @param days The number of days to delete the member's message. Only valid between 0 and 7.
+     * @return True if the member is banned successfully.
+     */
+    boolean banMember(IMember member, int days);
+
+    /**
+     * Ban a member by ID.
+     * The number of days to delete messages is 7 by default.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
+     *
+     * @param memberId The member's ID.
+     * @return True if the member is banned successfully.
+     */
+    boolean banMember(String memberId);
+
+    /**
+     * Ban a member by ID.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
+     * @exception IllegalArgumentException If the days are smaller than 0 or greater than 7.
+     *
+     * @param memberId The member's ID.
+     * @param days The number of days to delete the member's message. Only valid between 0 and 7.
+     * @return True if the member is banned successfully.
+     */
+    boolean banMember(String memberId, int days);
 
 }
