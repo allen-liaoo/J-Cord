@@ -7,6 +7,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
+import org.alienideology.jcord.internal.exception.ErrorCodeException;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -97,9 +98,14 @@ public final class Requester {
      */
     public void performRequest() {
         try {
-            request.asString();
+            HttpResponse<JsonNode> response = request.asJson();
+            handleErrorCode(response);
+            JsonNode node = response.getBody();
+            if (!node.isArray()) {
+                handleErrorResponse(node.getObject());
+            }
         } catch (UnirestException e) {
-            throw new RuntimeException("Fail to perform http requestHttp!");
+            throw new RuntimeException("Fail to perform http request!");
         }
     }
 
@@ -205,7 +211,7 @@ public final class Requester {
             if (errorResponse != ErrorResponse.UNKNOWN) {
                 throw new ErrorResponseException(errorResponse);
             } else {
-                throw new ErrorResponseException(response.getInt("code"), response.getString("message"));
+                throw new ErrorResponseException(response.getInt("code"), ErrorResponse.UNKNOWN, response.getString("message"));
             }
         }
     }
@@ -213,9 +219,9 @@ public final class Requester {
     private void handleErrorCode(HttpResponse response) {
         ErrorCode error = ErrorCode.getByKey(response.getStatus());
         if (error.isServerError() || error.isFailure()) {
-            throw new RuntimeException("[Error Code "+error.key+"] "+error.meaning);
+            throw new ErrorCodeException(error);
         } else if (error == ErrorCode.UNKNOWN){
-            throw new RuntimeException("[Unknown Error Code " + response.getStatus() +"] " + response.getStatusText());
+            throw new ErrorCodeException(response.getStatus(), ErrorCode.UNKNOWN, response.getStatusText());
         }
     }
 

@@ -9,6 +9,7 @@ import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.channel.*;
+import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 import org.alienideology.jcord.internal.object.guild.Member;
 import org.alienideology.jcord.internal.object.guild.Role;
@@ -71,13 +72,8 @@ public final class ObjectBuilder {
             int verification_level = json.getInt("verification_level");
             int notifications_level = json.getInt("default_message_notifications");
             int mfa_level = json.getInt("mfa_level");
-//            roles = new ArrayList<Role>();
-//            json.getJSONArray("roles").forEach(role -> roles.add(new Role(identity, role.toString())));
-//            emojis = new ArrayList<Emote>();
-//            json.getJSONArray("emojis").forEach(emoji -> emoji.add(new Role(identity, emoji.toString())));
 
             Guild guild = new Guild(identity, id, name, icon, splash, region, afk_timeout, embed_enabled, verification_level, notifications_level, mfa_level);
-//                .addRoles(roles).addEmojis(emojis);
 
             // Add guilds first because channels, roles, and members have a guild field
             identity.addGuild(guild);

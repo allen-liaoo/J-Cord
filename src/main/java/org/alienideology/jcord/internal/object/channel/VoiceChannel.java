@@ -4,7 +4,7 @@ import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.Guild;
+import org.alienideology.jcord.internal.object.guild.Guild;
 
 import java.util.Objects;
 

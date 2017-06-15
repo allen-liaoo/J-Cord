@@ -17,9 +17,13 @@ public class ErrorResponseException extends RuntimeException {
         this.response = error;
     }
 
-    public ErrorResponseException(int key, String message) {
-        super("[Response Code "+ key + "] " + message);
+    /**
+     * Constructor for custom message.
+     */
+    public ErrorResponseException(int key, ErrorResponse response, String message) {
+        super("[Custom] [Response Code "+ key + "] " + message);
         this.key = key;
+        this.response = response;
     }
 
     public int getKey() {

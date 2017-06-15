@@ -1,7 +1,7 @@
 package org.alienideology.jcord.event.guild;
 
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.Guild;
+import org.alienideology.jcord.internal.object.guild.Guild;
 
 /**
  * GuildCreateEvent - Fired whenever a guild is detected

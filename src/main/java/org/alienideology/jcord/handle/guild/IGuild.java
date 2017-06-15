@@ -7,7 +7,7 @@ import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.object.Guild;
+import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.handle.Region;
 
 import java.util.Arrays;
@@ -23,6 +23,13 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
      * @return True if the guild is available (no temporary shortage happens to discord server)
      */
     boolean isAvailable();
+
+    /**
+     * Get the IGuildManager of this guild.
+     *
+     * @return The manager.
+     */
+    IGuildManager getGuildManager();
 
     /**
      * Get the name of this guild.
@@ -58,7 +65,7 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
      *
      * @return The integer value of the timeout.
      */
-    Guild.AFK_Timeout getAfkTimeout();
+    AFKTimeout getAfkTimeout();
 
     /**
      * Get the AFK voice channel of this guild.
@@ -202,7 +209,7 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     /**
      * AFK Timeouts (second)
      */
-    enum AFK_Timeout {
+    enum AFKTimeout {
         MINUTE_1 (60),
         MINUTES_5 (300),
         MINUTES_10 (600),
@@ -212,11 +219,11 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
 
         public int timeout;
 
-        AFK_Timeout (int timeout) {
+        AFKTimeout(int timeout) {
             this.timeout = timeout;
         }
 
-        public static AFK_Timeout getByTimeout (int timeout) {
+        public static AFKTimeout getByTimeout (int timeout) {
             if (Arrays.stream(values()).anyMatch(afk -> afk.timeout == timeout)) {
                 return Arrays.stream(values()).filter(afk -> afk.timeout == timeout).findFirst().get();
             } else {

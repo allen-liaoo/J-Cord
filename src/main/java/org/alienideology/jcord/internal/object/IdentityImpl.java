@@ -10,7 +10,6 @@ import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.EventManager;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
@@ -20,6 +19,7 @@ import org.alienideology.jcord.handle.guild.*;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
+import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.user.User;
 import org.apache.commons.logging.impl.SimpleLog;
 import org.json.JSONException;
@@ -219,7 +219,6 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         ------------------------
      */
 
-    @Internal
     public IdentityImpl login (String token) throws ErrorResponseException, IllegalArgumentException, IOException {
         if (type == IdentityType.BOT && !token.startsWith("Bot ")) {
             this.token = "Bot " + token;
@@ -248,7 +247,6 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         return this;
     }
 
-    @Internal
     public IdentityImpl logout() {
         socket.disconnect();
         CONNECTION = Connection.OFFLINE;
@@ -261,24 +259,20 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         return this;
     }
 
-    @Internal
     public IdentityImpl setEventManager(EventManager manager) {
         this.manager = manager;
         return this;
     }
 
-    @Internal
     public void setSelf (User selfUser) {
         this.self = selfUser;
     }
 
-    @Internal
     public void addUser (User user) {
         if(users.contains(user)) return;
         this.users.add(user);
     }
 
-    @Internal
     public void addGuild (Guild guild) {
         if(guilds.contains(guild)) return;
         this.guilds.add(guild);
@@ -288,19 +282,16 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         this.guilds.set(guilds.indexOf(guild), guild);
     }
 
-    @Internal
     public void addTextChannel (TextChannel textChannel) {
         if(textChannels.contains(textChannel)) return;
         this.textChannels.add(textChannel);
     }
 
-    @Internal
     public void addVoiceChannel (VoiceChannel voiceChannel) {
         if(voiceChannels.contains(voiceChannel)) return;
         this.voiceChannels.add(voiceChannel);
     }
 
-    @Internal
     public void addPrivateChannel (PrivateChannel privateChannel) {
         if(privateChannels.contains(privateChannel)) return;
         this.privateChannels.add(privateChannel);

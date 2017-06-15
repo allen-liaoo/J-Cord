@@ -2,7 +2,6 @@ package org.alienideology.jcord.internal.object.user;
 
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
@@ -123,7 +122,6 @@ public final class User extends DiscordObject implements IUser {
         return "ID: "+id+"\tName: "+name;
     }
 
-    @Internal
     private void setAvatar() {
         this.avatar = avatar == null ?
                 String.format(HttpPath.EndPoint.DEFAULT_AVATAR, String.valueOf(Integer.parseInt(discriminator) % 5)) :

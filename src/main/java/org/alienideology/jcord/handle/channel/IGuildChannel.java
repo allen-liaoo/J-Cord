@@ -2,7 +2,6 @@ package org.alienideology.jcord.handle.channel;
 
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.internal.object.Guild;
 
 /**
  * IGuildChannel - A Channel that exist in a guild

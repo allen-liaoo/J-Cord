@@ -1,21 +1,16 @@
-package org.alienideology.jcord.internal.object;
+package org.alienideology.jcord.internal.object.guild;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
-import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.handle.guild.IGuildEmoji;
-import org.alienideology.jcord.handle.guild.IMember;
-import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.guild.*;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
-import org.alienideology.jcord.internal.object.guild.GuildEmoji;
-import org.alienideology.jcord.internal.object.guild.Member;
-import org.alienideology.jcord.internal.object.guild.Role;
+import org.alienideology.jcord.internal.object.DiscordObject;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
@@ -29,6 +24,7 @@ public final class Guild extends DiscordObject implements IGuild {
 
     private final String id;
     private boolean isAvailable = false;
+    private final GuildManager manager;
 
     private String name;
 
@@ -38,7 +34,7 @@ public final class Guild extends DiscordObject implements IGuild {
     private Member owner;
     private Region region;
 
-    private AFK_Timeout afk_timeout;
+    private AFKTimeout afk_timeout;
     private VoiceChannel afk_channel;
 
     private boolean embed_enabled;
@@ -89,25 +85,28 @@ public final class Guild extends DiscordObject implements IGuild {
         this.icon = icon;
         setIcon();
         this.splash = splash;
-//         this.owner = owner;
         this.region = Region.getByKey(region);
-        this.afk_timeout = AFK_Timeout.getByTimeout(afk_timeout);
-//        this.afk_channel = null;
+        this.afk_timeout = AFKTimeout.getByTimeout(afk_timeout);
         this.embed_enabled = embed_enabled;
-//        embed_channel = null;
         this.verification_level = Verification.getByKey(verification_level);
         this.notifications_level = Notification.getByKey(notification_level);
         this.mfa_level = MFA.getByKey(mfa_level);
-        roles = new ArrayList<>();
-        emojis = new ArrayList<>();
-        members = new ArrayList<>();
-        textChannels = new ArrayList<>();
-        voiceChannels = new ArrayList<>();
+        this.roles = new ArrayList<>();
+        this.emojis = new ArrayList<>();
+        this.members = new ArrayList<>();
+        this.textChannels = new ArrayList<>();
+        this.voiceChannels = new ArrayList<>();
+        this.manager = new GuildManager(this);
     }
 
     @Override
     public boolean isAvailable() {
         return isAvailable;
+    }
+
+    @Override
+    public IGuildManager getGuildManager() {
+        return manager;
     }
 
     @Override
@@ -131,7 +130,7 @@ public final class Guild extends DiscordObject implements IGuild {
     }
 
     @Override
-    public AFK_Timeout getAfkTimeout() {
+    public AFKTimeout getAfkTimeout() {
         return afk_timeout;
     }
 
@@ -299,14 +298,7 @@ public final class Guild extends DiscordObject implements IGuild {
         return "ID: "+id+"\tName: "+name;
     }
 
-    /**
-     * [API Use Only]
-     * Add Text or Voice channels.
-     * @param channels the varargs of channels to be added.
-     * @return this guild for chaining.
-     */
-    @Internal
-    Guild addGuildChannel (IGuildChannel... channels) {
+    public Guild addGuildChannel (IGuildChannel... channels) {
         for (IGuildChannel channel : channels) {
             if (channel instanceof TextChannel) {
                 textChannels.add((TextChannel) channel);
@@ -317,50 +309,22 @@ public final class Guild extends DiscordObject implements IGuild {
         return this;
     }
 
-    /**
-     * [API Use Only]
-     * Add Members.
-     * @param members the varargs of members to be added.
-     * @return this guild for chaining.
-     */
-    @Internal
-    Guild addMember (Member... members) {
+    public Guild addMember (Member... members) {
         this.members.addAll(Arrays.asList(members));
         return this;
     }
 
-    /**
-     * [API Use Only]
-     * Add roles.
-     * @param roles the varargs of roles to be added.
-     * @return this guild for chaining.
-     */
-    @Internal
-    Guild addRole (Role... roles) {
+    public Guild addRole (Role... roles) {
         this.roles.addAll(Arrays.asList(roles));
         return this;
     }
 
-    /**
-     * [API Use Only]
-     * Add server emojis.
-     * @param emojis the varargs of emojis to be added.
-     * @return this guild for chaining.
-     */
-    @Internal
-    Guild addGuildEmoji (GuildEmoji... emojis) {
+    public Guild addGuildEmoji (GuildEmoji... emojis) {
         this.emojis.addAll(Arrays.asList(emojis));
         return this;
     }
 
-    /**
-     * [API Use Only]
-     * Set the owner of this guild.
-     * @param id the id of the owner.
-     * @return this guild for chaining.
-     */
-    @Internal
-    Guild setOwner (String id) {
+    public Guild setOwner (String id) {
         for (Member mem : members) {
             if (mem.getId().equals(id)) {
                 this.owner = mem;
@@ -370,15 +334,7 @@ public final class Guild extends DiscordObject implements IGuild {
         return this;
     }
 
-    /**
-     * [API Use Only]
-     * Set the channels settings for this guild.
-     * @param afk the afk voice channel
-     * @param embed the embed text channel
-     * @return this guild for chaining.
-     */
-    @Internal
-    Guild setChannels (String afk, String embed) {
+    public Guild setChannels (String afk, String embed) {
         this.afk_channel = (VoiceChannel) getVoiceChannel(afk);
         this.embed_channel = (TextChannel) getTextChannel(embed);
         return this;

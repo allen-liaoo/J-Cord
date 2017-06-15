@@ -3,7 +3,6 @@ package org.alienideology.jcord.handle.guild;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
-import org.alienideology.jcord.internal.object.Guild;
 import org.alienideology.jcord.handle.Permission;
 
 import java.util.List;

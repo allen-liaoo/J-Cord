@@ -1,16 +1,21 @@
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.message.EmbedMessageBuilder;
+import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.EventManager;
+import org.alienideology.jcord.internal.object.guild.Guild;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.File;
 
 /**
  * A simple test bot for J-Cord
@@ -47,6 +52,8 @@ public class ExampleBot {
             for (IPrivateChannel dm : bot.getPrivateChannels()) {
                 System.out.println("DM:\t" + dm.getRecipient().getName());
             }
+
+            bot.getGuild("311250670068170752").getGuildManager().modifyIcon(ImageIO.read(new File("/Users/liaoyilin/Desktop/Me/Offline.png")));
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,17 +1,12 @@
 package org.alienideology.jcord.handle.message;
 
 import org.alienideology.jcord.internal.object.message.EmbedMessage;
-import org.alienideology.jcord.util.MessageUtil;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.alienideology.jcord.util.MessageUtils;
 
 import java.awt.*;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -295,7 +290,7 @@ public final class EmbedMessageBuilder {
 
     private void validateUrl(String field, String url) {
         if (url == null || url.isEmpty()) return;
-        if (!url.matches(MessageUtil.PATTERN_IS_URL.pattern())) {
+        if (!url.matches(MessageUtils.PATTERN_IS_URL.pattern())) {
             IllegalArgumentException exception = new IllegalArgumentException("The value of the \""+field+"\" is not a valid url!");
             exception.printStackTrace();
             throw exception;

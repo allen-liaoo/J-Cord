@@ -8,7 +8,7 @@ import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
-import org.alienideology.jcord.internal.object.Guild;
+import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.channel.*;
 import org.alienideology.jcord.internal.object.guild.Member;

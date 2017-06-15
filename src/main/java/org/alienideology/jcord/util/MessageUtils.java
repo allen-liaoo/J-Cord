@@ -3,10 +3,10 @@ package org.alienideology.jcord.util;
 import java.util.regex.Pattern;
 
 /**
- * MessageUtil - Message and String utilities
+ * MessageUtils - Message and String utilities
  * @author AlienIdeology
  */
-public class MessageUtil {
+public class MessageUtils {
 
     public static Pattern PATTERN_MENTION_USER = Pattern.compile("<@!?[0-9]+>");
     public static Pattern PATTERN_MENTION_CHANNEL = Pattern.compile("<#[0-9]+>");

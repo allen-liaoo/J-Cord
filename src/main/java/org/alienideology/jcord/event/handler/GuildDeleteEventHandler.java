@@ -4,7 +4,7 @@ import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.guild.GuildDeleteEvent;
 import org.alienideology.jcord.event.guild.GuildUnavailableEvent;
-import org.alienideology.jcord.internal.object.Guild;
+import org.alienideology.jcord.internal.object.guild.Guild;
 import org.json.JSONObject;
 
 import java.time.OffsetDateTime;

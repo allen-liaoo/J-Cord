@@ -6,11 +6,10 @@ import org.alienideology.jcord.handle.channel.MessageHistory;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.message.*;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
-import org.alienideology.jcord.internal.object.Guild;
+import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.handle.Permission;
 import org.alienideology.jcord.internal.object.message.EmbedMessage;
@@ -92,7 +91,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
         return send(((EmbedMessage) embed).toJson());
     }
 
-    @Internal
     private Message send(JSONObject json) {
         checkContentLength(json.getString("content"));
         if (isPrivate) {
@@ -127,7 +125,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
         return edit(((EmbedMessage) message).toJson(), messageId);
     }
 
-    @Internal
     private Message edit(JSONObject json, String id) {
         checkContentLength(json.getString("content"));
 
@@ -161,7 +158,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
         return delete(message.getId());
     }
 
-    @Internal
     private Message delete(String id) {
         User author = new ObjectBuilder(identity).buildMessageById(this.id, id).getAuthor();
         if (!author.isSelf()) {  // Delete a message from others
@@ -177,7 +173,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
         return new ObjectBuilder(identity).buildMessage(msg);
     }
 
-    @Internal
     private void checkContentLength(String content) {
         if (content.length() > Message.MAX_CONTENT_LENGTH) {  // Message content can by up to 2000 characters
             IllegalArgumentException exception = new IllegalArgumentException("String messages can only contains up to 2000 characters.");
@@ -205,7 +200,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
         new Requester(identity, HttpPath.Channel.ADD_PINNED_MESSAGE).request(this.id, id).performRequest();
     }
 
-    @Internal
     public MessageChannel setLatestMessage(IMessage latestMessage) {
         this.latestMessage = (Message) latestMessage;
         return this;

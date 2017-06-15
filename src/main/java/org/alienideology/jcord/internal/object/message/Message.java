@@ -8,7 +8,6 @@ import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.Internal;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
@@ -16,7 +15,6 @@ import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.user.User;
-import org.json.JSONObject;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -189,14 +187,12 @@ public class Message extends DiscordObject implements IMessage {
         return "ID: "+id;
     }
 
-    @Internal
     public Message setChannel(String channel) {
         this.channel = identity.getTextChannel(channel) == null ?
                 (PrivateChannel) identity.getPrivateChannel(channel) : (TextChannel) identity.getTextChannel(channel);
         return this;
     }
 
-    @Internal
     public void setReactions(List<IReaction> reactions) {
         this.reactions = reactions;
     }

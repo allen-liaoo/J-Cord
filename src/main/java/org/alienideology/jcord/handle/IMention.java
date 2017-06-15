@@ -7,7 +7,7 @@ package org.alienideology.jcord.handle;
 public interface IMention {
 
     /**
-     * Mention a entity.
+     * Mention an entity.
      *
      * @return The formatted mention.
      */
