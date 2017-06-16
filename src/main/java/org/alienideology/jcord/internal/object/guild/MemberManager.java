@@ -1,11 +1,13 @@
 package org.alienideology.jcord.internal.object.guild;
 
-import org.alienideology.jcord.event.ExceptionEvent;
+import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.Permission;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IMemberManager;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
+import org.alienideology.jcord.internal.exception.HigherHierarchyException;
+import org.alienideology.jcord.internal.exception.HigherHierarchyException.HierarchyType;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
@@ -15,6 +17,9 @@ import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.json.JSONObject;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * @author AlienIdeology
  */
@@ -22,11 +27,13 @@ import org.json.JSONObject;
 public class MemberManager implements IMemberManager {
 
     private Guild guild;
+    private IMember self;
 
     public final static int NICKNAME_LENGTH = 32;
 
     public MemberManager(Guild guild) {
         this.guild = guild;
+        this.self = guild.getSelfMember();
     }
 
     @Override
@@ -47,10 +54,23 @@ public class MemberManager implements IMemberManager {
 
     @Override
     public void modifyMemberNickname(String memberId, String newNickname) {
+        IMember member = guild.getMember(memberId);
         if (newNickname == null) newNickname = "";
-        if (guild.getMember(memberId) == null) {
+
+        // Validate member
+        if (member == null) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER, "Unknown member to modify nickname! ID: "+memberId);
         }
+
+        // Checks hierarchy
+        if (member.isOwner() && !self.isOwner()) {
+            throw new HigherHierarchyException(HierarchyType.OWNER);
+        }
+        if (!self.canModify(member)) {
+            throw new HigherHierarchyException(HierarchyType.MEMBER);
+        }
+
+        // Validate nickname
         if (newNickname.length() > NICKNAME_LENGTH) {
             throw new IllegalArgumentException("Nickname may not be longer than 32 letters!");
         }
@@ -65,7 +85,7 @@ public class MemberManager implements IMemberManager {
                         .performRequest();
             } catch (HttpErrorException ex) {
                 if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
-                    throw new PermissionException(Permission.ADMINISTRATOR, Permission.CHANGE_NICKNAME);
+                        throw new PermissionException(Permission.ADMINISTRATOR, Permission.CHANGE_NICKNAME);
                 } else {
                     throw ex;
                 }
@@ -76,50 +96,46 @@ public class MemberManager implements IMemberManager {
             try {
                 modifyMember(memberId, json);
             } catch (PermissionException ex) {
-                if (memberId.equals(guild.getOwner().getId())) { // Modify owner's nickname
-                    throw new PermissionException("Cannot modify the owner's nickname!");
-                } else { // Change other's nickname
-                    throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_NICKNAMES);
-                }
+                throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_NICKNAMES); // Change other's nickname
             }
         }
     }
 
     @Override
-    public void addRoleToMember(IMember member, IRole role) {
-        addRoleToMember(member.getId(), role.getId());
+    public void modifyMemberRoles(IMember member, Collection<IRole> add, Collection<IRole> remove) {
+        Set<IRole> roles = new HashSet<>(member.getRoles());
+        roles.addAll(add);
+        roles.removeAll(remove);
+        modifyMemberRoles(member, roles);
     }
 
     @Override
-    public void addRoleToMember(String memberId, IRole role) {
-        addRoleToMember(memberId, role.getId());
-    }
-
-    @Override
-    public void addRoleToMember(IMember member, String roleId) {
-        addRoleToMember(member.getId(), roleId);
-    }
-
-    @Override
-    public void addRoleToMember(String memberId, String roleId) {
-        IMember member = guild.getMember(memberId);
-        if (member == null) {
+    public void modifyMemberRoles(IMember member, Collection<IRole> modified) {
+        if (member == null || !member.getGuild().equals(guild)) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
         }
-        if (guild.getRole(roleId) == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_ROLE);
-        }
-        if (member.getRole(roleId) != null) {
-            throw new IllegalArgumentException("Cannot add a role from a member that already have the role!");
+        for (IRole role : modified) {
+            if (role == null || !role.getGuild().equals(guild)) {
+                throw new ErrorResponseException(ErrorResponse.UNKNOWN_ROLE);
+            }
         }
 
-        // Fires guild member update event
+        // Checks hierarchy
+        if (member.isOwner() && !self.isOwner()) {
+            throw new HigherHierarchyException(HierarchyType.OWNER);
+        }
+        if (!guild.getSelfMember().canModify(member)) {
+            throw new HigherHierarchyException(HierarchyType.MEMBER);
+        }
+
+        List<String> roleIds = modified.stream().map(ISnowFlake::getId).collect(Collectors.toList());
         try {
-            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.ADD_GUILD_MEMBER_ROLE).request(guild.getId(), memberId, roleId)
-                .performRequest();
+            modifyMember(member.getId(), new JSONObject().put("roles", roleIds));
+        } catch (PermissionException ex) {
+            throw new PermissionException(Permission.MANAGE_ROLES);
         } catch (HttpErrorException ex) {
-            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
-                throw new PermissionException(Permission.MANAGE_ROLES);
+            if (ex.getCode().equals(HttpCode.BAD_REQUEST)) {
+                throw new IllegalArgumentException("Modifying member roles without giving any changes!");
             } else {
                 throw ex;
             }
@@ -127,44 +143,31 @@ public class MemberManager implements IMemberManager {
     }
 
     @Override
-    public void removeRoleFromMember(IMember member, IRole role) {
-        removeRoleFromMember(member.getId(), role.getId());
+    public void addRolesToMember(IMember member, IRole... roles) {
+        List<IRole> allRoles = new ArrayList<>(member.getRoles());
+        allRoles.addAll(Arrays.asList(roles));
+        modifyMemberRoles(member, allRoles);
     }
 
     @Override
-    public void removeRoleFromMember(String memberId, IRole role) {
-        removeRoleFromMember(memberId, role.getId());
+    public void addRolesToMember(IMember member, Collection<IRole> roles) {
+        List<IRole> allRoles = new ArrayList<>(member.getRoles());
+        allRoles.addAll(roles);
+        modifyMemberRoles(member, allRoles);
     }
 
     @Override
-    public void removeRoleFromMember(IMember member, String roleId) {
-        removeRoleFromMember(member.getId(), roleId);
+    public void removeRolesFromMember(IMember member, IRole... roles) {
+        List<IRole> allRoles = new ArrayList<>(member.getRoles());
+        allRoles.removeAll(Arrays.asList(roles));
+        modifyMemberRoles(member, allRoles);
     }
 
     @Override
-    public void removeRoleFromMember(String memberId, String roleId) {
-        IMember member = guild.getMember(memberId);
-        if (member == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
-        }
-        if (guild.getRole(roleId) == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_ROLE);
-        }
-        if (member.getRole(roleId) == null) {
-            throw new IllegalArgumentException("Cannot remove a role from a member that does not have the role!");
-        }
-
-        // Fires guild member update event
-        try {
-            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.REMOVE_GUILD_MEMBER_ROLE).request(guild.getId(), memberId, roleId)
-                    .performRequest();
-        } catch (HttpErrorException ex) {
-            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
-                throw new PermissionException(Permission.MANAGE_ROLES);
-            } else {
-                throw ex;
-            }
-        }
+    public void removeRolesFromMember(IMember member, Collection<IRole> roles) {
+        List<IRole> allRoles = new ArrayList<>(member.getRoles());
+        allRoles.removeAll(roles);
+        modifyMemberRoles(member, allRoles);
     }
 
     @Override
@@ -175,18 +178,24 @@ public class MemberManager implements IMemberManager {
 
     @Override
     public void muteMember(String memberId) {
-        if (guild.getMember(memberId) == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
+        IMember member = guild.getMember(memberId);
+        // Validate member
+        if (member == null) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER, "Unknown member to modify nickname! ID: "+memberId);
+        }
+
+        // Checks hierarchy
+        if (member.isOwner() && !self.isOwner()) {
+            throw new HigherHierarchyException(HierarchyType.OWNER);
+        }
+        if (!self.canModify(member)) {
+            throw new HigherHierarchyException(HierarchyType.MEMBER);
         }
 
         try {
             modifyMember(memberId, new JSONObject().put("mute", true));
         } catch (PermissionException ex) {
-            if (memberId.equals(guild.getOwner().getId())) { // Mute server owner
-                throw new PermissionException("Cannot mute the server owner!");
-            } else {
-                throw new PermissionException(Permission.MUTE_MEMBERS);
-            }
+            throw new PermissionException(Permission.MUTE_MEMBERS);
         }
     }
 
@@ -198,17 +207,24 @@ public class MemberManager implements IMemberManager {
 
     @Override
     public void unmuteMember(String memberId) {
-        if (guild.getMember(memberId) == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
+        IMember member = guild.getMember(memberId);
+        // Validate member
+        if (member == null) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER, "Unknown member to modify nickname! ID: "+memberId);
         }
+
+        // Checks hierarchy
+        if (member.isOwner() && !self.isOwner()) {
+            throw new HigherHierarchyException(HierarchyType.OWNER);
+        }
+        if (!self.canModify(member)) {
+            throw new HigherHierarchyException(HierarchyType.MEMBER);
+        }
+
         try {
             modifyMember(memberId, new JSONObject().put("mute", false));
         } catch (PermissionException ex) {
-            if (memberId.equals(guild.getOwner().getId())) { // Unmute server owner
-                throw new PermissionException("Cannot unmute the server owner!");
-            } else {
-                throw new PermissionException(Permission.MUTE_MEMBERS);
-            }
+            throw new PermissionException(Permission.MUTE_MEMBERS);
         }
     }
 
@@ -220,18 +236,24 @@ public class MemberManager implements IMemberManager {
 
     @Override
     public void deafenMember(String memberId) {
-        if (guild.getMember(memberId) == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
+        IMember member = guild.getMember(memberId);
+        // Validate member
+        if (member == null) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER, "Unknown member to modify nickname! ID: "+memberId);
+        }
+
+        // Checks hierarchy
+        if (member.isOwner() && !self.isOwner()) {
+            throw new HigherHierarchyException(HierarchyType.OWNER);
+        }
+        if (!self.canModify(member)) {
+            throw new HigherHierarchyException(HierarchyType.MEMBER);
         }
 
         try {
             modifyMember(memberId, new JSONObject().put("deaf", true));
         } catch (PermissionException ex) {
-            if (memberId.equals(guild.getOwner().getId())) { // Deafen server owner
-                throw new PermissionException("Cannot Deafen the server owner!");
-            } else {
-                throw new PermissionException(Permission.DEAFEN_MEMBERS);
-            }
+            throw new PermissionException(Permission.DEAFEN_MEMBERS);
         }
     }
 
@@ -243,17 +265,24 @@ public class MemberManager implements IMemberManager {
 
     @Override
     public void undeafenMember(String memberId) {
-        if (guild.getMember(memberId) == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
+        IMember member = guild.getMember(memberId);
+        // Validate member
+        if (member == null) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER, "Unknown member to modify nickname! ID: "+memberId);
         }
+
+        // Checks hierarchy
+        if (member.isOwner() && !self.isOwner()) {
+            throw new HigherHierarchyException(HierarchyType.OWNER);
+        }
+        if (!self.canModify(member)) {
+            throw new HigherHierarchyException(HierarchyType.MEMBER);
+        }
+
         try {
             modifyMember(memberId, new JSONObject().put("deaf", false));
         } catch (PermissionException ex) {
-            if (memberId.equals(guild.getOwner().getId())) { // Undeafen server owner
-                throw new PermissionException("Cannot Undeafen the server owner!");
-            } else {
-                throw new PermissionException(Permission.DEAFEN_MEMBERS);
-            }
+            throw new PermissionException(Permission.DEAFEN_MEMBERS);
         }
     }
 

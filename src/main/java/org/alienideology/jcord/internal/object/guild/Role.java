@@ -5,14 +5,16 @@ import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.*;
+import org.json.JSONObject;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author AlienIdeology
  */
-public final class Role extends DiscordObject implements IRole {
+public final class Role extends DiscordObject implements IRole, Buildable {
 
     private final String id;
     private final Guild guild;
@@ -33,10 +35,22 @@ public final class Role extends DiscordObject implements IRole {
         this.name = name;
         this.color = color;
         this.permissionsLong = permissions;
-        this.permissions = Permission.getPermissionsByLong(permissions);
+        this.permissions = permissions == -1 ?      // -1 sent by RoleBuilder, just a place holder
+                new ArrayList<>() : Permission.getPermissionsByLong(permissions);
         this.position = position;
         this.isSeparateListed = isSeparateListed;
         this.canMention = canMention;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject role = new JSONObject();
+        if (name != null) role.put("name", name);
+        if (permissionsLong != -1) role.put("permissions", permissionsLong);
+        if (color != null) role.put("color", color.getRGB() & 0xFFFFFF);
+        if (isSeparateListed) role.put("hoist", true);
+        if (canMention) role.put("mentionable", true);
+        return role;
     }
 
     @Override
@@ -103,11 +117,6 @@ public final class Role extends DiscordObject implements IRole {
     @Override
     public boolean canMention() {
         return canMention;
-    }
-
-    @Override
-    public int compareTo(IRole o) {
-        return (o.getPosition() > this.position) ? -1 : ((o.getPosition() == this.position) ? 0 : 1);
     }
 
     @Override

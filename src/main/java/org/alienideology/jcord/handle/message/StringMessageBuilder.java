@@ -34,6 +34,10 @@ public final class StringMessageBuilder {
 
     /**
      * Build a string message.
+     * @see org.alienideology.jcord.handle.channel.IMessageChannel#sendMessage(IStringMessage)
+     * @see org.alienideology.jcord.handle.channel.IMessageChannel#editMessage(String, IStringMessage)
+     * @see IMessage#edit(IStringMessage)
+     * @see IMessage#reply(IStringMessage)
      *
      * @return The string message.
      */

@@ -15,6 +15,20 @@ import java.awt.Color;
 public interface IRole extends IDiscordObject, ISnowFlake, IMention, Comparable<IRole> {
 
     /**
+     * Deletes this role from the guild.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role is null or if the role is not from this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     *
+     */
+    default void delete() {
+        getGuild().getGuildManager().deleteRole(this);
+    }
+
+    /**
      * Get the guild this role belongs to.
      *
      * @return The guild.
@@ -99,6 +113,47 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, Comparable<
     }
 
     /**
+     * Check if this role can modify attributes of another member.
+     * A role can only manage members that have a lower role.
+     * Note that this method does not checks the role's permissions.
+     *
+     * @param member The member to check with.
+     * @return True if the other member is modifiable.
+     */
+    default boolean canModify(IMember member) {
+        return this.compareTo(member.getHighestRole()) > 0;
+    }
+
+    /**
+     * Check if this role can modify attributes of another role.
+     * A role can only manages roles that are lower than this role.
+     * Note that this method checks the role's permissions. ({@code Manage Roles} permission)
+     * @see IMember#getHighestRole()
+     *
+     * @param role The role to check with.
+     * @return True if the role is modifiable.
+     */
+    default boolean canModify(IRole role) {
+        return this.hasPermissions(Permission.ADMINISTRATOR, Permission.MANAGE_ROLES) && this.compareTo(role) > 0;
+    }
+
+    /**
+     * Check if this role can modify attributes of a guild emoji.
+     * Note that this method checks the role's permissions. ({@code Manage Emojis} permission)
+     *
+     * @param emoji The emoji to check with.
+     * @return True if the emoji is modifiable.
+     */
+    default boolean canModify(IGuildEmoji emoji) {
+        return this.hasPermissions(Permission.ADMINISTRATOR, Permission.MANAGE_EMOJIS) && emoji.canBeUseBy(this);
+    }
+
+    @Override
+    default String mention(){
+        return "<#"+getId()+">";
+    }
+
+    /**
      * Compare the role by position.
      *
      * @param o Another role to compare with.
@@ -106,11 +161,8 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, Comparable<
      * @see Comparable#compareTo(Object) for the returning value.
      */
     @Override
-    int compareTo(IRole o);
-
-    @Override
-    default String mention(){
-        return "<#"+getId()+">";
+    default int compareTo(IRole o) {
+        return (o.getPosition() > getPosition()) ? -1 : ((o.getPosition() == getPosition()) ? 0 : 1);
     }
     
 }

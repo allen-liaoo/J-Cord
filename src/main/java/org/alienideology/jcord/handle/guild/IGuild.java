@@ -41,6 +41,14 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     IMemberManager getMemberManager();
 
     /**
+     * Get the IRoleManager of his guild.
+     * The role manager is used to change attributes or a role.
+     *
+     * @return The role manager.
+     */
+    IRoleManager getRoleManager();
+
+    /**
      * Get the name of this guild.
      *
      * @return The string name.
@@ -190,6 +198,14 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     */
     @Nullable
     ITextChannel getTextChannel(String id);
+
+    /**
+     * Get the default text channel of this guild.
+     *
+     * @return The text channel.
+     */
+    @NotNull
+    ITextChannel getDefaultChannel();
 
     /**
      * @return A list of text channels this guild has.

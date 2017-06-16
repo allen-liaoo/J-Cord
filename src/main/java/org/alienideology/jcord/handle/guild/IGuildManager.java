@@ -4,6 +4,7 @@ import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.internal.exception.HigherHierarchyException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.object.guild.Guild;
 
@@ -13,7 +14,9 @@ import java.util.List;
 
 /**
  * IGuildManager - The manager that manages and perform actions upon a guild.
+ *
  * @author AlienIdeology
+ * @since 0.0.4
  */
 public interface IGuildManager {
 
@@ -33,6 +36,12 @@ public interface IGuildManager {
      * @return The guild.
      */
     Guild getGuild();
+
+    /*
+        --------------------------
+            Guild Modification
+        --------------------------
+     */
 
     /**
      * Modify the guild's name.
@@ -168,6 +177,12 @@ public interface IGuildManager {
      */
     void modifySplash(String imagePath) throws IOException;
 
+    /*
+        ---------------------
+            Member Action
+        ---------------------
+     */
+
     /**
      * Kick a member.
      *
@@ -187,6 +202,8 @@ public interface IGuildManager {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Kick Members} permission.
+     * @exception HigherHierarchyException
+     *          If the member is at a higher hierarchy than the identity (ie.e server owner)
      * @exception IllegalArgumentException
      *          If the identity tries to kick itself from the guild.
      *          Please use {leave()} to leave a guild.
@@ -261,6 +278,8 @@ public interface IGuildManager {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
+     * @exception HigherHierarchyException
+     *          If the member is at a higher hierarchy than the identity (ie.e server owner)
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
@@ -274,6 +293,8 @@ public interface IGuildManager {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
+     * @exception HigherHierarchyException
+     *          If the member is at a higher hierarchy than the identity (ie.e server owner)
      * @exception IllegalArgumentException If the days are smaller than 0 or greater than 7.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
@@ -290,6 +311,8 @@ public interface IGuildManager {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
+     * @exception HigherHierarchyException
+     *          If the member is at a higher hierarchy than the identity (ie.e server owner)
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
@@ -303,6 +326,8 @@ public interface IGuildManager {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
+     * @exception HigherHierarchyException
+     *          If the member is at a higher hierarchy than the identity (ie.e server owner)
      * @exception IllegalArgumentException If the days are smaller than 0 or greater than 7.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
@@ -338,5 +363,34 @@ public interface IGuildManager {
      * @return True if the user is unbanned successfully.
      */
     boolean unbanUser(String memberId);
+
+    /*
+        -------------------
+            Role Action
+        -------------------
+     */
+
+    /**
+     * Create a role in this guild.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     *
+     * @param role The role built by {@link RoleBuilder}
+     */
+    void createRole(IRole role);
+
+    /**
+     * Delete a existed role in this guild.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role is null or if the role is not from this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     *
+     * @param role The role to be deleted.
+     */
+    void deleteRole(IRole role);
 
 }

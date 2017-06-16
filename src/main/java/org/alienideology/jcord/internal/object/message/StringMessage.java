@@ -26,7 +26,7 @@ public final class StringMessage extends Message implements IStringMessage, Buil
     public JSONObject toJson() {
         JSONObject json = new JSONObject()
             .put("content", content);
-        if (isTTS) json.put("tts", isTTS);
+        if (isTTS) json.put("tts", true);
         return json;
     }
 

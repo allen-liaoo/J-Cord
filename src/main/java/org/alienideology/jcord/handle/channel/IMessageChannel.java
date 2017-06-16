@@ -57,7 +57,7 @@ public interface IMessageChannel extends IChannel {
      * @param format The string to be formatted and send.
      * @param args The arguments referenced by the format string.
      * @exception  IllegalArgumentException If the message is more than 2000 characters.
-     * @exception PermissionException If the user lack Send Messages permission
+     * @exception PermissionException If the user lack {@code Send Messages} permission
      * @return The message sent.
      */
     IMessage sendMessageFormat(String format, Object... args);
@@ -66,7 +66,7 @@ public interface IMessageChannel extends IChannel {
      * Send a message built by StringMessageBuilder
      *
      * @param message The StringMessage built by {@link StringMessageBuilder}.
-     * @exception PermissionException If the user lack Send Messages permission
+     * @exception PermissionException If the user lack {@code Send Messages} permission
      * @return The message sent.
      */
     IMessage sendMessage(IStringMessage message);
@@ -76,7 +76,7 @@ public interface IMessageChannel extends IChannel {
      *
      * @param embed The EmbedMessage built by {@link EmbedMessageBuilder}.
      * @exception  IllegalStateException If the embed message is built but the embed is empty.
-     * @exception PermissionException If the user lack Send Messages permission
+     * @exception PermissionException If the user lack {@code Send Messages} permission
      * @return The message sent.
      */
     IMessage sendMessage(IEmbedMessage embed);

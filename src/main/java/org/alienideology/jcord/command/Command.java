@@ -8,6 +8,7 @@ import java.lang.annotation.*;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
+// TODO: Permissions field, description, and AUTO-GENERATED HELP COMMAND
 public @interface Command {
 
     /**

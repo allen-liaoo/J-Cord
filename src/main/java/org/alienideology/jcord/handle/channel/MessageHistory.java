@@ -17,6 +17,7 @@ import java.util.*;
 
 /**
  * MessageHistory - The history of a MessageChannel, used to get lists of messages.
+ *
  * @author AlienIdeology
  */
 public class MessageHistory extends DiscordObject implements IDiscordObject {

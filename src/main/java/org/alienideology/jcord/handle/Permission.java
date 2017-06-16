@@ -1,6 +1,7 @@
 package org.alienideology.jcord.handle;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.alienideology.jcord.handle.Permission.PermissionLevel.*;
@@ -40,6 +41,7 @@ public enum Permission {
     MOVE_MEMBERS (0x01000000, "Allows for moving of members between voice channels", ALL),
     USE_VOICE_ACTIVITY (0x02000000, "Allows for using voice-activity-detection in a voice channel", ALL),
 
+    // These counts as Guild Permissions
     CHANGE_NICKNAME (0x04000000, "Allows for modification of own nickname", GUILD_ONLY),
     MANAGE_NICKNAMES (0x08000000, "Allows for modification of other users nicknames", GUILD_ONLY),
     MANAGE_ROLES (0x10000000, "Allows management and editing of roles", GUILD_ONLY),
@@ -49,9 +51,47 @@ public enum Permission {
 
     UNKNOWN (-1, "Unknown permission", UNKNOWN_LEVEL);
 
-    private long value;
-    private String description;
-    private PermissionLevel level;
+    /**
+     * All permissions assignable.
+     */
+    public static Collection<Permission> ALL_PERMS = getPermissionsByLong(2146958591);
+
+    /**
+     * All Guild related permissions.
+     */
+    public static Collection<Permission> ALL_GUILD_PERMS = getPermissionsByLong(2080374975);
+
+    /**
+     * All TextChannel permissions.
+     */
+    public static Collection<Permission> ALL_TEXT_PERMS = getPermissionsByLong(523328);
+
+    /**
+     * All VoiceChannel permissions.
+     */
+    public static Collection<Permission> ALL_VOICE_PERMS = getPermissionsByLong(66060288);
+
+    /**
+     * A Pre-set permissions for small guilds.
+     * This granted {@code Mention Everyone} permission.
+     *
+     * See this <a href = "https://discordapi.com/permissions.html#70765633">Permission Calculator</a>
+     * for permissions included in this constant.
+     */
+    public static Collection<Permission> PRE_SET_PERM_SMALL = getPermissionsByLong(70765633);
+
+    /**
+     * A Pre-set permissions for large guilds.
+     * This denied {@code Mention Everyone}, but granted {@code View Audit Logs} permission.
+     *
+     * See this <a href = "https://discordapi.com/permissions.html#70634689">Permission Calculator</a>
+     * for permissions included in this constant.
+     */
+    public static Collection<Permission> PRE_SET_PERM_LARGE = getPermissionsByLong(70634689);
+
+    public long value;
+    public String description;
+    public PermissionLevel level;
 
     Permission (long value, String description, PermissionLevel level) {
         this.value = value;
@@ -67,7 +107,7 @@ public enum Permission {
         List<Permission> permissions = new ArrayList<>();
 
         for (Permission perm : Permission.values()) {
-            if (hasPermission(permissionsLong, perm)) {
+            if (hasPermission(permissionsLong, perm) && perm != UNKNOWN) {
                 permissions.add(perm);
             }
         }
@@ -80,6 +120,10 @@ public enum Permission {
             permLong |= perm.value;
         }
         return permLong;
+    }
+
+    public static long getLongByPermissions (Collection<Permission> permissions) {
+        return getLongByPermissions(permissions.toArray(new Permission[permissions.size()]));
     }
 
     public boolean isAllLevel() {

@@ -6,8 +6,11 @@ import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IGuildManager;
 import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
+import org.alienideology.jcord.internal.exception.HigherHierarchyException;
+import org.alienideology.jcord.internal.exception.HigherHierarchyException.HierarchyType;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
@@ -62,7 +65,7 @@ public class GuildManager implements IGuildManager {
         try {
             requestModify(new JSONObject().put("region", region.key));
         } catch (HttpErrorException ex) {
-            if (ex.getCode() == HttpCode.BAD_REQUEST) {
+            if (ex.getCode().equals(HttpCode.BAD_REQUEST)) {
                 throw new HttpErrorException(HttpCode.BAD_REQUEST, "Invalid VIP Region!");
             }
         }
@@ -191,8 +194,21 @@ public class GuildManager implements IGuildManager {
 
     @Override
     public boolean kickMember(String memberId) {
-        if (guild.getMember(memberId) == null) {
+        IMember member = guild.getMember(memberId);
+        // Validate member
+        if (member == null) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER, "Unknown member to kick! ID: "+memberId);
+        }
+        if (member.equals(guild.getSelfMember())) {
+            throw new IllegalArgumentException("Cannot kick the identity itself from a guild!");
+        }
+
+        // Checks hierarchy
+        if (member.isOwner() && !guild.getSelfMember().isOwner()) {
+            throw new HigherHierarchyException(HierarchyType.OWNER);
+        }
+        if (!guild.getSelfMember().canModify(member)) {
+            throw new HigherHierarchyException(HierarchyType.MEMBER);
         }
 
         HttpCode code;
@@ -201,13 +217,7 @@ public class GuildManager implements IGuildManager {
                     .performRequest();
         } catch (HttpErrorException ex) {
             if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
-                if (memberId.equals(guild.getOwner().getId())) { // Modify owner's nickname
-                    throw new PermissionException("Cannot kick the server owner!");
-                } else if (memberId.equals(getIdentity().getSelf().getId())) { // Kick self
-                    throw new IllegalArgumentException("Cannot kick the identity itself from a guild!");
-                } else {
-                    throw new PermissionException(Permission.KICK_MEMBERS);
-                }
+                throw new PermissionException(Permission.KICK_MEMBERS);
             } else {
                 throw ex;
             }
@@ -255,8 +265,21 @@ public class GuildManager implements IGuildManager {
 
     @Override
     public boolean banMember(String memberId, int days) {
-        if (guild.getMember(memberId) == null) {
+        IMember member = guild.getMember(memberId);
+        // Validate member
+        if (member == null) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER, "Unknown member to ban! ID: "+memberId);
+        }
+        if (member.equals(guild.getSelfMember())) {
+            throw new IllegalArgumentException("Cannot kick the identity itself from a guild!");
+        }
+
+        // Checks hierarchy
+        if (member.isOwner() && !guild.getSelfMember().isOwner()) {
+            throw new HigherHierarchyException(HierarchyType.OWNER);
+        }
+        if (!guild.getSelfMember().canModify(member)) {
+            throw new HigherHierarchyException(HierarchyType.MEMBER);
         }
 
         checkDays(days);
@@ -266,9 +289,7 @@ public class GuildManager implements IGuildManager {
                     .updateRequestWithBody(request -> request.body(new JSONObject().put("delete-message-days", days)))
                     .performRequest();
         } catch (HttpErrorException ex) {
-            if (memberId.equals(guild.getOwner().getId())) { // Modify owner's nickname
-                throw new PermissionException("Cannot ban the server owner!");
-            } else if (ex.getCode().equals(HttpCode.FORBIDDEN)) { // Missing Permission
+            if (ex.getCode().equals(HttpCode.FORBIDDEN)) { // Missing Permission
                 throw new PermissionException(Permission.ADMINISTRATOR, Permission.BAN_MEMBERS);
             } else {
                 throw ex;
@@ -307,4 +328,39 @@ public class GuildManager implements IGuildManager {
         return code.isOK() || code.isSuccess();
     }
 
+    @Override
+    public void createRole(IRole role) {
+        JSONObject newRole = ((Role) role).toJson();
+
+        // Fires Guild Role Create event
+        try {
+            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.CREATE_GUILD_ROLE).request(guild.getId())
+                    .updateRequestWithBody(request -> request.body(newRole)).performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+                throw new PermissionException(Permission.MANAGE_ROLES);
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public void deleteRole(IRole role) {
+        if (role == null || !role.getGuild().equals(guild)) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_ROLE);
+        }
+
+        // Fires Guild Role Delete event
+        try {
+            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.DELETE_GUILD_ROLE).request(guild.getId(), role.getId())
+                    .performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+                throw new PermissionException(Permission.MANAGE_ROLES);
+            } else {
+                throw ex;
+            }
+        }
+    }
 }
