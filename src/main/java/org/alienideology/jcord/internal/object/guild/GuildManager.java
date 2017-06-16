@@ -29,7 +29,6 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-// TODO: Finish Get Bans
 public class GuildManager implements IGuildManager {
 
     private Guild guild;

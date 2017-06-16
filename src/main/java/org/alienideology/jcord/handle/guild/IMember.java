@@ -39,7 +39,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @return True if the member is banned successfully.
@@ -55,7 +55,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
      * @exception IllegalArgumentException If the days are smaller than 0 or greater than 7.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param days The number of days to delete the member's message. Only valid between 0 and 7.
@@ -74,7 +74,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
      *          If the identity does not have either {@code Change Nickname} permission to modify itself,
      *              or {@code Manage Nicknames} permission to manage other nicknames,
      *              or managing the server owner's nickname.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      * @exception IllegalArgumentException If the nickname is longer than 32 letters.
      *
@@ -85,13 +85,75 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
     }
 
     /**
+     * Add a role to this member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @exception IllegalArgumentException
+     *          If this member already had that role.
+     *
+     * @param role The role.
+     */
+    default void addRole(IRole role) {
+        getGuild().getMemberManager().addRoleToMember(this, role);
+    }
+
+    /**
+     * Add a role by ID to this member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @exception IllegalArgumentException
+     *          If this member already had that role.
+     *
+     * @param roleId The role's ID.
+     */
+    default void addRole(String roleId) {
+        getGuild().getMemberManager().addRoleToMember(this, roleId);
+    }
+
+    /**
+     * Remove a role from this member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @exception IllegalArgumentException If this member did not had that role.
+     *
+     * @param role The role.
+     */
+    default void removeRole(IRole role) {
+        getGuild().getMemberManager().removeRoleFromMember(this, role);
+    }
+
+    /**
+     * Remove a role by ID from this member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @exception IllegalArgumentException If this member did not had that role.
+     *
+     * @param roleId The role's ID.
+     */
+    default void removeRole(String roleId) {
+        getGuild().getMemberManager().removeRoleFromMember(this, roleId);
+    }
+
+    /**
      * Mute this member.
      * @see IMemberManager#muteMember(IMember)
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Mute Members} permission.
      *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      */
@@ -106,7 +168,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Mute Members} permission,
      *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      */
@@ -121,7 +183,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Deafen Members} permission.
      *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      */
@@ -136,7 +198,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Deafen Members} permission.
      *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      */
@@ -219,6 +281,15 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
      */
     @NotNull
     IRole getHighestRole();
+
+    /**
+     * Get a role by ID.
+     *
+     * @param id The id of a role.
+     * @return The role or null if no role is found.
+     */
+    @Nullable
+    IRole getRole(String id);
 
     /**
      * @return A list of roles this member has.

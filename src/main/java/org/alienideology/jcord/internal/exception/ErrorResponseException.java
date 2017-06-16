@@ -13,7 +13,7 @@ public class ErrorResponseException extends RuntimeException {
 
     public ErrorResponseException(ErrorResponse error) {
         super("[Response Code "+ error.key + "] " + error.message);
-        this.key = response.key;
+        this.key = error.key;
         this.response = error;
     }
 

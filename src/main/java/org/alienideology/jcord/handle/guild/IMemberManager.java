@@ -51,7 +51,7 @@ public interface IMemberManager {
      *          If the identity does not have either {@code Change Nickname} permission to modify itself,
      *              or {@code Manage Nicknames} permission to manage other nicknames,
      *              or managing the server owner's nickname.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      * @exception IllegalArgumentException If the nickname is longer than 32 letters.
      *
@@ -69,7 +69,7 @@ public interface IMemberManager {
      *          If the identity does not have either {@code Change Nickname} permission to modify itself,
      *              or {@code Manage Nicknames} permission to manage other nicknames,
      *              or managing the server owner's nickname.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      * @exception IllegalArgumentException If the nickname is longer than 32 letters.
      *
@@ -79,13 +79,151 @@ public interface IMemberManager {
     void modifyMemberNickname(String memberId, String newNickname);
 
     /**
+     * Add a role to a given member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *      <ul>
+     *          <li>If the member does not belong to this guild.</li>
+     *          <li>If the role does not belong to this guild.</li>
+     *      </ul>
+     * @exception IllegalArgumentException If the member already had that role.
+     *
+     * @param member The member.
+     * @param role The role to be added.
+     */
+    void addRoleToMember(IMember member, IRole role);
+
+    /**
+     * Add a role to a given ID of a member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *      <ul>
+     *          <li>If the member does not belong to this guild.</li>
+     *          <li>If the role does not belong to this guild.</li>
+     *      </ul>
+     * @exception IllegalArgumentException If the member already had that role.
+     *
+     * @param memberId The member's ID.
+     * @param role The role to be added.
+     */
+    void addRoleToMember(String memberId, IRole role);
+
+    /**
+     * Add a role by ID to a given member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *      <ul>
+     *          <li>If the member does not belong to this guild.</li>
+     *          <li>If the role does not belong to this guild.</li>
+     *      </ul>
+     * @exception IllegalArgumentException If the member already had that role.
+     *
+     * @param member The member.
+     * @param roleId The role's ID.
+     */
+    void addRoleToMember(IMember member, String roleId);
+
+    /**
+     * Add a role by ID to a given ID of a member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *      <ul>
+     *          <li>If the member does not belong to this guild.</li>
+     *          <li>If the role does not belong to this guild.</li>
+     *      </ul>
+     * @exception IllegalArgumentException If the member already had that role.
+     *
+     * @param memberId The member's ID.
+     * @param roleId The role's ID.
+     */
+    void addRoleToMember(String memberId, String roleId);
+
+    /**
+     * Remove a role from a member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *      <ul>
+     *          <li>If the member does not belong to this guild.</li>
+     *          <li>If the role does not belong to this guild.</li>
+     *      </ul>
+     * @exception IllegalArgumentException If the member did not had that role.
+     *
+     * @param member The member.
+     * @param role The role.
+     */
+    void removeRoleFromMember(IMember member, IRole role);
+
+    /**
+     * Remove a role from a given ID of a member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *      <ul>
+     *          <li>If the member does not belong to this guild.</li>
+     *          <li>If the role does not belong to this guild.</li>
+     *      </ul>
+     * @exception IllegalArgumentException If the member did not had that role.
+     *
+     * @param memberId The member's ID.
+     * @param role The role.
+     */
+    void removeRoleFromMember(String memberId, IRole role);
+
+    /**
+     * Remove a role by ID from a member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *      <ul>
+     *          <li>If the member does not belong to this guild.</li>
+     *          <li>If the role does not belong to this guild.</li>
+     *      </ul>
+     * @exception IllegalArgumentException If the member did not had that role.
+     *
+     * @param member The member.
+     * @param roleId The role.
+     */
+    void removeRoleFromMember(IMember member, String roleId);
+
+    /**
+     * Remove a role by ID from a given ID of a member.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *      <ul>
+     *          <li>If the member does not belong to this guild.</li>
+     *          <li>If the role does not belong to this guild.</li>
+     *      </ul>
+     * @exception IllegalArgumentException If the member did not had that role.
+     *
+     * @param memberId The member's ID.
+     * @param roleId The role's ID.
+     */
+    void removeRoleFromMember(String memberId, String roleId);
+
+    // TODO: Add #modifyMemberRoles(IMember member, List<IRole> add, List<IRole> remove) and #modifyMemberRoles(IMember member, List<IRole> modified)
+
+    /**
      * Mute a member.
      * Null member will be ignored.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Mute Members} permission.
      *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param member The member to be muted.
@@ -98,7 +236,7 @@ public interface IMemberManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Mute Members} permission.
      *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param memberId The member's ID..
@@ -112,7 +250,7 @@ public interface IMemberManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Mute Members} permission,
      *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param member The member to be unmuted.
@@ -125,7 +263,7 @@ public interface IMemberManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Mute Members} permission.
      *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param memberId The member's ID.
@@ -138,7 +276,7 @@ public interface IMemberManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Deafen Members} permission.
      *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param member The member.
@@ -151,7 +289,7 @@ public interface IMemberManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Deafen Members} permission.
      *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param memberId The member's ID.
@@ -164,7 +302,7 @@ public interface IMemberManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Deafen Members} permission.
      *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param member The member.
@@ -177,7 +315,7 @@ public interface IMemberManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Deafen Members} permission.
      *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param memberId The member's ID.

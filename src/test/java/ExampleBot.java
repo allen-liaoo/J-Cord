@@ -44,7 +44,7 @@ public class ExampleBot {
                 System.out.println("DM:\t" + dm.getRecipient().getName());
             }
 
-            bot.getGuild("311250670068170752").getMemberManager().modifySelfNickname(null);
+            IGuild guild = bot.getGuild("311250670068170752");
 
         } catch (Exception e) {
             e.printStackTrace();

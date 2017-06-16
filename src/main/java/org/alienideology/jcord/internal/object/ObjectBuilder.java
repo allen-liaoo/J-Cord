@@ -305,7 +305,6 @@ public final class ObjectBuilder {
      * @param json The message JSONObject
      * @return The Message object
      */
-    // TODO: Add lists (See Message object)
     public Message buildMessage (JSONObject json) {
         handleBuildError(json);
         Message message;

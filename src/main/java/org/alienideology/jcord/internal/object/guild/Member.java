@@ -104,6 +104,16 @@ public final class Member extends DiscordObject implements IMember {
     }
 
     @Override
+    @Nullable
+    public IRole getRole(String id) {
+        for (IRole role : roles) {
+            if (role.getId().equals(id))
+                return role;
+        }
+        return null;
+    }
+
+    @Override
     public List<IRole> getRoles() {
         return Collections.unmodifiableList(roles);
     }

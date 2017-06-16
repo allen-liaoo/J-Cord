@@ -261,7 +261,7 @@ public interface IGuildManager {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param member The member.
@@ -275,7 +275,7 @@ public interface IGuildManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
      * @exception IllegalArgumentException If the days are smaller than 0 or greater than 7.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param member The member.
@@ -290,7 +290,7 @@ public interface IGuildManager {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param memberId The member's ID.
@@ -304,7 +304,7 @@ public interface IGuildManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
      * @exception IllegalArgumentException If the days are smaller than 0 or greater than 7.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param memberId The member's ID.
@@ -318,7 +318,7 @@ public interface IGuildManager {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the user is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the user is not in the guild ban list.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
      *
      * @param user The user.
@@ -331,7 +331,7 @@ public interface IGuildManager {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the user is not found.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the user is not in the guild ban list.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
      *
      * @param memberId The user's ID.

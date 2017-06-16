@@ -1,8 +1,10 @@
 package org.alienideology.jcord.internal.object.guild;
 
+import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.handle.Permission;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IMemberManager;
+import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.exception.PermissionException;
@@ -16,7 +18,7 @@ import org.json.JSONObject;
 /**
  * @author AlienIdeology
  */
-// TODO: MemberManager#moveMember(IVoiceChannel), #addRoles(Role...), #removeRoles(Role...)
+// TODO: MemberManager#moveMember(IVoiceChannel)
 public class MemberManager implements IMemberManager {
 
     private Guild guild;
@@ -79,6 +81,88 @@ public class MemberManager implements IMemberManager {
                 } else { // Change other's nickname
                     throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_NICKNAMES);
                 }
+            }
+        }
+    }
+
+    @Override
+    public void addRoleToMember(IMember member, IRole role) {
+        addRoleToMember(member.getId(), role.getId());
+    }
+
+    @Override
+    public void addRoleToMember(String memberId, IRole role) {
+        addRoleToMember(memberId, role.getId());
+    }
+
+    @Override
+    public void addRoleToMember(IMember member, String roleId) {
+        addRoleToMember(member.getId(), roleId);
+    }
+
+    @Override
+    public void addRoleToMember(String memberId, String roleId) {
+        IMember member = guild.getMember(memberId);
+        if (member == null) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
+        }
+        if (guild.getRole(roleId) == null) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_ROLE);
+        }
+        if (member.getRole(roleId) != null) {
+            throw new IllegalArgumentException("Cannot add a role from a member that already have the role!");
+        }
+
+        // Fires guild member update event
+        try {
+            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.ADD_GUILD_MEMBER_ROLE).request(guild.getId(), memberId, roleId)
+                .performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+                throw new PermissionException(Permission.MANAGE_ROLES);
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public void removeRoleFromMember(IMember member, IRole role) {
+        removeRoleFromMember(member.getId(), role.getId());
+    }
+
+    @Override
+    public void removeRoleFromMember(String memberId, IRole role) {
+        removeRoleFromMember(memberId, role.getId());
+    }
+
+    @Override
+    public void removeRoleFromMember(IMember member, String roleId) {
+        removeRoleFromMember(member.getId(), roleId);
+    }
+
+    @Override
+    public void removeRoleFromMember(String memberId, String roleId) {
+        IMember member = guild.getMember(memberId);
+        if (member == null) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
+        }
+        if (guild.getRole(roleId) == null) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_ROLE);
+        }
+        if (member.getRole(roleId) == null) {
+            throw new IllegalArgumentException("Cannot remove a role from a member that does not have the role!");
+        }
+
+        // Fires guild member update event
+        try {
+            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.REMOVE_GUILD_MEMBER_ROLE).request(guild.getId(), memberId, roleId)
+                    .performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+                throw new PermissionException(Permission.MANAGE_ROLES);
+            } else {
+                throw ex;
             }
         }
     }

@@ -76,7 +76,6 @@ public final class Guild extends DiscordObject implements IGuild {
      * @param notification_level Level of notification
      * @param mfa_level Required MFA level
      */
-    // TODO: Add Owner Field
     public Guild (IdentityImpl identity, String id, String name, String icon, String splash, String region,
                   int afk_timeout, boolean embed_enabled, int verification_level, int notification_level, int mfa_level) {
         super(identity);
