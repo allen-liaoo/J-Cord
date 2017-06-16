@@ -5,6 +5,7 @@ import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
+import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
@@ -164,7 +165,12 @@ public final class ObjectBuilder {
         if (type.equals("text")) {
             String topic = json.isNull("topic") ? null : json.getString("topic");
             String last_msg = !json.has("last_message_id") || json.isNull("last_message_id") ? null : json.getString("last_message_id");
-            Message lastMessage = last_msg == null ? null : buildMessageById(id, last_msg);
+            Message lastMessage = null;
+            if (last_msg != null) {
+                try {
+                    lastMessage = buildMessageById(id, last_msg);
+                } catch (HttpErrorException ignored) { }
+            }
             TextChannel tc = new TextChannel(identity, guild_id, id, name, position, topic, lastMessage);
             identity.addTextChannel(tc);
             if (lastMessage != null) lastMessage.setChannel(id);
@@ -205,7 +211,12 @@ public final class ObjectBuilder {
         String id = json.getString("id");
         User recipient = buildUser(json.getJSONObject("recipient"));
         String last_msg = !json.has("last_message_id") || json.isNull("last_message_id") ? null : json.getString("last_message_id");
-        Message lastMessage = last_msg == null ? null : buildMessageById(id, last_msg);
+        Message lastMessage = null;
+        if (last_msg != null) {
+            try {
+                lastMessage = buildMessageById(id, last_msg);
+            } catch (HttpErrorException ignored) { }
+        }
 
         PrivateChannel dm = new PrivateChannel(identity, id, recipient, lastMessage);
         identity.addPrivateChannel(dm);
@@ -474,12 +485,7 @@ public final class ObjectBuilder {
      */
     public Message buildMessageById (String channel_id, String message_id) {
         JSONObject message;
-        try {
-            message = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(channel_id, message_id).getAsJSONObject();
-        } catch (RuntimeException e) {
-            identity.LOG.error("Building Message By ID (ID: "+message_id+")", e);
-            throw new IllegalArgumentException("Invalid ID!");
-        }
+        message = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(channel_id, message_id).getAsJSONObject();
         return buildMessage(message);
     }
 

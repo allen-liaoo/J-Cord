@@ -16,20 +16,23 @@ import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.util.FileUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author AlienIdeology
  */
-// TODO: Finish methods, error handling
+// TODO: Finish Get Bans
 public class GuildManager implements IGuildManager {
 
-    private final Guild guild;
+    private Guild guild;
 
     public final static int NICKNAME_LENGTH = 32;
 
@@ -131,11 +134,60 @@ public class GuildManager implements IGuildManager {
         }
     }
 
-    // TODO: Leave() method in either GuildManager or SelfUserManager, and reference it in Member#kick and GuildManager#kickMember Javadocs.
+    // TODO: #leave method in either GuildManager or SelfUserManager, and reference it in Member#kick and GuildManager#kickMember Javadocs.
 
     @Override
     public boolean kickMember(IMember member) {
         return kickMember(member.getId());
+    }
+
+    @Override
+    public int getPrunableCount() {
+        return getPrunableCount(7);
+    }
+
+    @Override
+    public int getPrunableCount(int days) {
+        if (days <= 0 || days > 30) {
+            throw new IllegalArgumentException("The days for getting prunable count may not be smaller or equal to 0, or greater than 30! Provided days: "+days);
+        }
+
+        try {
+            JSONObject pruneCount = new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.GET_GUILD_PRUNE_COUNT).request(guild.getId(), String.valueOf(days))
+                .getAsJSONObject();
+            return pruneCount.getInt("pruned");
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+                throw new PermissionException(Permission.KICK_MEMBERS);
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public void pruneMembers() {
+        pruneMembers(7);
+    }
+
+    @Override
+    public void pruneMembers(int days) {
+        if (days <= 0 || days > 30) {
+            throw new IllegalArgumentException("The days for getting prunable count may not be smaller or equal to 0, or greater than 30! Provided days: "+days);
+        }
+
+        // This fires multiple Guild Remove Gateway event
+        // Ignored the returning JSONObject (Pruned members)
+        try {
+            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.BEGIN_GUILD_PRUNE).request(guild.getId(), String.valueOf(days))
+                    .performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+                throw new PermissionException(Permission.KICK_MEMBERS);
+            } else {
+                throw ex;
+            }
+        }
     }
 
     @Override
@@ -163,6 +215,27 @@ public class GuildManager implements IGuildManager {
         }
 
         return code.isOK() || code.isSuccess();
+    }
+
+    @Override
+    public List<IMember> getBans() {
+        try {
+            JSONArray members = new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.GET_GUILD_BANS).request(guild.getId())
+                    .getAsJSONArray();
+            List<IMember> bannedMembers = new ArrayList<>();
+
+            for (int i = 0; i < members.length(); i++) {
+                JSONObject user = members.getJSONObject(i);
+                bannedMembers.add(guild.getMember(user.getString("id")));
+            }
+            return bannedMembers;
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+                throw new PermissionException(Permission.BAN_MEMBERS);
+            } else {
+                throw ex;
+            }
+        }
     }
 
     @Override
@@ -233,138 +306,6 @@ public class GuildManager implements IGuildManager {
             }
         }
         return code.isOK() || code.isSuccess();
-    }
-
-    @Override
-    public void modifyMemberNickname(IMember member, String newNickname) {
-        if (member == null) return;
-        modifyMemberNickname(member.getId(), newNickname);
-    }
-
-    @Override
-    public void modifyMemberNickname(String memberId, String newNickname) {
-        if (guild.getMember(memberId) == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER, "Unknown member to modify nickname! ID: "+memberId);
-        }
-        if (newNickname != null && newNickname.length() > NICKNAME_LENGTH) {
-            throw new IllegalArgumentException("Nickname may not be longer than 32 letters!");
-        }
-
-        try {
-            modifyMember(memberId, new JSONObject().put("nick", newNickname));
-        } catch (PermissionException ex) {
-            if (memberId.equals(guild.getOwner().getId())) { // Modify owner's nickname
-                throw new PermissionException("Cannot modify the owner's nickname!");
-            } else if (memberId.equals(getIdentity().getSelf().getId())) { // Change self nickname
-                throw new PermissionException(Permission.ADMINISTRATOR, Permission.CHANGE_NICKNAME);
-            } else { // Change other's nickname
-                throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_NICKNAMES);
-            }
-        }
-    }
-
-    @Override
-    public void muteMember(IMember member) {
-        if (member == null) return;
-        muteMember(member.getId());
-    }
-
-    @Override
-    public void muteMember(String memberId) {
-        if (guild.getMember(memberId) == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
-        }
-
-        try {
-            modifyMember(memberId, new JSONObject().put("mute", true));
-        } catch (PermissionException ex) {
-            if (memberId.equals(guild.getOwner().getId())) { // Mute server owner
-                throw new PermissionException("Cannot mute the server owner!");
-            } else {
-                throw new PermissionException(Permission.MUTE_MEMBERS);
-            }
-        }
-    }
-
-    @Override
-    public void unmuteMember(IMember member) {
-        if (member == null) return;
-        unmuteMember(member.getId());
-    }
-
-    @Override
-    public void unmuteMember(String memberId) {
-        if (guild.getMember(memberId) == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
-        }
-        try {
-            modifyMember(memberId, new JSONObject().put("mute", false));
-        } catch (PermissionException ex) {
-            if (memberId.equals(guild.getOwner().getId())) { // Unmute server owner
-                throw new PermissionException("Cannot unmute the server owner!");
-            } else {
-                throw new PermissionException(Permission.MUTE_MEMBERS);
-            }
-        }
-    }
-
-    @Override
-    public void deafenMember(IMember member) {
-        if (member == null) return;
-        deafenMember(member.getId());
-    }
-
-    @Override
-    public void deafenMember(String memberId) {
-        if (guild.getMember(memberId) == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
-        }
-
-        try {
-            modifyMember(memberId, new JSONObject().put("deaf", true));
-        } catch (PermissionException ex) {
-            if (memberId.equals(guild.getOwner().getId())) { // Deafen server owner
-                throw new PermissionException("Cannot Deafen the server owner!");
-            } else {
-                throw new PermissionException(Permission.DEAFEN_MEMBERS);
-            }
-        }
-    }
-
-    @Override
-    public void unDeafenMember(IMember member) {
-        if (member == null) return;
-        unDeafenMember(member.getId());
-    }
-
-    @Override
-    public void unDeafenMember(String memberId) {
-        if (guild.getMember(memberId) == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
-        }
-        try {
-            modifyMember(memberId, new JSONObject().put("deaf", false));
-        } catch (PermissionException ex) {
-            if (memberId.equals(guild.getOwner().getId())) { // Undeafen server owner
-                throw new PermissionException("Cannot Undeafen the server owner!");
-            } else {
-                throw new PermissionException(Permission.DEAFEN_MEMBERS);
-            }
-        }
-    }
-
-    private void modifyMember(String memberId, JSONObject json) {
-        try {
-            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.MODIFY_GUILD_MEMBER).request(guild.getId(), memberId)
-                    .updateRequestWithBody(request -> request.body(json))
-                    .performRequest();
-        } catch (HttpErrorException ex) {
-            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
-                throw new PermissionException();
-            } else {
-                throw ex;
-            }
-        }
     }
 
 }

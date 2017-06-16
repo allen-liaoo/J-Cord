@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.IllegalFormatException;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -43,7 +44,7 @@ public final class Requester {
      *  Chaining request method.
      */
     public Requester request(String... params) {
-        requestHttp(params);
+        requestHttp((Object[]) params);
         return this;
     }
 
@@ -166,7 +167,7 @@ public final class Requester {
      * @param params Parameters to be replaced.
      * @return The http request
      */
-    private HttpRequest requestHttp(String... params) {
+    private HttpRequest requestHttp(Object... params) {
         String processedPath = processPath(params);
 
         HttpRequest request = null;
@@ -191,11 +192,11 @@ public final class Requester {
         return request;
     }
 
-    private String processPath(String... params) {
+    private String processPath(Object... params) {
         String processedPath;
         try {
             processedPath = path.getPath().replaceAll("\\{(.+?)}", "%s");
-            processedPath = String.format(processedPath, (Object[]) params);
+            processedPath = String.format(processedPath, params);
         } catch (IllegalFormatException ife) {
             throw new IllegalArgumentException("[INTERNAL] Cannot perform an HttpRequest due to unmatched parameters!");
         }

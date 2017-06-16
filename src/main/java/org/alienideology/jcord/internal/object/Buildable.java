@@ -1,4 +1,4 @@
-package org.alienideology.jcord.handle;
+package org.alienideology.jcord.internal.object;
 
 import org.json.JSONObject;
 

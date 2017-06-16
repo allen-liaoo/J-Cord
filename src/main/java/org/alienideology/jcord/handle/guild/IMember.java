@@ -67,8 +67,8 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
 
     /**
      * Modify the nickname of a specific member.
-     * Null member will be ignored.
-     * @see org.alienideology.jcord.internal.object.guild.GuildManager#modifyMemberNickname(IMember, String)
+     * Use empty or null nicknames to reset the nickname.
+     * @see IMemberManager#modifyMemberNickname(IMember, String)
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Change Nickname} permission to modify itself,
@@ -81,12 +81,12 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
      * @param newNickname The new nickname.
      */
     default void modifyNickname(String newNickname) {
-        getGuild().getGuildManager().modifyMemberNickname(this, newNickname);
+        getGuild().getMemberManager().modifyMemberNickname(this, newNickname);
     }
 
     /**
      * Mute this member.
-     * Null member will be ignored.
+     * @see IMemberManager#muteMember(IMember)
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Mute Members} permission.
@@ -96,12 +96,12 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
      *
      */
     default void mute() {
-        getGuild().getGuildManager().muteMember(this);
+        getGuild().getMemberManager().muteMember(this);
     }
 
     /**
      * Unmute this member.
-     * Null member will be ignored.
+     * @see IMemberManager#unmuteMember(IMember)
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Mute Members} permission,
@@ -111,11 +111,12 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
      *
      */
     default void unmute() {
-        getGuild().getGuildManager().unmuteMember(this);
+        getGuild().getMemberManager().unmuteMember(this);
     }
 
     /**
      * Deafen this member.
+     * @see IMemberManager#deafenMember(IMember)
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Deafen Members} permission.
@@ -125,11 +126,12 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
      *
      */
     default void deafen() {
-        getGuild().getGuildManager().deafenMember(this);
+        getGuild().getMemberManager().deafenMember(this);
     }
 
     /**
      * Undeafen a member.
+     * @see IMemberManager#undeafenMember(IMember)
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the member does not have {@code Deafen Members} permission.
@@ -139,7 +141,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention {
      *
      */
     default void unDeafen() {
-        getGuild().getGuildManager().unDeafenMember(this);
+        getGuild().getMemberManager().undeafenMember(this);
     }
 
     /**

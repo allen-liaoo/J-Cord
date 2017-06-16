@@ -26,10 +26,19 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
 
     /**
      * Get the IGuildManager of this guild.
+     * The guild manager is used to kick, ban, unban, and change guild settings.
      *
      * @return The manager.
      */
     IGuildManager getGuildManager();
+
+    /**
+     * Get the IMemberManager of this guild.
+     * The member manager is used to change nicknames, mute, and deafen members.
+     *
+     * @return The member manager.
+     */
+    IMemberManager getMemberManager();
 
     /**
      * Get the name of this guild.

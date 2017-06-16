@@ -24,7 +24,8 @@ public final class Guild extends DiscordObject implements IGuild {
 
     private final String id;
     private boolean isAvailable = false;
-    private final GuildManager manager;
+    private GuildManager guildManager;
+    private MemberManager memberManager;
 
     private String name;
 
@@ -96,7 +97,8 @@ public final class Guild extends DiscordObject implements IGuild {
         this.members = new ArrayList<>();
         this.textChannels = new ArrayList<>();
         this.voiceChannels = new ArrayList<>();
-        this.manager = new GuildManager(this);
+        this.guildManager = new GuildManager(this);
+        this.memberManager = new MemberManager(this);
     }
 
     @Override
@@ -106,7 +108,12 @@ public final class Guild extends DiscordObject implements IGuild {
 
     @Override
     public IGuildManager getGuildManager() {
-        return manager;
+        return guildManager;
+    }
+
+    @Override
+    public IMemberManager getMemberManager() {
+        return memberManager;
     }
 
     @Override

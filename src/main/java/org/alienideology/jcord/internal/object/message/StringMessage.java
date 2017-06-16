@@ -1,6 +1,6 @@
 package org.alienideology.jcord.internal.object.message;
 
-import org.alienideology.jcord.handle.Buildable;
+import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;

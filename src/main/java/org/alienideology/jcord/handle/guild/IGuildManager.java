@@ -9,6 +9,7 @@ import org.alienideology.jcord.internal.object.guild.Guild;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * IGuildManager - The manager that manages and perform actions upon a guild.
@@ -196,6 +197,65 @@ public interface IGuildManager {
     boolean kickMember(String memberId);
 
     /**
+     * Get the value of members than can be pruned.
+     * The default days of this method is 7.
+     * @see #pruneMembers(int) For more information on pruning members.
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have either {@code Kick Members} {@code Administrator} permissions.
+     *
+     * @return The integer value of prunable members.
+     */
+    int getPrunableCount();
+
+    /**
+     * Get the value of members than can by pruned.
+     * @see #pruneMembers(int) For more information on pruning members.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have either {@code Kick Members} {@code Administrator} permissions.
+     * @exception IllegalArgumentException If the days provided are smaller than 1 or greater than 30.
+     *
+     * @param days The amount of days to start pruning.
+     * @return The integer value of prunable members.
+     */
+    int getPrunableCount(int days);
+
+    /**
+     * Prune members that are not active for a certain days.
+     * @see #pruneMembers(int) For more information on pruning members.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have either {@code Kick Members} {@code Administrator} permissions.
+     *
+     * The default days of this method is 7.
+     */
+    void pruneMembers();
+
+    /**
+     * Prune members that are not active for the given days.
+     * Prune:
+     * <p>Pruning will kick members than has not been seen in an amount of days and are not assigned to any roles.
+     * The kicked members can rejoin the guild using a new instant invite.</p>
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have either {@code Kick Members} {@code Administrator} permissions.
+     * @exception IllegalArgumentException If the days provided are smaller than 1 or greater than 30.
+     *
+     * @param days The amount of days.
+     */
+    void pruneMembers(int days);
+
+    /**
+     * Get a list of members that are banned from this guild.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Ban Members} permission.
+     *
+     * @return A list of banned members.
+     */
+    List<IMember> getBans();
+
+    /**
      * Ban a member.
      * The number of days to delete messages is 7 by default.
      *
@@ -278,144 +338,5 @@ public interface IGuildManager {
      * @return True if the user is unbanned successfully.
      */
     boolean unbanUser(String memberId);
-
-    /**
-     * Modify the nickname of a specific member.
-     * Null member will be ignored.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have either {@code Change Nickname} permission to modify itself,
-     *              or {@code Manage Nicknames} permission to manage other nicknames,
-     *              or managing the server owner's nickname.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     * @exception IllegalArgumentException If the nickname is longer than 32 letters.
-     *
-     * @param member The member.
-     * @param newNickname The new nickname.
-     */
-    void modifyMemberNickname(IMember member, String newNickname);
-
-    /**
-     * Modify the nickname of a specific member by ID.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have either {@code Change Nickname} permission to modify itself,
-     *              or {@code Manage Nicknames} permission to manage other nicknames,
-     *              or managing the server owner's nickname.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     * @exception IllegalArgumentException If the nickname is longer than 32 letters.
-     *
-     * @param memberId The member's ID.
-     * @param newNickname The new nickname.
-     */
-    void modifyMemberNickname(String memberId, String newNickname);
-
-    /**
-     * Mute a member.
-     * Null member will be ignored.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the member does not have {@code Mute Members} permission.
-     *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     *
-     * @param member The member to be muted.
-     */
-    void muteMember(IMember member);
-
-    /**
-     * Mute a member by ID.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the member does not have {@code Mute Members} permission.
-     *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     *
-     * @param memberId The member's ID..
-     */
-    void muteMember(String memberId);
-
-    /**
-     * Unmute a member.
-     * Null member will be ignored.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the member does not have {@code Mute Members} permission,
-     *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     *
-     * @param member The member to be unmuted.
-     */
-    void unmuteMember(IMember member);
-
-    /**
-     * Unmute a member.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the member does not have {@code Mute Members} permission.
-     *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     *
-     * @param memberId The member's ID.
-     */
-    void unmuteMember(String memberId);
-
-    /**
-     * Deafen a member.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the member does not have {@code Deafen Members} permission.
-     *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     *
-     * @param member The member.
-     */
-    void deafenMember(IMember member);
-
-    /**
-     * Deafen a member.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the member does not have {@code Deafen Members} permission.
-     *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     *
-     * @param memberId The member's ID.
-     */
-    void deafenMember(String memberId);
-
-    /**
-     * Undeafen a member.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the member does not have {@code Deafen Members} permission.
-     *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     *
-     * @param member The member.
-     */
-    void unDeafenMember(IMember member);
-
-    /**
-     * Undeafen a member.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the member does not have {@code Deafen Members} permission.
-     *              or if the member is server owner.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member is not found.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     *
-     * @param memberId The member's ID.
-     */
-    void unDeafenMember(String memberId);
 
 }

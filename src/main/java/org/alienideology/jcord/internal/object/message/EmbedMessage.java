@@ -1,6 +1,6 @@
 package org.alienideology.jcord.internal.object.message;
 
-import org.alienideology.jcord.handle.Buildable;
+import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.handle.message.IEmbedMessage;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Role;

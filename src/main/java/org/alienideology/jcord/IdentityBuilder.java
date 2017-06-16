@@ -36,7 +36,7 @@ public final class IdentityBuilder {
      * @throws IOException If there is any connection issue.
      */
     @Deprecated
-    public Identity build () throws IllegalArgumentException, ErrorResponseException, IOException {
+    public org.alienideology.jcord.Identity build () throws IllegalArgumentException, ErrorResponseException, IOException {
         IdentityImpl id =  new IdentityImpl(type, new WebSocketFactory());
         id.login(token).setEventManager(manager);
         return id;
@@ -49,8 +49,8 @@ public final class IdentityBuilder {
      * @throws IllegalArgumentException If the provided token is not valid.
      * @throws IOException If there is any connection issue.
      */
-    public Identity build (boolean useBlocking) throws IllegalArgumentException, ErrorResponseException, IOException {
-        Identity id = build();
+    public org.alienideology.jcord.Identity build (boolean useBlocking) throws IllegalArgumentException, ErrorResponseException, IOException {
+        org.alienideology.jcord.Identity id = build();
         if (useBlocking) {
             while (!((IdentityImpl)id).CONNECTION.isReady()) {
                 try {
