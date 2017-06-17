@@ -3,22 +3,26 @@ package org.alienideology.jcord.internal.object;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
-import com.neovisionaries.ws.client.*;
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketException;
+import com.neovisionaries.ws.client.WebSocketFactory;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.EventManager;
+import org.alienideology.jcord.handle.channel.IMessageChannel;
+import org.alienideology.jcord.handle.channel.IPrivateChannel;
+import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.channel.IVoiceChannel;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
 import org.alienideology.jcord.internal.gateway.HttpPath;
-import org.alienideology.jcord.handle.channel.*;
-import org.alienideology.jcord.handle.guild.*;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
-import org.alienideology.jcord.internal.object.channel.TextChannel;
-import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.user.User;
 import org.apache.commons.logging.impl.SimpleLog;
@@ -51,8 +55,6 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     private IUser self;
     private List<IUser> users = new ArrayList<>();
     private List<IGuild> guilds = new ArrayList<>();
-    private List<ITextChannel> textChannels = new ArrayList<>();
-    private List<IVoiceChannel> voiceChannels = new ArrayList<>();
     private List<IPrivateChannel> privateChannels = new ArrayList<>();
 
     public IdentityImpl(IdentityType type, WebSocketFactory wsFactory) {
@@ -137,7 +139,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
 
     @Nullable
     public IMessageChannel getMessageChannel(String id) {
-        List<IMessageChannel> channels = getMessageChannels();
+        List<IMessageChannel> channels = getAllMessageChannels();
         for (IMessageChannel channel : channels) {
             if (channel.getId().equals(id))
                 return channel;
@@ -145,29 +147,33 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         return null;
     }
 
-    public List<IMessageChannel> getMessageChannels() {
-        List<IMessageChannel> channels = new ArrayList<>(textChannels);
+    public List<IMessageChannel> getAllMessageChannels() {
+        List<IMessageChannel> channels = new ArrayList<>(getAllTextChannels());
         channels.addAll(privateChannels);
         return channels;
     }
 
     @Nullable
     public ITextChannel getTextChannel(String id) {
-        for (ITextChannel tc : textChannels) {
-            if (tc.getId().equals(id)) {
-                return tc;
+        for (ITextChannel channel : getAllTextChannels()) {
+            if (channel.getId().equals(id)) {
+                return channel;
             }
         }
         return null;
     }
 
-    public List<ITextChannel> getTextChannels() {
-        return textChannels;
+    public List<ITextChannel> getAllTextChannels() {
+        List<ITextChannel> channels = new ArrayList<>();
+        for (IGuild guild : guilds) {
+            channels.addAll(guild.getTextChannels());
+        }
+        return channels;
     }
 
     @Nullable
     public IVoiceChannel getVoiceChannel(String id) {
-        for (IVoiceChannel vc : voiceChannels) {
+        for (IVoiceChannel vc : getVoiceChannels()) {
             if (vc.getId().equals(id)) {
                 return vc;
             }
@@ -176,7 +182,11 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     }
 
     public List<IVoiceChannel> getVoiceChannels() {
-        return voiceChannels;
+        List<IVoiceChannel> channels = new ArrayList<>();
+        for (IGuild guild : guilds) {
+            channels.addAll(guild.getVoiceChannels());
+        }
+        return channels;
     }
 
     @Nullable
@@ -252,8 +262,6 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         CONNECTION = Connection.OFFLINE;
         users.clear();
         guilds.clear();
-        textChannels.clear();
-        voiceChannels.clear();
         privateChannels.clear();
         socket.clearListeners();
         return this;
@@ -273,28 +281,45 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         this.users.add(user);
     }
 
-    public void addGuild (Guild guild) {
+    public void updateUser (User user) {
+        this.users.set(users.indexOf(user), user);
+    }
+
+    // Removes and return the removed user
+    public User removeUser (String userId) {
+        User user = (User) getUser(userId);
+        this.users.remove(user);
+        return user;
+    }
+
+    public void addGuild(Guild guild) {
         if(guilds.contains(guild)) return;
         this.guilds.add(guild);
     }
 
-    public void updateGuild (Guild guild) {
+    public void updateGuild(Guild guild) {
         this.guilds.set(guilds.indexOf(guild), guild);
     }
 
-    public void addTextChannel (TextChannel textChannel) {
-        if(textChannels.contains(textChannel)) return;
-        this.textChannels.add(textChannel);
+    public Guild removeGuild(String guildId) {
+        Guild guild = (Guild) getGuild(guildId);
+        this.guilds.remove(guild);
+        return guild;
     }
 
-    public void addVoiceChannel (VoiceChannel voiceChannel) {
-        if(voiceChannels.contains(voiceChannel)) return;
-        this.voiceChannels.add(voiceChannel);
-    }
-
-    public void addPrivateChannel (PrivateChannel privateChannel) {
+    public void addPrivateChannel(PrivateChannel privateChannel) {
         if(privateChannels.contains(privateChannel)) return;
         this.privateChannels.add(privateChannel);
+    }
+
+    public void updatePrivateChannel(PrivateChannel channel) {
+        this.privateChannels.set(privateChannels.indexOf(channel), channel);
+    }
+
+    public PrivateChannel removePrivateChannel(String channelId) {
+        PrivateChannel channel= (PrivateChannel) getPrivateChannel(channelId);
+        this.guilds.remove(channel);
+        return channel;
     }
 
     public enum Connection {

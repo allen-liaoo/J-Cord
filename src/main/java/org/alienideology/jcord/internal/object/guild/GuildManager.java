@@ -36,8 +36,6 @@ public class GuildManager implements IGuildManager {
 
     private Guild guild;
 
-    public final static int NICKNAME_LENGTH = 32;
-
     public GuildManager(Guild guild) {
         this.guild = guild;
     }

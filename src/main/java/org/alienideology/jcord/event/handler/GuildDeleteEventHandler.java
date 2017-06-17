@@ -1,9 +1,8 @@
 package org.alienideology.jcord.event.handler;
 
-import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.guild.GuildDeleteEvent;
 import org.alienideology.jcord.event.guild.GuildUnavailableEvent;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.json.JSONObject;
 
@@ -25,16 +24,11 @@ public class GuildDeleteEventHandler extends EventHandler {
 
         if (unavailable) {
             Guild unavail = (Guild) identity.getGuild(id);
+            unavail.setUnavailable(true);
             fireEvent(new GuildUnavailableEvent(identity, unavail, sequence));
         } else {
-            Guild deleted = null;
-            for (IGuild guild : identity.getGuilds()) {
-                if (guild.getId().equals(id)) {
-                    deleted = (Guild) guild;
-                    identity.getGuilds().remove(guild);
-                    break;
-                }
-            }
+            Guild deleted = (Guild) identity.getGuild(id);
+            identity.removeGuild(id);
             fireEvent(new GuildDeleteEvent(identity, deleted, sequence, OffsetDateTime.now()));
         }
     }

@@ -3,17 +3,17 @@ package org.alienideology.jcord.internal.object.guild;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.Region;
+import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.*;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.gateway.HttpPath;
-import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
+import org.alienideology.jcord.internal.object.user.User;
 
 import java.util.*;
 
@@ -323,32 +323,6 @@ public final class Guild extends DiscordObject implements IGuild {
         return "ID: "+id+"\tName: "+name;
     }
 
-    public Guild addGuildChannel (IGuildChannel... channels) {
-        for (IGuildChannel channel : channels) {
-            if (channel instanceof TextChannel) {
-                textChannels.add((TextChannel) channel);
-            } else if (channel instanceof VoiceChannel) {
-                voiceChannels.add((VoiceChannel) channel);
-            }
-        }
-        return this;
-    }
-
-    public Guild addMember (Member... members) {
-        this.members.addAll(Arrays.asList(members));
-        return this;
-    }
-
-    public Guild addRole (Role... roles) {
-        this.roles.addAll(Arrays.asList(roles));
-        return this;
-    }
-
-    public Guild addGuildEmoji (GuildEmoji... emojis) {
-        this.emojis.addAll(Arrays.asList(emojis));
-        return this;
-    }
-
     public Guild setOwner (String id) {
         for (Member mem : members) {
             if (mem.getId().equals(id)) {
@@ -356,6 +330,11 @@ public final class Guild extends DiscordObject implements IGuild {
                 break;
             }
         }
+        return this;
+    }
+
+    public Guild setUnavailable(boolean isAvailable) {
+        this.isAvailable = isAvailable;
         return this;
     }
 
@@ -368,6 +347,62 @@ public final class Guild extends DiscordObject implements IGuild {
     private void setIcon() {
         this.icon = icon == null ?
                 null : String.format(HttpPath.EndPoint.GUILD_ICON, id, icon);
+    }
+
+    public Guild addGuildChannel (IGuildChannel... channels) {
+        for (IGuildChannel channel : channels) {
+            if (channel instanceof TextChannel) {
+                textChannels.add((TextChannel) channel);
+            } else if (channel instanceof VoiceChannel) {
+                voiceChannels.add((VoiceChannel) channel);
+            }
+        }
+        return this;
+    }
+
+    public TextChannel removeTextChannel(String channelId) {
+        TextChannel channel = (TextChannel) getTextChannel(channelId);
+        this.textChannels.remove(channel);
+        return channel;
+    }
+
+    public VoiceChannel removeVoiceChannel(String channelId) {
+        VoiceChannel channel = (VoiceChannel) getVoiceChannel(channelId);
+        this.voiceChannels.remove(channel);
+        return channel;
+    }
+
+    public Guild addMember (Member... members) {
+        this.members.addAll(Arrays.asList(members));
+        return this;
+    }
+
+    public Member removeMember(String memberId) {
+        Member member = (Member) getMember(memberId);
+        this.members.remove(member);
+        return member;
+    }
+
+    public Guild addRole (Role... roles) {
+        this.roles.addAll(Arrays.asList(roles));
+        return this;
+    }
+
+    public Role removeRole(String roleId) {
+        Role role = (Role) getRole(roleId);
+        this.roles.remove(role);
+        return role;
+    }
+
+    public Guild addGuildEmoji (GuildEmoji... emojis) {
+        this.emojis.addAll(Arrays.asList(emojis));
+        return this;
+    }
+
+    public GuildEmoji removeGuildEmoji(String emojiId) {
+        GuildEmoji emoji = (GuildEmoji) getGuildEmoji(emojiId);
+        this.roles.remove(emoji);
+        return emoji;
     }
 
 }

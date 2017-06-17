@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object;
 
+import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
@@ -9,7 +10,9 @@ import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
-import org.alienideology.jcord.internal.object.channel.*;
+import org.alienideology.jcord.internal.object.channel.PrivateChannel;
+import org.alienideology.jcord.internal.object.channel.TextChannel;
+import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 import org.alienideology.jcord.internal.object.guild.Member;
@@ -19,7 +22,6 @@ import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.Reaction;
 import org.alienideology.jcord.internal.object.message.StringMessage;
 import org.alienideology.jcord.internal.object.user.User;
-import org.alienideology.jcord.event.ExceptionEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -172,14 +174,12 @@ public final class ObjectBuilder {
                 } catch (HttpErrorException ignored) { }
             }
             TextChannel tc = new TextChannel(identity, guild_id, id, name, position, topic, lastMessage);
-            identity.addTextChannel(tc);
             if (lastMessage != null) lastMessage.setChannel(id);
             return tc;
         } else {
             int bitrate = json.getInt("bitrate");
             int user_limit = json.getInt("user_limit");
             VoiceChannel vc = new VoiceChannel(identity, guild_id, id, name, position, bitrate, user_limit);
-            identity.addVoiceChannel(vc);
             return vc;
         }
     }

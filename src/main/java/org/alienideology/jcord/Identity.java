@@ -4,9 +4,13 @@ import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.EventManager;
-import org.alienideology.jcord.handle.channel.*;
-import org.alienideology.jcord.handle.guild.*;
-import org.alienideology.jcord.handle.user.*;
+import org.alienideology.jcord.handle.channel.IMessageChannel;
+import org.alienideology.jcord.handle.channel.IPrivateChannel;
+import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.channel.IVoiceChannel;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 
 import java.io.IOException;
@@ -50,12 +54,12 @@ public interface Identity {
     @Nullable
     IMessageChannel getMessageChannel(String id);
 
-    List<IMessageChannel> getMessageChannels();
+    List<IMessageChannel> getAllMessageChannels();
 
     @Nullable
     ITextChannel getTextChannel(String id);
 
-    List<ITextChannel> getTextChannels();
+    List<ITextChannel> getAllTextChannels();
 
     @Nullable
     IVoiceChannel getVoiceChannel(String id);
