@@ -4,24 +4,23 @@
  - [ ] Not Done
 
 ### Discord Objects
- - [ ] Add interfaces for all Discord Objects!!!
  - [x] Guild
   - [x] Member
   - [x] Role
- - [x] User
- - [ ] Channel (Half-Done, Missing Actions)
+ - [ ] User (Half-Done, sync presence)
+ - [ ] Channel (Half-Done, Missing Actions, Permission Overrides)
   - [x] GuildChannel
       - [x] TextChannel
       - [x] VoiceChannel
   - [x] PrivateChannel
   - [ ] Group
+  - IChannelManager (For both text and voice)
  - [x] Member
- - [ ] Message (Half-Done, Missing fields)
+ - [x] Message
  - [ ] Permission (Half-Done, Missing permissions overrides for channels)
  - [x] Emoji
  - [ ] Invite
  - [ ] InviteBuilder
- - [ ] BotInviteBuilder
  - [ ] Webhook
 
 ### Event

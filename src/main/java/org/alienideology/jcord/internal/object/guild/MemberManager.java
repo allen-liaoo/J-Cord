@@ -27,13 +27,13 @@ import java.util.stream.Collectors;
 public class MemberManager implements IMemberManager {
 
     private Guild guild;
-    private IMember self;
+    private Member self;
 
     public final static int NICKNAME_LENGTH = 32;
 
     public MemberManager(Guild guild) {
         this.guild = guild;
-        this.self = guild.getSelfMember();
+        this.self = (Member) guild.getSelfMember();
     }
 
     @Override
@@ -84,7 +84,7 @@ public class MemberManager implements IMemberManager {
                         .updateRequestWithBody(request -> request.body(json))
                         .performRequest();
             } catch (HttpErrorException ex) {
-                if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+                if (ex.isPermissionException()) {
                         throw new PermissionException(Permission.ADMINISTRATOR, Permission.CHANGE_NICKNAME);
                 } else {
                     throw ex;
@@ -292,7 +292,7 @@ public class MemberManager implements IMemberManager {
                     .updateRequestWithBody(request -> request.body(json))
                     .performRequest();
         } catch (HttpErrorException ex) {
-            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+            if (ex.isPermissionException()) {
                 throw new PermissionException();
             } else {
                 throw ex;

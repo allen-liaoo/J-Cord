@@ -128,7 +128,7 @@ public class GuildManager implements IGuildManager {
             new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.MODIFY_GUILD).request(guild.getId())
                     .updateRequestWithBody(request -> request.header("Content-Type", "application/json").body(json)).performRequest();
         } catch (HttpErrorException ex) {
-            if (ex.getCode().equals(HttpCode.FORBIDDEN)) { // Missing Permission
+            if (ex.isPermissionException()) {
                 throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_SERVER);
             } else {
                 throw ex;
@@ -136,7 +136,7 @@ public class GuildManager implements IGuildManager {
         }
     }
 
-    // TODO: #leave method in either GuildManager or SelfUserManager, and reference it in Member#kick and GuildManager#kickMember Javadocs.
+    // TODO: #leave method in SelfUserManager, and reference it in Member#kick and GuildManager#kickMember Javadocs.
 
     @Override
     public boolean kickMember(IMember member) {
@@ -159,7 +159,7 @@ public class GuildManager implements IGuildManager {
                 .getAsJSONObject();
             return pruneCount.getInt("pruned");
         } catch (HttpErrorException ex) {
-            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+            if (ex.isPermissionException()) {
                 throw new PermissionException(Permission.KICK_MEMBERS);
             } else {
                 throw ex;
@@ -184,7 +184,7 @@ public class GuildManager implements IGuildManager {
             new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.BEGIN_GUILD_PRUNE).request(guild.getId(), String.valueOf(days))
                     .performRequest();
         } catch (HttpErrorException ex) {
-            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+            if (ex.isPermissionException()) {
                 throw new PermissionException(Permission.KICK_MEMBERS);
             } else {
                 throw ex;
@@ -216,7 +216,7 @@ public class GuildManager implements IGuildManager {
             code = new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.REMOVE_GUILD_MEMBER).request(guild.getId(), memberId)
                     .performRequest();
         } catch (HttpErrorException ex) {
-            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+            if (ex.isPermissionException()) {
                 throw new PermissionException(Permission.KICK_MEMBERS);
             } else {
                 throw ex;
@@ -239,7 +239,7 @@ public class GuildManager implements IGuildManager {
             }
             return bannedMembers;
         } catch (HttpErrorException ex) {
-            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+            if (ex.isPermissionException()) {
                 throw new PermissionException(Permission.BAN_MEMBERS);
             } else {
                 throw ex;
@@ -289,7 +289,7 @@ public class GuildManager implements IGuildManager {
                     .updateRequestWithBody(request -> request.body(new JSONObject().put("delete-message-days", days)))
                     .performRequest();
         } catch (HttpErrorException ex) {
-            if (ex.getCode().equals(HttpCode.FORBIDDEN)) { // Missing Permission
+            if (ex.isPermissionException()) { // Missing Permission
                 throw new PermissionException(Permission.ADMINISTRATOR, Permission.BAN_MEMBERS);
             } else {
                 throw ex;
@@ -317,7 +317,7 @@ public class GuildManager implements IGuildManager {
             code = new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.REMOVE_GUILD_BAN).request(guild.getId(), memberId)
                     .performRequest();
         } catch (HttpErrorException ex) {
-            if (ex.getCode().equals(HttpCode.FORBIDDEN)) { // Missing Permission
+            if (ex.isPermissionException()) { // Missing Permission
                 throw new PermissionException(Permission.ADMINISTRATOR, Permission.BAN_MEMBERS);
             } else if (ex.getCode().equals(HttpCode.NOT_FOUND)) {
                 throw new ErrorResponseException(ErrorResponse.UNKNOWN_USER, "Unknown user to unban! ID: "+memberId);
@@ -337,7 +337,7 @@ public class GuildManager implements IGuildManager {
             new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.CREATE_GUILD_ROLE).request(guild.getId())
                     .updateRequestWithBody(request -> request.body(newRole)).performRequest();
         } catch (HttpErrorException ex) {
-            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+            if (ex.isPermissionException()) {
                 throw new PermissionException(Permission.MANAGE_ROLES);
             } else {
                 throw ex;
@@ -356,7 +356,7 @@ public class GuildManager implements IGuildManager {
             new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.DELETE_GUILD_ROLE).request(guild.getId(), role.getId())
                     .performRequest();
         } catch (HttpErrorException ex) {
-            if (ex.getCode().equals(HttpCode.FORBIDDEN)) {
+            if (ex.isPermissionException()) {
                 throw new PermissionException(Permission.MANAGE_ROLES);
             } else {
                 throw ex;

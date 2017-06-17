@@ -17,39 +17,44 @@ Bot - The core of a Discord Bot
 
 ## Discord Objects
 Discord Objects - Entities such as Guild, User, or Channel.
- - SnowFake (Interface) - Objects that has ID.
- - Mention (Interface) - Objects that are mentionable.
- - User - A base entity, can be a member of guild/private channel, and bot/human.
+ - ISnowFake (Interface) - Objects that has ID.
+ - IMention (Interface) - Objects that are mentionable.
+ - IUser - A base entity, can be a member of guild/private channel, and bot/human.
  - Region - Used for guild voice channel connection.
  - Permission - A way to limit and grant certain abilities to members.
  - EmojiTable - A collection of Default Discord Emojis.
    - Emoji - An emoji in Discord (Not GuildEmoji).
 
 #### Guild
-Guild - A collection of users and channels, often referred to in the UI as a server.
- - Member - A user representation in a guild.
- - Role - A label that can be put on a set of guild members.
- - GuildEmoji - A custom emoji that can be used within a guild.
+IGuild - A collection of users and channels, often referred to in the UI as a server.
+ - IMember - A user representation in a guild.
+ - IRole - A label that can be put on a set of guild members.
+ - IGuildEmoji - A custom emoji that can be used within a guild.
 
 #### Channel
-Channel - A communication pipeline.
- - MessageChannel - A channel that allows users to send message.
-   - TextChannel - A GuildChannel for text messages. (GuildChannel)
-   - PrivateChannel - A one-to-one channel between two users.
+IChannel - A communication pipeline.
+ - IMessageChannel - A channel that allows users to send message.
+   - ITextChannel - A GuildChannel for text messages. (GuildChannel)
+   - IPrivateChannel - A one-to-one channel between two users.
    - MessageHistory - The history of a MessageChannel, used to get lists of messages.
 
- - VoiceChannel - A GuildChannel for audio connections. (GuildChannel)
- - GuildChannel (Interface) - A Channel that exist in a guild.
+ - IVoiceChannel - A GuildChannel for audio connections. (GuildChannel)
+ - IGuildChannel (Interface) - A Channel that exist in a guild.
 
 #### Message
-Message - A text bubble some user just said.
- - StringMessage - Normal messages that only contains string.
- - EmbedMessage - Embed messages that can by sent by bot.
- - Reaction - A emoji that users reacted under a message.
+IMessage - A text bubble some user just said.
+ - IStringMessage - Normal messages that only contains string.
+ - IEmbedMessage - Embed messages that can by sent by bot.
+ - IReaction - A emoji that users reacted under a message.
  - Builders
    - MessageBuilder - Build a message, can be StringMessage or EmbedMessage.
    - EmbedMessageBuilder - Build a JSONObject of an embed, used to build
      embed messages and send in channels.
+
+### Managers
+ - IGuildManager - The manager that manages and perform actions upon a guild.
+ - IMemberManager - The manager that manages and perform actions upon a member.
+ - IRoleManager - A manager that manages a role in the guild.
 
 ## Event
 Event - Whenever a change happens to an entity, an event get fired.

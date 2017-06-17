@@ -30,7 +30,7 @@ public interface IMemberManager {
      *
      * @return The guild.
      */
-    Guild getGuild();
+    IGuild getGuild();
 
     /**
      * Modify the nickname of the identity itself.

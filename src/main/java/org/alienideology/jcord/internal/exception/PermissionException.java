@@ -5,6 +5,8 @@ import org.alienideology.jcord.handle.Permission;
 import java.util.Arrays;
 
 /**
+ * PermissionException - When the identity request an action that
+ * it does not have permission to do so, a PermissionException is thrown.
  * @author AlienIdeology
  */
 public class PermissionException extends RuntimeException {

@@ -53,7 +53,7 @@ public class ExampleBot {
             IGuild guild = bot.getGuild("311250670068170752");
             System.out.println(guild.getRoles());
 
-            guild.getRoleManager().modifyRolePermissions(guild.getRole("325320884346945547"), Permission.ADMINISTRATOR);
+            guild.getRoleManager().removePermissionsFromRole(guild.getRole("325320884346945547"), Permission.VIEW_AUDIT_LOGS);
 
         } catch (Exception e) {
             e.printStackTrace();

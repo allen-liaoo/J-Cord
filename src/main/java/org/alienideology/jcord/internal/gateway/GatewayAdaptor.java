@@ -259,6 +259,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     }
 
     private void setEventHandler() {
+        // TODO: Role Events, to sync with IRoleManager. If no event updated, then there are problems with IRoleManager#addPermissionsToRole
         /* Gateway Event */
         eventHandler.put("READY", new GatewayEventHandler(identity, this));
         eventHandler.put("RESUMED", new GatewayEventHandler(identity, this));

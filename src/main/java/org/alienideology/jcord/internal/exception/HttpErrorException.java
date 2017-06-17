@@ -40,4 +40,9 @@ public class HttpErrorException extends RuntimeException {
     public HttpCode getCode() {
         return code;
     }
+
+    public boolean isPermissionException() {
+        return code.equals(HttpCode.FORBIDDEN);
+    }
+
 }

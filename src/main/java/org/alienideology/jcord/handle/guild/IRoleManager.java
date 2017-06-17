@@ -31,6 +31,14 @@ public interface IRoleManager {
     /**
      * Modify a role's name.
      *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     *
      * @param role The role to modify.
      * @param name The new name.
      */
@@ -38,6 +46,14 @@ public interface IRoleManager {
 
     /**
      * Modify a role's name.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
      *
      * @param roleId The role's ID.
      * @param name The new name.
@@ -47,13 +63,29 @@ public interface IRoleManager {
     /**
      * Modify a role's permissions.
      *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     *
      * @param role The role to modify.
-     * @param permissions A new sets of permissions.
+     * @param permissions A new varargs of permissions.
      */
     void modifyRolePermissions(IRole role, Permission... permissions);
 
     /**
      * Modify a role's permissions.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
      *
      * @param role The role to modify.
      * @param permissions A new collection of permissions.
@@ -61,7 +93,79 @@ public interface IRoleManager {
     void modifyRolePermissions(IRole role, Collection<Permission> permissions);
 
     /**
+     * Add permissions to a role.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     *
+     * @param role The role to add permissions to.
+     * @param permissions The varargs of permissions to add.
+     */
+    void addPermissionsToRole(IRole role, Permission... permissions);
+
+    /**
+     * Add permissions to a role.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     *
+     * @param role The role to add permissions to.
+     * @param permissions The collection of permissions to add.
+     */
+    void addPermissionsToRole(IRole role, Collection<Permission> permissions);
+
+    /**
+     * Remove permissions from a role.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     *
+     * @param role The role to remove permissions from.
+     * @param permissions The varargs of permissions to remove.
+     */
+    void removePermissionsFromRole(IRole role, Permission... permissions);
+
+    /**
+     * Remove permissions from a role.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     *
+     * @param role The role to remove permissions from.
+     * @param permissions The collection of permissions to remove.
+     */
+    void removePermissionsFromRole(IRole role, Collection<Permission> permissions);
+
+    /**
      * Modify a role's color.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
      *
      * @param role The role to modify.
      * @param color The new color.
@@ -71,6 +175,14 @@ public interface IRoleManager {
     /**
      * Modify a role's color.
      *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     *
      * @param roleId The role's ID.
      * @param color The new color.
      */
@@ -78,6 +190,14 @@ public interface IRoleManager {
 
     /**
      * Set if this role will be separate listed from online members.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
      *
      * @param role The role to modify.
      * @param isSeparateListed If set to true, then the role will be separated listed.
@@ -87,13 +207,29 @@ public interface IRoleManager {
     /**
      * Set if this role will be separate listed from online members.
      *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     *
      * @param roleId The role's ID.
      * @param isSeparateListed If set to true, then the role will be separated listed.
      */
     void modifyIsSeparateListed(String roleId, boolean isSeparateListed);
 
     /**
-     * Set if this role can be mentioned by anyone in the guild.
+     * Set if a role can be mentioned by anyone in the guild.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
      *
      * @param role The role to modify.
      * @param canMention If set to true, then the role can be mentioned.
@@ -101,11 +237,79 @@ public interface IRoleManager {
     void modifyCanMention(IRole role, boolean canMention);
 
     /**
-     * Set if this role can be mentioned by anyone in the guild.
+     * Set if a role can be mentioned by anyone in the guild.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
      *
      * @param roleId The role's ID.
      * @param canMention If set to true, then the role can be mentioned.
      */
     void modifyCanMention(String roleId, boolean canMention);
+
+    /**
+     * Change the position of a role.
+     * The position is calculated by counting up the position.
+     * The @everyone would be position 0, and the higher the position is, the higher the role is in the hierarchy.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException 
+     *          <ul>
+     *              <li>If the roles is at a higher hierarchy position than the identity.</li>
+     *              <li>If identity attempt to move the role to a position higher than the highest
+     *                  position of the identity's role.</li>
+     *          </ul>
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     * @exception IllegalArgumentException
+     *          <ul>
+     *              <li>If the role is @everyone (default) role.</li>
+     *              <li>If the position is <ul>
+     *                                      <li>smaller or equal to zero</li> or
+     *                                      <li>greater than the total number of roles.</li>
+     *                                      </ul></li>
+     *          </ul>
+     *
+     * @param role The role to change position.
+     * @param newPosition The new position.
+     */
+    void changeRolePosition(IRole role, int newPosition);
+
+    /**
+     * Change the position of a role by ID.
+     * The position is calculated by counting up the position.
+     * The @everyone would be position 0, and the higher the position is, the higher the role is in the hierarchy.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          <ul>
+     *              <li>If the roles is at a higher hierarchy position than the identity.</li>
+     *              <li>If identity attempt to move the role to a position higher than the highest
+     *                  position of the identity's role.</li>
+     *          </ul>
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     * @exception IllegalArgumentException
+     *          <ul>
+     *              <li>If the role is @everyone (default) role.</li>
+     *              <li>If the position is <ul>
+     *                                      <li>smaller or equal to zero</li> or
+     *                                      <li>greater than the total number of roles.</li>
+     *                                      </ul></li>
+     *          </ul>
+     *
+     * @param roleId The role's ID.
+     * @param newPosition The new position.
+     */
+    void changeRolePosition(String roleId, int newPosition);
 
 }

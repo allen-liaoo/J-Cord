@@ -18,7 +18,7 @@ import java.util.*;
 public interface IMember extends IDiscordObject, ISnowFlake, IMention, Comparable<IMember> {
 
     /**
-     * Kick a member.
+     * Kick this member.
      * @see org.alienideology.jcord.internal.object.guild.GuildManager#kickMember(IMember)
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
@@ -95,25 +95,6 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, Comparabl
 
     /**
      * Add roles to this member.
-     * @see IMemberManager#addRolesToMember(IMember, IRole...)
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have {@code Manage Roles} permission.
-     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
-     *          If the member is the server owner or have higher role than the identity.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
-     *          If the role does not belong to this guild.
-     * @exception IllegalArgumentException
-     *          If this member already had that role.
-     *
-     * @param role The roles to add.
-     */
-    default void addRoles(IRole... role) {
-        getGuild().getMemberManager().addRolesToMember(this, role);
-    }
-
-    /**
-     * Add roles to this member.
      * @see IMemberManager#addRolesToMember(IMember, Collection)
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
@@ -129,23 +110,6 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, Comparabl
      */
     default void addRoles(Collection<IRole> role) {
         getGuild().getMemberManager().addRolesToMember(this, role);
-    }
-
-    /**
-     * Remove roles from this member.
-     * @see IMemberManager#removeRolesFromMember(IMember, IRole...)
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have {@code Manage Roles} permission.
-     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
-     *          If the member is the server owner or have higher role than the identity.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
-     *          If the role does not belong to this guild.
-     *
-     * @param roles The roles to be removed.
-     */
-    default void removeRoles(IRole... roles) {
-        getGuild().getMemberManager().removeRolesFromMember(this, roles);
     }
 
     /**

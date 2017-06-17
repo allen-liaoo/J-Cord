@@ -5,6 +5,7 @@ import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.Permission;
 
+import java.util.Collection;
 import java.util.List;
 import java.awt.Color;
 
@@ -16,16 +17,118 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, Comparable<
 
     /**
      * Deletes this role from the guild.
+     * @see IGuildManager#deleteRole(IRole)
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Manage Roles} permission.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
-     *          If the role is null or if the role is not from this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
      *
      */
     default void delete() {
         getGuild().getGuildManager().deleteRole(this);
+    }
+
+    /**
+     * Modify the name of this.
+     * @see IRoleManager#modifyRoleName(IRole, String)
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a hierarchy position than the identity.
+     *
+     * @param name The new name.
+     */
+    default void modifyName(String name) {
+        getGuild().getRoleManager().modifyRoleName(this, name);
+    }
+
+    /**
+     * Modify permissions of this role.
+     * @see IRoleManager#modifyRolePermissions(IRole, Collection)
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a hierarchy position than the identity.
+     *
+     * @param permissions A new collection of permissions.
+     */
+    default void modifyPermissions(Collection<Permission> permissions) {
+        getGuild().getRoleManager().modifyRolePermissions(this, permissions);
+    }
+
+    /**
+     * Add permissions to this role.
+     * @see IRoleManager#addPermissionsToRole(IRole, Permission...)
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     *
+     * @param permissions The collection of permissions to add.
+     */
+    default void addPermissions(Collection<Permission> permissions) {
+        getGuild().getRoleManager().addPermissionsToRole(this, permissions);
+    }
+
+    /**
+     * Remove permissions from this role.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     *
+     * @param permissions The collection of permissions to remove.
+     */
+    default void removePermissions(Collection<Permission> permissions) {
+        getGuild().getRoleManager().removePermissionsFromRole(this, permissions);
+    }
+
+    /**
+     * Modify this role's color.
+     * @see IRoleManager#modifyRoleColor(IRole, Color)
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a hierarchy position than the identity.
+     *
+     * @param color The new color.
+     */
+    default void modifyColor(Color color) {
+        getGuild().getRoleManager().modifyRoleColor(this, color);
+    }
+
+    /**
+     * Set if this role will be separate listed from online members.
+     * @see IRoleManager#modifyIsSeparateListed(IRole, boolean)
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a hierarchy position than the identity.
+     *
+     * @param isSeparateListed If set to true, then the role will be separated listed.
+     */
+    default void modifyIsSeparateListed(boolean isSeparateListed) {
+        getGuild().getRoleManager().modifyIsSeparateListed(this, isSeparateListed);
+    }
+
+    /**
+     * Set if this role can be mentioned by anyone in the guild.
+     * @see IRoleManager#modifyCanMention(IRole, boolean)
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a hierarchy position than the identity.
+     *
+     * @param canMention If set to true, then the role can be mentioned.
+     */
+    default void modifyCanMention(boolean canMention) {
+        getGuild().getRoleManager().modifyCanMention(this, canMention);
     }
 
     /**
