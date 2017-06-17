@@ -1,18 +1,12 @@
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.handle.Permission;
-import org.alienideology.jcord.handle.channel.IPrivateChannel;
-import org.alienideology.jcord.handle.channel.ITextChannel;
-import org.alienideology.jcord.handle.channel.IVoiceChannel;
-import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.command.CommandFramework;
 import org.alienideology.jcord.event.EventManager;
-import org.alienideology.jcord.handle.guild.IMemberManager;
-import org.alienideology.jcord.handle.guild.RoleBuilder;
-import org.alienideology.jcord.handle.message.StringMessageBuilder;
-
-import java.awt.*;
+import org.alienideology.jcord.handle.channel.IPrivateChannel;
+import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.channel.IVoiceChannel;
+import org.alienideology.jcord.handle.guild.IGuild;
 
 /**
  * A simple test bot for J-Cord
@@ -51,9 +45,6 @@ public class ExampleBot {
             }
 
             IGuild guild = bot.getGuild("311250670068170752");
-            System.out.println(guild.getRoles());
-
-            guild.getRoleManager().removePermissionsFromRole(guild.getRole("325320884346945547"), Permission.VIEW_AUDIT_LOGS);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -5,17 +5,25 @@ import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
-import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.Permission;
+import org.alienideology.jcord.handle.user.IUser;
 
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.List;
 
 /**
  * Member - A user representation in a guild.
  * @author AlienIdeology
  */
 public interface IMember extends IDiscordObject, ISnowFlake, IMention, Comparable<IMember> {
+
+    /**
+     * Get the IMemberManager of this guild.
+     * The member manager is used to change nicknames, mute, and deafen members.
+     *
+     * @return The member manager.
+     */
+    IMemberManager getMemberManager();
 
     /**
      * Kick this member.
@@ -70,128 +78,6 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, Comparabl
      */
     default boolean ban(int days) {
         return getGuild().getGuildManager().banMember(this, days);
-    }
-
-    /**
-     * Modify the nickname of a specific member.
-     * Use empty or null nicknames to reset the nickname.
-     * @see IMemberManager#modifyMemberNickname(IMember, String)
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have either {@code Change Nickname} permission to modify itself,
-     *              or {@code Manage Nicknames} permission to manage other nicknames.
-     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
-     *          If the member is the server owner or have higher role than the identity.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
-     *          If the member does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     * @exception IllegalArgumentException If the nickname is longer than 32 letters.
-     *
-     * @param newNickname The new nickname.
-     */
-    default void modifyNickname(String newNickname) {
-        getGuild().getMemberManager().modifyMemberNickname(this, newNickname);
-    }
-
-    /**
-     * Add roles to this member.
-     * @see IMemberManager#addRolesToMember(IMember, Collection)
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have {@code Manage Roles} permission.
-     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
-     *          If the member is the server owner or have higher role than the identity.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
-     *          If the role does not belong to this guild.
-     * @exception IllegalArgumentException
-     *          If this member already had that role.
-     *
-     * @param role The roles to add.
-     */
-    default void addRoles(Collection<IRole> role) {
-        getGuild().getMemberManager().addRolesToMember(this, role);
-    }
-
-    /**
-     * Remove roles from this member.
-     * @see IMemberManager#removeRolesFromMember(IMember, Collection)
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have {@code Manage Roles} permission.
-     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
-     *          If the member is the server owner or have higher role than the identity.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
-     *          If the role does not belong to this guild.
-     *
-     * @param roles The roles to be removed.
-     */
-    default void removeRoles(Collection<IRole> roles) {
-        getGuild().getMemberManager().removeRolesFromMember(this, roles);
-    }
-
-    /**
-     * Mute this member.
-     * @see IMemberManager#muteMember(IMember)
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the member does not have {@code Mute Members} permission.
-     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
-     *          If the member is the server owner or have higher role than the identity.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
-     *          If the member does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     *
-     */
-    default void mute() {
-        getGuild().getMemberManager().muteMember(this);
-    }
-
-    /**
-     * Unmute this member.
-     * @see IMemberManager#unmuteMember(IMember)
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the member does not have {@code Mute Members} permission.
-     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
-     *          If the member is the server owner or have higher role than the identity.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     *
-     */
-    default void unmute() {
-        getGuild().getMemberManager().unmuteMember(this);
-    }
-
-    /**
-     * Deafen this member.
-     * @see IMemberManager#deafenMember(IMember)
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the member does not have {@code Deafen Members} permission.
-     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
-     *          If the member is the server owner or have higher role than the identity.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     *
-     */
-    default void deafen() {
-        getGuild().getMemberManager().deafenMember(this);
-    }
-
-    /**
-     * Undeafen a member.
-     * @see IMemberManager#undeafenMember(IMember)
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the member does not have {@code Deafen Members} permission.
-     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
-     *          If the member is the server owner or have higher role than the identity.
-     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
-     *
-     */
-    default void unDeafen() {
-        getGuild().getMemberManager().undeafenMember(this);
     }
 
     /**

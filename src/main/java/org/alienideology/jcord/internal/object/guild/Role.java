@@ -3,11 +3,13 @@ package org.alienideology.jcord.internal.object.guild;
 import org.alienideology.jcord.handle.Permission;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.guild.IRoleManager;
+import org.alienideology.jcord.internal.object.Buildable;
+import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.*;
 import org.json.JSONObject;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,8 @@ public final class Role extends DiscordObject implements IRole, Buildable {
 
     private final String id;
     private final Guild guild;
+
+    private RoleManager roleManager;
 
     private String name;
     private Color color;
@@ -40,6 +44,7 @@ public final class Role extends DiscordObject implements IRole, Buildable {
         this.position = position;
         this.isSeparateListed = isSeparateListed;
         this.canMention = canMention;
+        this.roleManager = new RoleManager(this);
     }
 
     @Override
@@ -56,6 +61,11 @@ public final class Role extends DiscordObject implements IRole, Buildable {
     @Override
     public IGuild getGuild() {
         return guild;
+    }
+
+    @Override
+    public IRoleManager getRoleManager() {
+        return roleManager;
     }
 
     @Override

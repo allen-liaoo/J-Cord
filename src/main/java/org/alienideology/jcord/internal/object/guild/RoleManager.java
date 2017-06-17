@@ -4,12 +4,10 @@ import org.alienideology.jcord.handle.Permission;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.guild.IRoleManager;
-import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException.HierarchyType;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.exception.PermissionException;
-import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.HttpCode;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
@@ -26,10 +24,12 @@ import java.util.List;
  */
 public class RoleManager implements IRoleManager {
 
+    private Role role;
     private Guild guild;
 
-    public RoleManager(Guild guild) {
-        this.guild = guild;
+    public RoleManager(Role role) {
+        this.role = role;
+        this.guild = (Guild) role.getGuild();
     }
 
     @Override
@@ -38,97 +38,77 @@ public class RoleManager implements IRoleManager {
     }
 
     @Override
-    public void modifyRoleName(IRole role, String name) {
-        modifyRoleName(role.getId(), name);
+    public IRole getRole() {
+        return role;
     }
 
     @Override
-    public void modifyRoleName(String roleId, String name) {
+    public void modifyName(String name) {
         if (name == null || name.isEmpty()) return;
-        modifyRole(roleId, new JSONObject().put("name", name));
+        modifyRole(new JSONObject().put("name", name));
     }
 
     @Override
-    public void modifyRolePermissions(IRole role, Permission... permissions) {
-        modifyPermission(role, Arrays.asList(permissions));
+    public void modifyPermissions(Permission... permissions) {
+        modifyPermission(Arrays.asList(permissions));
     }
 
     @Override
-    public void modifyRolePermissions(IRole role, Collection<Permission> permissions) {
-        modifyPermission(role, permissions);
+    public void modifyPermissions(Collection<Permission> permissions) {
+        modifyPermission(permissions);
     }
 
     @Override
-    public void addPermissionsToRole(IRole role, Permission... permissions) {
-        addPermissionsToRole(role, Arrays.asList(permissions));
+    public void addPermissions(Permission... permissions) {
+        addPermissions(Arrays.asList(permissions));
     }
 
     @Override
-    public void addPermissionsToRole(IRole role, Collection<Permission> permissions) {
+    public void addPermissions(Collection<Permission> permissions) {
         List<Permission> allPerms = new ArrayList<>(role.getPermissions());
         allPerms.addAll(permissions);
-        modifyPermission(role, allPerms);
+        modifyPermission(allPerms);
     }
 
     @Override
-    public void removePermissionsFromRole(IRole role, Permission... permissions) {
-        removePermissionsFromRole(role, Arrays.asList(permissions));
+    public void removePermissions(Permission... permissions) {
+        removePermissions(Arrays.asList(permissions));
     }
 
     @Override
-    public void removePermissionsFromRole(IRole role, Collection<Permission> permissions) {
+    public void removePermissions(Collection<Permission> permissions) {
         List<Permission> allPerms = new ArrayList<>(role.getPermissions());
         allPerms.removeAll(permissions);
-        modifyPermission(role, allPerms);
+        modifyPermission(allPerms);
     }
 
-    private void modifyPermission(IRole role, Collection<Permission> permissions) {
-        modifyRole(role.getId(), new JSONObject().put("permissions", Permission.getLongByPermissions(permissions)));
-    }
-
-    @Override
-    public void modifyRoleColor(IRole role, Color color) {
-        modifyRoleColor(role.getId(), color);
+    private void modifyPermission(Collection<Permission> permissions) {
+        modifyRole(new JSONObject().put("permissions", Permission.getLongByPermissions(permissions)));
     }
 
     @Override
-    public void modifyRoleColor(String roleId, Color color) {
-        modifyRole(roleId, new JSONObject().put("color", color.getRGB() & 0xFFFFFF));
+    public void modifyColor(Color color) {
+        modifyRole(new JSONObject().put("color", color.getRGB() & 0xFFFFFF));
     }
 
     @Override
-    public void modifyIsSeparateListed(IRole role, boolean isSeparateListed) {
-        modifyIsSeparateListed(role.getId(), isSeparateListed);
+    public void modifyIsSeparateListed(boolean isSeparateListed) {
+        modifyRole(new JSONObject().put("hoist", isSeparateListed));
     }
 
     @Override
-    public void modifyIsSeparateListed(String roleId, boolean isSeparateListed) {
-        modifyRole(roleId, new JSONObject().put("hoist", isSeparateListed));
+    public void modifyCanMention(boolean canMention) {
+        modifyRole(new JSONObject().put("mentionable", canMention));
     }
 
-    @Override
-    public void modifyCanMention(IRole role, boolean canMention) {
-        modifyCanMention(role.getId(), canMention);
-    }
-
-    @Override
-    public void modifyCanMention(String roleId, boolean canMention) {
-        modifyRole(roleId, new JSONObject().put("mentionable", canMention));
-    }
-
-    private void modifyRole(String roleId, JSONObject json) {
-        IRole role = guild.getRole(roleId);
-        if (role == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_ROLE);
-        }
-
+    private void modifyRole(JSONObject json) {
         // Checks hierarchy
         if (!guild.getSelfMember().canModify(role)) {
             throw new HigherHierarchyException(HierarchyType.ROLE);
         }
 
         try {
-            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.MODIFY_GUILD_ROLE).request(guild.getId(), roleId)
+            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.MODIFY_GUILD_ROLE).request(guild.getId(), role.getId())
                     .updateRequestWithBody(request -> request.body(json)).performRequest();
         } catch (HttpErrorException ex) {
             if (ex.isPermissionException()) {
@@ -144,20 +124,11 @@ public class RoleManager implements IRoleManager {
     }
 
     @Override
-    public void changeRolePosition(IRole role, int newPosition) {
-        changeRolePosition(role.getId(), newPosition);
-    }
-
-    @Override
-    public void changeRolePosition(String roleId, int newPosition) {
-        IRole role = guild.getRole(roleId);
-        if (role == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_ROLE);
-        }
+    public void changePosition(int position) {
         if (role.isEveryone()) {
             throw new IllegalArgumentException("Cannot modify the position of a everyone role!");
         }
-        if (newPosition <= 0 || newPosition > guild.getRoles().size()) {
+        if (position <= 0 || position > guild.getRoles().size()) {
             throw new IllegalArgumentException("The position cannot be smaller or equal to zero, or greater than the total number of roles!");
         }
 
@@ -176,14 +147,14 @@ public class RoleManager implements IRoleManager {
             if (r.equals(role)) continue;
 
             /* Lower Position */
-            if (r.getPosition() <= newPosition) {
+            if (r.getPosition() <= position) {
                 roleMap.put(r.getId(), r.getPosition()-1);
             }
             /* Ignore Higher Position */
             // Since they will not be affected by the role change
         }
         // Add the changed position's role
-        roleMap.put(role.getId(), newPosition);
+        roleMap.put(role.getId(), position);
 
         // Construct JSONArray
         JSONArray array = new JSONArray();

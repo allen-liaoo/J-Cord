@@ -4,11 +4,11 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.guild.Guild;
-import org.alienideology.jcord.handle.Region;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,22 +31,6 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
      * @return The manager.
      */
     IGuildManager getGuildManager();
-
-    /**
-     * Get the IMemberManager of this guild.
-     * The member manager is used to change nicknames, mute, and deafen members.
-     *
-     * @return The member manager.
-     */
-    IMemberManager getMemberManager();
-
-    /**
-     * Get the IRoleManager of his guild.
-     * The role manager is used to change attributes or a role.
-     *
-     * @return The role manager.
-     */
-    IRoleManager getRoleManager();
 
     /**
      * Get the name of this guild.

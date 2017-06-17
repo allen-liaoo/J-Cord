@@ -7,8 +7,8 @@ import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IMemberManager;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.*;
 import org.alienideology.jcord.internal.object.user.User;
 
 import java.time.OffsetDateTime;
@@ -23,6 +23,8 @@ public final class Member extends DiscordObject implements IMember {
     private final User user;
     private String nickname;
     private OffsetDateTime joinedDate;
+
+    private MemberManager memberManager;
 
     private List<Role> roles;
     private List<Permission> permissions;
@@ -40,6 +42,13 @@ public final class Member extends DiscordObject implements IMember {
         this.permissions = initPermissions();
         this.isDeafened = isDeafened;
         this.isMuted = isMuted;
+
+        this.memberManager = new MemberManager(this);
+    }
+
+    @Override
+    public IMemberManager getMemberManager() {
+        return memberManager;
     }
 
     @Override

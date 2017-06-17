@@ -3,8 +3,8 @@
 
 ## Features
 - Events Handling and Dispatching
-- Native CommandFramework support
-- Native Emoji Support
+- CommandFramework Support
+- Emoji Support
 
 ## How to Use
 - Build an Identity
