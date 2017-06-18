@@ -1,6 +1,7 @@
 package org.alienideology.jcord.internal.object.channel;
 
 import org.alienideology.jcord.handle.channel.IChannel;
+import org.alienideology.jcord.handle.channel.IChannelManager;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.internal.object.IdentityImpl;
@@ -15,6 +16,8 @@ import java.util.Objects;
 public final class TextChannel extends MessageChannel implements ITextChannel {
 
     private Guild guild;
+    private ChannelManager channelManager;
+
     private String name;
     private int position;
     private String topic;
@@ -25,11 +28,17 @@ public final class TextChannel extends MessageChannel implements ITextChannel {
         this.name = name;
         this.position = position;
         this.topic = topic;
+        this.channelManager = new ChannelManager(this);
     }
 
     @Override
     public IGuild getGuild() {
         return guild;
+    }
+
+    @Override
+    public IChannelManager getChannelManager() {
+        return channelManager;
     }
 
     @Override

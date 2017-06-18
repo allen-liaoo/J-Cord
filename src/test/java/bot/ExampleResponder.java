@@ -1,3 +1,5 @@
+package bot;
+
 import org.alienideology.jcord.command.Command;
 import org.alienideology.jcord.command.CommandResponder;
 
@@ -12,9 +14,9 @@ public class ExampleResponder implements CommandResponder {
         return "hi";
     }
 
-    @Command(aliases = "test")
+    @Command(aliases = "hey there")
     public String onHeyThere() {
-        return "test";
+        return "hey there";
     }
 
 

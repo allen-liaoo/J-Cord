@@ -2,6 +2,7 @@ package org.alienideology.jcord.internal.object.guild;
 
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.Permission;
+import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IMemberManager;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -27,14 +28,10 @@ public class MemberManager implements IMemberManager {
 
     private Member member;
     private Guild guild;
-    private Member self;
-
-    public final static int NICKNAME_LENGTH = 32;
 
     public MemberManager(Member member) {
         this.member = member;
         this.guild = (Guild) member.getGuild();
-        this.self = (Member) guild.getSelfMember();
     }
 
     @Override
@@ -57,29 +54,23 @@ public class MemberManager implements IMemberManager {
             throw new IllegalArgumentException("Nickname may not be longer than 32 letters!");
         }
 
+        if (member.equals(guild.getSelfMember()) && !member.hasPermissions(true, Permission.CHANGE_NICKNAME)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.CHANGE_NICKNAME);
+        } else if (!member.hasPermissions(true, Permission.MANAGE_NICKNAMES)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_NICKNAMES);
+        }
+
         JSONObject json = new JSONObject().put("nick", nickname);
 
         /* Modify Self Nickname */
-        if (guild.getSelfMember().equals(member)) {
-            try {
-                new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.MODIFY_CURRENT_USER_NICK).request(guild.getId())
-                        .updateRequestWithBody(request -> request.body(json))
-                        .performRequest();
-            } catch (HttpErrorException ex) {
-                if (ex.isPermissionException()) {
-                    throw new PermissionException(Permission.ADMINISTRATOR, Permission.CHANGE_NICKNAME);
-                } else {
-                    throw ex;
-                }
-            }
+        if (member.equals(guild.getSelfMember())) {
+            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.MODIFY_CURRENT_USER_NICK).request(guild.getId())
+                    .updateRequestWithBody(request -> request.body(json))
+                    .performRequest();
 
         /* Modify Other Nickname */
         } else {
-            try {
-                modifyMember(json);
-            } catch (PermissionException ex) {
-                throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_NICKNAMES); // Change other's nickname
-            }
+            modifyMember(json);
         }
     }
 
@@ -100,12 +91,13 @@ public class MemberManager implements IMemberManager {
         }
 
         checkPerm();
+        if (!member.hasPermissions(true, Permission.MANAGE_ROLES)) {
+            throw new PermissionException(Permission.MANAGE_ROLES);
+        }
 
         List<String> roleIds = modified.stream().map(ISnowFlake::getId).collect(Collectors.toList());
         try {
             modifyMember(new JSONObject().put("roles", roleIds));
-        } catch (PermissionException ex) {
-            throw new PermissionException(Permission.MANAGE_ROLES);
         } catch (HttpErrorException ex) {
             if (ex.getCode().equals(HttpCode.BAD_REQUEST)) {
                 throw new IllegalArgumentException("Modifying member roles without giving any changes!");
@@ -144,28 +136,44 @@ public class MemberManager implements IMemberManager {
     }
 
     @Override
+    public void moveToVoiceChannel(IVoiceChannel channel) {
+        moveToVoiceChannel(channel.getId());
+    }
+
+    @Override
+    public void moveToVoiceChannel(String channelId) {
+        // TODO: Check if the member is in a voice channel
+        if (guild.getVoiceChannel(channelId) == null) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_CHANNEL);
+        }
+        if (member.hasPermissions(true, Permission.MOVE_MEMBERS)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MOVE_MEMBERS);
+        }
+
+        // TODO: Check PermissionOverride (Permission#CONNECT) For VoiceChannel
+
+        modifyMember(new JSONObject().put("channel_id", channelId));
+    }
+
+    @Override
     public void mute(boolean mute) {
         checkPerm();
-
-        try {
-            modifyMember(new JSONObject().put("mute", mute));
-        } catch (PermissionException ex) {
+        if (!member.hasPermissions(true, Permission.MUTE_MEMBERS)) {
             throw new PermissionException(Permission.MUTE_MEMBERS);
         }
 
+        modifyMember(new JSONObject().put("mute", mute));
     }
 
     @Override
     public void deafen(boolean deafen) {
         checkPerm();
-        try {
-            modifyMember(new JSONObject().put("deaf", deafen));
-        } catch (PermissionException ex) {
+        if (!member.hasPermissions(true, Permission.DEAFEN_MEMBERS)) {
             throw new PermissionException(Permission.DEAFEN_MEMBERS);
         }
-    }
 
-    // TODO: Move members
+        modifyMember(new JSONObject().put("deaf", deafen));
+    }
 
     private void modifyMember(JSONObject json) {
         try {
@@ -183,10 +191,10 @@ public class MemberManager implements IMemberManager {
 
     private void checkPerm() {
         // Checks hierarchy
-        if (member.isOwner() && !self.isOwner()) {
+        if (member.isOwner() && !guild.getSelfMember().isOwner()) {
             throw new HigherHierarchyException(HierarchyType.OWNER);
         }
-        if (!self.canModify(member)) {
+        if (!guild.getSelfMember().canModify(member)) {
             throw new HigherHierarchyException(HierarchyType.MEMBER);
         }
     }

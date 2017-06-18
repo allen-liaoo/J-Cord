@@ -17,6 +17,13 @@ public interface IGuildChannel extends IChannel, ISnowFlake {
     IGuild getGuild();
 
     /**
+     * Get the manager that manages this GuildChannel.
+     *
+     * @return The channel manager.
+     */
+    IChannelManager getChannelManager();
+
+    /**
      * Ge the name of this channel.
      *
      * @return The string name
@@ -25,6 +32,7 @@ public interface IGuildChannel extends IChannel, ISnowFlake {
 
     /**
      * Get the position of this guild channel in a channel list.
+     * The position of a channel can be calculated by counting down the channel list, starting from 1.
      *
      * @return The integer value of the position.
      */

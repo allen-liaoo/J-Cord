@@ -1,6 +1,7 @@
 package org.alienideology.jcord.handle.guild;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.channel.IVoiceChannel;
 
 import java.util.Collection;
 
@@ -13,6 +14,11 @@ import java.util.Collection;
  * @since 0.0.4
  */
 public interface IMemberManager {
+
+    /**
+     * The maximum length of a nickname.
+     */
+    int NICKNAME_LENGTH = 32;
 
     /**
      * Get the identity the manager's guild belongs to.
@@ -49,7 +55,7 @@ public interface IMemberManager {
      * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException 
      *          If the member is the server owner or have higher role than the identity.
      * 
-     * @exception IllegalArgumentException If the nickname is longer than 32 letters.
+     * @exception IllegalArgumentException If the nickname is longer than {@value #NICKNAME_LENGTH}.
      *
      * @param nickname The new nickname.
      */
@@ -146,6 +152,38 @@ public interface IMemberManager {
      * @param roles The roles to be removed.
      */
     void removeRoles(Collection<IRole> roles);
+
+    /**
+     * Move this member to a voice channel.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          <ul>
+     *              <li>If the identity does not have {@code Move Members} permission.</li>
+     *              <li>If the identity does not have {@code Connect} permission to connect to the specific channel.</li>
+     *          </ul>
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the voice channel does not belongs to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_CHANNEL
+     *
+     * @param channel The new channel.
+     */
+    void moveToVoiceChannel(IVoiceChannel channel);
+
+    /**
+     * Move this member to a voice channel bt ID.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          <ul>
+     *              <li>If the identity does not have {@code Move Members} permission.</li>
+     *              <li>If the identity does not have {@code Connect} permission to connect to the specific channel.</li>
+     *          </ul>
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the voice channel does not belongs to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_CHANNEL
+     *
+     * @param channelId The new channel's ID.
+     */
+    void moveToVoiceChannel(String channelId);
 
     /**
      * Mute or unmute this member.
