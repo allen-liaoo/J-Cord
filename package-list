@@ -4,6 +4,7 @@ org.alienideology.jcord.command
 org.alienideology.jcord.event
 org.alienideology.jcord.event.gateway
 org.alienideology.jcord.event.guild
+org.alienideology.jcord.event.guild.member
 org.alienideology.jcord.event.guild.role
 org.alienideology.jcord.event.guild.update
 org.alienideology.jcord.event.handler
