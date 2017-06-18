@@ -3,8 +3,8 @@ package org.alienideology.jcord.internal.object.channel;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.internal.object.message.Message;
+import org.alienideology.jcord.internal.object.user.User;
 
 import java.util.Objects;
 
@@ -32,7 +32,11 @@ public final class PrivateChannel extends MessageChannel implements IPrivateChan
 
     @Override
     public String toString() {
-        return "ID: "+id+"\tRecipient: "+ recipient.getName();
+        return "PrivateChannel{" +
+                "id='" + id + '\'' +
+                ", type=" + type +
+                ", recipient=" + recipient +
+                '}';
     }
 
 }

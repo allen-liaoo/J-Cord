@@ -3,7 +3,8 @@ package org.alienideology.jcord.handle.guild;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
-import org.alienideology.jcord.handle.Permission;
+import org.alienideology.jcord.handle.permission.PermCheckable;
+import org.alienideology.jcord.handle.permission.Permission;
 
 import java.awt.*;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
  * Role - A label that can be put on a set of guild members.
  * @author AlienIdeology
  */
-public interface IRole extends IDiscordObject, ISnowFlake, IMention, Comparable<IRole> {
+public interface IRole extends IDiscordObject, ISnowFlake, IMention, PermCheckable, Comparable<IRole> {
 
     /**
      * Get the IRoleManager of his guild.
@@ -62,32 +63,6 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, Comparable<
      * @return The integer value of the role position.
      */
     int getPosition();
-
-    /**
-     * Check if this role have the given permission.
-     * @deprecated See {@link #hasAllPermissions(Permission...)}
-     *
-     * @param permission The specified permission.
-     * @return True if the role have this permission.
-     */
-    @Deprecated
-    boolean hasPermission(Permission permission);
-
-    /**
-    * Check if this role have all the given permissions
-    * @param permissions The varargs of permission enums to be checked
-    * @return True if the role have all given permissions
-    */
-    boolean hasAllPermissions (Permission... permissions);
-
-    /**
-    * Check if this role have one of the given permissions
-    * To check if this member have all the permissions, see #hasAllPermissions(Permission...)
-     *
-    * @param permissions The varargs of permission enums to be checked
-    * @return True if the role have one of the given permissions
-    */
-    boolean hasPermissions (Permission... permissions);
 
     /**
      * Get the raw value of this role's permissions.
@@ -140,7 +115,7 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, Comparable<
      * @return True if the role is modifiable.
      */
     default boolean canModify(IRole role) {
-        return this.hasPermissions(Permission.ADMINISTRATOR, Permission.MANAGE_ROLES) && this.compareTo(role) > 0;
+        return hasPermissions(true, Permission.MANAGE_ROLES) && this.compareTo(role) > 0;
     }
 
     /**
@@ -151,7 +126,7 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, Comparable<
      * @return True if the emoji is modifiable.
      */
     default boolean canModify(IGuildEmoji emoji) {
-        return this.hasPermissions(Permission.ADMINISTRATOR, Permission.MANAGE_EMOJIS) && emoji.canBeUseBy(this);
+        return this.hasPermissions(true, Permission.MANAGE_EMOJIS) && emoji.canBeUseBy(this);
     }
 
     @Override

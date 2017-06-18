@@ -322,6 +322,16 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         return channel;
     }
 
+    @Override
+    public String toString() {
+        return "IdentityImpl{" +
+                "type=" + type +
+                ", socket=" + socket +
+                ", CONNECTION=" + CONNECTION +
+                ", self=" + self +
+                '}';
+    }
+
     public enum Connection {
         CONNECTING,
         RESUMING,

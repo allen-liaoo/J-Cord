@@ -184,7 +184,11 @@ public class Message extends DiscordObject implements IMessage {
 
     @Override
     public String toString() {
-        return "ID: "+id;
+        return "Message{" +
+                "channel=" + channel +
+                ", id='" + id + '\'' +
+                ", author=" + author +
+                '}';
     }
 
     public Message setChannel(String channel) {

@@ -306,7 +306,10 @@ public final class Guild extends DiscordObject implements IGuild {
 
     @Override
     public String toString() {
-        return "ID: "+id+"\tName: "+name;
+        return "Guild{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 
     public Guild setOwner (String id) {

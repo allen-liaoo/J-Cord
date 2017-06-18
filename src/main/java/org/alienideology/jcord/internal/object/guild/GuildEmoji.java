@@ -2,9 +2,9 @@ package org.alienideology.jcord.internal.object.guild;
 
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IRole;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.DiscordObject;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,7 +89,10 @@ public final class GuildEmoji extends DiscordObject implements IGuildEmoji {
 
     @Override
     public String toString() {
-        return "ID: "+id+"\tName: "+name;
+        return "GuildEmoji{" +
+                "guild=" + guild +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
-
 }

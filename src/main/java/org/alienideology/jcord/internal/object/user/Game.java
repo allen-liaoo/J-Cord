@@ -1,7 +1,7 @@
 package org.alienideology.jcord.internal.object.user;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.DiscordObject;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 
 import java.util.regex.Pattern;
 
@@ -59,7 +59,10 @@ public final class Game extends DiscordObject {
 
     @Override
     public String toString() {
-        return type == Type.PLAYING ? "Playing: " : "Streaming: " + name;
+        return "Game{" +
+                "name='" + name + '\'' +
+                ", type=" + type +
+                '}';
     }
 
     public enum Type {

@@ -1,10 +1,10 @@
 package org.alienideology.jcord.internal.object.guild;
 
 import org.alienideology.jcord.handle.ISnowFlake;
-import org.alienideology.jcord.handle.Permission;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IMemberManager;
 import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException.HierarchyType;
@@ -143,14 +143,16 @@ public class MemberManager implements IMemberManager {
     @Override
     public void moveToVoiceChannel(String channelId) {
         // TODO: Check if the member is in a voice channel
-        if (guild.getVoiceChannel(channelId) == null) {
+        IVoiceChannel channel = guild.getVoiceChannel(channelId);
+        if (channel == null) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_CHANNEL);
         }
         if (member.hasPermissions(true, Permission.MOVE_MEMBERS)) {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.MOVE_MEMBERS);
         }
-
-        // TODO: Check PermissionOverride (Permission#CONNECT) For VoiceChannel
+        if (!channel.hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.CONNECT)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.CONNECT);
+        }
 
         modifyMember(new JSONObject().put("channel_id", channelId));
     }

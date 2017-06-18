@@ -1,7 +1,7 @@
 package org.alienideology.jcord.handle.guild;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.handle.Permission;
+import org.alienideology.jcord.handle.permission.Permission;
 
 import java.awt.*;
 import java.util.Collection;

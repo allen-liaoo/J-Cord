@@ -5,7 +5,8 @@ import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
-import org.alienideology.jcord.handle.Permission;
+import org.alienideology.jcord.handle.permission.PermCheckable;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
 
 import java.time.OffsetDateTime;
@@ -15,7 +16,7 @@ import java.util.List;
  * Member - A user representation in a guild.
  * @author AlienIdeology
  */
-public interface IMember extends IDiscordObject, ISnowFlake, IMention, Comparable<IMember> {
+public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheckable, Comparable<IMember> {
 
     /**
      * Get the IMemberManager of this guild.
@@ -79,34 +80,6 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, Comparabl
     default boolean ban(int days) {
         return getGuild().getGuildManager().banMember(this, days);
     }
-
-    /**
-    * Check if this member have all the given permissions
-     *
-    * @param permissions The varargs of permission enums to be checked
-    * @return True if the member have all given permissions
-    */
-    boolean hasAllPermissions (Permission... permissions);
-
-    /**
-    * Check if this member have one of the given permissions.
-     *
-    * @param checkAdmin If true, returns true if the member have administrator permission.
-    * @param permissions The varargs of permission enums to be checked.
-    * @return True if the member have one of the given permissions.
-    */
-    boolean hasPermissions (boolean checkAdmin, Permission... permissions) ;
-
-    /**
-    * Check if this member have one of the given permissions
-     *
-    * @deprecated #hasPermissions(boolean, Permission...) To check with the member having administrator permission.
-    * @see #hasAllPermissions(Permission...) To check if this member have all the permissions.
-    * @param permissions The varargs of permission enums to be checked
-    * @return True if the member have one of the given permissions
-    */
-    @Deprecated
-    boolean hasPermissions (Permission... permissions);
 
     /**
      * Get the guild this member belongs to.
@@ -225,7 +198,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, Comparabl
      * @return True if the emoji is modifiable.
      */
     default boolean canModify(IGuildEmoji emoji) {
-        return this.hasPermissions(Permission.MANAGE_EMOJIS) && emoji.canBeUseBy(this);
+        return this.hasPermissions(true, Permission.MANAGE_EMOJIS) && emoji.canBeUseBy(this);
     }
 
     /**

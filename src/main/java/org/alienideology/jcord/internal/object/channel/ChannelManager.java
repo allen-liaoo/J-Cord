@@ -1,10 +1,10 @@
 package org.alienideology.jcord.internal.object.channel;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.handle.Permission;
 import org.alienideology.jcord.handle.channel.IChannelManager;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
@@ -103,7 +103,7 @@ public class ChannelManager implements IChannelManager {
     }
 
     private void modifyChannel(JSONObject json) {
-        if (!getGuild().getSelfMember().hasPermissions(true, Permission.MANAGE_CHANNELS)) {
+        if (!channel.hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_CHANNELS)) {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_CHANNELS);
         }
 

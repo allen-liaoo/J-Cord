@@ -4,10 +4,17 @@ import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IChannelManager;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.permission.PermOverwrite;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.message.Message;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -21,6 +28,8 @@ public final class TextChannel extends MessageChannel implements ITextChannel {
     private String name;
     private int position;
     private String topic;
+
+    private List<PermOverwrite> permOverwrites = new ArrayList<>();
 
     public TextChannel(IdentityImpl identity, String guild_id, String id, String name, int position, String topic, Message lastMessagt) {
         super(identity, id, IChannel.Type.TEXT, lastMessagt);
@@ -52,6 +61,59 @@ public final class TextChannel extends MessageChannel implements ITextChannel {
     }
 
     @Override
+    public Collection<PermOverwrite> getPermOverwrites() {
+        return permOverwrites;
+    }
+
+    @Override
+    public boolean hasAllPermission(IMember member, Collection<Permission> permissions) {
+        PermOverwrite overwrites = getMemberPermOverwrite(member.getId());
+        for (Permission permission : permissions) {
+            if (overwrites.getDeniedPermissions().contains(permission))
+                return false;
+            if (!member.getPermissions().contains(permission))
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean hasAllPermission(IRole role, Collection<Permission> permissions) {
+        PermOverwrite overwrites = getRolePermOverwrite(role.getId());
+        for (Permission permission : permissions) {
+            if (overwrites.getDeniedPermissions().contains(permission))
+                return false;
+            if (!role.getPermissions().contains(permission))
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean hasPermission(IMember member, Collection<Permission> permissions) {
+        PermOverwrite overwrites = getMemberPermOverwrite(member.getId());
+        for (Permission permission : permissions) {
+            if (overwrites.getAllowedPermissions().contains(permission))
+                return true;
+            if (member.getPermissions().contains(permission))
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasPermission(IRole role, Collection<Permission> permissions) {
+        PermOverwrite overwrites = getRolePermOverwrite(role.getId());
+        for (Permission permission : permissions) {
+            if (overwrites.getAllowedPermissions().contains(permission))
+                return true;
+            if (role.getPermissions().contains(permission))
+                return true;
+        }
+        return false;
+    }
+
+    @Override
     public String getTopic() {
         return topic;
     }
@@ -63,7 +125,17 @@ public final class TextChannel extends MessageChannel implements ITextChannel {
 
     @Override
     public String toString() {
-        return "ID: "+id+"\tName: "+name;
+        return "TextChannel{" +
+                "id='" + id + '\'' +
+                ", type=" + type +
+                ", guild=" + guild +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    public TextChannel setPermOverwrites(List<PermOverwrite> permOverwrites) {
+        this.permOverwrites = permOverwrites;
+        return this;
     }
 
 }

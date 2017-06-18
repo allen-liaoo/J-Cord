@@ -1,9 +1,9 @@
 package org.alienideology.jcord.internal.object.guild;
 
-import org.alienideology.jcord.handle.Permission;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.guild.IRoleManager;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -84,27 +85,22 @@ public final class Role extends DiscordObject implements IRole, Buildable {
     }
 
     @Override
-    @Deprecated
-    public boolean hasPermission (Permission permission) {
-        return Permission.hasPermission (permissionsLong, permission);
-    }
-
-    @Override
-    public boolean hasAllPermissions (Permission... permissions) {
+    public boolean hasAllPermissions(Permission... permissions) {
         for (Permission perm : permissions) {
-            if (!hasPermission(perm)) {
+            if (!hasPermissions(false, perm))
                 return false;
-            }
         }
         return true;
     }
 
     @Override
-    public boolean hasPermissions (Permission... permissions) {
+    public boolean hasPermissions(boolean checkAdmin, Collection<Permission> permissions) {
+        if (checkAdmin) {
+            if (this.permissions.contains(Permission.ADMINISTRATOR)) return true;
+        }
         for (Permission perm : permissions) {
-            if (hasPermission(perm)) {
+            if (this.permissions.contains(perm))
                 return true;
-            }
         }
         return false;
     }
@@ -150,7 +146,10 @@ public final class Role extends DiscordObject implements IRole, Buildable {
 
     @Override
     public String toString() {
-        return "ID: "+id+"\tName: "+name+"  Position: "+position;
+        return "Role{" +
+                "id='" + id + '\'' +
+                ", guild=" + guild +
+                ", name='" + name + '\'' +
+                '}';
     }
-
 }

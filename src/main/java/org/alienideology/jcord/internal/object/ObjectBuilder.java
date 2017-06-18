@@ -5,6 +5,7 @@ import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.message.IReaction;
+import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
@@ -157,12 +158,25 @@ public final class ObjectBuilder {
      */
     public IGuildChannel buildGuildChannel (JSONObject json) {
         handleBuildError(json);
+        System.out.println(json.toString(4));
 
         String guild_id = json.getString("guild_id");
         String id = json.getString("id");
         String name = json.getString("name");
         int position = json.getInt("position");
         String type = json.getString("type");
+
+        /* Build PermOverwrite Objects */
+        List<PermOverwrite> overwrites = new ArrayList<>();
+        JSONArray perms = json.getJSONArray("permission_overwrites");
+
+        for (int i = 0; i < perms.length(); i++) {
+            JSONObject over = perms.getJSONObject(i);
+            String typeId = over.getString("id");
+            long allow = over.getLong("allow");
+            long deny = over.getLong("deny");
+            overwrites.add(new PermOverwrite(identity, guild_id, typeId, allow, deny));
+        }
 
         if (type.equals("text")) {
             String topic = json.isNull("topic") ? null : json.getString("topic");
@@ -173,13 +187,15 @@ public final class ObjectBuilder {
                     lastMessage = buildMessageById(id, last_msg);
                 } catch (HttpErrorException ignored) { }
             }
-            TextChannel tc = new TextChannel(identity, guild_id, id, name, position, topic, lastMessage);
+            TextChannel tc = new TextChannel(identity, guild_id, id, name, position, topic, lastMessage)
+                    .setPermOverwrites(overwrites);
             if (lastMessage != null) lastMessage.setChannel(id);
             return tc;
         } else {
             int bitrate = json.getInt("bitrate");
             int user_limit = json.getInt("user_limit");
-            VoiceChannel vc = new VoiceChannel(identity, guild_id, id, name, position, bitrate, user_limit);
+            VoiceChannel vc = new VoiceChannel(identity, guild_id, id, name, position, bitrate, user_limit)
+                    .setPermOverwrites(overwrites);
             return vc;
         }
     }

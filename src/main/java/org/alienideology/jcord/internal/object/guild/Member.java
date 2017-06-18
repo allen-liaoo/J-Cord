@@ -1,11 +1,11 @@
 package org.alienideology.jcord.internal.object.guild;
 
 import com.sun.istack.internal.Nullable;
-import org.alienideology.jcord.handle.Permission;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IMemberManager;
 import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
@@ -52,24 +52,19 @@ public final class Member extends DiscordObject implements IMember {
     }
 
     @Override
-    public boolean hasAllPermissions (Permission... permissions) {
+    public boolean hasAllPermissions(Permission... permissions) {
         for (Permission perm : permissions) {
             if (!this.permissions.contains(perm))
                 return false;
         }
-
         return true;
     }
 
     @Override
-    public boolean hasPermissions (boolean checkAdmin, Permission... permissions) {
-        if (checkAdmin && hasPermissions(Permission.ADMINISTRATOR)) return true;
-        return hasPermissions(permissions);
-    }
-
-    @Override
-    @Deprecated
-    public boolean hasPermissions (Permission... permissions) {
+    public boolean hasPermissions(boolean checkAdmin, Collection<Permission> permissions) {
+        if (checkAdmin) {
+            if (this.permissions.contains(Permission.ADMINISTRATOR)) return true;
+        }
         for (Permission perm : permissions) {
             if (this.permissions.contains(perm))
                 return true;
@@ -163,7 +158,9 @@ public final class Member extends DiscordObject implements IMember {
 
     @Override
     public String toString() {
-        return "ID: "+user.getId()+"\tNickName: "+nickname;
+        return "Member{" +
+                "guild=" + guild +
+                ", user=" + user +
+                '}';
     }
-
 }

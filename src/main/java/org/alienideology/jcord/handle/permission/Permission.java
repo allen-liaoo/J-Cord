@@ -1,10 +1,10 @@
-package org.alienideology.jcord.handle;
+package org.alienideology.jcord.handle.permission;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static org.alienideology.jcord.handle.Permission.PermissionLevel.*;
+import static org.alienideology.jcord.handle.permission.Permission.PermissionLevel.*;
 
 /**
  * Permission - A way to limit and grant certain abilities to members.
@@ -99,11 +99,11 @@ public enum Permission {
         this.level = level;
     }
 
-    public static boolean hasPermission (long permissions, Permission permission) {
+    public static boolean hasPermission(long permissions, Permission permission) {
         return (permissions & permission.value) != 0;
     }
 
-    public static List<Permission> getPermissionsByLong (long permissionsLong) {
+    public static List<Permission> getPermissionsByLong(long permissionsLong) {
         List<Permission> permissions = new ArrayList<>();
 
         for (Permission perm : Permission.values()) {
@@ -114,7 +114,7 @@ public enum Permission {
         return permissions;
     }
 
-    public static long getLongByPermissions (Permission... permissions) {
+    public static long getLongByPermissions(Permission... permissions) {
         long permLong = 0;
         for (Permission perm : permissions) {
             permLong |= perm.value;
@@ -122,7 +122,7 @@ public enum Permission {
         return permLong;
     }
 
-    public static long getLongByPermissions (Collection<Permission> permissions) {
+    public static long getLongByPermissions(Collection<Permission> permissions) {
         return getLongByPermissions(permissions.toArray(new Permission[permissions.size()]));
     }
 

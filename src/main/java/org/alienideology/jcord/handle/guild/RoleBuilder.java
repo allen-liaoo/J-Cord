@@ -1,6 +1,6 @@
 package org.alienideology.jcord.handle.guild;
 
-import org.alienideology.jcord.handle.Permission;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.guild.Role;
 
 import java.awt.*;

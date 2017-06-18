@@ -4,14 +4,17 @@ import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.channel.MessageHistory;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.handle.message.*;
-import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.handle.message.IEmbedMessage;
+import org.alienideology.jcord.handle.message.IMessage;
+import org.alienideology.jcord.handle.message.IStringMessage;
+import org.alienideology.jcord.handle.message.StringMessageBuilder;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
-import org.alienideology.jcord.internal.object.guild.Guild;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
-import org.alienideology.jcord.handle.Permission;
+import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.message.EmbedMessage;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.StringMessage;
@@ -198,6 +201,15 @@ public class MessageChannel extends Channel implements IMessageChannel {
         }
 
         new Requester(identity, HttpPath.Channel.ADD_PINNED_MESSAGE).request(this.id, id).performRequest();
+    }
+
+    @Override
+    public String toString() {
+        return "MessageChannel{" +
+                "id='" + id + '\'' +
+                ", isPrivate=" + isPrivate +
+                ", latestMessage=" + latestMessage +
+                '}';
     }
 
     public MessageChannel setLatestMessage(IMessage latestMessage) {

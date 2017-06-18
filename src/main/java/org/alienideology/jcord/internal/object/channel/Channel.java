@@ -1,8 +1,8 @@
 package org.alienideology.jcord.internal.object.channel;
 
 import org.alienideology.jcord.handle.channel.IChannel;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.DiscordObject;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 
 import java.util.Objects;
 
@@ -58,7 +58,9 @@ public class Channel extends DiscordObject implements IChannel {
 
     @Override
     public String toString() {
-        return "ID: "+id;
+        return "Channel{" +
+                "id='" + id + '\'' +
+                ", type=" + type +
+                '}';
     }
-
 }

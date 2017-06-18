@@ -1,10 +1,10 @@
 package org.alienideology.jcord.internal.object.message;
 
+import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.message.IReaction;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.handle.EmojiTable;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 
 /**
  * @author AlienIdeology
@@ -81,10 +81,11 @@ public final class Reaction extends DiscordObject implements IReaction {
 
     @Override
     public String toString() {
-        if (guildEmoji != null) {
-            return "Reaction: "+reactedTimes+" "+guildEmoji.getName()+" "+guildEmoji.getId()+"\t";
-        } else {
-            return "Reaction: "+reactedTimes+" "+emoji.getName()+" "+emoji.getUnicode();
-        }
+        return "Reaction{" +
+                "reactedTimes=" + reactedTimes +
+                ", emoji=" + emoji +
+                ", guildEmoji=" + guildEmoji +
+                '}';
     }
+
 }

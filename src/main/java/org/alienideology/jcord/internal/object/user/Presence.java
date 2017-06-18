@@ -1,7 +1,7 @@
 package org.alienideology.jcord.internal.object.user;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.DiscordObject;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 
 /**
  * @author AlienIdeology
@@ -33,6 +33,10 @@ public final class Presence extends DiscordObject {
 
     @Override
     public String toString() {
-        return user.toString() + " " + status.toString() + " " + game.toString();
+        return "Presence{" +
+                "user=" + user +
+                ", game=" + game +
+                ", status=" + status +
+                '}';
     }
 }

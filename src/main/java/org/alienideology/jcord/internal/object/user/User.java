@@ -1,10 +1,10 @@
 package org.alienideology.jcord.internal.object.user;
 
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.json.JSONObject;
@@ -119,7 +119,11 @@ public final class User extends DiscordObject implements IUser {
 
     @Override
     public String toString() {
-        return "ID: "+id+"\tName: "+name;
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", discriminator='" + discriminator + '\'' +
+                '}';
     }
 
     private void setAvatar() {

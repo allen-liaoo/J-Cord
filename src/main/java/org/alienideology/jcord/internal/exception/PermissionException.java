@@ -1,6 +1,6 @@
 package org.alienideology.jcord.internal.exception;
 
-import org.alienideology.jcord.handle.Permission;
+import org.alienideology.jcord.handle.permission.Permission;
 
 import java.util.Arrays;
 

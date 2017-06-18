@@ -1,9 +1,9 @@
 package org.alienideology.jcord.internal.object.guild;
 
-import org.alienideology.jcord.handle.Permission;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.guild.IRoleManager;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException.HierarchyType;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
