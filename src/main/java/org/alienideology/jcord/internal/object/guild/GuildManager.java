@@ -1,11 +1,7 @@
 package org.alienideology.jcord.internal.object.guild;
 
-import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
-import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.handle.guild.IGuildManager;
-import org.alienideology.jcord.handle.guild.IMember;
-import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.guild.*;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -134,11 +130,43 @@ public class GuildManager implements IGuildManager {
         }
     }
 
-    // TODO: #leave method in SelfUserManager, and reference it in Member#kick and GuildManager#kickMember Javadocs.
-
     @Override
     public boolean kickMember(IMember member) {
         return kickMember(member.getId());
+    }
+
+    @Override
+    public boolean kickMember(String memberId) {
+        IMember member = guild.getMember(memberId);
+        // Validate member
+        if (member == null) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER, "Unknown member to kick! ID: "+memberId);
+        }
+        if (member.equals(guild.getSelfMember())) {
+            throw new IllegalArgumentException("Cannot kick the identity itself from a guild!");
+        }
+
+        // Checks hierarchy
+        if (member.isOwner() && !guild.getSelfMember().isOwner()) {
+            throw new HigherHierarchyException(HierarchyType.OWNER);
+        }
+        if (!guild.getSelfMember().canModify(member)) {
+            throw new HigherHierarchyException(HierarchyType.MEMBER);
+        }
+
+        HttpCode code;
+        try {
+            code = new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.REMOVE_GUILD_MEMBER).request(guild.getId(), memberId)
+                    .performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.isPermissionException()) {
+                throw new PermissionException(Permission.KICK_MEMBERS);
+            } else {
+                throw ex;
+            }
+        }
+
+        return code.isOK() || code.isSuccess();
     }
 
     @Override
@@ -188,40 +216,6 @@ public class GuildManager implements IGuildManager {
                 throw ex;
             }
         }
-    }
-
-    @Override
-    public boolean kickMember(String memberId) {
-        IMember member = guild.getMember(memberId);
-        // Validate member
-        if (member == null) {
-            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER, "Unknown member to kick! ID: "+memberId);
-        }
-        if (member.equals(guild.getSelfMember())) {
-            throw new IllegalArgumentException("Cannot kick the identity itself from a guild!");
-        }
-
-        // Checks hierarchy
-        if (member.isOwner() && !guild.getSelfMember().isOwner()) {
-            throw new HigherHierarchyException(HierarchyType.OWNER);
-        }
-        if (!guild.getSelfMember().canModify(member)) {
-            throw new HigherHierarchyException(HierarchyType.MEMBER);
-        }
-
-        HttpCode code;
-        try {
-            code = new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.REMOVE_GUILD_MEMBER).request(guild.getId(), memberId)
-                    .performRequest();
-        } catch (HttpErrorException ex) {
-            if (ex.isPermissionException()) {
-                throw new PermissionException(Permission.KICK_MEMBERS);
-            } else {
-                throw ex;
-            }
-        }
-
-        return code.isOK() || code.isSuccess();
     }
 
     @Override

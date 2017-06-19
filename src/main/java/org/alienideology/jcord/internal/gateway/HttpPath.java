@@ -43,7 +43,10 @@ public final class HttpPath {
     }
 
     public static class Gateway {
-        public final static HttpPath GET_BOT = new HttpPath(GET, "/gateway/bot");
+
+        public final static HttpPath GET_GATEWAY = new HttpPath(GET, "/gateway");
+        public final static HttpPath GET_GATEWAY_BOT = new HttpPath(GET, "/gateway/bot");
+
     }
 
     public static class Guild {
@@ -111,6 +114,7 @@ public final class HttpPath {
         public final static HttpPath GET_CHANNEL = new HttpPath(GET, "/channels/{channel.id}");
         public final static HttpPath MODIFY_CHANNEL = new HttpPath(PATCH, "/channels/{channel.id}");
         public final static HttpPath DELETE_CHANNEL = new HttpPath(DELETE, "/channels/{channel.id}");
+        public final static HttpPath TRIGGER_TYPING_INDICATOR = new HttpPath(POST, "/channels/{channel.id}/typing");
 
         /* Message Action */
         public final static HttpPath GET_CHANNEL_MESSAGES = new HttpPath(GET, "/channels/{channel.id}/messages?limit={limit}");
@@ -133,8 +137,8 @@ public final class HttpPath {
         public final static HttpPath DELETE_REACTIOM_ALL = new HttpPath(DELETE, "/channels/{channel.id}/messages/{message.id}/reactions");
 
         /* Permission Action */
-        public final static HttpPath EDIT_CHANNE_PERMISSIONS = new HttpPath(PUT, "/channels/{channel.id}/permissions/{overwrite.id}");
-        public final static HttpPath DELETE_CHANNE_PERMISSION = new HttpPath(DELETE, "/channels/{channel.id}/permissions/{overwrite.id}");
+        public final static HttpPath EDIT_CHANNEL_PERMISSIONS = new HttpPath(PUT, "/channels/{channel.id}/permissions/{overwrite.id}");
+        public final static HttpPath DELETE_CHANNEL_PERMISSION = new HttpPath(DELETE, "/channels/{channel.id}/permissions/{overwrite.id}");
 
         /* Invite Action */
         public final static HttpPath GET_CHANNEL_INVITES = new HttpPath(GET, "/channels/{channel.id}/invites");
@@ -171,6 +175,31 @@ public final class HttpPath {
 
     }
 
+    public static class Invite {
+
+        public final static HttpPath GET_INVITE = new HttpPath(GET, "/invites/{invite.code}");
+        public final static HttpPath DELETE_INVITE = new HttpPath(DELETE, "/invites/{invite.code}");
+        public final static HttpPath ACCEPT_INVITE = new HttpPath(POST, "/invites/{invite.code}");
+
+    }
+
+    public static class Webhook {
+
+        /* Webhook Getters */
+        public final static HttpPath GET_GUILD_WEBHOOKS = new HttpPath(GET, "/guilds/{channel.id}/webhooks");
+        public final static HttpPath GET_CHANNEL_WEBHOOKS = new HttpPath(GET, "/channels/{channel.id}/webhooks");
+        public final static HttpPath GET_WEBHOOK = new HttpPath(GET, "/webhooks/{webhook.id}");
+        public final static HttpPath GET_WEBHOOK_WITH_TOKEN = new HttpPath(GET, "/webhooks/{webhook.id}/{webhook.token}");
+
+        /* Webhook Actions */
+        public final static HttpPath CREATE_WEBHOOK = new HttpPath(POST, "/channels/{channel.id}/webhooks");
+        public final static HttpPath MODIFY_WEBHOOK = new HttpPath(PATCH, "/webhooks/{webhook.id}");
+        public final static HttpPath MODIFY_WEBHOOK_WITH_TOKEN = new HttpPath(PATCH, "/webhooks/{webhook.id}/{webhook.token}");
+        public final static HttpPath EXECUTE_WEBHOOK = new HttpPath(POST, "/webhooks/{webhook.id}/{webhook.token}");
+        public final static HttpPath DELETE_WEBHOOK = new HttpPath(DELETE, "/webhooks/{webhook.id}");
+        public final static HttpPath DELETE_WEBHOOK_WITH_TOKEN = new HttpPath(DELETE, "/webhooks/{webhook.id}/{webhook.token}");
+    }
+
     private final HttpMethod method;
     private String path;
 
@@ -187,4 +216,11 @@ public final class HttpPath {
         return path;
     }
 
+    @Override
+    public String toString() {
+        return "HttpPath{" +
+                "method=" + method +
+                ", path='" + path + '\'' +
+                '}';
+    }
 }

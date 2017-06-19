@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 /**
  * @author AlienIdeology
  */
-// TODO: MemberManager#moveMember(IVoiceChannel)
 public class MemberManager implements IMemberManager {
 
     private Member member;

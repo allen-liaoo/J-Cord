@@ -4,7 +4,6 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
-import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.user.IUser;

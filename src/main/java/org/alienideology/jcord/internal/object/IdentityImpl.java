@@ -173,7 +173,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
 
     @Nullable
     public IVoiceChannel getVoiceChannel(String id) {
-        for (IVoiceChannel vc : getVoiceChannels()) {
+        for (IVoiceChannel vc : getAllVoiceChannels()) {
             if (vc.getId().equals(id)) {
                 return vc;
             }
@@ -181,7 +181,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         return null;
     }
 
-    public List<IVoiceChannel> getVoiceChannels() {
+    public List<IVoiceChannel> getAllVoiceChannels() {
         List<IVoiceChannel> channels = new ArrayList<>();
         for (IGuild guild : guilds) {
             channels.addAll(guild.getVoiceChannels());
@@ -192,7 +192,17 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     @Nullable
     public IPrivateChannel getPrivateChannel(String id) {
         for (IPrivateChannel dm : privateChannels) {
-            if (dm.getRecipient().getId().equals(id)) {
+            if (dm.getId().equals(id)) {
+                return dm;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public IPrivateChannel getPrivateChannelByUserId(String userId) {
+        for (IPrivateChannel dm : privateChannels) {
+            if (dm.getRecipient().getId().equals(userId)) {
                 return dm;
             }
         }
@@ -237,7 +247,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         }
 
         try {
-            HttpRequest request = Unirest.get(HttpPath.Gateway.GET_BOT.getPath()).header("Authorization", this.token);
+            HttpRequest request = Unirest.get(HttpPath.Gateway.GET_GATEWAY_BOT.getPath()).header("Authorization", this.token);
             String uri = request.asJson().getBody().getObject().getString("url") + "?encoding=json&v=" + GatewayAdaptor.GATEWAY_VERSION;
 
             URI url = new URI(uri);
@@ -318,7 +328,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
 
     public PrivateChannel removePrivateChannel(String channelId) {
         PrivateChannel channel= (PrivateChannel) getPrivateChannel(channelId);
-        this.guilds.remove(channel);
+        this.privateChannels.remove(channel);
         return channel;
     }
 

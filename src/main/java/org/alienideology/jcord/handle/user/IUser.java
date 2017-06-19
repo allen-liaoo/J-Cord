@@ -4,7 +4,6 @@ import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
-import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 
 /**
  * User - A base entity, can be a member of guild/private channel, and bot/human.
@@ -14,9 +13,16 @@ public interface IUser extends IDiscordObject, ISnowFlake, IMention {
 
     /**
      * Get or open a PrivateChannel with this user
+     *
      * @return The PrivateChannel with this user
      */
     IPrivateChannel getPrivateChannel();
+
+    /**
+     * Close the PrivateChannel with this user
+     * Note that this action can be undone by using {@link #getPrivateChannel()} to reopen a new PrivateChannel.
+     */
+    void closePrivateChannel();
 
     /**
      * Get the username of this user.

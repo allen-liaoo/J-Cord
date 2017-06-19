@@ -1,23 +1,31 @@
 package org.alienideology.jcord.command;
 
-import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.handle.guild.IMember;
-import org.alienideology.jcord.handle.message.*;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.message.IEmbedMessage;
+import org.alienideology.jcord.handle.message.IMessage;
+import org.alienideology.jcord.handle.message.IStringMessage;
+import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.channel.Channel;
+import org.alienideology.jcord.internal.object.channel.MessageChannel;
+import org.alienideology.jcord.internal.object.channel.PrivateChannel;
+import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.guild.Guild;
-import org.alienideology.jcord.internal.object.message.Message;
-import org.alienideology.jcord.internal.object.channel.*;
 import org.alienideology.jcord.internal.object.guild.Member;
+import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.user.User;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -25,6 +33,8 @@ import java.util.stream.Collectors;
  * @author AlienIdeology
  */
 public class CommandFramework {
+
+    private List<CommandResponder> responders;
 
     private List<String> prefixes;
     private HashMap<Command, ResponderContainer> annotations;
@@ -34,6 +44,7 @@ public class CommandFramework {
      * Default Constructor
      */
     public CommandFramework() {
+        this.responders = new ArrayList<>();
         this.prefixes = new ArrayList<>();
         this.annotations = new HashMap<>();
         this.dispatcher = new DispatcherAdaptor() {
@@ -93,6 +104,7 @@ public class CommandFramework {
      * @return The CommandFramework for chaining.
      */
     public CommandFramework registerCommandResponders(CommandResponder... commands) {
+        responders.addAll(Arrays.asList(commands));
         for (CommandResponder responder : commands) {
             for (Method method : responder.getClass().getMethods()) {
                 if (method.isAnnotationPresent(Command.class)) {
@@ -101,6 +113,34 @@ public class CommandFramework {
             }
         }
         return this;
+    }
+
+    /**
+     * @return A list of prefixes
+     */
+    public List<String> getPrefixes() {
+        return prefixes;
+    }
+
+    /**
+     * @return The DispatcherAdaptor of this CommandFramework
+     */
+    public DispatcherAdaptor getDispatcher() {
+        return dispatcher;
+    }
+
+    /**
+     * @return The command responders registered to this command framework.
+     */
+    public List<CommandResponder> getResponders() {
+        return responders;
+    }
+
+    /**
+     * @return All aliases found in all CommandResponders.
+     */
+    private List<String> getAliases() {
+        return annotations.keySet().stream().flatMap(c -> Arrays.stream(c.aliases())).collect(Collectors.toList());
     }
 
     @SuppressWarnings("InstantiatingObjectToGetClassObject")
@@ -164,27 +204,6 @@ public class CommandFramework {
                 }
             }
         }
-    }
-
-    /**
-     * @return A list of prefixes
-     */
-    public List<String> getPrefixes() {
-        return prefixes;
-    }
-
-    /**
-     * @return The DispatcherAdaptor of this CommandFramework
-     */
-    public DispatcherAdaptor getDispatcher() {
-        return dispatcher;
-    }
-
-    /**
-     * @return All aliases found in all CommandResponders.
-     */
-    private List<String> getAliases() {
-        return annotations.keySet().stream().flatMap(c -> Arrays.stream(c.aliases())).collect(Collectors.toList());
     }
 
     /**

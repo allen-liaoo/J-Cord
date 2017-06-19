@@ -48,8 +48,6 @@ public class ExampleBot {
 
             IGuild guild = bot.getGuild("311250670068170752");
 
-            System.out.println(guild.getDefaultChannel().getMemberPermOverwrites());
-
         } catch (Exception e) {
             e.printStackTrace();
         }

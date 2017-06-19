@@ -15,4 +15,12 @@ public interface IPrivateChannel extends IMessageChannel {
      */
     IUser getRecipient();
 
+    /**
+     * Close the private channel.
+     * Note that this action can be undone by using {@link IUser#getPrivateChannel()} to reopen a new PrivateChannel.
+     */
+    default void close() {
+        getRecipient().closePrivateChannel();
+    }
+
 }

@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.user;
 
+import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
@@ -45,18 +46,27 @@ public final class User extends DiscordObject implements IUser {
 
     @Override
     public PrivateChannel getPrivateChannel() {
-        PrivateChannel dm = (PrivateChannel) identity.getPrivateChannel(id);
+        PrivateChannel dm = (PrivateChannel) identity.getPrivateChannelByUserId(id);
 
         // Private Channel has not exist
         if (dm == null) {
-            try {
-                JSONObject json = new Requester(identity, HttpPath.User.CREATE_DM).request()
-                        .updateRequestWithBody(body -> body.header("Content-Type", "application/json")
-                                .body(new JSONObject().put("recipient_id", id))).getAsJSONObject();
-                dm = new ObjectBuilder(identity).buildPrivateChannel(json);
-            } catch (RuntimeException ignored) { }
+            JSONObject json = new Requester(identity, HttpPath.User.CREATE_DM).request()
+                    .updateRequestWithBody(body -> body.header("Content-Type", "application/json")
+                            .body(new JSONObject().put("recipient_id", id))).getAsJSONObject();
+
+            dm = new ObjectBuilder(identity).buildPrivateChannel(json);
+            identity.addPrivateChannel(dm);
         }
         return dm;
+    }
+
+    @Override
+    public void closePrivateChannel() {
+        IPrivateChannel channel = identity.getPrivateChannelByUserId(id);
+        if (channel == null) return;
+        new Requester(identity, HttpPath.Channel.DELETE_CHANNEL).request(channel.getId())
+                .performRequest();
+        identity.removePrivateChannel(id);
     }
 
     @Override

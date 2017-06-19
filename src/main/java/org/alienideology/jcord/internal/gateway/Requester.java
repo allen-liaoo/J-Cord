@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.gateway;
 
+import com.mashape.unirest.http.Headers;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -7,16 +8,15 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
-import org.alienideology.jcord.internal.exception.HttpErrorException;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
+import org.alienideology.jcord.internal.exception.HttpErrorException;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.IllegalFormatException;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -52,7 +52,7 @@ public final class Requester {
      * @return A GetRequest to perform further action.
      */
     public GetRequest requestGet(String... params) {
-        HttpRequest request = requestHttp(params);
+        HttpRequest request = requestHttp((Object[]) params);
         return (GetRequest) request;
     }
 
@@ -60,7 +60,7 @@ public final class Requester {
      * @return A HttpRequestWithBody to perform further action.
      */
     public HttpRequestWithBody requestWithBody(String... params) {
-        HttpRequest request = requestHttp(params);
+        HttpRequest request = requestHttp((Object[]) params);
         return (HttpRequestWithBody) request;
     }
 
@@ -101,6 +101,7 @@ public final class Requester {
     public HttpCode performRequest() {
         try {
             HttpResponse<JsonNode> response = request.asJson();
+            checkRateLimit(response);
             handleErrorCode(response);
             JsonNode node = response.getBody();
             if (node != null && !node.isArray()) {
@@ -119,6 +120,7 @@ public final class Requester {
         JSONObject json;
         try {
             HttpResponse<JsonNode> response = request.asJson();
+            checkRateLimit(response);
             handleErrorCode(response);
             JsonNode node = response.getBody();
 
@@ -141,6 +143,7 @@ public final class Requester {
         JSONArray json;
         try {
             HttpResponse<JsonNode> response = request.asJson();
+            checkRateLimit(response);
             handleErrorCode(response);
             JsonNode node = response.getBody();
 
@@ -220,12 +223,32 @@ public final class Requester {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void handleErrorCode(HttpResponse response) {
         HttpCode error = HttpCode.getByKey(response.getStatus());
         if (error.isServerError() || error.isFailure()) {
-            throw new HttpErrorException(error);
+            if (error.equals(HttpCode.TOO_MANY_REQUESTS)) { // Rate limited
+                checkRateLimit(response);
+            } else {
+                throw new HttpErrorException(error);
+            }
         } else if (error == HttpCode.UNKNOWN){
             throw new HttpErrorException(response.getStatus(), response.getStatusText());
+        }
+    }
+
+    private void checkRateLimit(HttpResponse<JsonNode> response) {
+        final Headers headers = response.getHeaders();
+        if (headers.containsKey("Retry-After")) { // Rate limited
+            Long retryAfter = Long.parseLong(headers.getFirst("Retry-After")); // In milliseconds
+            identity.LOG.error("You are being rate limited! Automatically blocked the thread.\n" +
+                    "(Request: "+path.toString()+" | Retry after: "+retryAfter+" ms)");
+            try {
+                Thread.sleep(retryAfter);
+            } catch (InterruptedException e) {
+                identity.LOG.error("Error when blocking thread for rate limit: ");
+                e.printStackTrace();
+            }
         }
     }
 

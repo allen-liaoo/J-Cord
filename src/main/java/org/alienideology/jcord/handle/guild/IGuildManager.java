@@ -1,7 +1,6 @@
 package org.alienideology.jcord.handle.guild;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException;
@@ -185,6 +184,7 @@ public interface IGuildManager {
 
     /**
      * Kick a member.
+     * To let the identity leave a guild, see {@link org.alienideology.jcord.handle.ISelfManager#leaveGuild(IGuild)}
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Kick Members} permission.
@@ -199,6 +199,7 @@ public interface IGuildManager {
 
     /**
      * Kick a member by ID.
+     * To let the identity leave a guild, see {@link org.alienideology.jcord.handle.ISelfManager#leaveGuild(IGuild)}
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Kick Members} permission.

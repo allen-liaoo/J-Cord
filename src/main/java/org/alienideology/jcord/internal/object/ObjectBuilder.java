@@ -158,7 +158,6 @@ public final class ObjectBuilder {
      */
     public IGuildChannel buildGuildChannel (JSONObject json) {
         handleBuildError(json);
-        System.out.println(json.toString(4));
 
         String guild_id = json.getString("guild_id");
         String id = json.getString("id");
