@@ -3,9 +3,26 @@ package org.alienideology.jcord.event;
 import org.alienideology.jcord.event.channel.ChannelCreateEvent;
 import org.alienideology.jcord.event.channel.ChannelDeleteEvent;
 import org.alienideology.jcord.event.channel.ChannelEvent;
+import org.alienideology.jcord.event.channel.dm.IPrivateChannelEvent;
 import org.alienideology.jcord.event.channel.dm.PrivateChannelCreateEvent;
 import org.alienideology.jcord.event.channel.dm.PrivateChannelDeleteEvent;
-import org.alienideology.jcord.event.channel.guild.*;
+import org.alienideology.jcord.event.channel.guild.GuildChannelCreateEvent;
+import org.alienideology.jcord.event.channel.guild.GuildChannelDeleteEvent;
+import org.alienideology.jcord.event.channel.guild.GuildChannelUpdateEvent;
+import org.alienideology.jcord.event.channel.guild.IGuildChannelEvent;
+import org.alienideology.jcord.event.channel.guild.text.ITextChannelEvent;
+import org.alienideology.jcord.event.channel.guild.text.TextChannelCreateEvent;
+import org.alienideology.jcord.event.channel.guild.text.TextChannelDeleteEvent;
+import org.alienideology.jcord.event.channel.guild.text.TextChannelUpdateEvent;
+import org.alienideology.jcord.event.channel.guild.text.update.TextChannelNameUpdateEvent;
+import org.alienideology.jcord.event.channel.guild.text.update.TextChannelPermissionsUpdateEvent;
+import org.alienideology.jcord.event.channel.guild.text.update.TextChannelPositionUpdateEvent;
+import org.alienideology.jcord.event.channel.guild.text.update.TextChannelTopicUpdateEvent;
+import org.alienideology.jcord.event.channel.guild.voice.IVoiceChannelEvent;
+import org.alienideology.jcord.event.channel.guild.voice.VoiceChannelCreateEvent;
+import org.alienideology.jcord.event.channel.guild.voice.VoiceChannelDeleteEvent;
+import org.alienideology.jcord.event.channel.guild.voice.VoiceChannelUpdateEvent;
+import org.alienideology.jcord.event.channel.guild.voice.update.*;
 import org.alienideology.jcord.event.gateway.GatewayEvent;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.gateway.ResumedEvent;
@@ -17,12 +34,14 @@ import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.MessageDeleteEvent;
 import org.alienideology.jcord.event.message.MessageEvent;
 import org.alienideology.jcord.event.message.MessageUpdateEvent;
+import org.alienideology.jcord.event.message.dm.IPrivateMessageEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageDeleteEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageUpdateEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageDeleteEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageUpdateEvent;
+import org.alienideology.jcord.event.message.guild.IGuildMessageEvent;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 
 /**
@@ -167,6 +186,17 @@ public class DispatcherAdaptor {
      */
     private void dispatchChannelEvent(ChannelEvent event) {
         onChannelEvent(event);
+        if (event instanceof IGuildChannelEvent) {
+            onGuildChannelEvent((IGuildChannelEvent) event);
+            if (event instanceof ITextChannelEvent) {
+                onTextChannelEvent((ITextChannelEvent) event);
+            } else if (event instanceof IVoiceChannelEvent) {
+                onVoiceChannelEvent((IVoiceChannelEvent) event);
+            }
+        } else if (event instanceof IPrivateChannelEvent) {
+            onPrivateChannelEvent((IPrivateChannelEvent) event);
+        }
+
         if (event instanceof ChannelCreateEvent) {
             onChannelCreate((ChannelCreateEvent) event);
             if (event instanceof GuildChannelCreateEvent) {
@@ -178,6 +208,32 @@ public class DispatcherAdaptor {
                 }
             } else if (event instanceof PrivateChannelCreateEvent) {
                 onPrivateChannelCreate((PrivateChannelCreateEvent) event);
+            }
+        } else if (event instanceof GuildChannelUpdateEvent) {
+            if (event instanceof TextChannelUpdateEvent) {
+                onTextChannelUpdate((TextChannelUpdateEvent) event);
+                if (event instanceof TextChannelNameUpdateEvent) {
+                    onTextChannelNameUpdate((TextChannelNameUpdateEvent) event);
+                } else if (event instanceof TextChannelPositionUpdateEvent) {
+                    onTextChannelPositionUpdate((TextChannelPositionUpdateEvent) event);
+                } else if (event instanceof TextChannelPermissionsUpdateEvent) {
+                    onTextChannelPermissionsUpdate((TextChannelPermissionsUpdateEvent) event);
+                } else if (event instanceof TextChannelTopicUpdateEvent) {
+                    onTextChannelTopicUpdate((TextChannelTopicUpdateEvent) event);
+                }
+            } else if (event instanceof VoiceChannelUpdateEvent) {
+                onVoiceChannelUpdate((VoiceChannelUpdateEvent) event);
+                if (event instanceof VoiceChannelNameUpdateEvent) {
+                    onVoiceChannelNameUpdate((VoiceChannelNameUpdateEvent) event);
+                } else if (event instanceof VoiceChannelPositionUpdateEvent) {
+                    onVoiceChannelPositionUpdate((VoiceChannelPositionUpdateEvent) event);
+                } else if (event instanceof VoiceChannelPermissionsUpdateEvent) {
+                    onVoiceChannelPermissionsUpdate((VoiceChannelPermissionsUpdateEvent) event);
+                } else if (event instanceof VoiceChannelBitrateUpdateEvent) {
+                    onVoiceChannelBitrateUpdate((VoiceChannelBitrateUpdateEvent) event);
+                } else if (event instanceof VoiceChannelUserLimitUpdateEvent) {
+                    onVoiceChannelUserLimitUpdate((VoiceChannelUserLimitUpdateEvent) event);
+                }
             }
         } else if (event instanceof ChannelDeleteEvent) {
             onChannelDelete((ChannelDeleteEvent) event);
@@ -199,6 +255,14 @@ public class DispatcherAdaptor {
      */
     public void onChannelEvent (ChannelEvent event) {}
 
+    public void onGuildChannelEvent (IGuildChannelEvent event) {}
+
+    public void onTextChannelEvent (ITextChannelEvent event) {}
+
+    public void onVoiceChannelEvent (IVoiceChannelEvent event) {}
+
+    public void onPrivateChannelEvent (IPrivateChannelEvent event) {}
+
     public void onChannelCreate (ChannelCreateEvent event) {}
 
     public void onGuildChannelCreate (GuildChannelCreateEvent event) {}
@@ -208,6 +272,30 @@ public class DispatcherAdaptor {
     public void onVoiceChannelCreate (VoiceChannelCreateEvent event) {}
 
     public void onPrivateChannelCreate (PrivateChannelCreateEvent event) {}
+
+    public void onGuildChannelUpdate (GuildChannelUpdateEvent event) {}
+
+    public void onTextChannelUpdate (TextChannelUpdateEvent event) {}
+
+    public void onTextChannelNameUpdate (TextChannelNameUpdateEvent event) {}
+
+    public void onTextChannelPositionUpdate (TextChannelPositionUpdateEvent event) {}
+
+    public void onTextChannelPermissionsUpdate (TextChannelPermissionsUpdateEvent event) {}
+
+    public void onTextChannelTopicUpdate (TextChannelTopicUpdateEvent event) {}
+
+    public void onVoiceChannelUpdate (VoiceChannelUpdateEvent event) {}
+
+    public void onVoiceChannelNameUpdate (VoiceChannelNameUpdateEvent event) {}
+
+    public void onVoiceChannelPositionUpdate (VoiceChannelPositionUpdateEvent event) {}
+
+    public void onVoiceChannelPermissionsUpdate (VoiceChannelPermissionsUpdateEvent event) {}
+
+    public void onVoiceChannelBitrateUpdate (VoiceChannelBitrateUpdateEvent event) {}
+
+    public void onVoiceChannelUserLimitUpdate (VoiceChannelUserLimitUpdateEvent event) {}
 
     public void onChannelDelete (ChannelDeleteEvent event) {}
 
@@ -224,6 +312,12 @@ public class DispatcherAdaptor {
      */
     private void dispatchMessageEvent(MessageEvent event) {
         onMessageEvent(event);
+        if (event instanceof IGuildMessageEvent) {
+            onGuildMessageEvent((IGuildMessageEvent) event);
+        } else if (event instanceof IPrivateMessageEvent) {
+            onPrivateMessageEvent((IPrivateMessageEvent) event);
+        }
+
         if (event instanceof MessageCreateEvent) {
             onMessageCreate((MessageCreateEvent) event);
             if (event instanceof GuildMessageCreateEvent) {
@@ -249,6 +343,10 @@ public class DispatcherAdaptor {
     }
 
     public void onMessageEvent (MessageEvent event) {}
+
+    public void onGuildMessageEvent (IGuildMessageEvent event) {}
+
+    public void onPrivateMessageEvent (IPrivateMessageEvent event) {}
 
     public void onMessageCreate (MessageCreateEvent event) {}
 

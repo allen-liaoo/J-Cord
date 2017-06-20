@@ -58,5 +58,4 @@ public class ExampleDispatcher extends DispatcherAdaptor {
         System.out.println("------------\nPrivate msg: \n"+event.getChannel());
         System.out.println(event.getMessage()+"\n------------");
     }
-
 }

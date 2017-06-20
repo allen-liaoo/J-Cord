@@ -268,7 +268,7 @@ public final class Guild extends DiscordObject implements IGuild {
     @Override
     public List<IGuildChannel> getAllGuildChannels() {
         List<IGuildChannel> channels = new ArrayList<>(getTextChannels());
-        channels.addAll(getTextChannels());
+        channels.addAll(getVoiceChannels());
         return Collections.unmodifiableList(channels);
     }
 

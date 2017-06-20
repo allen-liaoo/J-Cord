@@ -2,6 +2,7 @@ Event - Whenever a change happens to an entity, an event get fired.
  - GatewayEvent - Events that are fired at connection.
    - ReadyEvent - Event that fired when the Discord server is ready.
    - ResumedEvent - Event fired when reconnect to the Discord server.
+    <br />
  - GuildEvent - Any events that happens under a guild.
    - GuildCreateEvent - Fired whenever a guild is detected. Do not use this event.
    - GuildUpdateEvent - Fired whenever a guild's setting is changed.
@@ -22,7 +23,29 @@ Event - Whenever a change happens to an entity, an event get fired.
      - GuildUnbanEvent (Special event that doesn't really counts as a GuildMemberEvent. <br />
        There is no member getter for the event)
    - GuildRoleCreatedEvent - Fired whenever a role is created.
+    <br />
+ - ChannelEvent
+   - ChannelCreateEvent
+     - GuildChannelCreateEvent
+       - TextChannelCreateEvent
+       - VoiceChannelCreateEvent
+     - PrivateChannelCreateEvent
+   - ChannelUpdateEvent
+     - TextChannelUpdateEvent
+     - VoiceChannelUpdateEvent
+   - ChannelDeleteEvent
+     - GuildChannelDeleteEvent
+       - TextChannelDeleteEvent
+       - VoiceChannelDeleteEvent
+     - PrivateChannelDeleteEvent
+    <br />
  - MessageEvent - Events that are related to a message.
    - MessageCreateEvent
+     - GuildMessageCreateEvent
+     - PrivateMessageCreateEvent
    - MessageUpdateEvent
+     - GuildMessageUpdateEvent
+     - PrivateMessageUpdateEvent
    - MessageDeleteEvent
+     - GuildMessageDeleteEvent
+     - PrivateMessageDeleteEvent

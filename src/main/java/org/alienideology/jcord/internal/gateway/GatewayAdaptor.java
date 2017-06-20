@@ -282,6 +282,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
         /* Channel Event */
         eventHandler.put("CHANNEL_CREATE", new ChannelCreateEventHandler(identity));
+        eventHandler.put("CHANNEL_UPDATE", new ChannelUpdateEventHandler(identity));
         eventHandler.put("CHANNEL_DELETE", new ChannelDeleteEventHandler(identity));
 
         /* Message Event */

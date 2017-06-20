@@ -1,8 +1,8 @@
 package org.alienideology.jcord.event.handler;
 
 import org.alienideology.jcord.event.channel.dm.PrivateChannelCreateEvent;
-import org.alienideology.jcord.event.channel.guild.TextChannelCreateEvent;
-import org.alienideology.jcord.event.channel.guild.VoiceChannelCreateEvent;
+import org.alienideology.jcord.event.channel.guild.text.TextChannelCreateEvent;
+import org.alienideology.jcord.event.channel.guild.voice.VoiceChannelCreateEvent;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.internal.object.IdentityImpl;

@@ -88,7 +88,9 @@ public class EventManager {
 
         Class<? extends Event> eventClass = event.getClass();
         for (;;) {
+            System.out.println(eventClass);
             for (Class<? extends Event> param : methods.keySet()) {
+                System.out.println("Param "+param);
 
                 if (param.isAssignableFrom(eventClass)) {
                     try {

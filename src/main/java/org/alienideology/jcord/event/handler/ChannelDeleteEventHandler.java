@@ -1,8 +1,8 @@
 package org.alienideology.jcord.event.handler;
 
 import org.alienideology.jcord.event.channel.dm.PrivateChannelDeleteEvent;
-import org.alienideology.jcord.event.channel.guild.TextChannelDeleteEvent;
-import org.alienideology.jcord.event.channel.guild.VoiceChannelDeleteEvent;
+import org.alienideology.jcord.event.channel.guild.text.TextChannelDeleteEvent;
+import org.alienideology.jcord.event.channel.guild.voice.VoiceChannelDeleteEvent;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.internal.object.IdentityImpl;

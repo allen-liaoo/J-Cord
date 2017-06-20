@@ -127,6 +127,36 @@ public class PermOverwrite extends DiscordObject implements ISnowFlake {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PermOverwrite)) return false;
+        if (!super.equals(o)) return false;
+
+        PermOverwrite overwrite = (PermOverwrite) o;
+
+        if (allow != overwrite.allow) return false;
+        if (denied != overwrite.denied) return false;
+        if (!id.equals(overwrite.id)) return false;
+        if (!guild.equals(overwrite.guild)) return false;
+        if (overwriteType != overwrite.overwriteType) return false;
+        if (role != null ? !role.equals(overwrite.role) : overwrite.role != null) return false;
+        return member != null ? member.equals(overwrite.member) : overwrite.member == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + id.hashCode();
+        result = 31 * result + guild.hashCode();
+        result = 31 * result + overwriteType.hashCode();
+        result = 31 * result + (role != null ? role.hashCode() : 0);
+        result = 31 * result + (member != null ? member.hashCode() : 0);
+        result = 31 * result + (int) (allow ^ (allow >>> 32));
+        result = 31 * result + (int) (denied ^ (denied >>> 32));
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "PermOverwrite{" +
                 "identity=" + identity +
