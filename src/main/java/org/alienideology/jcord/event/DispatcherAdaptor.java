@@ -1,5 +1,11 @@
 package org.alienideology.jcord.event;
 
+import org.alienideology.jcord.event.channel.ChannelCreateEvent;
+import org.alienideology.jcord.event.channel.ChannelDeleteEvent;
+import org.alienideology.jcord.event.channel.ChannelEvent;
+import org.alienideology.jcord.event.channel.dm.PrivateChannelCreateEvent;
+import org.alienideology.jcord.event.channel.dm.PrivateChannelDeleteEvent;
+import org.alienideology.jcord.event.channel.guild.*;
 import org.alienideology.jcord.event.gateway.GatewayEvent;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.gateway.ResumedEvent;
@@ -20,10 +26,11 @@ import org.alienideology.jcord.event.message.guild.GuildMessageUpdateEvent;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 
 /**
- * DispatcherAdaptor - Event listener used to listen to events and perform actions
+ * DispatcherAdaptor - Event listener used to listen to events and perform actions.
+ *
  * @author AlienIdeology
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class DispatcherAdaptor {
 
     /*
@@ -39,6 +46,8 @@ public class DispatcherAdaptor {
             dispatchGatewayEvent((GatewayEvent) event);
         } else if (event instanceof GuildEvent) {
             dispatchGuildEvent((GuildEvent) event);
+        } else if (event instanceof ChannelEvent) {
+            dispatchChannelEvent((ChannelEvent) event);
         } else if (event instanceof MessageEvent) {
             dispatchMessageEvent((MessageEvent) event);
         }
@@ -152,6 +161,63 @@ public class DispatcherAdaptor {
     public void onGuildUnban (GuildUnbanEvent event) {}
 
     public void onGuildRoleCreate (GuildRoleCreateEvent event) {}
+
+    /**
+     * Channel Events
+     */
+    private void dispatchChannelEvent(ChannelEvent event) {
+        onChannelEvent(event);
+        if (event instanceof ChannelCreateEvent) {
+            onChannelCreate((ChannelCreateEvent) event);
+            if (event instanceof GuildChannelCreateEvent) {
+                onGuildChannelCreate((GuildChannelCreateEvent) event);
+                if (event instanceof TextChannelCreateEvent) {
+                    onTextChannelCreate((TextChannelCreateEvent) event);
+                } else if (event instanceof VoiceChannelCreateEvent) {
+                    onVoiceChannelCreate((VoiceChannelCreateEvent) event);
+                }
+            } else if (event instanceof PrivateChannelCreateEvent) {
+                onPrivateChannelCreate((PrivateChannelCreateEvent) event);
+            }
+        } else if (event instanceof ChannelDeleteEvent) {
+            onChannelDelete((ChannelDeleteEvent) event);
+            if (event instanceof GuildChannelDeleteEvent) {
+                onGuildChannelDelete((GuildChannelDeleteEvent) event);
+                if (event instanceof TextChannelDeleteEvent) {
+                    onTextChannelDelete((TextChannelDeleteEvent) event);
+                }else if (event instanceof VoiceChannelDeleteEvent) {
+                    onVoiceChannelDelete((VoiceChannelDeleteEvent) event);
+                }
+            } else if (event instanceof PrivateChannelDeleteEvent) {
+                onPrivateChannelDelete((PrivateChannelDeleteEvent) event);
+            }
+        }
+    }
+
+    /*
+        General Channel Events
+     */
+    public void onChannelEvent (ChannelEvent event) {}
+
+    public void onChannelCreate (ChannelCreateEvent event) {}
+
+    public void onGuildChannelCreate (GuildChannelCreateEvent event) {}
+
+    public void onTextChannelCreate (TextChannelCreateEvent event) {}
+
+    public void onVoiceChannelCreate (VoiceChannelCreateEvent event) {}
+
+    public void onPrivateChannelCreate (PrivateChannelCreateEvent event) {}
+
+    public void onChannelDelete (ChannelDeleteEvent event) {}
+
+    public void onGuildChannelDelete (GuildChannelDeleteEvent event) {}
+
+    public void onTextChannelDelete (TextChannelDeleteEvent event) {}
+
+    public void onVoiceChannelDelete (VoiceChannelDeleteEvent event) {}
+
+    public void onPrivateChannelDelete (PrivateChannelDeleteEvent event) {}
 
     /**
      * Message Events

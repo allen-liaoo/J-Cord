@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public class InviteManager implements IInviteManager {
+public final class InviteManager implements IInviteManager {
 
     private Guild guild;
     private IGuildChannel channel;

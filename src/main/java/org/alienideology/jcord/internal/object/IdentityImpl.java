@@ -135,6 +135,19 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     }
 
     @Override
+    public IChannel getChannel(String id) {
+        IGuildChannel channel = getGuildChannel(id);
+        return channel == null ? getPrivateChannel(id) : channel;
+    }
+
+    @Override
+    public List<IChannel> getAllChannels() {
+        List<IChannel> channels = new ArrayList<>(getAllGuildChannels());
+        channels.addAll(getPrivateChannels());
+        return channels;
+    }
+
+    @Override
     public IGuildChannel getGuildChannel(String id) {
         for (IGuild guild : guilds) {
             IGuildChannel channel = guild.getGuildChannel(id);
@@ -145,7 +158,9 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
 
     @Override
     public List<IGuildChannel> getAllGuildChannels() {
-        return null;
+        List<IGuildChannel> channels = new ArrayList<>(getAllTextChannels());
+        channels.addAll(getAllVoiceChannels());
+        return channels;
     }
 
     @Nullable

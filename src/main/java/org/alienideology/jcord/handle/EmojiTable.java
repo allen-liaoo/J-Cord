@@ -5,15 +5,15 @@ import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * EmojiTable - A collection of Default Discord Emojis.
- * See a full this of emojis here:
- * https://raw.githubusercontent.com/emojione/emojione/master/emoji.json
+ *
  * @author AlienIdeology
  */
 public class EmojiTable {

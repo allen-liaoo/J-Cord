@@ -4,6 +4,7 @@ import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.IChannelManager;
+import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.permission.OverwriteCheckable;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 
@@ -29,6 +30,14 @@ public interface IGuildChannel extends IChannel, OverwriteCheckable, ISnowFlake 
      * @return The channel managers.
      */
     IChannelManager getChannelManager();
+
+    /**
+     * Get the IInviteManager that manages invites from this GuildChannel.
+     * All the invite actions can be found in the manager.
+     *
+     * @return The invite manager.
+     */
+    IInviteManager getInviteManager();
 
     /**
      * Ge the name of this channel.

@@ -1,6 +1,7 @@
 package org.alienideology.jcord.handle.permission;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
@@ -13,7 +14,7 @@ import java.util.Collection;
 /**
  * @author AlienIdeology
  */
-public class PermOverwrite extends DiscordObject {
+public class PermOverwrite extends DiscordObject implements ISnowFlake {
 
     private String id;
     private Guild guild;
@@ -34,46 +35,89 @@ public class PermOverwrite extends DiscordObject {
         this.denied = denied;
     }
 
-    public String getId() {
-        return id;
-    }
-
+    /**
+     * Get the guild this permission overwrite happened in.
+     *
+     * @return The guild.
+     */
     public Guild getGuild() {
         return guild;
     }
 
+    /**
+     * @return True if this permission overwrite is for a role.
+     *      Returns false if the overwrite is for a member.
+     */
     public boolean isRoleOverwrite() {
         return overwriteType.equals(Type.ROLE);
     }
 
+    /**
+     * Get the overwrite type.
+     *
+     * @return Either role or member type.
+     */
     public Type getOverwriteType() {
         return overwriteType;
     }
 
+    /**
+     * Get the role of permission overwrite.
+     * @return The role, or null if this is a member permission overwrite.
+     */
     @Nullable
     public Role getRole() {
         return role;
     }
 
+    /**
+     * Get the member of permission overwrite.
+     * @return The member, or null if this is a member role overwrite.
+     */
     @Nullable
     public Member getMember() {
         return member;
     }
 
+    /**
+     * Get the long value of the allowed permissions.
+     *
+     * @return The allowed permissions.
+     */
     public long getAllow() {
         return allow;
     }
 
+    /**
+     * Get a collection of allowed permissions.
+     *
+     * @return The allowed permissions.
+     */
     public Collection<Permission> getAllowedPermissions() {
         return Permission.getPermissionsByLong(allow);
     }
 
+    /**
+     * Get the long calue of the denied permissions.
+     *
+     * @return The denied permissions.
+     */
     public long getDenied() {
         return denied;
     }
 
+    /**
+     * Get a collection of denied permissions.
+     *
+     * @return The denied permissions.
+     */
     public Collection<Permission> getDeniedPermissions() {
         return Permission.getPermissionsByLong(denied);
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     private void setType() {
@@ -93,7 +137,11 @@ public class PermOverwrite extends DiscordObject {
                 '}';
     }
 
+    /**
+     * Types of permission overwrite
+     */
     public enum Type {
+
         /**
          * Permission overwrite for a {@link org.alienideology.jcord.handle.guild.IRole} in a {@link IGuildChannel}.
          */

@@ -86,12 +86,12 @@ public interface IMessageChannel extends IChannel {
     IMessage sendMessage(IEmbedMessage embed);
 
     /**
-    * Edit a string message by ID
+     * Edit a string message by ID
      *
-    * @param messageId The message ID
-    * @param message The new string content of the message
-    * @return The message edited
-    */
+     * @param messageId The message ID
+     * @param message The new string content of the message
+     * @return The message edited
+     */
     IMessage editMessage(String messageId, String message);
 
     /**
@@ -123,41 +123,47 @@ public interface IMessageChannel extends IChannel {
     IMessage editMessage(String messageId, IEmbedMessage message);
 
     /**
-    * Delete a message by ID.
+     * Delete a message by ID.
      *
-    * @param messageId The Id of the message.
-    *
-    * @exception IllegalArgumentException If this channel is a PrivateChannel and the message is from another user.
-    * @exception PermissionException If this channel is a TextChannel and the user lack Manage Messages permission to delete other's message.
-    *
-    * @return The message deleted.
-    */
-    IMessage deleteMessage(String messageId);
+     * @param messageId The Id of the message.
+     *
+     * @exception IllegalArgumentException If this channel is a PrivateChannel and the message is from another user.
+     * @exception PermissionException If this channel is a TextChannel and the user lack Manage Messages permission to delete other's message.
+     *
+     * @return The message deleted.
+     */
+     IMessage deleteMessage(String messageId);
 
     /**
-    * Delete a message.
+     * Delete a message.
      *
-    * @param message The the message.
-    *
-    * @exception IllegalArgumentException If this channel is a PrivateChannel and the message is from another user.
-    * @exception PermissionException If this channel is a TextChannel and the user lack Manage Messages permission to delete other's message.
-    *
-    * @return The message deleted.
-    */
+     * @param message The the message.
+     *
+     * @exception IllegalArgumentException If this channel is a PrivateChannel and the message is from another user.
+     * @exception PermissionException If this channel is a TextChannel and the user lack Manage Messages permission to delete other's message.
+     *
+     * @return The message deleted.
+     */
     IMessage deleteMessage(IMessage message);
 
     /**
-    * Pin a message by ID.
+     * Pin a message by ID.
      *
-    * @param messageId The message id.
-    */
+     * @param messageId The message id.
+     */
     void pinMessage(String messageId);
 
     /**
-    * Pin a message.
+     * Pin a message.
      *
-    * @param message The message object.
-    */
+     * @param message The message object.
+     */
     void pinMessage(IMessage message);
+
+    /**
+     * Start the typing status in this channel.
+     * Typing status is on when the channel shows {@code YOUR_BOT'S_NAME is typing...}.
+     */
+    void startTyping();
 
 }

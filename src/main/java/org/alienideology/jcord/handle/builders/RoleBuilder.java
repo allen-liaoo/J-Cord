@@ -15,7 +15,7 @@ import java.util.Collection;
  * @author AlienIdeology
  * @since 0.0.5
  */
-public class RoleBuilder {
+public final class RoleBuilder {
 
     private String name = null;
     private long permissions;

@@ -8,6 +8,7 @@ import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.managers.IGuildManager;
+import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.guild.Guild;
 
@@ -29,9 +30,17 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
      * Get the IGuildManager of this guild.
      * The guild managers is used to kick, ban, unban, and change guild settings.
      *
-     * @return The managers.
+     * @return The guild manager.
      */
     IGuildManager getGuildManager();
+
+    /**
+     * Get the IInviteManager for this guild.
+     * All the invite actions can be found in the manager.
+     *
+     * @return The invite manager.
+     */
+    IInviteManager getInviteManager();
 
     /**
      * Get the name of this guild.

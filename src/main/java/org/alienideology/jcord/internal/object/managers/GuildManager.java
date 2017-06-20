@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public class GuildManager implements IGuildManager {
+public final class GuildManager implements IGuildManager {
 
     private Guild guild;
 

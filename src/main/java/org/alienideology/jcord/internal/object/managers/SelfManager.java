@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * @author AlienIdeology
  */
-public class SelfManager implements ISelfManager {
+public final class SelfManager implements ISelfManager {
 
     private IdentityImpl identity;
 

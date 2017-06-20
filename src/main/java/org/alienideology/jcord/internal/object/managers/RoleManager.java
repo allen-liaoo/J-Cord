@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public class RoleManager implements IRoleManager {
+public final class RoleManager implements IRoleManager {
 
     private Role role;
     private Guild guild;

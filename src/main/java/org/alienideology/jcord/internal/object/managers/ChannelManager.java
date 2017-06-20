@@ -16,7 +16,7 @@ import org.json.JSONObject;
 /**
  * @author AlienIdeology
  */
-public class ChannelManager implements IChannelManager {
+public final class ChannelManager implements IChannelManager {
 
     private IGuildChannel channel;
 

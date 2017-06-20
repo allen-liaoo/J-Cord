@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 /**
  * @author AlienIdeology
  */
-public class MemberManager implements IMemberManager {
+public final class MemberManager implements IMemberManager {
 
     private Member member;
     private Guild guild;

@@ -6,12 +6,14 @@ import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IChannelManager;
+import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.ChannelManager;
+import org.alienideology.jcord.internal.object.managers.InviteManager;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.json.JSONObject;
 
@@ -27,6 +29,7 @@ public final class TextChannel extends MessageChannel implements ITextChannel, B
 
     private Guild guild;
     private ChannelManager channelManager;
+    private InviteManager inviteManager;
 
     private String name;
     private int position;
@@ -41,6 +44,7 @@ public final class TextChannel extends MessageChannel implements ITextChannel, B
         this.position = position;
         this.topic = topic;
         this.channelManager = new ChannelManager(this);
+        this.inviteManager = new InviteManager(this);
     }
 
     @Override
@@ -58,6 +62,11 @@ public final class TextChannel extends MessageChannel implements ITextChannel, B
     @Override
     public IChannelManager getChannelManager() {
         return channelManager;
+    }
+
+    @Override
+    public IInviteManager getInviteManager() {
+        return inviteManager;
     }
 
     @Override
@@ -103,7 +112,7 @@ public final class TextChannel extends MessageChannel implements ITextChannel, B
     public boolean hasPermission(IMember member, Collection<Permission> permissions) {
         PermOverwrite overwrites = getMemberPermOverwrite(member.getId());
         for (Permission permission : permissions) {
-            if (overwrites.getAllowedPermissions().contains(permission))
+            if (overwrites != null && overwrites.getAllowedPermissions().contains(permission))
                 return true;
             if (member.getPermissions().contains(permission))
                 return true;

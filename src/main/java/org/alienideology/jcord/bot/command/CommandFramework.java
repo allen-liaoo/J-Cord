@@ -150,7 +150,7 @@ public class CommandFramework {
                 Method method = annotations.get(command).method;
 
                 MessageCreateEvent event = parser.event;
-                IdentityImpl identity = event.getIdentity();
+                IdentityImpl identity = (IdentityImpl) event.getIdentity();
                 IMessage message = event.getMessage();
                 IGuild guild = event.getGuild();
                 IMember member = event.getMember();

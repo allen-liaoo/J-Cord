@@ -12,8 +12,9 @@ import static org.alienideology.jcord.handle.managers.IChannelManager.VOICE_CHAN
  * ChannelBuilder - A GuildChannel builder for creating text and voice channels.
  *
  * @author AlienIdeology
+ * @since 0.0.6
  */
-public class ChannelBuilder {
+public final class ChannelBuilder {
 
     private String name;
 

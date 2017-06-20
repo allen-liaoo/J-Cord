@@ -1,7 +1,7 @@
 package bot;
 
 import org.alienideology.jcord.event.EventSubscriber;
-import org.alienideology.jcord.event.message.MessageCreateEvent;
+import org.alienideology.jcord.event.channel.guild.TextChannelDeleteEvent;
 
 /**
  * @author AlienIdeology
@@ -9,8 +9,10 @@ import org.alienideology.jcord.event.message.MessageCreateEvent;
 public class ExampleSubscriber {
 
     @EventSubscriber
-    public void onMessageCreateEvent(MessageCreateEvent event) {
-        System.out.println(event.getChannel());
+    public void onChannelRemove(TextChannelDeleteEvent event) {
+        System.out.println(event.getVoiceChannel());
+        System.out.println(event.getTextChannel());
     }
 
 }
+

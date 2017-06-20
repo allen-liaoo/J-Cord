@@ -7,6 +7,7 @@ import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.*;
 import org.alienideology.jcord.handle.managers.IGuildManager;
+import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.DiscordObject;
@@ -14,6 +15,7 @@ import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.alienideology.jcord.internal.object.managers.GuildManager;
+import org.alienideology.jcord.internal.object.managers.InviteManager;
 import org.alienideology.jcord.internal.object.user.User;
 
 import java.util.*;
@@ -27,6 +29,7 @@ public final class Guild extends DiscordObject implements IGuild {
     private boolean isAvailable = false;
 
     private GuildManager guildManager;
+    private InviteManager inviteManager;
 
     private String name;
 
@@ -98,6 +101,7 @@ public final class Guild extends DiscordObject implements IGuild {
         this.textChannels = new ArrayList<>();
         this.voiceChannels = new ArrayList<>();
         this.guildManager = new GuildManager(this);
+        this.inviteManager = new InviteManager(this);
     }
 
     @Override
@@ -108,6 +112,11 @@ public final class Guild extends DiscordObject implements IGuild {
     @Override
     public IGuildManager getGuildManager() {
         return guildManager;
+    }
+
+    @Override
+    public IInviteManager getInviteManager() {
+        return inviteManager;
     }
 
     @Override

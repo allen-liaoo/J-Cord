@@ -6,12 +6,14 @@ import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IChannelManager;
+import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.ChannelManager;
+import org.alienideology.jcord.internal.object.managers.InviteManager;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Builda
 
     private Guild guild;
     private ChannelManager channelManager;
+    private InviteManager inviteManager;
 
     private String name;
     private int position;
@@ -42,6 +45,7 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Builda
         this.bitrate = bitrate;
         this.user_limit = user_limit;
         this.channelManager = new ChannelManager(this);
+        this.inviteManager = new InviteManager(this);
     }
 
     @Override
@@ -56,6 +60,11 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Builda
     @Override
     public IChannelManager getChannelManager() {
         return channelManager;
+    }
+
+    @Override
+    public IInviteManager getInviteManager() {
+        return inviteManager;
     }
 
     @Override

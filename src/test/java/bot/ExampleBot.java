@@ -9,8 +9,6 @@ import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.internal.object.guild.Guild;
-import org.alienideology.jcord.internal.object.managers.InviteManager;
 
 /**
  * A simple test bot for J-Cord
@@ -49,9 +47,6 @@ public class ExampleBot {
             }
 
             IGuild guild = bot.getGuild("311250670068170752");
-
-            InviteManager manager = new InviteManager((Guild) guild);
-            manager.deleteInvite("KecXegR");
 
         } catch (Exception e) {
             e.printStackTrace();

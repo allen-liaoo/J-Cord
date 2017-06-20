@@ -3,6 +3,7 @@ package org.alienideology.jcord.internal.object.channel;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.builders.StringMessageBuilder;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
+import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.MessageHistory;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.message.IEmbedMessage;
@@ -201,6 +202,16 @@ public class MessageChannel extends Channel implements IMessageChannel {
         }
 
         new Requester(identity, HttpPath.Channel.ADD_PINNED_MESSAGE).request(this.id, id).performRequest();
+    }
+
+    @Override
+    public void startTyping() {
+        if (this instanceof ITextChannel) {
+            if (((ITextChannel) this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.SEND_MESSAGES)) {
+                throw new PermissionException(Permission.ADMINISTRATOR, Permission.SEND_MESSAGES);
+            }
+        }
+        new Requester(identity, HttpPath.Channel.TRIGGER_TYPING_INDICATOR).request(id).performRequest();
     }
 
     @Override

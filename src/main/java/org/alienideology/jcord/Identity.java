@@ -124,9 +124,36 @@ public interface Identity {
      */
     List<IRole> getAllRoles();
 
+    /**
+     * Get a channel by ID.
+     *
+     * @param id The channel ID.
+     * @return A channel (Can be private, text, or voice channel), or null if no channel matches the ID.
+     */
+    @Nullable
+    IChannel getChannel(String id);
+
+    /**
+     * Get a list of all channels under this identity.
+     *
+     * @return A list of channels.
+     */
+    List<IChannel> getAllChannels();
+
+    /**
+     * Get a GuildChannel by ID.
+     *
+     * @param id The channel ID.
+     * @return The channel, or null if the ID does not match any guild channel.
+     */
     @Nullable
     IGuildChannel getGuildChannel(String id);
 
+    /**
+     * Get all GuildChannels, including all TextChannels and VoiceChannels.
+     *
+     * @return A list of all guild channels under this identity.
+     */
     List<IGuildChannel> getAllGuildChannels();
 
     /**

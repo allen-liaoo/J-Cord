@@ -1,5 +1,6 @@
 package org.alienideology.jcord.event;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 
 /**
@@ -20,7 +21,7 @@ public abstract class Event {
         this.sequence = sequence;
     }
 
-    public IdentityImpl getIdentity() {
+    public Identity getIdentity() {
         return identity;
     }
 

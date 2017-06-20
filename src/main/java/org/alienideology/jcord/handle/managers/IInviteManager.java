@@ -74,7 +74,7 @@ public interface IInviteManager {
      * @param maxAge Max durations in second before expiry (0 for unlimited age)
      * @param isTemporary True if this invite only grant temporarily membership.
      * @param isUnique True for creating unique one time use invites.
-     * @return
+     * @return The invite created.
      */
     IInvite createInvite(int maxUses, long maxAge, boolean isTemporary, boolean isUnique);
 
