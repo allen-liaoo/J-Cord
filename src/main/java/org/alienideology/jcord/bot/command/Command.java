@@ -1,6 +1,9 @@
-package org.alienideology.jcord.command;
+package org.alienideology.jcord.bot.command;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Command - A command annotation used on methods for the native command framework.

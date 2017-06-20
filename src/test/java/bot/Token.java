@@ -5,6 +5,6 @@ package bot;
  */
 public class Token {
 
-    public final static String YOUR_SECRET_TOKEN_HERE = "MzIwMDAyOTQ2NTEzMjQwMDcx.DCMR1A.80pN9ZHUsVLLRvXt0D4rZpofH6A";
+    public final static String YOUR_SECRET_TOKEN_HERE = "MzIwMDAyOTQ2NTEzMjQwMDcx.DClgcQ.M4OHnMrR0OstFcb7_jETX4V2AoA";
 
 }

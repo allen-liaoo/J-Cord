@@ -3,6 +3,7 @@ package org.alienideology.jcord.handle.channel;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.managers.IChannelManager;
 import org.alienideology.jcord.handle.permission.OverwriteCheckable;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 
@@ -23,9 +24,9 @@ public interface IGuildChannel extends IChannel, OverwriteCheckable, ISnowFlake 
     IGuild getGuild();
 
     /**
-     * Get the manager that manages this GuildChannel.
+     * Get the managers that manages this GuildChannel.
      *
-     * @return The channel manager.
+     * @return The channel managers.
      */
     IChannelManager getChannelManager();
 

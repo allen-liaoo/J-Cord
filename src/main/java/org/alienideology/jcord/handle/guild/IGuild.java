@@ -4,8 +4,10 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
+import org.alienideology.jcord.handle.managers.IGuildManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.guild.Guild;
 
@@ -25,9 +27,9 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
 
     /**
      * Get the IGuildManager of this guild.
-     * The guild manager is used to kick, ban, unban, and change guild settings.
+     * The guild managers is used to kick, ban, unban, and change guild settings.
      *
-     * @return The manager.
+     * @return The managers.
      */
     IGuildManager getGuildManager();
 
@@ -173,6 +175,22 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
      * @return A list of server custom emojis this guild has.
      */
     List<IGuildEmoji> getGuildEmojis();
+
+    /**
+     * Get a guild channel by ID.
+     *
+     * @param id The channel ID.
+     * @return A guild channel, can be text or voice channel.
+     */
+    @Nullable
+    IGuildChannel getGuildChannel(String id);
+
+    /**
+     * Get all the guild channels in this guild.
+     *
+     * @return A unmodifiable list of guild channels.
+     */
+    List<IGuildChannel> getAllGuildChannels();
 
     /**
     * Get a text channel by id.

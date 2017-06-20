@@ -104,8 +104,8 @@ public final class IdentityBuilder {
     }
 
     /**
-     * Set the event manager of this identity
-     * @param manager The event manager
+     * Set the event managers of this identity
+     * @param manager The event managers
      * @return IdentityBuilder for chaining.
      */
     public IdentityBuilder setEventManager(EventManager manager) {

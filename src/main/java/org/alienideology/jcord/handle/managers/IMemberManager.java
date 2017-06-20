@@ -1,7 +1,10 @@
-package org.alienideology.jcord.handle.guild;
+package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.guild.IRole;
 
 import java.util.Collection;
 
@@ -21,7 +24,7 @@ public interface IMemberManager {
     int NICKNAME_LENGTH = 32;
 
     /**
-     * Get the identity the manager's guild belongs to.
+     * Get the identity the managers's guild belongs to.
      *
      * @return The identity.
      */
@@ -38,7 +41,7 @@ public interface IMemberManager {
     IGuild getGuild();
 
     /**
-     * Get the member this manager manages.
+     * Get the member this managers manages.
      *
      * @return The member.
      */

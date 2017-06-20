@@ -1,9 +1,11 @@
-package org.alienideology.jcord.handle.message;
+package org.alienideology.jcord.handle.builders;
 
 import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.IMention;
-import org.alienideology.jcord.internal.object.message.Message;
+import org.alienideology.jcord.handle.message.IMessage;
+import org.alienideology.jcord.handle.message.IStringMessage;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
+import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.StringMessage;
 
 /**

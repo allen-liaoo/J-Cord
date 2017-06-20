@@ -1,7 +1,13 @@
-package org.alienideology.jcord.internal.object.guild;
+package org.alienideology.jcord.internal.object.managers;
 
+import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
-import org.alienideology.jcord.handle.guild.*;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.guild.Region;
+import org.alienideology.jcord.handle.managers.IGuildManager;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -14,6 +20,11 @@ import org.alienideology.jcord.internal.gateway.HttpCode;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.ObjectBuilder;
+import org.alienideology.jcord.internal.object.channel.TextChannel;
+import org.alienideology.jcord.internal.object.channel.VoiceChannel;
+import org.alienideology.jcord.internal.object.guild.Guild;
+import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.util.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -321,20 +332,60 @@ public class GuildManager implements IGuildManager {
     }
 
     @Override
-    public void createRole(IRole role) {
+    public ITextChannel createTextChannel(ITextChannel channel) {
+        // Fires Channel Create Gateway Event
+        // Automatically build the channel and add to identity in this method.
+        // So the event will not override the channel built here.
+        return (ITextChannel) createChannel(((TextChannel) channel).toJson());
+    }
+
+    @Override
+    public IVoiceChannel createVoiceChannel(IVoiceChannel channel) {
+        // Fires Channel Create Gateway Event
+        // See documentations above.
+        return (IVoiceChannel) createChannel(((VoiceChannel) channel).toJson());
+    }
+
+    private IGuildChannel createChannel(JSONObject json) {
+        if (!guild.getSelfMember().hasPermissions(true, Permission.MANAGE_CHANNELS)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_CHANNELS);
+        }
+
+        JSONObject channel = new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.CREATE_GUILD_CHANNEL).request(guild.getId())
+                .updateRequestWithBody(request -> request.body(json)).getAsJSONObject();
+        return new ObjectBuilder((IdentityImpl) getIdentity()).buildGuildChannel(channel);
+    }
+
+    @Override
+    public void deleteGuildChannel(IGuildChannel channel) {
+        if (!getGuild().getSelfMember().hasPermissions(true, Permission.MANAGE_CHANNELS)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_CHANNELS);
+        }
+
+        if (channel instanceof ITextChannel) {
+            if (((ITextChannel) channel).isDefaultChannel()) {
+                throw new PermissionException("Cannot delete the default channel of a guild!");
+            }
+        }
+
+        new Requester((IdentityImpl) getIdentity(), HttpPath.Channel.DELETE_CHANNEL)
+                .request(channel.getId()).performRequest();
+    }
+
+    @Override
+    public IRole createRole(IRole role) {
+        if (!guild.getSelfMember().hasPermissions(true, Permission.MANAGE_ROLES)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_ROLES);
+        }
+
         JSONObject newRole = ((Role) role).toJson();
 
         // Fires Guild Role Create event
-        try {
-            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.CREATE_GUILD_ROLE).request(guild.getId())
-                    .updateRequestWithBody(request -> request.body(newRole)).performRequest();
-        } catch (HttpErrorException ex) {
-            if (ex.isPermissionException()) {
-                throw new PermissionException(Permission.MANAGE_ROLES);
-            } else {
-                throw ex;
-            }
-        }
+        JSONObject roleJson = new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.CREATE_GUILD_ROLE).request(guild.getId())
+                .updateRequestWithBody(request -> request.body(newRole)).getAsJSONObject();
+
+        return new ObjectBuilder((IdentityImpl) getIdentity()).buildRole(roleJson, guild);
+
     }
 
     @Override

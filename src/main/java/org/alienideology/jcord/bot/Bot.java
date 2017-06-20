@@ -1,5 +1,6 @@
 package org.alienideology.jcord.bot;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 
 /**
@@ -21,7 +22,7 @@ public class Bot {
         this.inviteBuilder = new BotInviteBuilder(identity.getSelf().getId());
     }
 
-    public IdentityImpl getIdentity() {
+    public Identity getIdentity() {
         return identity;
     }
 

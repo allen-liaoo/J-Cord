@@ -529,7 +529,7 @@ public final class ObjectBuilder {
      * @param guild The guild this emoji is in
      * @return The GuildEmoji object
      */
-    public GuildEmoji buildEmoji (JSONObject json, Guild guild) {
+    public GuildEmoji buildEmoji(JSONObject json, Guild guild) {
         handleBuildError(json);
         String id = json.getString("id");
         String name = json.getString("name");
@@ -542,6 +542,31 @@ public final class ObjectBuilder {
             if (role != null) roles.add(role);
         }
         return new GuildEmoji(identity, guild, id, name, roles, requireColon);
+    }
+
+    /**
+     * Built an invite with provided json.
+     * @param json The json invite object. May not contains metadata.
+     * @return The invite impl built.
+     */
+    public Invite buildInvite(JSONObject json) {
+        String code = json.getString("code");
+        Guild guild = (Guild) identity.getGuild(json.getJSONObject("guild").getString("id"));
+        IGuildChannel channel = identity.getGuildChannel(json.getJSONObject("channel").getString("id"));
+        Invite invite = new Invite(code, guild, channel);
+
+        // If the invites has metadata object
+        if (json.has("inviter")) {
+            User inviter = (User) identity.getUser(json.getJSONObject("inviter").getString("id"));
+            int uses = json.getInt("uses");
+            int maxUses = json.getInt("max_uses");
+            long maxAge = json.getLong("max_age");
+            boolean isTemporary = json.has("temporary") && json.getBoolean("temporary");
+            boolean isRevoked = json.has("revoked") && json.getBoolean("revoked");
+            String timeStamp = json.getString("created_at");
+            invite.setMetaData(inviter, uses, maxUses, maxAge, isTemporary, isRevoked, timeStamp);
+        }
+        return invite;
     }
 
     /**

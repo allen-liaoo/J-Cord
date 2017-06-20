@@ -1,11 +1,12 @@
-package org.alienideology.jcord.internal.object;
+package org.alienideology.jcord.internal.object.managers;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.handle.ISelfManager;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.managers.ISelfManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.util.FileUtils;
 import org.json.JSONObject;
 

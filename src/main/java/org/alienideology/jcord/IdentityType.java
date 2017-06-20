@@ -6,9 +6,16 @@ package org.alienideology.jcord;
  */
 public enum IdentityType {
 
-    /* Discord Bot or Application Account */
+    /**
+     * Bot
+     */
+    /* Discord Bot Account */
     BOT,
 
+    /**
+     * Client
+     * Selfbot, not User bot.
+     */
     /* Client Account */
-    HUMAN;
+    CLIENT;
 }

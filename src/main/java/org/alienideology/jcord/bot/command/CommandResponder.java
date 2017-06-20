@@ -1,4 +1,4 @@
-package org.alienideology.jcord.command;
+package org.alienideology.jcord.bot.command;
 
 /**
  * CommandResponder - All command classes must implements CommandResponder in order to be added to the framework.

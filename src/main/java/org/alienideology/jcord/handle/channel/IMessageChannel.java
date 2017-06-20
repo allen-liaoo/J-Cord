@@ -1,8 +1,12 @@
 package org.alienideology.jcord.handle.channel;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.builders.EmbedMessageBuilder;
+import org.alienideology.jcord.handle.builders.StringMessageBuilder;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.handle.message.*;
+import org.alienideology.jcord.handle.message.IEmbedMessage;
+import org.alienideology.jcord.handle.message.IMessage;
+import org.alienideology.jcord.handle.message.IStringMessage;
 import org.alienideology.jcord.internal.exception.PermissionException;
 
 /**

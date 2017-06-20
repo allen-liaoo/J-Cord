@@ -5,9 +5,11 @@ import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.managers.IMemberManager;
 import org.alienideology.jcord.handle.permission.PermCheckable;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.internal.object.managers.GuildManager;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -20,15 +22,15 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
 
     /**
      * Get the IMemberManager of this guild.
-     * The member manager is used to change nicknames, mute, and deafen members.
+     * The member managers is used to change nicknames, mute, and deafen members.
      *
-     * @return The member manager.
+     * @return The member managers.
      */
     IMemberManager getMemberManager();
 
     /**
      * Kick this member.
-     * @see org.alienideology.jcord.internal.object.guild.GuildManager#kickMember(IMember)
+     * @see GuildManager#kickMember(IMember)
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Kick Members} permission.
@@ -46,7 +48,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
 
     /**
      * Ban this member.
-     * @see org.alienideology.jcord.internal.object.guild.GuildManager#banMember(IMember)
+     * @see GuildManager#banMember(IMember)
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
@@ -63,7 +65,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
 
     /**
      * Ban this member.
-     * @see org.alienideology.jcord.internal.object.guild.GuildManager#banMember(IMember)
+     * @see GuildManager#banMember(IMember)
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.

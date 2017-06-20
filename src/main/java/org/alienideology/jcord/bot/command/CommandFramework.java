@@ -1,4 +1,4 @@
-package org.alienideology.jcord.command;
+package org.alienideology.jcord.bot.command;
 
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.message.MessageCreateEvent;

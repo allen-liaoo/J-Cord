@@ -214,6 +214,7 @@ public final class Requester {
 
     private void handleErrorResponse(JSONObject response) {
         if (response.has("code")) {
+            if (!(response.get("code") instanceof Integer)) return;
             ErrorResponse errorResponse = ErrorResponse.getByKey(response.getInt("code"));
             if (errorResponse != ErrorResponse.UNKNOWN) {
                 throw new ErrorResponseException(errorResponse);

@@ -1,5 +1,6 @@
-package org.alienideology.jcord.handle.message;
+package org.alienideology.jcord.handle.builders;
 
+import org.alienideology.jcord.handle.message.IEmbedMessage;
 import org.alienideology.jcord.internal.object.message.EmbedMessage;
 import org.alienideology.jcord.util.MessageUtils;
 

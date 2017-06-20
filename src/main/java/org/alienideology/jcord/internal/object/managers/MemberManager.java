@@ -1,9 +1,9 @@
-package org.alienideology.jcord.internal.object.guild;
+package org.alienideology.jcord.internal.object.managers;
 
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
-import org.alienideology.jcord.handle.guild.IMemberManager;
 import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.managers.IMemberManager;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException;
@@ -15,6 +15,8 @@ import org.alienideology.jcord.internal.gateway.HttpCode;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.guild.Guild;
+import org.alienideology.jcord.internal.object.guild.Member;
 import org.json.JSONObject;
 
 import java.util.*;

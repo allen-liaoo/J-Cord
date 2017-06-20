@@ -1,4 +1,4 @@
-package org.alienideology.jcord.handle;
+package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.guild.IGuild;
@@ -10,7 +10,7 @@ import java.io.IOException;
 
 /**
  * ISelfManager - A manager that manages self user.
- * This manager is for both bot and client, which means setting email or password is not supported.
+ * This managers is for both bot and client, which means setting email or password is not supported.
  *
  * @author AlienIdeology
  */
@@ -56,7 +56,7 @@ public interface ISelfManager {
 
     /**
      * Leave a guild.
-     * Do not use {@link org.alienideology.jcord.handle.guild.IGuildManager#kickMember(IMember)} to kick the self user,
+     * Do not use {@link IGuildManager#kickMember(IMember)} to kick the self user,
      * use this method instead.
      *
      * @param guild The guild to leave.

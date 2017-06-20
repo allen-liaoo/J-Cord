@@ -1,7 +1,7 @@
 package bot;
 
-import org.alienideology.jcord.command.Command;
-import org.alienideology.jcord.command.CommandResponder;
+import org.alienideology.jcord.bot.command.Command;
+import org.alienideology.jcord.bot.command.CommandResponder;
 
 /**
  * @author AlienIdeology

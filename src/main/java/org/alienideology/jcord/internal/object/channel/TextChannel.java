@@ -1,16 +1,19 @@
 package org.alienideology.jcord.internal.object.channel;
 
 import org.alienideology.jcord.handle.channel.IChannel;
-import org.alienideology.jcord.handle.channel.IChannelManager;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.managers.IChannelManager;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.permission.Permission;
+import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
+import org.alienideology.jcord.internal.object.managers.ChannelManager;
 import org.alienideology.jcord.internal.object.message.Message;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +23,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-public final class TextChannel extends MessageChannel implements ITextChannel {
+public final class TextChannel extends MessageChannel implements ITextChannel, Buildable {
 
     private Guild guild;
     private ChannelManager channelManager;
@@ -33,11 +36,18 @@ public final class TextChannel extends MessageChannel implements ITextChannel {
 
     public TextChannel(IdentityImpl identity, String guild_id, String id, String name, int position, String topic, Message lastMessagt) {
         super(identity, id, IChannel.Type.TEXT, lastMessagt);
-        this.guild = (Guild) identity.getGuild(guild_id);
+        this.guild = guild_id == null ? null : (Guild) identity.getGuild(guild_id);
         this.name = name;
         this.position = position;
         this.topic = topic;
         this.channelManager = new ChannelManager(this);
+    }
+
+    @Override
+    public JSONObject toJson() {
+        return new JSONObject()
+                .put("name", name == null? "" : name)
+                .put("type", "text");
     }
 
     @Override

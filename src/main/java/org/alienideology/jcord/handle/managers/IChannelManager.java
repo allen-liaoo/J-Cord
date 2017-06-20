@@ -1,6 +1,9 @@
-package org.alienideology.jcord.handle.channel;
+package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 
 import java.util.List;
@@ -46,21 +49,21 @@ public interface IChannelManager {
     int VOICE_CHANNEL_USER_LIMIT_MAX = 99;
 
     /**
-     * Get the identity this channel manager belongs to.
+     * Get the identity this channel managers belongs to.
      *
      * @return The identity.
      */
     Identity getIdentity();
 
     /**
-     * Get the guild this channel manager manages channel from.
+     * Get the guild this channel managers manages channel from.
      *
      * @return The guild.
      */
     IGuild getGuild();
 
     /**
-     * Get the channel this channel manager manages.
+     * Get the channel this channel managers manages.
      *
      * @return The channel. Can be {@link ITextChannel} or {@link IVoiceChannel}.
      */
@@ -117,7 +120,7 @@ public interface IChannelManager {
      *          If the identity do not have {@code Manage Channels} permission.
      * @exception IllegalArgumentException
      *          <ul>
-     *              <li>If the channel manager manages a {@link IVoiceChannel}.</li>
+     *              <li>If the channel managers manages a {@link IVoiceChannel}.</li>
      *              <li>If the topic is longer than {@value #TEXT_CHANNEL_TOPIC_LENGTH_MAX}.</li>
      *          </ul>
      *
@@ -138,7 +141,7 @@ public interface IChannelManager {
      *          If the identity do not have {@code Manage Channels} permission.
      * @exception IllegalArgumentException
      *          <ul>
-     *              <li>If the channel manager manages a {@link ITextChannel}.</li>
+     *              <li>If the channel managers manages a {@link ITextChannel}.</li>
      *              <li>If the bitrate is smaller than {@value #VOICE_CHANNEL_BITRATE_MIN}.</li>
      *              <li>The bitrate exceeds the limit. (For normal guild, the limit is {@value #VOICE_CHANNEL_BITRATE_MAX}.
      *                  For VIP guild, the limit is {@value #VOICE_CHANNEL_BITRATE_VIP_MAX}.</li>
@@ -158,7 +161,7 @@ public interface IChannelManager {
      *          If the identity do not have {@code Manage Channels} permission.
      * @exception IllegalArgumentException
      *          <ul>
-     *              <li>If the channel manager manages a {@link ITextChannel}.</li>
+     *              <li>If the channel managers manages a {@link ITextChannel}.</li>
      *              <li>If the bitrate is smaller than {@value #VOICE_CHANNEL_USER_LIMIT_MIN} or greater than {@value #VOICE_CHANNEL_USER_LIMIT_MAX}.</li>
      *          </ul>
      *
@@ -172,9 +175,11 @@ public interface IChannelManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity do not have {@code Manage Channels} permission.
      * @exception IllegalArgumentException
-     *          If the channel is a text channel, and if the text channel is a default channel.
+     *          If the channel is a text channel, and the text channel is a default channel.
      *          @see IGuild#getDefaultChannel() For more information.
      */
-    void deleteChannel();
+    default void deleteChannel() {
+        getGuild().getGuildManager().deleteGuildChannel(getGuildChannel());
+    }
 
 }

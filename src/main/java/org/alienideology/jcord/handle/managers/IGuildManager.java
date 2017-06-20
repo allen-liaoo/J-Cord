@@ -1,7 +1,15 @@
-package org.alienideology.jcord.handle.guild;
+package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.builders.ChannelBuilder;
+import org.alienideology.jcord.handle.builders.RoleBuilder;
+import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.guild.Region;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
@@ -29,7 +37,7 @@ public interface IGuildManager {
     }
 
     /**
-     * Get the guild this manager manages.
+     * Get the guild this managers manages.
      *
      *
      * @return The guild.
@@ -184,7 +192,7 @@ public interface IGuildManager {
 
     /**
      * Kick a member.
-     * To let the identity leave a guild, see {@link org.alienideology.jcord.handle.ISelfManager#leaveGuild(IGuild)}
+     * To let the identity leave a guild, see {@link ISelfManager#leaveGuild(IGuild)}
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Kick Members} permission.
@@ -199,7 +207,7 @@ public interface IGuildManager {
 
     /**
      * Kick a member by ID.
-     * To let the identity leave a guild, see {@link org.alienideology.jcord.handle.ISelfManager#leaveGuild(IGuild)}
+     * To let the identity leave a guild, see {@link ISelfManager#leaveGuild(IGuild)}
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Kick Members} permission.
@@ -365,11 +373,43 @@ public interface IGuildManager {
      */
     boolean unbanUser(String memberId);
 
-    /*
-        -------------------
-            Role Action
-        -------------------
+    /**
+     * Create a text channel in this guild.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Channels} permission.
+     *
+     * @param channel The channel built by {@link org.alienideology.jcord.handle.builders.ChannelBuilder}.
+     * @see ChannelBuilder#buildTextChannel()
+     * @return The text channel created.
+     * This returning channel is not the same instance as the parameter.
      */
+    ITextChannel createTextChannel(ITextChannel channel);
+
+    /**
+     * Create a voice channel in this guild.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Channels} permission.
+     *
+     * @param channel The channel built by {@link org.alienideology.jcord.handle.builders.ChannelBuilder}.
+     * @see ChannelBuilder#buildVoiceChannel()
+     * @return The voice channel created.
+     */
+    IVoiceChannel createVoiceChannel(IVoiceChannel channel);
+
+    /**
+     * Deletes a guild channel.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity do not have {@code Manage Channels} permission.
+     * @exception IllegalArgumentException
+     *          If the channel is a text channel, and the text channel is a default channel.
+     *          @see IGuild#getDefaultChannel() For more information.
+     *
+     * @param channel The channel.
+     */
+    void deleteGuildChannel(IGuildChannel channel);
 
     /**
      * Create a role in this guild.
@@ -378,8 +418,9 @@ public interface IGuildManager {
      *          If the identity does not have {@code Manage Roles} permission.
      *
      * @param role The role built by {@link RoleBuilder}
+     * @return The role created.
      */
-    void createRole(IRole role);
+    IRole createRole(IRole role);
 
     /**
      * Delete a existed role in this guild.

@@ -3,6 +3,8 @@ package org.alienideology.jcord.handle.guild;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.managers.IGuildManager;
+import org.alienideology.jcord.handle.managers.IRoleManager;
 import org.alienideology.jcord.handle.permission.PermCheckable;
 import org.alienideology.jcord.handle.permission.Permission;
 
@@ -17,9 +19,9 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, PermCheckab
 
     /**
      * Get the IRoleManager of his guild.
-     * The role manager is used to change attributes or a role.
+     * The role managers is used to change attributes or a role.
      *
-     * @return The role manager.
+     * @return The role managers.
      */
     IRoleManager getRoleManager();
 

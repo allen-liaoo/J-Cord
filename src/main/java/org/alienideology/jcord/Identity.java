@@ -1,13 +1,10 @@
 package org.alienideology.jcord;
 
 import com.sun.istack.internal.Nullable;
-import org.alienideology.jcord.command.CommandFramework;
+import org.alienideology.jcord.bot.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.EventManager;
-import org.alienideology.jcord.handle.channel.IMessageChannel;
-import org.alienideology.jcord.handle.channel.IPrivateChannel;
-import org.alienideology.jcord.handle.channel.ITextChannel;
-import org.alienideology.jcord.handle.channel.IVoiceChannel;
+import org.alienideology.jcord.handle.channel.*;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.user.IUser;
@@ -31,15 +28,15 @@ public interface Identity {
     Identity revive() throws IOException;
 
     /**
-     * Get the event manager of this identity.
+     * Get the event managers of this identity.
      * @see EventManager
      *
-     * @return The event manager.
+     * @return The event managers.
      */
     EventManager getEventManager();
 
     /**
-     * Get the {@link DispatcherAdaptor}s registered in the event manager.
+     * Get the {@link DispatcherAdaptor}s registered in the event managers.
      * @see EventManager#getDispatcherAdaptors()
      *
      * @return A list of Dispatcher Adaptors.
@@ -55,7 +52,7 @@ public interface Identity {
     List<Object> getSubscribers();
 
     /**
-     * Get the {@link CommandFramework}s registered in the event manager.
+     * Get the {@link CommandFramework}s registered in the event managers.
      * @see EventManager#getCommandFrameworks()
      *
      * @return A list of Command Frameworks
@@ -126,6 +123,11 @@ public interface Identity {
      * @return A list of roles.
      */
     List<IRole> getAllRoles();
+
+    @Nullable
+    IGuildChannel getGuildChannel(String id);
+
+    List<IGuildChannel> getAllGuildChannels();
 
     /**
      * Get a MessageChannel by ID.

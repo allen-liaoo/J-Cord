@@ -6,12 +6,14 @@ import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.*;
+import org.alienideology.jcord.handle.managers.IGuildManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
+import org.alienideology.jcord.internal.object.managers.GuildManager;
 import org.alienideology.jcord.internal.object.user.User;
 
 import java.util.*;
@@ -243,6 +245,22 @@ public final class Guild extends DiscordObject implements IGuild {
     @Override
     public List<IGuildEmoji> getGuildEmojis() {
         return Collections.unmodifiableList(emojis);
+    }
+
+    @Override
+    public IGuildChannel getGuildChannel(String id) {
+        for (IGuildChannel channel : getAllGuildChannels()) {
+            if (channel.getId().equals(id))
+                return channel;
+        }
+        return null;
+    }
+
+    @Override
+    public List<IGuildChannel> getAllGuildChannels() {
+        List<IGuildChannel> channels = new ArrayList<>(getTextChannels());
+        channels.addAll(getTextChannels());
+        return Collections.unmodifiableList(channels);
     }
 
     @Override

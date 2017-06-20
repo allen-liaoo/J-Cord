@@ -1,5 +1,7 @@
-package org.alienideology.jcord.handle.guild;
+package org.alienideology.jcord.handle.builders;
 
+import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.managers.IGuildManager;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.guild.Role;
 

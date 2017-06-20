@@ -1,19 +1,21 @@
-package org.alienideology.jcord.handle.guild;
+package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.permission.Permission;
 
 import java.awt.*;
 import java.util.Collection;
 
 /**
- * IRoleManager - A manager that manages a role in the guild.
+ * IRoleManager - A managers that manages a role in the guild.
  * @author AlienIdeology
  */
 public interface IRoleManager {
 
     /**
-     * Get the identity the manager's guild belongs to.
+     * Get the identity the managers's guild belongs to.
      *
      * @return The identity.
      */
@@ -29,7 +31,7 @@ public interface IRoleManager {
     IGuild getGuild();
 
     /**
-     * Gt the role this manager manages.
+     * Gt the role this managers manages.
      *
      * @return The role.
      */

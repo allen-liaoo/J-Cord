@@ -58,7 +58,7 @@ public final class HttpPath {
 
         /* Channel Action */
         public final static HttpPath GET_GUILD_CHANNELS = new HttpPath(GET, "/guilds/{guild.id}/channels");
-        public final static HttpPath CREATE_GUILD_CHANNELS = new HttpPath(POST, "/guilds/{guild.id}/channels");
+        public final static HttpPath CREATE_GUILD_CHANNEL = new HttpPath(POST, "/guilds/{guild.id}/channels");
         public final static HttpPath MODIFY_GUILD_CHANNEL_POSITION = new HttpPath(PATCH, "/guilds/{guild.id}/channels");
 
         /* Member Action */
@@ -93,11 +93,6 @@ public final class HttpPath {
         public final static HttpPath MODIFY_GUILD_INTEGRATION = new HttpPath(PATCH, "/guilds/{guild.id}/integrations/{integration.id}");
         public final static HttpPath DELETE_GUILD_INTEGRATION = new HttpPath(DELETE, "/guilds/{guild.id}/integrations/{integration.id}");
         public final static HttpPath SYNC_GUILD_INTEGRATION = new HttpPath(GET, "/guilds/{guild.id}/integrations/{integration.id}/sync");
-
-        /* Invite Action */
-        public final static HttpPath GET_INVITE = new HttpPath(GET, "/invites/{invite.code}");
-        public final static HttpPath DELETE_INVITE = new HttpPath(DELETE, "/invites/{invite.code}");
-        public final static HttpPath ACCEPT_INVITE = new HttpPath(POST, "/invites/{invite.code}");
 
         /* Other Action */
         public final static HttpPath LIST_VOICE_REGIONS = new HttpPath(GET, "/voice/regions");
@@ -143,6 +138,8 @@ public final class HttpPath {
         /* Invite Action */
         public final static HttpPath GET_CHANNEL_INVITES = new HttpPath(GET, "/channels/{channel.id}/invites");
         public final static HttpPath CREATE_CHANNEL_INVITE = new HttpPath(POST, "/channels/{channel.id}/invites");
+        public final static HttpPath GET_INVITE = new HttpPath(GET, "/invites/{invite.code}");
+        public final static HttpPath DELETE_INVITE = new HttpPath(DELETE, "/invites/{invite.code}");
 
         /* Pin Action */
         public final static HttpPath GET_PINNED_MESSAGES = new HttpPath(GET, "/channels/{channel.id}/pins");
@@ -172,6 +169,7 @@ public final class HttpPath {
 
         /* User Action */
         public final static HttpPath GET_USER = new HttpPath(GET, "/users/{user.id}");
+        public final static HttpPath ACCEPT_INVITE = new HttpPath(POST, "/invites/{invite.code}");
 
     }
 

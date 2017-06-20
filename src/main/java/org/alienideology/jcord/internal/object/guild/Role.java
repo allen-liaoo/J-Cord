@@ -2,11 +2,12 @@ package org.alienideology.jcord.internal.object.guild;
 
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
-import org.alienideology.jcord.handle.guild.IRoleManager;
+import org.alienideology.jcord.handle.managers.IRoleManager;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.managers.RoleManager;
 import org.json.JSONObject;
 
 import java.awt.*;

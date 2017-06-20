@@ -1,6 +1,6 @@
 package org.alienideology.jcord.event;
 
-import org.alienideology.jcord.command.CommandFramework;
+import org.alienideology.jcord.bot.command.CommandFramework;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * EventManager - The manager of DispatcherAdaptors, EvenSubscribers and CommandFrameworks
+ * EventManager - The managers of DispatcherAdaptors, EvenSubscribers and CommandFrameworks
  * @author AlienIdeology
  */
 public class EventManager {

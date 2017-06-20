@@ -1,14 +1,16 @@
-package org.alienideology.jcord.internal.object.channel;
+package org.alienideology.jcord.internal.object.managers;
 
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.handle.channel.IChannelManager;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.managers.IChannelManager;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.channel.TextChannel;
+import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.json.JSONObject;
 
 /**
@@ -43,10 +45,7 @@ public class ChannelManager implements IChannelManager {
 
     @Override
     public void modifyName(String name) {
-        if (name.length() < CHANNEL_NAME_LENGTH_MIN || name.length() > CHANNEL_NAME_LENGTH_MAX) {
-            throw new IllegalArgumentException("The channel's name can not be shorter than "+CHANNEL_NAME_LENGTH_MIN+
-                    " or longer than "+CHANNEL_NAME_LENGTH_MAX+" characters!");
-        }
+        checkName(name);
         modifyChannel(new JSONObject().put("name", name));
     }
 
@@ -66,9 +65,7 @@ public class ChannelManager implements IChannelManager {
             throw new IllegalArgumentException("Cannot modify the topic of a voice channel!");
         }
         if (topic == null) topic = "";
-        if (topic.length() > TEXT_CHANNEL_TOPIC_LENGTH_MAX) {
-            throw new IllegalArgumentException("The TextChannel's topic may not be longer than"+ TEXT_CHANNEL_TOPIC_LENGTH_MAX +" characters!");
-        }
+        checkTopic(topic);
         modifyChannel(new JSONObject().put("topic", topic));
     }
 
@@ -78,15 +75,7 @@ public class ChannelManager implements IChannelManager {
             throw new IllegalArgumentException("Cannot modify the bitrate of a text channel!");
         }
 
-        if (bitrate < VOICE_CHANNEL_BITRATE_MIN) {
-            throw new IllegalArgumentException("The bitrate can not be lower than "+VOICE_CHANNEL_BITRATE_MIN+"!");
-        } else if (bitrate > VOICE_CHANNEL_BITRATE_MAX) {
-            if (getGuild().getSplash() != null && bitrate > VOICE_CHANNEL_BITRATE_VIP_MAX) { // Guild is VIP
-                throw new IllegalArgumentException("The bitrate of a vip guild can not be greater than "+VOICE_CHANNEL_BITRATE_VIP_MAX+"!");
-            } else {
-                throw new IllegalArgumentException("The bitrate of a normal guild can not be greater than "+VOICE_CHANNEL_BITRATE_MAX+"!");
-            }
-        }
+        checkBitrate(bitrate, getGuild());
 
         modifyChannel(new JSONObject().put("bitrate", bitrate));
     }
@@ -96,9 +85,7 @@ public class ChannelManager implements IChannelManager {
         if (channel instanceof TextChannel) {
             throw new IllegalArgumentException("Cannot modify the user limit of a text channel!");
         }
-        if (limit < VOICE_CHANNEL_USER_LIMIT_MIN || limit > VOICE_CHANNEL_USER_LIMIT_MAX) {
-            throw new IllegalArgumentException("The user limit may not be lower than "+VOICE_CHANNEL_USER_LIMIT_MIN+" or greater than "+VOICE_CHANNEL_USER_LIMIT_MAX+"!");
-        }
+        checkUserLimit(limit);
         modifyChannel(new JSONObject().put("user_limit", limit));
     }
 
@@ -111,20 +98,38 @@ public class ChannelManager implements IChannelManager {
                 .request(channel.getId()).updateRequestWithBody(request -> request.body(json)).performRequest();
     }
 
-    @Override
-    public void deleteChannel() {
-        if (!getGuild().getSelfMember().hasPermissions(true, Permission.MANAGE_CHANNELS)) {
-            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_CHANNELS);
+    /*
+        Utility Checkers
+     */
+    public static void checkName(String name) {
+        if (name.length() < CHANNEL_NAME_LENGTH_MIN || name.length() > CHANNEL_NAME_LENGTH_MAX) {
+            throw new IllegalArgumentException("The channel's name can not be shorter than "+CHANNEL_NAME_LENGTH_MIN+
+                    " or longer than "+CHANNEL_NAME_LENGTH_MAX+" characters!");
         }
+    }
 
-        if (channel instanceof TextChannel) {
-            if (((TextChannel) channel).isDefaultChannel()) {
-                throw new PermissionException("Cannot delete the default channel of a guild!");
+    public static void checkTopic(String topic) {
+        if (topic.length() > TEXT_CHANNEL_TOPIC_LENGTH_MAX) {
+            throw new IllegalArgumentException("The TextChannel's topic may not be longer than"+ TEXT_CHANNEL_TOPIC_LENGTH_MAX +" characters!");
+        }
+    }
+
+    public static void checkBitrate(int bitrate, IGuild guild) {
+        if (bitrate < VOICE_CHANNEL_BITRATE_MIN) {
+            throw new IllegalArgumentException("The bitrate can not be lower than "+VOICE_CHANNEL_BITRATE_MIN+"!");
+        } else if (bitrate > VOICE_CHANNEL_BITRATE_MAX) {
+            if (guild.getSplash() != null && bitrate > VOICE_CHANNEL_BITRATE_VIP_MAX) { // Guild is VIP
+                throw new IllegalArgumentException("The bitrate of a vip guild can not be greater than "+VOICE_CHANNEL_BITRATE_VIP_MAX+"!");
+            } else {
+                throw new IllegalArgumentException("The bitrate of a normal guild can not be greater than "+VOICE_CHANNEL_BITRATE_MAX+"!");
             }
         }
+    }
 
-        new Requester((IdentityImpl) getIdentity(), HttpPath.Channel.DELETE_CHANNEL)
-                .request(channel.getId()).performRequest();
+    public static void checkUserLimit(int limit) {
+        if (limit < VOICE_CHANNEL_USER_LIMIT_MIN || limit > VOICE_CHANNEL_USER_LIMIT_MAX) {
+            throw new IllegalArgumentException("The user limit may not be lower than "+VOICE_CHANNEL_USER_LIMIT_MIN+" or greater than "+VOICE_CHANNEL_USER_LIMIT_MAX+"!");
+        }
     }
 
 }

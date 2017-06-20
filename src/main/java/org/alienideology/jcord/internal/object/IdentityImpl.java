@@ -8,13 +8,10 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.IdentityType;
-import org.alienideology.jcord.command.CommandFramework;
+import org.alienideology.jcord.bot.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.EventManager;
-import org.alienideology.jcord.handle.channel.IMessageChannel;
-import org.alienideology.jcord.handle.channel.IPrivateChannel;
-import org.alienideology.jcord.handle.channel.ITextChannel;
-import org.alienideology.jcord.handle.channel.IVoiceChannel;
+import org.alienideology.jcord.handle.channel.*;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.user.IUser;
@@ -137,6 +134,20 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         return Collections.unmodifiableList(roles);
     }
 
+    @Override
+    public IGuildChannel getGuildChannel(String id) {
+        for (IGuild guild : guilds) {
+            IGuildChannel channel = guild.getGuildChannel(id);
+            if (channel != null) return channel;
+        }
+        return null;
+    }
+
+    @Override
+    public List<IGuildChannel> getAllGuildChannels() {
+        return null;
+    }
+
     @Nullable
     public IMessageChannel getMessageChannel(String id) {
         List<IMessageChannel> channels = getAllMessageChannels();
@@ -150,7 +161,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     public List<IMessageChannel> getAllMessageChannels() {
         List<IMessageChannel> channels = new ArrayList<>(getAllTextChannels());
         channels.addAll(privateChannels);
-        return channels;
+        return Collections.unmodifiableList(channels);
     }
 
     @Nullable
@@ -168,7 +179,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         for (IGuild guild : guilds) {
             channels.addAll(guild.getTextChannels());
         }
-        return channels;
+        return Collections.unmodifiableList(channels);
     }
 
     @Nullable
@@ -186,7 +197,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         for (IGuild guild : guilds) {
             channels.addAll(guild.getVoiceChannels());
         }
-        return channels;
+        return Collections.unmodifiableList(channels);
     }
 
     @Nullable
@@ -210,7 +221,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     }
 
     public List<IPrivateChannel> getPrivateChannels() {
-        return privateChannels;
+        return Collections.unmodifiableList(privateChannels);
     }
 
     @Override
