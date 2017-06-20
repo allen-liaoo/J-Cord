@@ -1,5 +1,3 @@
-package bot;
-
 import org.alienideology.jcord.bot.command.Command;
 import org.alienideology.jcord.bot.command.CommandResponder;
 

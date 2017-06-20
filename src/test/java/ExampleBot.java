@@ -1,5 +1,3 @@
-package bot;
-
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;

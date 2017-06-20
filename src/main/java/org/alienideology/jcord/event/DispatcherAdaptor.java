@@ -27,6 +27,7 @@ import org.alienideology.jcord.event.gateway.GatewayEvent;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.gateway.ResumedEvent;
 import org.alienideology.jcord.event.guild.*;
+import org.alienideology.jcord.event.guild.emoji.*;
 import org.alienideology.jcord.event.guild.member.*;
 import org.alienideology.jcord.event.guild.role.GuildRoleCreateEvent;
 import org.alienideology.jcord.event.guild.update.*;
@@ -129,12 +130,30 @@ public class DispatcherAdaptor {
             } else if (event instanceof GuildMemberLeaveEvent) {
                 onGuildMemberLeave((GuildMemberLeaveEvent) event);
             }else if (event instanceof GuildMemberBanEvent) {
-                onGuildBan((GuildMemberBanEvent) event);
+                onGuildMemberBan((GuildMemberBanEvent) event);
+            } else if (event instanceof GuildMemberNicknameUpdateEvent) {
+                onGuildMemberNicknameUpdate((GuildMemberNicknameUpdateEvent) event);
+            } else if (event instanceof GuildMemberAddRoleEvent) {
+                onGuildMemberAddRole((GuildMemberAddRoleEvent) event);
+            } else if (event instanceof GuildMemberRemoveRoleEvent) {
+                onGuildMemberRemoveRole((GuildMemberRemoveRoleEvent) event);
             }
         } else if (event instanceof GuildUnbanEvent) {
             onGuildUnban((GuildUnbanEvent) event);
-        } else if (event instanceof GuildRoleCreateEvent) {
-            onGuildRoleCreate((GuildRoleCreateEvent) event);
+        } else if (event instanceof GuildEmojiEvent) {
+            onGuildEmojiEvent((GuildEmojiEvent) event);
+            if (event instanceof GuildEmojiUploadEvent) {
+                onGuildEmojiUpload((GuildEmojiUploadEvent) event);
+            } else if (event instanceof GuildEmojiUpdateEvent) {
+                onGuildEmojiUpdate((GuildEmojiUpdateEvent) event);
+                if (event instanceof GuildEmojiNameUpdateEvent) {
+                    onGuildEmojiNameUpdate((GuildEmojiNameUpdateEvent) event);
+                } else if (event instanceof GuildEmojiRolesUpdateEvent) {
+                    onGuildEmojiRolesUpdate((GuildEmojiRolesUpdateEvent) event);
+                }
+            } else if (event instanceof GuildEmojiDeleteEvent) {
+                onGuildEmojiDelete((GuildEmojiDeleteEvent) event);
+            }
         }
     }
     /*
@@ -175,9 +194,27 @@ public class DispatcherAdaptor {
 
     public void onGuildMemberLeave (GuildMemberLeaveEvent event) {}
 
-    public void onGuildBan (GuildMemberBanEvent event) {}
+    public void onGuildMemberBan(GuildMemberBanEvent event) {}
 
     public void onGuildUnban (GuildUnbanEvent event) {}
+
+    public void onGuildMemberNicknameUpdate (GuildMemberNicknameUpdateEvent event) {}
+
+    public void onGuildMemberAddRole (GuildMemberAddRoleEvent event) {}
+
+    public void onGuildMemberRemoveRole (GuildMemberRemoveRoleEvent event) {}
+
+    public void onGuildEmojiEvent (GuildEmojiEvent event) {}
+
+    public void onGuildEmojiUpload (GuildEmojiUploadEvent event) {}
+
+    public void onGuildEmojiUpdate (GuildEmojiUpdateEvent event) {}
+
+    public void onGuildEmojiNameUpdate (GuildEmojiNameUpdateEvent event) {}
+
+    public void onGuildEmojiRolesUpdate (GuildEmojiRolesUpdateEvent event) {}
+
+    public void onGuildEmojiDelete (GuildEmojiDeleteEvent event) {}
 
     public void onGuildRoleCreate (GuildRoleCreateEvent event) {}
 

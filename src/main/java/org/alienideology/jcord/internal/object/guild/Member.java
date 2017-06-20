@@ -28,12 +28,12 @@ public final class Member extends DiscordObject implements IMember {
     private String nickname;
     private OffsetDateTime joinedDate;
 
-    private List<Role> roles;
+    private List<IRole> roles;
     private List<Permission> permissions;
     private boolean isDeafened;
     private boolean isMuted;
 
-    public Member(IdentityImpl identity, Guild guild, User user, String nickname, String joinedDate, List<Role> roles, boolean isDeafened, boolean isMuted) {
+    public Member(IdentityImpl identity, Guild guild, User user, String nickname, String joinedDate, List<IRole> roles, boolean isDeafened, boolean isMuted) {
         super(identity);
         this.guild = guild;
         this.user = user;
@@ -73,9 +73,9 @@ public final class Member extends DiscordObject implements IMember {
         return false;
     }
 
-    private List<Permission> initPermissions() {
+    public List<Permission> initPermissions() {
         Set<Permission> allPerms = new TreeSet<>();
-        for (Role role : roles) {
+        for (IRole role : roles) {
             allPerms.addAll(role.getPermissions());
         }
         List<Permission> permissions = new ArrayList<>();
@@ -164,4 +164,26 @@ public final class Member extends DiscordObject implements IMember {
                 ", user=" + user +
                 '}';
     }
+
+    public Member setNickname(String nickname) {
+        this.nickname = nickname;
+        return this;
+    }
+
+    public Member setRoles(List<IRole> roles) {
+        this.roles = roles;
+        return this;
+    }
+
+    public Member addRole(Role role) {
+        if (!roles.contains(role))
+            roles.add(role);
+        return this;
+    }
+
+    public Member removeRoles(Collection<IRole> roles) {
+        this.roles.removeAll(roles);
+        return this;
+    }
+
 }

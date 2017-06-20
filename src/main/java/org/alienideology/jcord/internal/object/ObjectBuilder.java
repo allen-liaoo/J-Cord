@@ -4,6 +4,7 @@ import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -290,7 +291,7 @@ public final class ObjectBuilder {
         boolean isMute = json.getBoolean("mute");
         User user = buildUser(json.getJSONObject("user"));
 
-        List<Role> memberRoles = new ArrayList<>();
+        List<IRole> memberRoles = new ArrayList<>();
 
         if (!json.isNull("roles")) {
             JSONArray roles = json.getJSONArray("roles");
@@ -299,7 +300,7 @@ public final class ObjectBuilder {
                 Role newRole = (Role) guild.getRole(roleId);
                 if (newRole != null) memberRoles.add(newRole);
             }
-            memberRoles.add((Role) guild.getEveryoneRole());
+            memberRoles.add(guild.getEveryoneRole());
         }
 
         return new Member(identity, guild, user, nick, joined_at, memberRoles, isDeaf, isMute);

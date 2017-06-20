@@ -1,5 +1,3 @@
-package bot;
-
 /**
  * @author AlienIdeology
  */

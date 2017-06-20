@@ -1,5 +1,3 @@
-package bot;
-
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.guild.GuildCreateEvent;

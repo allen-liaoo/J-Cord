@@ -276,6 +276,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         eventHandler.put("GUILD_BAN_ADD", new GuildBanEventHandler(identity, true));
         eventHandler.put("GUILD_BAN_REMOVE", new GuildBanEventHandler(identity, false));
         eventHandler.put("GUILD_MEMBER_ADD", new GuildMemberAddEventHandler(identity));
+        eventHandler.put("GUILD_MEMBER_UPDATE", new GuildMemberUpdateEventHandler(identity));
         eventHandler.put("GUILD_MEMBER_REMOVE", new GuildMemberRemoveEventHandler(identity));
 
         // Role Event

@@ -22,6 +22,15 @@ Event - Whenever a change happens to an entity, an event get fired.
      - GuildMemberBanEvent
      - GuildUnbanEvent (Special event that doesn't really counts as a GuildMemberEvent. <br />
        There is no member getter for the event)
+     - GuildMemberNicknameUpdateEvent
+     - GuildMemberAddRoleEvent
+     - GuildMemberRemoveRoleEvent
+   - GuildEmojiEvent
+     - GuildEmojiUploadEvent
+     - GuildEmojiUpdateEvent
+       - GuildEmojiNameUpdateEvent
+       - GuildEmojiRolesUpdateEvent
+     - GuildEmojiDeleteEvent
    - GuildRoleCreatedEvent - Fired whenever a role is created.
     <br />
  - ChannelEvent
@@ -32,7 +41,16 @@ Event - Whenever a change happens to an entity, an event get fired.
      - PrivateChannelCreateEvent
    - ChannelUpdateEvent
      - TextChannelUpdateEvent
+       - TextChannelNameUpdateEvent
+       - TextChannelPositionUpdateEvent
+       - TextChannelPermissionsUpdateEvent
+       - TextChannelTopicUpdateEvent
      - VoiceChannelUpdateEvent
+       - VoiceChannelNameUpdateEvent
+       - VoiceChannelPositionUpdateEvent
+       - VoiceChannelPermissionsUpdateEvent
+       - VoiceChannelBitrateUpdateEvent
+       - VoiceChannelUserLimitUpdateEvent
    - ChannelDeleteEvent
      - GuildChannelDeleteEvent
        - TextChannelDeleteEvent
