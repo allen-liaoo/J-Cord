@@ -75,8 +75,8 @@ public final class GuildEmoji extends DiscordObject implements IGuildEmoji {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return (obj instanceof GuildEmoji) && ((GuildEmoji) obj).getId().equals(this.id);
+    public boolean equals(Object o) {
+        return (o instanceof GuildEmoji) && ((GuildEmoji) o).getId().equals(id);
     }
 
     @Override

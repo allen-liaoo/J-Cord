@@ -1,7 +1,7 @@
 package bot;
 
 import org.alienideology.jcord.event.EventSubscriber;
-import org.alienideology.jcord.event.channel.guild.text.TextChannelUpdateEvent;
+import org.alienideology.jcord.event.guild.emoji.GuildEmojiNameUpdateEvent;
 
 /**
  * @author AlienIdeology
@@ -9,8 +9,8 @@ import org.alienideology.jcord.event.channel.guild.text.TextChannelUpdateEvent;
 public class ExampleSubscriber {
 
     @EventSubscriber
-    public void onChannelPerm(TextChannelUpdateEvent event) {
-        System.out.println(event.getTextChannel());
+    public void onEmoji(GuildEmojiNameUpdateEvent event) {
+        System.out.println(event.getOldName());
     }
 
 }

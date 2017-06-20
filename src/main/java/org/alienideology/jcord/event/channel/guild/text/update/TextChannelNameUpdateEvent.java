@@ -10,7 +10,7 @@ import org.alienideology.jcord.internal.object.channel.Channel;
  */
 public class TextChannelNameUpdateEvent extends TextChannelUpdateEvent {
 
-    public TextChannelNameUpdateEvent(IdentityImpl identity, int sequence, Channel channel, IGuildChannel oldChannel) {
+    public TextChannelNameUpdateEvent(IdentityImpl identity, int sequence, Channel channel, IGuildChannel oldChannel, String holder) {
         super(identity, sequence, channel, oldChannel);
     }
 

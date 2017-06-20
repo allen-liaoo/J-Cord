@@ -95,7 +95,7 @@ public final class ObjectBuilder {
             JSONArray emojis = json.getJSONArray("emojis");
             for (int i = 0; i < emojis.length(); i++) {
                 JSONObject emojiJson = emojis.getJSONObject(i);
-                guild.addGuildEmoji(buildEmoji(emojiJson, guild));
+                buildEmoji(emojiJson, guild);
             }
 
             /* Build Channels */
@@ -525,6 +525,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a GuildEmoji object base on provided json.
+     *
      * @param json The emoji JSONObject
      * @param guild The guild this emoji is in
      * @return The GuildEmoji object
@@ -534,18 +535,22 @@ public final class ObjectBuilder {
         String id = json.getString("id");
         String name = json.getString("name");
         boolean requireColon = json.has("require_colons") & json.getBoolean("require_colons");
-        List<Role> roles = new ArrayList<>();
 
+        List<Role> roles = new ArrayList<>();
         JSONArray rolesJson = json.getJSONArray("roles");
         for (int i = 0; i < rolesJson.length(); i++) {
             Role role = (Role) guild.getRole(rolesJson.getString(i));
             if (role != null) roles.add(role);
         }
-        return new GuildEmoji(identity, guild, id, name, roles, requireColon);
+
+        GuildEmoji emoji = new GuildEmoji(identity, guild, id, name, roles, requireColon);
+        guild.addGuildEmoji(emoji);
+        return emoji;
     }
 
     /**
      * Built an invite with provided json.
+     *
      * @param json The json invite object. May not contains metadata.
      * @return The invite impl built.
      */

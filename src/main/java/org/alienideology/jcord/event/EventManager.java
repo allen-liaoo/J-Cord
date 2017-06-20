@@ -86,13 +86,16 @@ public class EventManager {
     public void onEvent(Event event) {
         dispatchers.forEach(d -> d.dispatchEvent(event));
 
+        List<Class<? extends Event>> classes = new ArrayList<>(methods.keySet());
+
         Class<? extends Event> eventClass = event.getClass();
         for (;;) {
-            System.out.println(eventClass);
             for (Class<? extends Event> param : methods.keySet()) {
-                System.out.println("Param "+param);
 
-                if (param.isAssignableFrom(eventClass)) {
+                // Class#isAssignableFrom also checks for same parameters' constructors.
+                // So I check for their names to make sure they are the same class.
+                // This avoids duplicated calls to the same method.
+                if (param.isAssignableFrom(eventClass) && param.getName().equals(eventClass.getName())) {
                     try {
                         methods.get(param).method.invoke(methods.get(param).object, event);
                     } catch (IllegalAccessException | InvocationTargetException e) {

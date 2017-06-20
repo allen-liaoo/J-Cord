@@ -18,7 +18,10 @@ import org.alienideology.jcord.internal.object.managers.GuildManager;
 import org.alienideology.jcord.internal.object.managers.InviteManager;
 import org.alienideology.jcord.internal.object.user.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author AlienIdeology
@@ -367,9 +370,11 @@ public final class Guild extends DiscordObject implements IGuild {
     public Guild addGuildChannel (IGuildChannel... channels) {
         for (IGuildChannel channel : channels) {
             if (channel instanceof TextChannel) {
-                textChannels.add((TextChannel) channel);
+                if (!textChannels.contains(channel))
+                    textChannels.add((TextChannel) channel);
             } else if (channel instanceof VoiceChannel) {
-                voiceChannels.add((VoiceChannel) channel);
+                if (!voiceChannels.contains(channel))
+                    voiceChannels.add((VoiceChannel) channel);
             }
         }
         return this;
@@ -387,8 +392,9 @@ public final class Guild extends DiscordObject implements IGuild {
         return channel;
     }
 
-    public Guild addMember (Member... members) {
-        this.members.addAll(Arrays.asList(members));
+    public Guild addMember (Member member) {
+        if (!members.contains(member))
+            members.add(member);
         return this;
     }
 
@@ -398,8 +404,9 @@ public final class Guild extends DiscordObject implements IGuild {
         return member;
     }
 
-    public Guild addRole (Role... roles) {
-        this.roles.addAll(Arrays.asList(roles));
+    public Guild addRole (Role role) {
+        if (!roles.contains(role))
+            roles.add(role);
         return this;
     }
 
@@ -409,8 +416,9 @@ public final class Guild extends DiscordObject implements IGuild {
         return role;
     }
 
-    public Guild addGuildEmoji (GuildEmoji... emojis) {
-        this.emojis.addAll(Arrays.asList(emojis));
+    public Guild addGuildEmoji (GuildEmoji emoji) {
+        if (!emojis.contains(emoji))
+            emojis.add(emoji);
         return this;
     }
 
