@@ -77,3 +77,5 @@ Event - Whenever a change happens to an entity, an event get fired.
    - MessageDeleteEvent
      - GuildMessageDeleteEvent
      - PrivateMessageDeleteEvent
+   - MessagePinUpdateEvent - This is just a internal event that discord fired.
+     It is not possible to get the pinned message from this event.

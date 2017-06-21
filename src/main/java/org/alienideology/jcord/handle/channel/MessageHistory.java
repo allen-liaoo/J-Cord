@@ -6,14 +6,16 @@ import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
+import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.util.Cache;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * MessageHistory - The history of a MessageChannel, used to get lists of messages.
@@ -27,11 +29,13 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
     /**
      * A list of messages from old to new (Index small to large)
      */
-    private Cache<Message> history = new Cache<>();
+    private Cache<IMessage> history = new Cache<>();
 
     public MessageHistory(MessageChannel channel) {
         super((IdentityImpl) channel.getIdentity());
         this.channel = channel;
+        // Cache 5 messages
+        getLatestMessages(5);
     }
 
     /**
@@ -46,7 +50,7 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
      *
      * @return The cached messages. They may or may not be in chronological order.
      */
-    public Cache<Message> getCachedMessages() {
+    public Cache<IMessage> getCachedMessages() {
         Collections.sort(history.toList());
         return history;
     }
@@ -64,11 +68,10 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
 
     /**
      * Get the latest message of this channel.
-     * @deprecated  MessageChannel#getLatestMessage()
+     * @see   MessageChannel#getLatestMessage()
      *
      * @return The latest message
      */
-    @Deprecated
     public IMessage getLatestMessage() {
         return channel.getLatestMessage();
     }
@@ -80,34 +83,51 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
      * @param amount The integer amounts of messages to get.
      * @return A list of messages sorted from old to new.
      */
-    public List<Message> getLatestMessages(int amount) {
-        List<Message> messageList = getMessagesAfter(channel.getLatestMessage().getId(), amount);
-        if (!messageList.isEmpty()) messageList.remove(messageList.get(0)); // Remove oldest message. Add latest message.
-        messageList.add((Message) channel.getLatestMessage());
-        return messageList.subList(messageList.size()-amount > 0 ? messageList.size()-amount : 0, messageList.size());
+    public List<IMessage> getLatestMessages(int amount) {
+        // Reset latest message
+        if (getLatestMessage() == null) {
+            channel.resetLatestMessage();
+        }
+
+        if (getLatestMessage() == null) {
+            return new ArrayList<>();
+        } else {
+
+            List<IMessage> messageList = getMessagesBefore(getLatestMessage().getId(), amount);
+
+            if (!messageList.isEmpty()) {
+                messageList.remove(messageList.get(0)); // Remove oldest message. Add latest message.
+            }
+            messageList.add(channel.getLatestMessage());
+
+            return messageList.subList(messageList.size() - amount > 0 ? messageList.size() - amount : 0, messageList.size());
+        }
     }
 
     /**
      * Get the messages sent after a message. (Does not includes the message itself)
      *
+     * @exception IllegalArgumentException
+     *          If the amount is smaller than 0 or greater than 100.
+     *
      * @param messageId The ID of the message.
      * @param amount The integer amounts of message to get.
-     * @exception IllegalArgumentException If the amount is <= 0 or > 100.
      * @return A list of messages sorted from old to new.
      */
-    public List<Message> getMessagesAfter(String messageId, int amount) {
+    public List<IMessage> getMessagesAfter(String messageId, int amount) {
         checkAmount(amount);
         JSONArray messages = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGES_AFTER)
                 .request(channel.getId(), String.valueOf(amount), messageId)
                 .getAsJSONArray();
 
-        List<Message> messageList = new ArrayList<>();
+        List<IMessage> messageList = new ArrayList<>();
         for (int i = 0; i < messages.length(); i++) {
             JSONObject msg = messages.getJSONObject(i);
             Message message = new ObjectBuilder(identity).buildMessage(msg);
             messageList.add(message);
         }
         Collections.sort(messageList); // Sort the list by chronological order
+        history.cacheAll(messageList.toArray(new IMessage[messageList.size()]));
         return messageList;
     }
 
@@ -119,19 +139,19 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
      * @exception IllegalArgumentException If the amount is <= 0 or > 100.
      * @return A list of messages sorted from old to new.
      */
-    public List<Message> getMessagesBefore(String messageId, int amount) {
+    public List<IMessage> getMessagesBefore(String messageId, int amount) {
         checkAmount(amount);
         JSONArray messages = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGES_BEFORE)
                 .request(channel.getId(), String.valueOf(amount), messageId)
                 .getAsJSONArray();
-        List<Message> messageList = new ArrayList<>();
+        List<IMessage> messageList = new ArrayList<>();
         for (int i = 0; i < messages.length(); i++) {
             JSONObject msg = messages.getJSONObject(i);
             Message message = new ObjectBuilder(identity).buildMessage(msg);
             messageList.add(message);
         }
         Collections.sort(messageList);
-        history.cacheAll(messageList.toArray(new Message[messageList.size()]));
+        history.cacheAll(messageList.toArray(new IMessage[messageList.size()]));
         return messageList;
     }
 
@@ -144,19 +164,19 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
      * @exception IllegalArgumentException If the amount is <= 0 or > 100.
      * @return A list of messages sorted from old to new.
      */
-    public List<Message> getMessagesAround(String messageId, int amount) {
+    public List<IMessage> getMessagesAround(String messageId, int amount) {
         checkAmount(amount);
         JSONArray messages = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGES_AROUND)
                 .request(channel.getId(), String.valueOf(amount), messageId)
                 .getAsJSONArray();
-        List<Message> messageList = new ArrayList<>();
+        List<IMessage> messageList = new ArrayList<>();
         for (int i = 0; i < messages.length(); i++) {
             JSONObject msg = messages.getJSONObject(i);
-            Message message = new ObjectBuilder(identity).buildMessage(msg);
+            IMessage message = new ObjectBuilder(identity).buildMessage(msg);
             messageList.add(message);
         }
         Collections.sort(messageList);
-        history.cacheAll(messageList.toArray(new Message[messageList.size()]));
+        history.cacheAll(messageList.toArray(new IMessage[messageList.size()]));
         return messageList;
     }
 
@@ -165,16 +185,17 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
      *
      * @return the list of messages, list size without limits.
      */
-    public List<Message> getPinnedMessages() {
+    public List<IMessage> getPinnedMessages() {
         JSONArray pins = new Requester(identity, HttpPath.Channel.GET_PINNED_MESSAGES)
                 .request(channel.getId()).getAsJSONArray();
 
-        List<Message> pinnedMessages = new ArrayList<>();
+        List<IMessage> pinnedMessages = new ArrayList<>();
         for (int i = 0; i < pins.length(); i++) {
             JSONObject msg = pins.getJSONObject(i);
             Message message = new ObjectBuilder(identity).buildMessage(msg);
             pinnedMessages.add(message);
         }
+        history.cacheAll(pinnedMessages.toArray(new IMessage[pinnedMessages.size()]));
         return pinnedMessages;
     }
 

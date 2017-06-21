@@ -22,11 +22,12 @@ public class ExampleBot {
                     .setIdentityType(IdentityType.BOT)
                     .useToken(Token.YOUR_SECRET_TOKEN_HERE) // Remember to keep this secret
                     .setEventManager(
-                            new EventManager()
-                                    .registerDispatcherAdaptors(new ExampleDispatcher())
-                                    .registerCommandFrameworks(new CommandFramework().setPrefixes("=")
-                                            .registerCommandResponders(new ExampleResponder()))
-                                    .registerEventSubscribers(new ExampleSubscriber())
+                        new EventManager()
+                            .registerDispatcherAdaptors(new ExampleDispatcher())
+                            .registerCommandFrameworks(new CommandFramework().setPrefixes("=")
+                                .registerCommandResponders(new ExampleResponder())
+                            )
+                            .registerEventSubscribers(new ExampleSubscriber())
                     )
                     .build(true);
 

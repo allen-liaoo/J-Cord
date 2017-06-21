@@ -57,6 +57,11 @@ public enum Permission {
     public static Collection<Permission> ALL_PERMS = getPermissionsByLong(2146958591);
 
     /**
+     * No permissions.
+     */
+    public static Collection<Permission> NO_PERMS = getPermissionsByLong(0);
+
+    /**
      * All Guild related permissions.
      */
     public static Collection<Permission> ALL_GUILD_PERMS = getPermissionsByLong(2080374975);

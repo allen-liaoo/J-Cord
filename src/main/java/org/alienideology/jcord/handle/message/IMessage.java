@@ -1,6 +1,7 @@
 package org.alienideology.jcord.handle.message;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.builders.EmbedMessageBuilder;
@@ -8,9 +9,11 @@ import org.alienideology.jcord.handle.builders.StringMessageBuilder;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.StringMessage;
 
@@ -21,7 +24,7 @@ import java.util.List;
  * Message - A recorded communication sent in MessageChannel.
  * @author AlienIdeology
  */
-public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<Message> {
+public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessage> {
 
     /**
      * Reply to this message, starting with mentioning the message's author
@@ -128,6 +131,125 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<Message
      */
     default void pin() {
         getChannel().pinMessage(getId());
+    }
+
+    /**
+     * Add an reaction to a message by unicode.
+     *
+     * @exception PermissionException
+     *          <ul>
+     *              <li>If the identity does not have {@code Read Message History} permission to access the message.</li>
+     *              <li>If the identity does not have {@code Add Reactions} permission to add a brand new reaction to the message.</li>
+     *          </ul>
+     *
+     * @param unicode The string unicode
+     */
+    default void addReaction(String unicode) {
+        getChannel().addReaction(this.getId(), unicode);
+    }
+
+    /**
+     * Add an emoji reaction to this message.
+     *
+     * @exception PermissionException
+     *          <ul>
+     *              <li>If the identity does not have {@code Read Message History} permission to access the message.</li>
+     *              <li>If the identity does not have {@code Add Reactions} permission to add a brand new reaction to the message.</li>
+     *          </ul>
+     *
+     * @param emoji The emoji.
+     */
+    default void addReaction(EmojiTable.Emoji emoji) {
+        getChannel().addReaction(this.getId(), emoji);
+    }
+
+    /**
+     * Add a guild emoji reaction to this message.
+     *
+     * @exception PermissionException
+     *          <ul>
+     *              <li>If the identity does not have {@code Read Message History} permission to access the message.</li>
+     *              <li>If the identity does not have {@code Add Reactions} permission to add a brand new reaction to the message.</li>
+     *          </ul>
+     *
+     * @param emoji The guild emoji
+     */
+    default void addReaction(IGuildEmoji emoji) {
+        getChannel().addReaction(this.getId(), emoji);
+    }
+
+    /**
+     * Remove a member's reaction on this message.
+     *
+     * @exception PermissionException
+     *          If the reaction to remove is not reacted by the identity itself, and the identity does not have {@code Manager Messages} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          <ul>
+     *              <li>If the member is the server owner.</li>
+     *              <li>If the member is at a higher or same hierarchy as the identity.</li>
+     *          </ul>
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the reaction is not found from the message's reactions.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_EMOJI
+     *
+     * @param member The member that reacted on the message.
+     * @param unicode The unicode reaction.
+     */
+    default void removeReaction(IMember member, String unicode) {
+        getChannel().removeReaction(member, getId(), unicode);
+    }
+
+    /**
+     * Remove a member's reaction on this message.
+     *
+     * @exception PermissionException
+     *          If the reaction to remove is not reacted by the identity itself, and the identity does not have {@code Manager Messages} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          <ul>
+     *              <li>If the member is the server owner.</li>
+     *              <li>If the member is at a higher or same hierarchy as the identity.</li>
+     *          </ul>
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the reaction is not found from the message's reactions.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_EMOJI
+     *
+     * @param member The member that reacted on the message.
+     * @param emoji The emoji reaction.
+     */
+    default void removeReaction(IMember member, EmojiTable.Emoji emoji) {
+        getChannel().removeReaction(member, getId(), emoji);
+    }
+
+    /**
+     * Remove a member's reaction on this message.
+     *
+     * @exception PermissionException
+     *          If the reaction to remove is not reacted by the identity itself, and the identity does not have {@code Manager Messages} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          <ul>
+     *              <li>If the member is the server owner.</li>
+     *              <li>If the member is at a higher or same hierarchy as the identity.</li>
+     *          </ul>
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the reaction is not found from the message's reactions.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_EMOJI
+     *
+     * @param member The member that reacted on the message.
+     * @param guildEmoji The guild emoji reaction.
+     */
+    default void removeReaction(IMember member, IGuildEmoji guildEmoji) {
+        getChannel().removeReaction(member, getId(), guildEmoji);
+    }
+
+    /**
+     * Remove all reactions from this message.
+     *
+     * @exception PermissionException
+     *          If the identity does not have {@code Manager Messages} permission.
+     *
+     */
+    default void removeAllReactions() {
+        getChannel().removeAllReactions(getId());
     }
 
     /**
@@ -270,7 +392,7 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<Message
      * @see Comparable#compareTo(Object) for the returning value.
      */
     @Override
-    int compareTo(Message o);
+    int compareTo(IMessage o);
 
     /**
      * An file or image attachment of a message.

@@ -35,10 +35,7 @@ import org.alienideology.jcord.event.guild.role.GuildRoleEvent;
 import org.alienideology.jcord.event.guild.role.GuildRoleUpdateEvent;
 import org.alienideology.jcord.event.guild.role.update.*;
 import org.alienideology.jcord.event.guild.update.*;
-import org.alienideology.jcord.event.message.MessageCreateEvent;
-import org.alienideology.jcord.event.message.MessageDeleteEvent;
-import org.alienideology.jcord.event.message.MessageEvent;
-import org.alienideology.jcord.event.message.MessageUpdateEvent;
+import org.alienideology.jcord.event.message.*;
 import org.alienideology.jcord.event.message.dm.IPrivateMessageEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageDeleteEvent;
@@ -430,6 +427,8 @@ public class DispatcherAdaptor {
             } else if (event instanceof PrivateMessageDeleteEvent) {
                 onPrivateMessageDelete((PrivateMessageDeleteEvent) event);
             }
+        } else if (event instanceof MessagePinUpdateEvent) {
+            onMessagePinUpdate((MessagePinUpdateEvent) event);
         }
     }
 
@@ -456,6 +455,8 @@ public class DispatcherAdaptor {
     public void onGuildMessageDelete (GuildMessageDeleteEvent event) {}
 
     public void onPrivateMessageDelete (PrivateMessageDeleteEvent event) {}
+
+    public void onMessagePinUpdate (MessagePinUpdateEvent event) {}
 
     private void dispatchUserEvent(UserEvent event) {
         onUserEvent(event);

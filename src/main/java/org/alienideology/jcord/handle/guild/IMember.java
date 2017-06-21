@@ -176,7 +176,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * @return True if the other member is modifiable.
      */
     default boolean canModify(IMember member) {
-        return this.compareTo(member) > 0;
+        return this.compareTo(member) < 0;
     }
 
     /**
@@ -189,7 +189,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * @return True if the role is modifiable.
      */
     default boolean canModify(IRole role) {
-        return this.hasPermissions(true, Permission.MANAGE_ROLES) && this.getHighestRole().compareTo(role) > 0;
+        return this.hasPermissions(true, Permission.MANAGE_ROLES) && this.getHighestRole().compareTo(role) < 0;
     }
 
     /**

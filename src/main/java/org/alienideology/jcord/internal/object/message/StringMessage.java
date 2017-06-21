@@ -1,10 +1,10 @@
 package org.alienideology.jcord.internal.object.message;
 
-import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.message.IStringMessage;
+import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.user.User;
@@ -126,11 +126,6 @@ public final class StringMessage extends Message implements IStringMessage, Buil
             }
         }
         return md;
-    }
-
-    @Override
-    public String toString() {
-        return "ID: "+id+"\tContent: "+content;
     }
 
 }

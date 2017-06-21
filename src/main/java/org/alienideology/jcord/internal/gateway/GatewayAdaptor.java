@@ -294,6 +294,8 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         eventHandler.put("MESSAGE_CREATE", new MessageCreateEventHandler(identity));
         eventHandler.put("MESSAGE_UPDATE", new MessageUpdateEventHandler(identity));
         eventHandler.put("MESSAGE_DELETE", new MessageDeleteEventHandler(identity));
+        eventHandler.put("CHANNEL_PINS_UPDATE", new ChannelPinsUpdateEventHandler(identity));
+        //WEBHOOKS_UPDATE
     }
 
 }

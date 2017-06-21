@@ -111,10 +111,26 @@ public final class TextChannel extends MessageChannel implements ITextChannel, B
     @Override
     public boolean hasPermission(IMember member, Collection<Permission> permissions) {
         PermOverwrite overwrites = getMemberPermOverwrite(member.getId());
-        for (Permission permission : permissions) {
-            if (overwrites != null && overwrites.getAllowedPermissions().contains(permission))
-                return true;
-            if (member.getPermissions().contains(permission))
+
+        // If the member does not have overwrite, check the highest role
+        if (overwrites == null) {
+            overwrites = getRolePermOverwrite(member.getHighestRole().getId());
+        }
+
+        // If the member or highest role has overwrite
+        if (overwrites != null) {
+            for (Permission permission : permissions) {
+                // If the overwrite allowed one permission
+                if (overwrites.getAllowedPermissions().contains(permission))
+                    return true;
+                // If the overwrite did not denied, and the member has permission
+                if (!overwrites.getDeniedPermissions().contains(permission) && member.getPermissions().contains(permission))
+                    return true;
+            }
+
+        // If not, check permission
+        } else {
+            if (member.hasPermissions(true, permissions))
                 return true;
         }
         return false;
@@ -123,10 +139,21 @@ public final class TextChannel extends MessageChannel implements ITextChannel, B
     @Override
     public boolean hasPermission(IRole role, Collection<Permission> permissions) {
         PermOverwrite overwrites = getRolePermOverwrite(role.getId());
-        for (Permission permission : permissions) {
-            if (overwrites.getAllowedPermissions().contains(permission))
-                return true;
-            if (role.getPermissions().contains(permission))
+
+        // If the member or highest role has overwrite
+        if (overwrites != null) {
+            for (Permission permission : permissions) {
+                // If the overwrite allowed one permission
+                if (overwrites.getAllowedPermissions().contains(permission))
+                    return true;
+                // If the overwrite did not denied, and the member has permission
+                if (!overwrites.getDeniedPermissions().contains(permission) && role.getPermissions().contains(permission))
+                    return true;
+            }
+
+        // If not, check permission
+        } else {
+            if (role.hasPermissions(true, permissions))
                 return true;
         }
         return false;

@@ -1,7 +1,7 @@
 package org.alienideology.jcord.internal.object;
 
+import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.event.ExceptionEvent;
-import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.guild.IRole;
@@ -15,6 +15,7 @@ import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
+import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
@@ -192,7 +193,7 @@ public final class ObjectBuilder {
             }
             TextChannel tc = new TextChannel(identity, guild_id, id, name, position, topic, lastMessage)
                     .setPermOverwrites(overwrites);
-            if (lastMessage != null) lastMessage.setChannel(id);
+            if (lastMessage != null) lastMessage.setChannel(tc);
             return tc;
         } else {
             int bitrate = json.getInt("bitrate");
@@ -239,7 +240,7 @@ public final class ObjectBuilder {
 
         PrivateChannel dm = new PrivateChannel(identity, id, recipient, lastMessage);
         identity.addPrivateChannel(dm);
-        if (lastMessage != null) lastMessage.setChannel(id);
+        if (lastMessage != null) lastMessage.setChannel(dm);
         return dm;
     }
 
@@ -460,14 +461,13 @@ public final class ObjectBuilder {
             }
             message = embedMessage;
         }
-        message.setChannel(channel_id);  // Set channel may be null for MessageChannel's LastMessage
+        message.setChannel((MessageChannel) identity.getMessageChannel(channel_id));  // Set channel may be null for MessageChannel's LastMessage
 
         /* Reactions */
         // Build this at last because GuildEmoji requires Message#getGuild, which can only be called after setting channel
         List<IReaction> reactions = new ArrayList<>();
         if (json.has("reactions")) {
-            boolean isFromGuild = message.fromType(IChannel.Type.TEXT);
-            EmojiTable emojis = new EmojiTable();
+            boolean isFromGuild = message.getChannel() != null && message.fromType(IChannel.Type.TEXT);
             JSONArray reacts = json.getJSONArray("reactions");
 
             for (int i = 0; i < reacts.length(); i++) {
@@ -480,12 +480,12 @@ public final class ObjectBuilder {
 
                 if (emoji.has("id") && !emoji.isNull("id")) {
                     if (isFromGuild && message.getGuild() != null) {  // From recognized guild
-                        reaction = new Reaction(identity, reactedTimes, selfReacted, message.getGuild().getGuildEmoji(emoji.getString("id")));
+                        reaction = new Reaction(identity, message, reactedTimes, selfReacted, message.getGuild().getGuildEmoji(emoji.getString("id")));
                     } else {    // Global guild emoji
-                        reaction = new Reaction(identity, reactedTimes, selfReacted, new GuildEmoji(identity, emoji.getString("id"), emoji.getString("name")));
+                        reaction = new Reaction(identity, message, reactedTimes, selfReacted, new GuildEmoji(identity, emoji.getString("id"), emoji.getString("name")));
                     }
                 } else {
-                    reaction = new Reaction(identity, reactedTimes, selfReacted, emojis.getByUnicode(emoji.getString("name")));
+                    reaction = new Reaction(identity, message, reactedTimes, selfReacted, JCord.EMOJI_TABLE.getByUnicode(emoji.getString("name")));
                 }
                 reactions.add(reaction);
             }

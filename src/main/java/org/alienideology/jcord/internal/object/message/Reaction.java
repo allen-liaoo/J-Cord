@@ -2,6 +2,7 @@ package org.alienideology.jcord.internal.object.message;
 
 import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
+import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
@@ -10,6 +11,8 @@ import org.alienideology.jcord.internal.object.IdentityImpl;
  * @author AlienIdeology
  */
 public final class Reaction extends DiscordObject implements IReaction {
+
+    private Message message;
 
     private int reactedTimes;
     private boolean selfReacted;
@@ -20,8 +23,9 @@ public final class Reaction extends DiscordObject implements IReaction {
     /**
      * Constructor for Emoji
      */
-    public Reaction(IdentityImpl identity, int reactedTimes, boolean selfReacted, EmojiTable.Emoji emoji) {
+    public Reaction(IdentityImpl identity, Message message, int reactedTimes, boolean selfReacted, EmojiTable.Emoji emoji) {
         super(identity);
+        this.message = message;
         this.reactedTimes = reactedTimes;
         this.selfReacted = selfReacted;
         this.emoji = emoji;
@@ -31,12 +35,18 @@ public final class Reaction extends DiscordObject implements IReaction {
     /**
      * Constructor for GuildEmoji
      */
-    public Reaction(IdentityImpl identity, int reactedTimes, boolean selfReacted, IGuildEmoji guildEmoji) {
+    public Reaction(IdentityImpl identity, Message message, int reactedTimes, boolean selfReacted, IGuildEmoji guildEmoji) {
         super(identity);
+        this.message = message;
         this.reactedTimes = reactedTimes;
         this.selfReacted = selfReacted;
         this.emoji = null;
         this.guildEmoji = guildEmoji;
+    }
+
+    @Override
+    public IMessage getMessage() {
+        return message;
     }
 
     @Override

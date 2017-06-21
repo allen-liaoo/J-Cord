@@ -209,7 +209,7 @@ public final class Requester {
     private void processRequest(HttpRequest request, String path) {
         request.header("Authorization", identity.getToken())
                 .header("User-Agent", "DiscordBot ($"+path+", $"+ JCord.VERSION+")")
-                .header("Content-GameType", "application/json");
+                .header("Content-Type", "application/json");
     }
 
     private void handleErrorResponse(JSONObject response) {

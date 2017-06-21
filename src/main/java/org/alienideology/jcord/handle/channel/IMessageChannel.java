@@ -1,13 +1,19 @@
 package org.alienideology.jcord.handle.channel;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.builders.EmbedMessageBuilder;
 import org.alienideology.jcord.handle.builders.StringMessageBuilder;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IGuildEmoji;
+import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.message.IEmbedMessage;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.message.IStringMessage;
+import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.PermissionException;
+
+import java.util.List;
 
 /**
  * MessageChannel - A channel that allows users to send message.
@@ -127,8 +133,10 @@ public interface IMessageChannel extends IChannel {
      *
      * @param messageId The Id of the message.
      *
-     * @exception IllegalArgumentException If this channel is a PrivateChannel and the message is from another user.
-     * @exception PermissionException If this channel is a TextChannel and the user lack Manage Messages permission to delete other's message.
+     * @exception PermissionException
+     *          If this channel is a TextChannel and the user lack Manage Messages permission to delete other's message.
+     * @exception IllegalArgumentException
+     *          If this channel is a PrivateChannel and the message is from another user.
      *
      * @return The message deleted.
      */
@@ -137,17 +145,45 @@ public interface IMessageChannel extends IChannel {
     /**
      * Delete a message.
      *
+     * @exception PermissionException
+     *          If the identity lack {@code Manager Messages} permission.
+     * @exception IllegalArgumentException
+     *          If this channel is a PrivateChannel and the message is from another user.
+     *
      * @param message The the message.
-     *
-     * @exception IllegalArgumentException If this channel is a PrivateChannel and the message is from another user.
-     * @exception PermissionException If this channel is a TextChannel and the user lack Manage Messages permission to delete other's message.
-     *
      * @return The message deleted.
      */
     IMessage deleteMessage(IMessage message);
 
     /**
+     * Build delete a collection of messages.
+     *
+     * @exception IllegalArgumentException
+     *          If this channel is a private channel.
+     * @exception PermissionException
+     *          If the identity does not have {@code Manage Messages} permission.
+     *
+     * @param throwEx If true, the the method will check and throw exceptions.
+     *                If false, the exceptions below will be ignored.
+     *
+     * @throws org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If one of the messages is not from this channel.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     * @throws IllegalArgumentException
+     *          If one of the messages is older than 2 weeks.
+     *
+     * @param messages The messages to delete.
+     */
+    void bulkDeleteMessages(boolean throwEx, List<IMessage> messages);
+
+    /**
      * Pin a message by ID.
+     *
+     * @exception PermissionException
+     *          If the identity lack {@code Manager Messages} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the message is not found in this channel.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
      *
      * @param messageId The message id.
      */
@@ -156,9 +192,210 @@ public interface IMessageChannel extends IChannel {
     /**
      * Pin a message.
      *
+     * @exception PermissionException
+     *          If the identity lack {@code Manager Messages} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the message is not found in this channel.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *
      * @param message The message object.
      */
     void pinMessage(IMessage message);
+
+    /**
+     * Unpin a message by ID.
+     *
+     * @exception PermissionException
+     *          If the identity lack {@code Manager Messages} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the message is not found in this channel.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *
+     * @param messageId The message id.
+     */
+    void unpinMessage(String messageId);
+
+    /**
+     * Unpin a message.
+     *
+     * @exception PermissionException
+     *          If the identity lack {@code Manager Messages} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the message is not found in this channel.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *
+     * @param message The message object.
+     */
+    void unpinMessage(IMessage message);
+
+    /**
+     * Get reacted users of a reaction on a message.
+     *
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the message or reaction is not found.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN
+     *
+     * @param messageId The message ID.
+     * @param unicode The unicode reaction.
+     * @return A list of users reacted to this reaction.
+     */
+    List<IUser> getReactedUsers(String messageId, String unicode);
+
+    /**
+     * Get reacted users of a reaction on a message.
+     *
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the message or reaction is not found.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN
+     *
+     * @param messageId The message ID.
+     * @param emoji The emoji reaction.
+     * @return A list of users reacted to this reaction.
+     */
+    default List<IUser> getReactedUsers(String messageId, EmojiTable.Emoji emoji) {
+        return getReactedUsers(messageId, emoji.getUnicode());
+    }
+
+    /**
+     * Get reacted users of a reaction on a message.
+     *
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the message or reaction is not found.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN
+     *
+     * @param messageId The message ID.
+     * @param guildEmoji The guild emoji reaction.
+     * @return A list of users reacted to this reaction.
+     */
+    List<IUser> getReactedUsers(String messageId, IGuildEmoji guildEmoji);
+
+    /**
+     * Add a reaction to a message by unicode.
+     *
+     * @exception PermissionException
+     *          <ul>
+     *              <li>If the identity does not have {@code Read Message History} permission to access the message.</li>
+     *              <li>If the identity does not have {@code Add Reactions} permission to add a brand new reaction to the message.</li>
+     *          </ul>
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the messages does not belong to this channel.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *
+     * @param messageId The message ID.
+     * @param unicode The string unicode
+     */
+    void addReaction(String messageId, String unicode);
+
+    /**
+     * Add an emoji reaction to a message.
+     *
+     * @exception PermissionException
+     *          <ul>
+     *              <li>If the identity does not have {@code Read Message History} permission to access the message.</li>
+     *              <li>If the identity does not have {@code Add Reactions} permission to add a brand new reaction to the message.</li>
+     *          </ul>
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the messages does not belong to this channel.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *
+     * @param messageId The message ID.
+     * @param emoji The emoji.
+     */
+    default void addReaction(String messageId, EmojiTable.Emoji emoji) {
+        addReaction(messageId, emoji.getUnicode());
+    }
+
+    /**
+     * Add a guild emoji reaction to a message.
+     *
+     * @exception PermissionException
+     *          <ul>
+     *              <li>If the identity does not have {@code Read Message History} permission to access the message.</li>
+     *              <li>If the identity does not have {@code Add Reactions} permission to add a brand new reaction to the message.</li>
+     *          </ul>
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the messages does not belong to this channel.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *
+     * @param messageId The message ID.
+     * @param guildEmoji The guild emoji
+     */
+    void addReaction(String messageId, IGuildEmoji guildEmoji);
+
+    /**
+     * Remove a member's reaction from a message.
+     *
+     * @exception PermissionException
+     *          If the reaction to remove is not reacted by the identity itself, and the identity does not have {@code Manager Messages} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          <ul>
+     *              <li>If the member is the server owner.</li>
+     *              <li>If the member is at a higher or same hierarchy as the identity.</li>
+     *          </ul>
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the reaction is not found from the message's reactions.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_EMOJI
+     *
+     * @param member The member that reacted on the message.
+     * @param messageId The message's ID.
+     * @param unicode The unicode reaction.
+     */
+    void removeReaction(IMember member, String messageId, String unicode);
+
+    /**
+     * Remove a member's reaction from a message.
+     *
+     * @exception PermissionException
+     *          If the reaction to remove is not reacted by the identity itself, and the identity does not have {@code Manager Messages} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          <ul>
+     *              <li>If the member is the server owner.</li>
+     *              <li>If the member is at a higher or same hierarchy as the identity.</li>
+     *          </ul>
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the reaction is not found from the message's reactions.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_EMOJI
+     *
+     * @param member The member that reacted on the message.
+     * @param messageId The message's ID.
+     * @param emoji The emoji reaction.
+     */
+    default void removeReaction(IMember member, String messageId, EmojiTable.Emoji emoji) {
+        removeReaction(member, messageId, emoji.getUnicode());
+    }
+
+    /**
+     * Remove a member's reaction from a message.
+     *
+     * @exception PermissionException
+     *          If the reaction to remove is not reacted by the identity itself, and the identity does not have {@code Manager Messages} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          <ul>
+     *              <li>If the member is the server owner.</li>
+     *              <li>If the member is at a higher or same hierarchy as the identity.</li>
+     *          </ul>
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the reaction is not found from the message's reactions.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_EMOJI
+     *
+     * @param member The member that reacted on the message.
+     * @param messageId The message's ID.
+     * @param guildEmoji The guild emoji reaction.
+     */
+    void removeReaction(IMember member, String messageId, IGuildEmoji guildEmoji);
+
+    /**
+     * Remove all reactions from a message.
+     *
+     * @exception PermissionException
+     *          If the identity does not have {@code Manager Messages} permission.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the message is not from this channel.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *
+     * @param messageId The message ID.
+     */
+    void removeAllReactions(String messageId);
 
     /**
      * Start the typing status in this channel.

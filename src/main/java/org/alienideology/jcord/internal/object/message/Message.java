@@ -11,8 +11,6 @@ import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
-import org.alienideology.jcord.internal.object.channel.PrivateChannel;
-import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.user.User;
 
@@ -166,7 +164,7 @@ public class Message extends DiscordObject implements IMessage {
     }
 
     @Override
-    public int compareTo(Message o) {
+    public int compareTo(IMessage o) {
         return createdTime.compareTo(o.getCreatedTime());
     }
 
@@ -191,9 +189,8 @@ public class Message extends DiscordObject implements IMessage {
                 '}';
     }
 
-    public Message setChannel(String channel) {
-        this.channel = identity.getTextChannel(channel) == null ?
-                (PrivateChannel) identity.getPrivateChannel(channel) : (TextChannel) identity.getTextChannel(channel);
+    public Message setChannel(MessageChannel channel) {
+        this.channel = channel;
         return this;
     }
 
