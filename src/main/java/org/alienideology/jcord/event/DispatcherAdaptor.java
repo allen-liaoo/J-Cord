@@ -30,6 +30,10 @@ import org.alienideology.jcord.event.guild.*;
 import org.alienideology.jcord.event.guild.emoji.*;
 import org.alienideology.jcord.event.guild.member.*;
 import org.alienideology.jcord.event.guild.role.GuildRoleCreateEvent;
+import org.alienideology.jcord.event.guild.role.GuildRoleDeleteEvent;
+import org.alienideology.jcord.event.guild.role.GuildRoleEvent;
+import org.alienideology.jcord.event.guild.role.GuildRoleUpdateEvent;
+import org.alienideology.jcord.event.guild.role.update.*;
 import org.alienideology.jcord.event.guild.update.*;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.MessageDeleteEvent;
@@ -129,7 +133,7 @@ public class DispatcherAdaptor {
                 onGuildMemberJoin((GuildMemberJoinEvent) event);
             } else if (event instanceof GuildMemberLeaveEvent) {
                 onGuildMemberLeave((GuildMemberLeaveEvent) event);
-            }else if (event instanceof GuildMemberBanEvent) {
+            } else if (event instanceof GuildMemberBanEvent) {
                 onGuildMemberBan((GuildMemberBanEvent) event);
             } else if (event instanceof GuildMemberNicknameUpdateEvent) {
                 onGuildMemberNicknameUpdate((GuildMemberNicknameUpdateEvent) event);
@@ -140,6 +144,28 @@ public class DispatcherAdaptor {
             }
         } else if (event instanceof GuildUnbanEvent) {
             onGuildUnban((GuildUnbanEvent) event);
+        } else if (event instanceof GuildRoleEvent) {
+            onGuildRoleEvent((GuildRoleEvent) event);
+            if (event instanceof GuildRoleCreateEvent) {
+                onGuildRoleCreate((GuildRoleCreateEvent) event);
+            } else if (event instanceof GuildRoleUpdateEvent) {
+                onGuildRoleUpdate((GuildRoleUpdateEvent) event);
+                if (event instanceof GuildRoleNameUpdateEvent) {
+                    onGuildRoleNameUpdate((GuildRoleNameUpdateEvent) event);
+                } else if (event instanceof GuildRolePositionUpdateEvent) {
+                    onGuildRolePositionUpdate((GuildRolePositionUpdateEvent) event);
+                } else if (event instanceof GuildRoleColorUpdateEvent) {
+                    onGuildRoleColorUpdate((GuildRoleColorUpdateEvent) event);
+                } else if (event instanceof GuildRolePermissionsUpdateEvent) {
+                    onGuildRolePermissionsUpdate((GuildRolePermissionsUpdateEvent) event);
+                } else if (event instanceof GuildRoleSeparateListedUpdateEvent) {
+                    onGuildRoleSeparateListedUpdate((GuildRoleSeparateListedUpdateEvent) event);
+                } else if (event instanceof GuildRoleMentionUpdateEvent) {
+                    onGuildRoleMentionUpdate((GuildRoleMentionUpdateEvent) event);
+                }
+            } else if (event instanceof GuildRoleDeleteEvent) {
+                onGuildRoleDelete((GuildRoleDeleteEvent) event);
+            }
         } else if (event instanceof GuildEmojiEvent) {
             onGuildEmojiEvent((GuildEmojiEvent) event);
             if (event instanceof GuildEmojiUploadEvent) {
@@ -204,6 +230,32 @@ public class DispatcherAdaptor {
 
     public void onGuildMemberRemoveRole (GuildMemberRemoveRoleEvent event) {}
 
+    /*
+        General Guild Role Events
+     */
+    public void onGuildRoleEvent (GuildRoleEvent event) {}
+
+    public void onGuildRoleCreate (GuildRoleCreateEvent event) {}
+
+    public void onGuildRoleUpdate (GuildRoleUpdateEvent event) {}
+
+    public void onGuildRoleNameUpdate (GuildRoleNameUpdateEvent event) {}
+
+    public void onGuildRolePositionUpdate (GuildRolePositionUpdateEvent event) {}
+
+    public void onGuildRoleColorUpdate (GuildRoleColorUpdateEvent event) {}
+
+    public void onGuildRolePermissionsUpdate (GuildRolePermissionsUpdateEvent event) {}
+
+    public void onGuildRoleSeparateListedUpdate (GuildRoleSeparateListedUpdateEvent event) {}
+
+    public void onGuildRoleMentionUpdate (GuildRoleMentionUpdateEvent event) {}
+
+    public void onGuildRoleDelete (GuildRoleDeleteEvent event) {}
+
+    /*
+        General Guild Emoji Events
+     */
     public void onGuildEmojiEvent (GuildEmojiEvent event) {}
 
     public void onGuildEmojiUpload (GuildEmojiUploadEvent event) {}
@@ -215,8 +267,6 @@ public class DispatcherAdaptor {
     public void onGuildEmojiRolesUpdate (GuildEmojiRolesUpdateEvent event) {}
 
     public void onGuildEmojiDelete (GuildEmojiDeleteEvent event) {}
-
-    public void onGuildRoleCreate (GuildRoleCreateEvent event) {}
 
     /**
      * Channel Events

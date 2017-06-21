@@ -41,8 +41,7 @@ public final class Role extends DiscordObject implements IRole, Buildable {
         this.name = name;
         this.color = color;
         this.permissionsLong = permissions;
-        this.permissions = permissions == -1 ?      // -1 sent by RoleBuilder, just a place holder
-                new ArrayList<>() : Permission.getPermissionsByLong(permissions);
+        initPermissions(permissions);
         this.position = position;
         this.isSeparateListed = isSeparateListed;
         this.canMention = canMention;
@@ -58,6 +57,11 @@ public final class Role extends DiscordObject implements IRole, Buildable {
         if (isSeparateListed) role.put("hoist", true);
         if (canMention) role.put("mentionable", true);
         return role;
+    }
+
+    private void initPermissions(Long permissionsLong) {
+        this.permissions = permissionsLong == -1 ?      // -1 sent by RoleBuilder, just a place holder
+                new ArrayList<>() : Permission.getPermissionsByLong(permissionsLong);
     }
 
     @Override
@@ -152,5 +156,30 @@ public final class Role extends DiscordObject implements IRole, Buildable {
                 ", guild=" + guild +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public void setPermissionsLong(long permissionsLong) {
+        this.permissionsLong = permissionsLong;
+        initPermissions(permissionsLong);
+    }
+
+    public void setSeparateListed(boolean separateListed) {
+        isSeparateListed = separateListed;
+    }
+
+    public void setCanMention(boolean canMention) {
+        this.canMention = canMention;
     }
 }

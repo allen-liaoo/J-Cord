@@ -9,6 +9,7 @@ import org.apache.commons.logging.impl.SimpleLog;
  * PostAgent - An agent used to post bot status to bots websites.
  * @author AlienIdeology
  */
+// TODO: Customizable post agent, accept arguments. Feature: Automatically post status on startup and status change (User join and leave)
 public class PostAgent {
 
     public static SimpleLog LOG = new SimpleLog("Post-Agent");

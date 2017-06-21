@@ -25,6 +25,16 @@ Event - Whenever a change happens to an entity, an event get fired.
      - GuildMemberNicknameUpdateEvent
      - GuildMemberAddRoleEvent
      - GuildMemberRemoveRoleEvent
+   - GuildRoleEvent
+     - GuildRoleCreateEvent
+     - GuildRoleUpdateEvent
+       - GuildRoleNameUpdateEvent
+       - GuildRolePositionUpdateEvent
+       - GuildRoleColorUpdateEvent
+       - GuildRolePermissionsUpdateEvent
+       - GuildRoleSeparateListedUpdateEvent
+       - GuildRoleMentionUpdateEvent
+     - GuildRoleDeleteEvent
    - GuildEmojiEvent
      - GuildEmojiUploadEvent
      - GuildEmojiUpdateEvent

@@ -28,7 +28,7 @@ public class GuildEmojisUpdateEventHandler extends EventHandler {
         Guild guild = (Guild) identity.getGuild(json.getString("guild_id"));
 
         if (guild == null) {
-            identity.LOG.fatal("Detected new guild that is not cached in a Guild Emojis Update Event!");
+            identity.LOG.fatal("[UNKNOWN GUILD] [GUILD_EMOJIS_UPDATE_EVENT]");
             return;
         }
 
@@ -55,7 +55,7 @@ public class GuildEmojisUpdateEventHandler extends EventHandler {
             JSONObject emojiJson = emojis.getJSONObject(i);
 
             GuildEmoji emoji = (GuildEmoji) guild.getGuildEmoji(emojiJson.getString("id"));
-            GuildEmoji newEmoji = builder.buildEmoji(emojiJson, guild);
+            GuildEmoji newEmoji = builder.buildEmoji(emojiJson, guild); // Automatically add emoji to guild if appropriate
 
             if (emoji == null) { // New emoji, not cached yet
                 fireEvent(new GuildEmojiUploadEvent(identity, guild, sequence, newEmoji)); // Emoji get added to the guild automatically

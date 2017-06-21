@@ -31,7 +31,7 @@ public class GuildMemberUpdateEventHandler extends EventHandler {
             Member member = (Member) guild.getMember(json.getJSONObject("user").getString("id"));
 
             if (member == null) {
-                identity.LOG.fatal("Find a new member in Member Update Event that were not cached! Json: " + json);
+                identity.LOG.fatal("[UNKNOWN MEMBER] [MEMBER_UPDATE_EVENT]");
                 return;
             }
 
