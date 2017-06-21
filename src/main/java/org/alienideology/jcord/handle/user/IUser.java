@@ -53,6 +53,14 @@ public interface IUser extends IDiscordObject, ISnowFlake, IMention {
     String getEmail();
 
     /**
+     * Get the presence object of this user.
+     * The presence contains information about a user's online status and playing game.
+     *
+     * @return The presence object.
+     */
+    Presence getPresence();
+
+    /**
      * @return True if this user is a bot.
      */
     boolean isBot();

@@ -46,7 +46,7 @@ public class PostAgent {
         try {
             String response = Unirest.post(DiscordBotsURL)
                     .header("Authorization", apiToken)
-                    .header("Content-Type ", "application/json")
+                    .header("Content-GameType ", "application/json")
                     .field("server_count", serverCount)
                     .asString().getBody();
 

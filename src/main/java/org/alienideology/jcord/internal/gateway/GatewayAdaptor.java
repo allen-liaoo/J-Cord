@@ -261,10 +261,10 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     }
 
     private void setEventHandler() {
-        // TODO: Role Events, to sync with IRoleManager. If no event updated, then there are problems with IRoleManager#addPermissions
         /* Gateway Event */
         eventHandler.put("READY", new GatewayEventHandler(identity, this));
         eventHandler.put("RESUMED", new GatewayEventHandler(identity, this));
+        eventHandler.put("PRESENCE_UPDATE", new PresenceUpdateEventHandler(identity));
 
         /* Guild Event */
         eventHandler.put("GUILD_CREATE", new GuildCreateEventHandler(identity));
@@ -288,6 +288,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         eventHandler.put("CHANNEL_CREATE", new ChannelCreateEventHandler(identity));
         eventHandler.put("CHANNEL_UPDATE", new ChannelUpdateEventHandler(identity));
         eventHandler.put("CHANNEL_DELETE", new ChannelDeleteEventHandler(identity));
+        eventHandler.put("TYPING_START", new TypingStartEventHandler(identity));
 
         /* Message Event */
         eventHandler.put("MESSAGE_CREATE", new MessageCreateEventHandler(identity));

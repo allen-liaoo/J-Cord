@@ -1,6 +1,6 @@
 import org.alienideology.jcord.event.EventSubscriber;
 import org.alienideology.jcord.event.guild.member.GuildMemberNicknameUpdateEvent;
-import org.alienideology.jcord.event.guild.role.update.GuildRolePermissionsUpdateEvent;
+import org.alienideology.jcord.event.user.PresenceUpdateEvent;
 
 /**
  * @author AlienIdeology
@@ -8,8 +8,8 @@ import org.alienideology.jcord.event.guild.role.update.GuildRolePermissionsUpdat
 public class ExampleSubscriber {
 
     @EventSubscriber
-    public void onEvent(GuildRolePermissionsUpdateEvent event) {
-
+    public void onEvent(PresenceUpdateEvent event) {
+        System.out.println(event.getOldPresence());
     }
 
     @EventSubscriber

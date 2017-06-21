@@ -103,7 +103,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
         }
 
         JSONObject msg = new Requester(identity, HttpPath.Channel.CREATE_MESSAGE).request(id)
-                .updateRequestWithBody(http -> http.header("Content-Type", "application/json").body(json)).getAsJSONObject();
+                .updateRequestWithBody(http -> http.header("Content-GameType", "application/json").body(json)).getAsJSONObject();
         Message message = new ObjectBuilder(identity).buildMessage(msg);
         setLatestMessage(message);
         return message;
@@ -146,7 +146,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
         // The MessageUpdateEvent get fired by this, but will be ignored
         JSONObject msg = new Requester(identity, HttpPath.Channel.EDIT_MESSAGE).request(this.id, id)
-                .updateRequestWithBody(http -> http.header("Content-Type", "application/json").body(json)).getAsJSONObject();
+                .updateRequestWithBody(http -> http.header("Content-GameType", "application/json").body(json)).getAsJSONObject();
         Message edited = new ObjectBuilder(identity).buildMessage(msg);
         if (id.equals(latestMessage.getId())) setLatestMessage(edited); // Set latest message
         return edited;

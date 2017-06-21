@@ -2,6 +2,8 @@ package org.alienideology.jcord.internal.object.user;
 
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.handle.user.OnlineStatus;
+import org.alienideology.jcord.handle.user.Presence;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
@@ -18,6 +20,8 @@ import java.util.Objects;
 public final class User extends DiscordObject implements IUser {
 
     private final String id;
+
+    private Presence presence;
 
     private String name;
     private String discriminator;
@@ -42,6 +46,7 @@ public final class User extends DiscordObject implements IUser {
         this.isWebHook = isWebHook;
         this.isVerified = isVerified;
         this.MFAEnabled = MFAEnabled;
+        this.presence = new Presence(identity, this, null, OnlineStatus.OFFLINE);
     }
 
     @Override
@@ -51,7 +56,7 @@ public final class User extends DiscordObject implements IUser {
         // Private Channel has not exist
         if (dm == null) {
             JSONObject json = new Requester(identity, HttpPath.User.CREATE_DM).request()
-                    .updateRequestWithBody(body -> body.header("Content-Type", "application/json")
+                    .updateRequestWithBody(body -> body.header("Content-GameType", "application/json")
                             .body(new JSONObject().put("recipient_id", id))).getAsJSONObject();
 
             dm = new ObjectBuilder(identity).buildPrivateChannel(json);
@@ -87,6 +92,11 @@ public final class User extends DiscordObject implements IUser {
     @Override
     public String getEmail() {
         return email;
+    }
+
+    @Override
+    public Presence getPresence() {
+        return presence;
     }
 
     @Override
@@ -142,4 +152,7 @@ public final class User extends DiscordObject implements IUser {
                 String.format(HttpPath.EndPoint.AVATAR, id, avatar, (avatar.startsWith("a_") ? ".gif" : ".png"));
     }
 
+    public void setPresence(Presence presence) {
+        this.presence = presence;
+    }
 }

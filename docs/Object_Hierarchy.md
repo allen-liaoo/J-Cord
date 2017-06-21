@@ -20,8 +20,10 @@ Discord Objects - Entities such as Guild, User, or Channel.
  - ISnowFake (Interface) - Objects that has ID.
  - IMention (Interface) - Objects that are mentionable.
  - IUser - A base entity, can be a member of guild/private channel, and bot/human.
- - Region - Used for guild voice channel connection.
- - Permission - A way to limit and grant certain abilities to members.
+ - Presence - A status of a user, containing information about the user online status and game.
+   - Game - A playing or streaming status of a user.
+   - OnlineStatus (Enumeration) - The online status of a user.
+ - Permission (Enumeration) - A way to limit and grant certain abilities to members.
  - EmojiTable - A collection of Default Discord Emojis.
    - Emoji - An emoji in Discord (Not GuildEmoji).
 
@@ -30,6 +32,7 @@ IGuild - A collection of users and channels, often referred to in the UI as a se
  - IMember - A user representation in a guild.
  - IRole - A label that can be put on a set of guild members.
  - IGuildEmoji - A custom emoji that can be used within a guild.
+ - Region (Enumeration) - Used for guild voice channel connection.
 
 #### Channel
 IChannel - A communication pipeline.

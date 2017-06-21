@@ -7,6 +7,9 @@ import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
+import org.alienideology.jcord.handle.user.Game;
+import org.alienideology.jcord.handle.user.OnlineStatus;
+import org.alienideology.jcord.handle.user.Presence;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
@@ -484,7 +487,7 @@ public final class ObjectBuilder {
                 } else {
                     reaction = new Reaction(identity, reactedTimes, selfReacted, emojis.getByUnicode(emoji.getString("name")));
                 }
-                reactions.add((IReaction) reaction);
+                reactions.add(reaction);
             }
         }
         message.setReactions(reactions);
@@ -553,7 +556,7 @@ public final class ObjectBuilder {
      * Built an invite with provided json.
      *
      * @param json The json invite object. May not contains metadata.
-     * @return The invite impl built.
+     * @return The IInvite built.
      */
     public Invite buildInvite(JSONObject json) {
         String code = json.getString("code");
@@ -573,6 +576,33 @@ public final class ObjectBuilder {
             invite.setMetaData(inviter, uses, maxUses, maxAge, isTemporary, isRevoked, timeStamp);
         }
         return invite;
+    }
+
+    /**
+     * Built an user presence with provided json.
+     *
+     * @param json The json presence object.
+     * @return The presence built.
+     */
+    public Presence buildPresence(JSONObject json, User user) {
+        //OnlineStatus
+        OnlineStatus status = OnlineStatus.getByKey(json.getString("status"));
+
+        // Game
+        Game game = null;
+
+        if (json.has("game") && !json.isNull("game")) {
+            JSONObject gameJson = json.getJSONObject("game");
+            String name = gameJson.isNull("name") ? null : gameJson.getString("name");
+            String url = gameJson.has("type") && gameJson.getInt("type") == 1 ?
+                    gameJson.getString("url") : null;
+            game = new Game(identity, name, url);
+            if (game.isStreaming()) status = OnlineStatus.STREAMING;
+        }
+
+        Presence presence = new Presence(identity, user, game, status);
+        user.setPresence(presence);
+        return presence;
     }
 
     /**

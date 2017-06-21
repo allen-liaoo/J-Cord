@@ -47,6 +47,8 @@ import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageDeleteEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageUpdateEvent;
 import org.alienideology.jcord.event.message.guild.IGuildMessageEvent;
+import org.alienideology.jcord.event.user.PresenceUpdateEvent;
+import org.alienideology.jcord.event.user.UserEvent;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 
 /**
@@ -74,6 +76,8 @@ public class DispatcherAdaptor {
             dispatchChannelEvent((ChannelEvent) event);
         } else if (event instanceof MessageEvent) {
             dispatchMessageEvent((MessageEvent) event);
+        } else if (event instanceof UserEvent) {
+            dispatchUserEvent((UserEvent) event);
         }
     }
 
@@ -452,6 +456,17 @@ public class DispatcherAdaptor {
     public void onGuildMessageDelete (GuildMessageDeleteEvent event) {}
 
     public void onPrivateMessageDelete (PrivateMessageDeleteEvent event) {}
+
+    private void dispatchUserEvent(UserEvent event) {
+        onUserEvent(event);
+        if (event instanceof PresenceUpdateEvent) {
+            onPresenceUpdate((PresenceUpdateEvent) event);
+        }
+    }
+
+    public void onUserEvent (UserEvent event) {}
+
+    public void onPresenceUpdate (PresenceUpdateEvent event) {}
 
     /*
         -----------------------

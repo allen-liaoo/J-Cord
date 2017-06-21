@@ -131,7 +131,7 @@ public final class GuildManager implements IGuildManager {
     private void requestModify(JSONObject json) {
         try {
             new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.MODIFY_GUILD).request(guild.getId())
-                    .updateRequestWithBody(request -> request.header("Content-Type", "application/json").body(json)).performRequest();
+                    .updateRequestWithBody(request -> request.header("Content-GameType", "application/json").body(json)).performRequest();
         } catch (HttpErrorException ex) {
             if (ex.isPermissionException()) {
                 throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_SERVER);

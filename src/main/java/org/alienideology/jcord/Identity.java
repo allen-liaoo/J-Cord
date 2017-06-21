@@ -7,6 +7,7 @@ import org.alienideology.jcord.event.EventManager;
 import org.alienideology.jcord.handle.channel.*;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.managers.ISelfManager;
 import org.alienideology.jcord.handle.user.IUser;
 
 import java.io.IOException;
@@ -75,6 +76,13 @@ public interface Identity {
      * @return The self user.
      */
     IUser getSelf();
+
+    /**
+     * Get the self manager of this identity.
+     *
+     * @return The self manager.
+     */
+    ISelfManager getSelfManager();
 
     /**
      * Get a user by ID.

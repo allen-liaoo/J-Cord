@@ -1,46 +1,67 @@
-package org.alienideology.jcord.internal.object.user;
+package org.alienideology.jcord.handle.user;
 
+import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 
-import java.util.regex.Pattern;
-
 /**
+ * Game - A playing or streaming status of a user.
  * @author AlienIdeology
  */
 public final class Game extends DiscordObject {
 
     private String name;
-    private Type type;
+    private GameType type;
     private String url;
-
-    private final Pattern TWITCH_URL = Pattern.compile("(http|https)(://)(www\\.|)(twitch)(\\.tv/)");
 
     public Game(IdentityImpl identity, String name) {
         super(identity);
         this.name = name;
-        this.type = Type.PLAYING;
+        this.type = GameType.PLAYING;
         this.url = null;
     }
 
     public Game(IdentityImpl identity, String name, String url) {
         super(identity);
         this.name = name;
-        this.type = Type.STREAMING;
-        if (url != null && !url.matches(TWITCH_URL.pattern())) {
-            throw new IllegalArgumentException("Streaming game type url only support valid twitch urls!");
-        }
+        this.type = url != null ? GameType.STREAMING : GameType.PLAYING;
         this.url = url;
     }
 
+    /**
+     * Get the name of the game.
+     *
+     * @return The string name.
+     */
     public String getName() {
         return name;
     }
 
-    public Type getType() {
+    /**
+     * Get the game type.
+     *
+     * @return Playing or streaming.
+     */
+    public GameType getType() {
         return type;
     }
 
+    /**
+     * Check if the game is a stream.
+     *
+     * @return True of the game status is streaming.
+     */
+    public boolean isStreaming() {
+        return type.equals(GameType.STREAMING);
+    }
+
+    /**
+     * Get the url of the stream.
+     * The url may be null for not streaming game.
+     *
+     * @return The url.
+     */
+    @Nullable
     public String getUrl() {
         return url;
     }
@@ -65,13 +86,16 @@ public final class Game extends DiscordObject {
                 '}';
     }
 
-    public enum Type {
+    /**
+     * The game type.
+     */
+    public enum GameType {
         PLAYING (0),
         STREAMING (1);
 
         public final int id;
 
-        Type(int id) {
+        GameType(int id) {
             this.id = id;
         }
     }

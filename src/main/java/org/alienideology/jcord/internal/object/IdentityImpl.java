@@ -14,6 +14,7 @@ import org.alienideology.jcord.event.EventManager;
 import org.alienideology.jcord.handle.channel.*;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.managers.ISelfManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
@@ -21,6 +22,7 @@ import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.guild.Guild;
+import org.alienideology.jcord.internal.object.managers.SelfManager;
 import org.alienideology.jcord.internal.object.user.User;
 import org.apache.commons.logging.impl.SimpleLog;
 import org.json.JSONException;
@@ -50,6 +52,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     private EventManager manager;
 
     private IUser self;
+    private SelfManager selfManager;
     private List<IUser> users = new ArrayList<>();
     private List<IGuild> guilds = new ArrayList<>();
     private List<IPrivateChannel> privateChannels = new ArrayList<>();
@@ -57,6 +60,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     public IdentityImpl(IdentityType type, WebSocketFactory wsFactory) {
         this.type = type;
         this.wsFactory = wsFactory;
+        this.selfManager = new SelfManager(this);
     }
 
     public IdentityImpl revive() throws IOException {
@@ -87,6 +91,11 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
 
     public IUser getSelf() {
         return self;
+    }
+
+    @Override
+    public ISelfManager getSelfManager() {
+        return selfManager;
     }
 
     @Nullable
@@ -306,6 +315,10 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     public IdentityImpl setEventManager(EventManager manager) {
         this.manager = manager;
         return this;
+    }
+
+    public WebSocket getSocket() {
+        return socket;
     }
 
     public void setSelf (User selfUser) {
