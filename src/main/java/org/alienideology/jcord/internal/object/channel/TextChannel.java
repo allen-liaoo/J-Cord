@@ -15,6 +15,7 @@ import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.ChannelManager;
 import org.alienideology.jcord.internal.object.managers.InviteManager;
 import org.alienideology.jcord.internal.object.message.Message;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -49,9 +50,18 @@ public final class TextChannel extends MessageChannel implements ITextChannel, B
 
     @Override
     public JSONObject toJson() {
-        return new JSONObject()
+        JSONObject json = new JSONObject()
                 .put("name", name == null? "" : name)
                 .put("type", "text");
+        if (permOverwrites != null && !permOverwrites.isEmpty()) {
+            JSONArray perms = new JSONArray();
+            for (PermOverwrite perm : permOverwrites) {
+                perms.put(perm.toJson());
+            }
+            json.put("permission_overwrites", perms);
+        }
+        System.out.println(json.toString(4));
+        return json;
     }
 
     @Override

@@ -84,10 +84,6 @@ public class MessageHistory extends DiscordObject implements IDiscordObject {
      * @return A list of messages sorted from old to new.
      */
     public List<IMessage> getLatestMessages(int amount) {
-        // Reset latest message
-        if (getLatestMessage() == null) {
-            channel.resetLatestMessage();
-        }
 
         if (getLatestMessage() == null) {
             return new ArrayList<>();

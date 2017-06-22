@@ -198,4 +198,14 @@ public class Message extends DiscordObject implements IMessage {
         this.reactions = reactions;
     }
 
+    public Message addReaction(IReaction reaction) {
+        this.reactions.add(reaction);
+        return this;
+    }
+
+    public Message removeReaction(IReaction reaction) {
+        this.reactions.remove(reaction);
+        return this;
+    }
+
 }

@@ -1,6 +1,6 @@
 import org.alienideology.jcord.event.EventSubscriber;
-import org.alienideology.jcord.event.guild.member.GuildMemberNicknameUpdateEvent;
-import org.alienideology.jcord.event.message.MessagePinUpdateEvent;
+import org.alienideology.jcord.event.message.MessageReactionAddEvent;
+import org.alienideology.jcord.event.message.MessageReactionRemoveEvent;
 
 /**
  * @author AlienIdeology
@@ -8,13 +8,13 @@ import org.alienideology.jcord.event.message.MessagePinUpdateEvent;
 public class ExampleSubscriber {
 
     @EventSubscriber
-    public void onEvent(MessagePinUpdateEvent event) {
-
+    public void onEvent(MessageReactionRemoveEvent event) {
+        System.out.println("Remove: "+event.getMessage());
     }
 
     @EventSubscriber
-    public void onEvent2(GuildMemberNicknameUpdateEvent event) {
-
+    public void onEvent2(MessageReactionAddEvent event) {
+        System.out.println("Add: "+event.getMessage());
     }
 
 }

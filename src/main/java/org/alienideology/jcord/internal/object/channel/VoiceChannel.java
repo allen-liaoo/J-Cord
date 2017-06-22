@@ -54,7 +54,8 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Builda
                 .put("name", name == null ? "" : name)
                 .put("type", "voice")
                 .put("bitrate", bitrate)
-                .put("user_limit", user_limit);
+                .put("user_limit", user_limit)
+                .put("permission_overwrites", permOverwrites);
     }
 
     @Override

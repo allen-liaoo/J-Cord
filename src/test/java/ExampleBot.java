@@ -3,10 +3,12 @@ import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.bot.command.CommandFramework;
 import org.alienideology.jcord.event.EventManager;
+import org.alienideology.jcord.handle.builders.ChannelBuilder;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.permission.PermOverwrite;
 
 /**
  * A simple test bot for J-Cord
@@ -46,6 +48,10 @@ public class ExampleBot {
             }
 
             IGuild guild = bot.getGuild("311250670068170752");
+
+            guild.getGuildManager().createTextChannel(
+                    new ChannelBuilder().setName("hi")
+                            .addOverwrites(new PermOverwrite("310971713922007040", PermOverwrite.Type.MEMBER, 33, 56 )).buildTextChannel());
 
         } catch (Exception e) {
             e.printStackTrace();

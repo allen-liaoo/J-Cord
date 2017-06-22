@@ -295,9 +295,15 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         eventHandler.put("MESSAGE_UPDATE", new MessageUpdateEventHandler(identity));
         eventHandler.put("MESSAGE_DELETE", new MessageDeleteEventHandler(identity));
         eventHandler.put("CHANNEL_PINS_UPDATE", new ChannelPinsUpdateEventHandler(identity));
-        eventHandler.put("MESSAGE_REACTION_ADD", new MessageReactionAddEventHandler(identity));
-        //MESSAGE_REACTION_REMOVE
-        //WEBHOOKS_UPDATE
+        eventHandler.put("MESSAGE_REACTION_ADD", new MessageReactionEventHandler(identity, true));
+        eventHandler.put("MESSAGE_REACTION_REMOVE", new MessageReactionEventHandler(identity, false));
+
+        // TODO: Finish priority events
+        // Priority: USER_UPDATE, MESSAGE_DELETE_BULK, MESSAGE_REACTION_REMOVE_ALL, PRESENCE_UPDATE,
+        // Future: GUILD_SYNC, GUILD_MEMBERS_CHUNK, WEBHOOKS_UPDATE, VOICE_SERVER_UPDATE, VOICE_STATE_UPDATE
+        // Unknown: MESSAGE_ACK
+
+        // Clients: CALL_CREATE, CALL_UPDATE, CALL_DELETE, CHANNEL_RECIPIENT_ADD, CHANNEL_RECIPIENT_REMOVE, RELATIONSHIP_ADD, RELATIONSHIP_REMOVE
     }
 
 }

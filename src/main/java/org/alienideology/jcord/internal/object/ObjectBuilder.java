@@ -2,8 +2,8 @@ package org.alienideology.jcord.internal.object;
 
 import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.event.ExceptionEvent;
-import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
@@ -46,6 +46,7 @@ public final class ObjectBuilder {
 
     /**
      * Default Constructor
+     *
      * @param identity The identity this built DiscordObject belongs to.
      */
     public ObjectBuilder(IdentityImpl identity) {
@@ -54,6 +55,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a guild object base on provided json.
+     *
      * The guild will be added to the identity automatically.
      * @param json The guild JSONObject
      * @return The Guild object
@@ -142,6 +144,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a guild object by an id.
+     *
      * @param id The id of the guild
      * @return The guild object
      */
@@ -158,6 +161,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a guild channel object base on provided json.
+     *
      * @param json The IGuildChannel JSONObject
      * @return TextChannel or VoiceChannel, wrapped as a IGuildChannel
      */
@@ -206,6 +210,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a guild channel object by an id.
+     *
      * @param id The id of the channel
      * @return The IGuildChannel object
      */
@@ -222,6 +227,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a private channel object base on provided json.
+     *
      * @param json The PrivateChannel JSONObject
      * @return The PrivateChannel object
      */
@@ -246,6 +252,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a user object base on provided json.
+     *
      * @param json The user JSONObject
      * @return The User object
      */
@@ -274,6 +281,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a user object (webhook) base on provided json.
+     *
      * @param json The json of this webhook user object (Does not contains webhook id)
      * @param webhookId The webhook id
      * @return The User(Webhook) object
@@ -284,6 +292,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a member object base on provided json.
+     *
      * @param json The member JSONObject
      * @return The Member object
      */
@@ -312,6 +321,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a member object base on provided json.
+     *
      * @param json The member JSONObject
      * @return The Member object
      */
@@ -322,6 +332,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a message object base on provided json.
+     *
      * @param json The message JSONObject
      * @return The Message object
      */
@@ -467,27 +478,11 @@ public final class ObjectBuilder {
         // Build this at last because GuildEmoji requires Message#getGuild, which can only be called after setting channel
         List<IReaction> reactions = new ArrayList<>();
         if (json.has("reactions")) {
-            boolean isFromGuild = message.getChannel() != null && message.fromType(IChannel.Type.TEXT);
             JSONArray reacts = json.getJSONArray("reactions");
 
             for (int i = 0; i < reacts.length(); i++) {
                 JSONObject react = reacts.getJSONObject(i);
-                int reactedTimes = react.getInt("count");
-                boolean selfReacted = react.has("me") && react.getBoolean("me");
-
-                Reaction reaction;
-                JSONObject emoji = react.getJSONObject("emoji");
-
-                if (emoji.has("id") && !emoji.isNull("id")) {
-                    if (isFromGuild && message.getGuild() != null) {  // From recognized guild
-                        reaction = new Reaction(identity, message, reactedTimes, selfReacted, message.getGuild().getGuildEmoji(emoji.getString("id")));
-                    } else {    // Global guild emoji
-                        reaction = new Reaction(identity, message, reactedTimes, selfReacted, new GuildEmoji(identity, emoji.getString("id"), emoji.getString("name")));
-                    }
-                } else {
-                    reaction = new Reaction(identity, message, reactedTimes, selfReacted, JCord.EMOJI_TABLE.getByUnicode(emoji.getString("name")));
-                }
-                reactions.add(reaction);
+                reactions.add(buildReaction(react, message));
             }
         }
         message.setReactions(reactions);
@@ -497,6 +492,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a message object by an id.
+     *
      * @param channel_id The id of the channel
      * @param message_id The id of the message
      * @return The Message object
@@ -509,6 +505,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a role object base on provided json.
+     *
      * @param json The role JSONObject
      * @param guild The guild this role is in
      * @return The Message object
@@ -550,6 +547,36 @@ public final class ObjectBuilder {
         GuildEmoji emoji = new GuildEmoji(identity, guild, id, name, roles, requireColon);
         guild.addGuildEmoji(emoji);
         return emoji;
+    }
+
+    /**
+     * Build a reaction by provided json.
+     *
+     * @param json The reaction json.
+     * @param message The message.
+     * @return The reaction built.
+     */
+    public Reaction buildReaction(JSONObject json, Message message) {
+        int reactedTimes = json.has("count") ? json.getInt("count") : -1;
+        boolean selfReacted = json.has("me") && json.getBoolean("me");
+
+        Reaction reaction;
+        JSONObject emojiJson = json.getJSONObject("emoji");
+
+        /* Guild Emoji */
+        if (emojiJson.has("id") && !emojiJson.isNull("id")) {
+            IGuildEmoji emoji = message.getGuild().getGuildEmoji(emojiJson.getString("id"));
+            if (emoji == null) { // Global Guilc Emoji
+                reaction = new Reaction(identity, message, reactedTimes, selfReacted, new GuildEmoji(identity, emojiJson.getString("id"), emojiJson.getString("name")));
+            } else { // Guild Emoji
+                reaction = new Reaction(identity, message, reactedTimes, selfReacted, emoji);
+            }
+
+        /* Emoji */
+        } else {
+            reaction = new Reaction(identity, message, reactedTimes, selfReacted, JCord.EMOJI_TABLE.getByUnicode(emojiJson.getString("name")));
+        }
+        return reaction;
     }
 
     /**

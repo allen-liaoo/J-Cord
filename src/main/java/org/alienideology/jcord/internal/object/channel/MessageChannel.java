@@ -237,10 +237,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
         JSONObject msg = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(this.id, id).getAsJSONObject();
 
-        if (id.equals(latestMessage.getId())) {
-            resetLatestMessage();
-        }
-
         return new ObjectBuilder(identity).buildMessage(msg);
     }
 
@@ -276,11 +272,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
         new Requester(identity, HttpPath.Channel.BULK_DELETE_MESSAGE).request(this.id)
                 .updateRequestWithBody(request -> request.body(new JSONObject().put("messages", ids)))
                 .performRequest();
-
-        // Reset latest message, since it is deleted.
-        if (ids.contains(latestMessage.getId())) {
-            resetLatestMessage();
-        }
     }
 
     @Override
@@ -478,17 +469,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     public MessageChannel setLatestMessage(IMessage latestMessage) {
         this.latestMessage = (Message) latestMessage;
-        return this;
-    }
-
-    // Reset latest message by getting the message ID, and build the message
-    public MessageChannel resetLatestMessage() {
-        try {
-            JSONObject channel = new Requester(identity, HttpPath.Channel.GET_CHANNEL).request(this.id).getAsJSONObject();
-            String id = channel.isNull("last_message_id") ? null : channel.getString("last_message_id");
-            this.latestMessage = id == null ? null : new ObjectBuilder(identity).buildMessageById(this.id, id);
-
-        } catch (HttpErrorException ignored) {}
         return this;
     }
 

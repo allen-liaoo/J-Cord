@@ -3,18 +3,20 @@ package org.alienideology.jcord.handle.permission;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.Member;
 import org.alienideology.jcord.internal.object.guild.Role;
+import org.json.JSONObject;
 
 import java.util.Collection;
 
 /**
  * @author AlienIdeology
  */
-public class PermOverwrite extends DiscordObject implements ISnowFlake {
+public class PermOverwrite extends DiscordObject implements ISnowFlake, Buildable {
 
     private String id;
     private Guild guild;
@@ -33,6 +35,26 @@ public class PermOverwrite extends DiscordObject implements ISnowFlake {
         setType();
         this.allow = allow;
         this.denied = denied;
+    }
+
+    /**
+     * Constructor for buildable PermOverwrite
+     */
+    public PermOverwrite(String id, Type overwriteType, long allow, long denied) {
+        super(null);
+        this.id = id;
+        this.overwriteType = overwriteType;
+        this.allow = allow;
+        this.denied = denied;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        return new JSONObject()
+                .put("id", id)
+                .put("type", overwriteType.name().toLowerCase())
+                .put("allow", allow)
+                .put("deny", denied);
     }
 
     /**

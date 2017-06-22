@@ -2,9 +2,18 @@ package org.alienideology.jcord.handle.builders;
 
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.permission.PermOverwrite;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.alienideology.jcord.internal.object.managers.ChannelManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 import static org.alienideology.jcord.handle.managers.IChannelManager.VOICE_CHANNEL_BITRATE_VIP_MAX;
 
@@ -21,9 +30,8 @@ public final class ChannelBuilder {
     private int bitrate;
     private int userLimit;
 
-//    private List<PermOverwrite> overwrites = new ArrayList<>();
+    private List<PermOverwrite> overwrites = new ArrayList<>();
 
-    // TODO: PermOverwrites
     public ChannelBuilder() {
     }
 
@@ -33,7 +41,8 @@ public final class ChannelBuilder {
      * @return The text channel built.
      */
     public ITextChannel buildTextChannel() {
-        return new TextChannel(null, null, null, name, 0, null, null);
+        return new TextChannel(null, null, null, name, 0, null, null)
+                .setPermOverwrites(overwrites);
     }
 
     /**
@@ -42,7 +51,8 @@ public final class ChannelBuilder {
      * @return The voice channel built.
      */
     public IVoiceChannel buildVoiceChannel() {
-        return new VoiceChannel(null, null, null, name, 0, bitrate, userLimit);
+        return new VoiceChannel(null, null, null, name, 0, bitrate, userLimit)
+                .setPermOverwrites(overwrites);
     }
 
     /**
@@ -54,6 +64,7 @@ public final class ChannelBuilder {
      *          {@value org.alienideology.jcord.handle.managers.IChannelManager#CHANNEL_NAME_LENGTH_MAX}.
      *
      * @param name The name of the channel.
+     * @return ChannelBuilder for chaining.
      */
     public ChannelBuilder setName(String name) {
         if (name == null) name = "";
@@ -76,6 +87,7 @@ public final class ChannelBuilder {
      *          </ul>
      *
      * @param bitrate The integer bitrate.
+     * @return ChannelBuilder for chaining.
      */
     public ChannelBuilder setBitrate(int bitrate) {
         if (bitrate > VOICE_CHANNEL_BITRATE_VIP_MAX) {
@@ -96,10 +108,59 @@ public final class ChannelBuilder {
      *          or greater than {@value org.alienideology.jcord.handle.managers.IChannelManager#VOICE_CHANNEL_USER_LIMIT_MAX}.
      *
      * @param userLimit The user limit.
+     * @return ChannelBuilder for chaining.
      */
     public ChannelBuilder setUserLimit(int userLimit) {
         ChannelManager.checkUserLimit(userLimit);
         this.userLimit = userLimit;
+        return this;
+    }
+
+    /**
+     * Set the permission overwrites
+     *
+     * @param overwrites The permission overwrites
+     * @return ChannelBuilder for chaining.
+     */
+    public ChannelBuilder setOverwrites(List<PermOverwrite> overwrites) {
+        this.overwrites = overwrites;
+        return this;
+    }
+
+    /**
+     * Add permission overwrites
+     *
+     * @param overwrites The permission overwrites
+     * @return ChannelBuilder for chaining.
+     */
+    public ChannelBuilder addOverwrites(PermOverwrite... overwrites) {
+        this.overwrites.addAll(Arrays.asList(overwrites));
+        return this;
+    }
+
+    /**
+     * Add a permission overwrite for a member.
+     *
+     * @param member The member.
+     * @param allowed The allowed permissions.
+     * @param denied The denied permissions.
+     * @return ChannelBuilder for chaining.
+     */
+    public ChannelBuilder addMemberOverwrites(IMember member, Collection<Permission> allowed, Collection<Permission> denied) {
+        this.overwrites.add(new PermOverwrite(member.getId(), PermOverwrite.Type.MEMBER, Permission.getLongByPermissions(allowed), Permission.getLongByPermissions(denied)));
+        return this;
+    }
+
+    /**
+     * Add a permission overwrite for a role.
+     *
+     * @param role The role.
+     * @param allowed The allowed permissions.
+     * @param denied The denied permissions.
+     * @return ChannelBuilder for chaining.
+     */
+    public ChannelBuilder addRoleOverwrites(IRole role, Collection<Permission> allowed, Collection<Permission> denied) {
+        this.overwrites.add(new PermOverwrite(role.getId(), PermOverwrite.Type.MEMBER, Permission.getLongByPermissions(allowed), Permission.getLongByPermissions(denied)));
         return this;
     }
 
