@@ -3,15 +3,24 @@ package org.alienideology.jcord.internal.object.managers;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IChannelManager;
 import org.alienideology.jcord.handle.permission.Permission;
+import org.alienideology.jcord.internal.exception.ErrorResponseException;
+import org.alienideology.jcord.internal.exception.HigherHierarchyException;
+import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.exception.PermissionException;
+import org.alienideology.jcord.internal.gateway.ErrorResponse;
+import org.alienideology.jcord.internal.gateway.HttpCode;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.json.JSONObject;
+
+import java.util.Collection;
 
 /**
  * @author AlienIdeology
@@ -132,4 +141,73 @@ public final class ChannelManager implements IChannelManager {
         }
     }
 
+    @Override
+    public void editPermOverwrite(IMember member, Collection<Permission> allowed, Collection<Permission> denied) {
+        if (!member.getGuild().equals(getGuild())) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
+        }
+        if (!channel.hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_ROLES)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_ROLES);
+        }
+        if (!getGuild().getSelfMember().canModify(member)) {
+            throw new HigherHierarchyException(HigherHierarchyException.HierarchyType.ROLE);
+        }
+
+        editPerms(member.getId(),
+                new JSONObject()
+                        .put("allow", Permission.getLongByPermissions(allowed))
+                        .put("deny", Permission.getLongByPermissions(denied))
+                        .put("type", "member")
+        );
+    }
+
+    @Override
+    public void editPermOverwrite(IRole role, Collection<Permission> allowed, Collection<Permission> denied) {
+        if (!role.getGuild().equals(getGuild())) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_ROLE);
+        }
+        if (!channel.hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_ROLES)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_ROLES);
+        }
+        if (!getGuild().getSelfMember().canModify(role)) {
+            throw new HigherHierarchyException(HigherHierarchyException.HierarchyType.ROLE);
+        }
+
+        editPerms(role.getId(),
+                new JSONObject()
+                        .put("allow", Permission.getLongByPermissions(allowed))
+                        .put("deny", Permission.getLongByPermissions(denied))
+                        .put("type", "role")
+        );
+    }
+
+    private void editPerms(String id, JSONObject json) {
+        new Requester((IdentityImpl) getIdentity(), HttpPath.Channel.EDIT_CHANNEL_PERMISSIONS)
+                .request(getGuildChannel().getId(), id)
+                .updateRequestWithBody(request -> request.body(json))
+                .performRequest();
+    }
+
+    @Override
+    public void deletePermOverwrite(String id) {
+        if (!channel.hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_ROLES)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_ROLES);
+        }
+
+        try {
+            new Requester((IdentityImpl) getIdentity(), HttpPath.Channel.DELETE_CHANNEL_PERMISSION)
+                    .request(getGuildChannel().getId(), id)
+                    .performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.isPermissionException()) {
+                // Can by modifying higher hierarchy perm overwrite
+                // Not sure if this is thrown properly
+                throw new HigherHierarchyException(HigherHierarchyException.HierarchyType.UNKNOWN);
+            } else if (ex.getCode().equals(HttpCode.NOT_FOUND)) {
+                throw new ErrorResponseException(ErrorResponse.UNKNOWN_OVERWRITE);
+            } else {
+                throw ex;
+            }
+        }
+    }
 }

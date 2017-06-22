@@ -5,7 +5,12 @@ import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.permission.PermOverwrite;
+import org.alienideology.jcord.handle.permission.Permission;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -181,5 +186,55 @@ public interface IChannelManager {
     default void deleteChannel() {
         getGuild().getGuildManager().deleteGuildChannel(getGuildChannel());
     }
+
+    /**
+     * Edit or add {@link PermOverwrite} to a member in this channel.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manager Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the member is at a higher or same hierarchy than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the member does not belong to this guild.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
+     *
+     * @param member The member to add permission overwrites.
+     * @param allowed The allowed permissions.
+     * @param denied The denied permissions.
+     */
+    void editPermOverwrite(IMember member, Collection<Permission> allowed, Collection<Permission> denied);
+
+    /**
+     * Edit or add {@link PermOverwrite} to a role in this channel.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manager Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher or same hierarchy than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the role does not belong to this guild.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     *
+     * @param role The role to add permission overwrites.
+     * @param allowed The allowed permissions.
+     * @param denied The denied permissions.
+     */
+    void editPermOverwrite(IRole role, Collection<Permission> allowed, Collection<Permission> denied);
+
+    /**
+     * Deletes a permission overwrite by ID.
+     * The ID can be a member id, role id or the {@link PermOverwrite} id.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manager Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the member or role is at a higher or same hierarchy than the identity.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the member or role does not belong to this guild.
+     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_OVERWRITE
+     *
+     * @param id The id.
+     */
+    void deletePermOverwrite(String id);
 
 }

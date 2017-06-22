@@ -48,7 +48,7 @@ public final class GuildManager implements IGuildManager {
     }
 
     @Override
-    public Guild getGuild() {
+    public IGuild getGuild() {
         return guild;
     }
 

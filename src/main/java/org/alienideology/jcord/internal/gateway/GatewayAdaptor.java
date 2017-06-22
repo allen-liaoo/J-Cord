@@ -165,7 +165,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         EventHandler handler = eventHandler.get(key);
 
         if (handler == null) {
-            LOG.fatal("Unknown Event: "+key);// + json.toString(4));
+            LOG.fatal("Unknown Event: "+key + json.toString(4));
         } else {
 
             switch (key) {
@@ -295,6 +295,8 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         eventHandler.put("MESSAGE_UPDATE", new MessageUpdateEventHandler(identity));
         eventHandler.put("MESSAGE_DELETE", new MessageDeleteEventHandler(identity));
         eventHandler.put("CHANNEL_PINS_UPDATE", new ChannelPinsUpdateEventHandler(identity));
+        eventHandler.put("MESSAGE_REACTION_ADD", new MessageReactionAddEventHandler(identity));
+        //MESSAGE_REACTION_REMOVE
         //WEBHOOKS_UPDATE
     }
 
