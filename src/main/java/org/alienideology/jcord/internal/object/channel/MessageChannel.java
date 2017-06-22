@@ -32,6 +32,9 @@ import org.alienideology.jcord.util.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -111,14 +114,55 @@ public class MessageChannel extends Channel implements IMessageChannel {
     private Message send(JSONObject json) {
         checkContentLength(json.getString("content"));
         if (!isPrivate && !((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.SEND_MESSAGES)) {
-            throw new PermissionException(Permission.SEND_MESSAGES);
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.SEND_MESSAGES);
         }
 
         JSONObject msg = new Requester(identity, HttpPath.Channel.CREATE_MESSAGE).request(id)
-                .updateRequestWithBody(http -> http.header("Content-GameType", "application/json").body(json)).getAsJSONObject();
+                .updateRequestWithBody(http -> http.body(json)).getAsJSONObject();
         Message message = new ObjectBuilder(identity).buildMessage(msg);
         setLatestMessage(message);
         return message;
+    }
+
+    @Override
+    public IMessage sendAttachment(File file, String message) throws IOException {
+        return attach(file, ((StringMessage) new StringMessageBuilder().setContent(message).build()).toJson());
+    }
+
+    @Override
+    public IMessage sendAttachmentFormat(File file, String format, Object... args) throws IOException {
+        return sendAttachment(file, String.format(format, args));
+    }
+
+    @Override
+    public IMessage sendAttachment(File file, IStringMessage message) throws IOException {
+        return attach(file, ((StringMessage) message).toJson());
+    }
+
+    private IMessage attach(File file, JSONObject message) throws IOException {
+        if (!isPrivate && !((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.SEND_MESSAGES)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.SEND_MESSAGES);
+        }
+
+        if (!isPrivate && !((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.ATTACH_FILES)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.ATTACH_FILES);
+        }
+
+        if (!file.exists() || file.isDirectory() || !file.canRead()) {
+            throw new FileNotFoundException("The provided file to send can not be found or read from!");
+        }
+
+        if (file.length() / (1024 ^ 2) > 8) {
+            throw new IllegalArgumentException("The file provided is too large to send!");
+        }
+
+        // Get the RequestWithBody object, use it to get MultipartBody object (#field)
+        JSONObject msg = new Requester(identity, HttpPath.Channel.CREATE_MESSAGE, false)
+                .request(id).updateRequestWithBody(request ->
+                        request.field("file", file, file.getName())
+                            .field("payload_json", message.toString())).getAsJSONObject();
+
+        return new ObjectBuilder(identity).buildMessage(msg);
     }
 
     @Override
@@ -157,7 +201,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
         // The MessageUpdateEvent get fired by this, but will be ignored
         JSONObject msg = new Requester(identity, HttpPath.Channel.EDIT_MESSAGE).request(this.id, id)
-                .updateRequestWithBody(http -> http.header("Content-GameType", "application/json").body(json)).getAsJSONObject();
+                .updateRequestWithBody(http -> http.header("Content-Type", "application/json").body(json)).getAsJSONObject();
         Message edited = new ObjectBuilder(identity).buildMessage(msg);
         if (id.equals(latestMessage.getId())) setLatestMessage(edited); // Set latest message
         return edited;

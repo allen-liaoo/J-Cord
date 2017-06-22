@@ -23,11 +23,7 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-/src/test/java/bot.Token.java
 /.idea/
 /build/
 /.gradle/
 /src/test/java/Token.java
-src/main/resources/
-src/test/java/bot/
-src/test/resources/

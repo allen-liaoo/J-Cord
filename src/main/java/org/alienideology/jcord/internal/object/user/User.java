@@ -56,7 +56,7 @@ public final class User extends DiscordObject implements IUser {
         // Private Channel has not exist
         if (dm == null) {
             JSONObject json = new Requester(identity, HttpPath.User.CREATE_DM).request()
-                    .updateRequestWithBody(body -> body.header("Content-GameType", "application/json")
+                    .updateRequestWithBody(body -> body.header("Content-Type", "application/json")
                             .body(new JSONObject().put("recipient_id", id))).getAsJSONObject();
 
             dm = new ObjectBuilder(identity).buildPrivateChannel(json);

@@ -200,8 +200,8 @@ public final class ChannelManager implements IChannelManager {
                     .performRequest();
         } catch (HttpErrorException ex) {
             if (ex.isPermissionException()) {
-                // Can by modifying higher hierarchy perm overwrite
-                // Not sure if this is thrown properly
+                // Can be thrown by modifying higher hierarchy perm overwrite
+                // Not sure if this will really cause the problem
                 throw new HigherHierarchyException(HigherHierarchyException.HierarchyType.UNKNOWN);
             } else if (ex.getCode().equals(HttpCode.NOT_FOUND)) {
                 throw new ErrorResponseException(ErrorResponse.UNKNOWN_OVERWRITE);

@@ -97,6 +97,8 @@ Identity bot = new IdentityBuilder()
         agent.toDiscordListBots(YOUR_API_TOKEN);
         ```
     Note: You must create an account and get a token from one of the websites first!
+<br /><br />
+For more examples, see [ExampleBot.java](/src/test/java/ExampleBot.java).
 
 ## More
 - Javadocs: [AlienIdeology.Github.io/J-Cord/](https://alienideology.github.io/J-Cord/)

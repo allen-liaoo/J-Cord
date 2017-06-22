@@ -13,4 +13,7 @@ dependencies {
     compile 'com.mashape.unirest:unirest-java:1.4.9'
     compile 'com.neovisionaries:nv-websocket-client:2.2'
     compile 'org.json:json:20160212'
+
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'commons-io:commons-io:2.5'
 }

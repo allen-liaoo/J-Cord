@@ -28,10 +28,22 @@ public final class Requester {
     private HttpPath path;
     private IdentityImpl identity;
     private HttpRequest request;
+    private boolean useJson;
 
+    /**
+     * Constructor for JSON requests
+     */
     public Requester(IdentityImpl identity, HttpPath path) {
+        this(identity, path, true);
+    }
+
+    /**
+     * Constructor for JSON requests
+     */
+    public Requester(IdentityImpl identity, HttpPath path, boolean useJson) {
         this.identity = identity;
         this.path = path;
+        this.useJson = useJson;
     }
 
     /*
@@ -84,7 +96,12 @@ public final class Requester {
      * @param consumer Specified actions to the HttpRequestWithBody. I.e. Adding json.
      */
     public Requester updateRequestWithBody(Consumer<HttpRequestWithBody> consumer) {
-        consumer.accept((HttpRequestWithBody)request);
+        consumer.accept((HttpRequestWithBody) request);
+        return this;
+    }
+
+    public Requester setRequest(HttpRequest request) {
+        this.request = request;
         return this;
     }
 
@@ -208,8 +225,8 @@ public final class Requester {
 
     private void processRequest(HttpRequest request, String path) {
         request.header("Authorization", identity.getToken())
-                .header("User-Agent", "DiscordBot ($"+path+", $"+ JCord.VERSION+")")
-                .header("Content-Type", "application/json");
+                .header("User-Agent", "DiscordBot ($"+path+", $"+ JCord.VERSION+")");
+        if (useJson) request.header("Content-Type", "application/json");
     }
 
     private void handleErrorResponse(JSONObject response) {

@@ -36,6 +36,13 @@ public interface IInvite {
     IGuildChannel getChannel();
 
     /**
+     * Deletes this invite.
+     */
+    default void delete() {
+        getChannel().getInviteManager().deleteInvite(this);
+    }
+
+    /**
      * Get the author of this invite.
      *
      * @return The inviter.

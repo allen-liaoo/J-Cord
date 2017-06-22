@@ -13,6 +13,8 @@ import org.alienideology.jcord.handle.message.IStringMessage;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.PermissionException;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -90,6 +92,76 @@ public interface IMessageChannel extends IChannel {
      * @return The message sent.
      */
     IMessage sendMessage(IEmbedMessage embed);
+
+    /**
+     * Send an attachment with the string message.
+     *
+     * @exception PermissionException
+     *          <ul>
+     *              <li>If the identity does not have {@code Send Messages} permission.</li>
+     *              <li>If the identity does not have {@code Add Attachments} permission.</li>
+     *          </ul>
+     * @exception IllegalArgumentException
+     *          If the file is greater than {@code 8 MB}, which is the size limit of an attachment.
+     *
+     * @param file The file attachment.
+     * @param message The message.
+     * @return The message sent.
+     * @throws IOException
+     *          <ul>
+     *              <li>If the file is not found.</li>
+     *              <li>If the file is a directory.</li>
+     *              <li>If the file is not readable.</li>
+     *          </ul>
+     */
+    IMessage sendAttachment(File file, String message) throws IOException;
+
+    /**
+     * Send an attachment with the formatted string message.
+     *
+     * @exception PermissionException
+     *          <ul>
+     *              <li>If the identity does not have {@code Send Messages} permission.</li>
+     *              <li>If the identity does not have {@code Add Attachments} permission.</li>
+     *          </ul>
+     * @exception IllegalArgumentException
+     *          If the file is greater than {@code 8 MB}, which is the size limit of an attachment.
+     *
+     * @param file The file attachment.
+     * @param format The string to be formatted and send.
+     * @param args The arguments referenced by the format string.
+     * @return The message sent.
+     * @throws IOException
+     *          <ul>
+     *              <li>If the file is not found.</li>
+     *              <li>If the file is a directory.</li>
+     *              <li>If the file is not readable.</li>
+     *          </ul>
+     */
+    IMessage sendAttachmentFormat(File file, String format, Object... args) throws IOException;
+
+    /**
+     * Send an attachment with the formatted string message.
+     *
+     * @exception PermissionException
+     *          <ul>
+     *              <li>If the identity does not have {@code Send Messages} permission.</li>
+     *              <li>If the identity does not have {@code Add Attachments} permission.</li>
+     *          </ul>
+     * @exception IllegalArgumentException
+     *          If the file is greater than {@code 8 MB}, which is the size limit of an attachment.
+     *
+     * @param file The file attachment.
+     * @param message The message built by {@link StringMessageBuilder}.
+     * @return The message sent.
+     * @throws IOException
+     *          <ul>
+     *              <li>If the file is not found.</li>
+     *              <li>If the file is a directory.</li>
+     *              <li>If the file is not readable.</li>
+     *          </ul>
+     */
+    IMessage sendAttachment(File file, IStringMessage message) throws IOException;
 
     /**
      * Edit a string message by ID
