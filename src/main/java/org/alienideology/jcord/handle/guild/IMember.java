@@ -215,12 +215,14 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
     }
 
     /**
-     * Compare the member by highest role's position.
+     * Compare this to another member by highest role's position.
      * @see #getHighestRole()
      * @see IRole#compareTo(IRole)
      *
      * @param o Another member to compare with.
-     * @return the integer result of the comparison.
+     * @return the value {@code 0} if the members' role positions are the same;
+     *         a value less than {@code 0} if this member's role position is smaller than the other member's role position; and
+     *         a value greater than {@code 0} if this member's role position is greater than the other member's role position
      * @see Comparable#compareTo(Object) for the returning value.
      */
     @Override

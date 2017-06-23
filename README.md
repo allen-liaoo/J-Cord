@@ -6,7 +6,37 @@
 - CommandFramework Support
 - Emoji Support
 
+## Download
+- Jar (Coming soon)
+- Gradle (In your `build.gradle` file)
+```gradle
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compile 'com.github.AlienIdeology:J-Cord:-SNAPSHOT'
+}
+```
+- Maven (In your `pom.xml` file)
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependency>
+    <groupId>com.github.AlienIdeology</groupId>
+    <artifactId>J-Cord</artifactId>
+    <version>-SNAPSHOT</version>
+</dependency>
+```
+
 ## How to Use
+
+### Bot & Selfbot
 - Build an Identity
 ```java
 Identity bot = new IdentityBuilder()
@@ -96,9 +126,12 @@ Identity bot = new IdentityBuilder()
         ```java
         agent.toDiscordListBots(YOUR_API_TOKEN);
         ```
-    Note: You must create an account and get a token from one of the websites first!
-<br /><br />
+    Note: You must create an account and get a token from one of the websites first! <br />
 For more examples, see [ExampleBot.java](/src/test/java/ExampleBot.java).
+### OAuth
+Coming soon~~ <br />
+### Webhook
+Coming soon~~ <br />
 
 ## More
 - Javadocs: [AlienIdeology.Github.io/J-Cord/](https://alienideology.github.io/J-Cord/)

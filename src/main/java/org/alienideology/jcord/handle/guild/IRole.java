@@ -140,7 +140,9 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, PermCheckab
      * Compare the role by position.
      *
      * @param o Another role to compare with.
-     * @return the integer result of the comparison.
+     * @return the value {@code 0} if the roles' positions are the same;
+     *         a value less than {@code 0} if this role's position is smaller than the other role's position; and
+     *         a value greater than {@code 0} if this role's position is greater than the role's position
      * @see Comparable#compareTo(Object) for the returning value.
      */
     @Override

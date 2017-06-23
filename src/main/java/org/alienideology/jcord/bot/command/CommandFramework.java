@@ -4,11 +4,13 @@ import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.message.IEmbedMessage;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.message.IStringMessage;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.Channel;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
@@ -22,10 +24,7 @@ import org.alienideology.jcord.internal.object.user.User;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -145,11 +144,23 @@ public class CommandFramework {
 
     @SuppressWarnings("InstantiatingObjectToGetClassObject")
     private void handleCommand(Command command, CommandParser parser) {
+        MessageCreateEvent event = parser.event;
+
+        /* Check Permissions */
+        if (command.permissions().length != 0) { // Specified permissions
+            Collection<Permission> permissions = Arrays.asList(command.permissions());
+            if (event.fromType(IChannel.Type.TEXT)) { // From Text Channels
+                if (!event.getTextChannel().hasAllPermission(event.getMember(), permissions)) {
+                    return;
+                }
+            }
+        }
+
+        /* Perform Actions */
         for (String alias : command.aliases()) {
             if (alias.equals(parser.alias)) {
                 Method method = annotations.get(command).method;
 
-                MessageCreateEvent event = parser.event;
                 IdentityImpl identity = (IdentityImpl) event.getIdentity();
                 IMessage message = event.getMessage();
                 IGuild guild = event.getGuild();

@@ -18,6 +18,7 @@ import java.util.zip.Inflater;
 
 /**
  * GatewayAdaptor - Communication client for Discord GateWay
+ *
  * @author AlienIdeology
  */
 public final class GatewayAdaptor extends WebSocketAdapter {
@@ -28,6 +29,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     private IdentityImpl identity;
     private WebSocket webSocket;
     private Thread heart;
+    private long interval;
 
     /* Used for resuming and heartbeat */
     private int sequence;
@@ -51,7 +53,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
-        LOG.info("Connected");
+        LOG.info("[CONNECTION] Connected");
         identity.CONNECTION = IdentityImpl.Connection.CONNECTED;
 
         if (session_id == null || session_id.isEmpty()) {
@@ -110,10 +112,13 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
     @Override
     public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
+        LOG.info("[CONNECTION] Disconnected");
         identity.CONNECTION = IdentityImpl.Connection.OFFLINE;
         DisconnectionCode code = DisconnectionCode.getCode(serverCloseFrame.getCloseCode());
-        if(closedByServer) handleError(new RuntimeException("Connection closed: "+code.code+"\tBy reason: "+code.message));
-        LOG.error(code+"\t"+code.message);
+        if(closedByServer) {
+            handleError(new RuntimeException("Connection closed: "+code.code+"\tBy reason: "+code.message));
+            LOG.error(code+"\t"+code.message);
+        }
     }
 
     /**
@@ -122,14 +127,16 @@ public final class GatewayAdaptor extends WebSocketAdapter {
      * @param message The json message
      */
     private void handleOPCode(OPCode code, String message) {
+        JSONObject json = new JSONObject(message);
         switch (code) {
             /* Event */
             case DISPATCH: {
-                handleEvent(new JSONObject(message));
+                handleEvent(json);
             }
             /* Server Side HandShake */
             case HELLO: {
-                sendHeartBeat(new JSONObject(message).getJSONObject("d").getLong("heartbeat_interval"));
+                interval = json.getJSONObject("d").getLong("heartbeat_interval");
+                sendHeartBeat();
                 LOG.info("[RECEIVED] Hello");
                 break;
             }
@@ -140,15 +147,15 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             /* Heartbeat */
             case HEARTBEAT_ACK:
             case HEARTBEAT: {
-                LOG.info("Heart: "+code);
+                LOG.info("[HEART] "+code);
                 break;
             }
             case RESUME: {
                 sendIdentification();
-                sendHeartBeat(4000);
+                sendHeartBeat();
             }
             default: {
-                LOG.error("Unknown OP Code | Message : " +message);
+                LOG.error("[UNKNOWN] OP Code/Message : " +message);
             }
         }
     }
@@ -165,13 +172,18 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         EventHandler handler = eventHandler.get(key);
 
         if (handler == null) {
-            LOG.fatal("Unknown Event: "+key + json.toString(4));
+            LOG.fatal("[UNKNOWN] Event: " + key + json.toString(4));
         } else {
 
             switch (key) {
                 case "READY": {
                     session_id = event.getString("session_id");
                     LOG.info("[RECEIVED] Ready Event");
+                    break;
+                }
+                case "RESUMED": {
+                    session_id = event.getString("session_id");
+                    LOG.info("[RECEIVED] Resumed Event");
                     break;
                 }
                 default: {
@@ -204,15 +216,15 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         identity.getEventManager().onEvent(new ExceptionEvent(identity, exception));
     }
 
-    private void sendHeartBeat(long interval) {
-        LOG.info("Interval: "+interval);
+    private void sendHeartBeat() {
+        LOG.info("[HEART] Interval: "+interval);
         webSocket.setPingInterval(interval);
         heart = new Thread(() -> {
             while (identity.CONNECTION.isConnected()) {
                 webSocket.sendText(
                         new JSONObject()
                             .put("op", OPCode.HEARTBEAT.key)
-                            .put("d", 100).toString());
+                            .put("d", sequence).toString());
 
                 try {
                     Thread.sleep(interval);
@@ -221,7 +233,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
                 }
             }
         });
-        heart.setName("Heart Beat");
+        heart.setName("HEART");
         heart.start();
     }
 
@@ -297,9 +309,10 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         eventHandler.put("CHANNEL_PINS_UPDATE", new ChannelPinsUpdateEventHandler(identity));
         eventHandler.put("MESSAGE_REACTION_ADD", new MessageReactionEventHandler(identity, true));
         eventHandler.put("MESSAGE_REACTION_REMOVE", new MessageReactionEventHandler(identity, false));
+        eventHandler.put("MESSAGE_REACTION_REMOVE_ALL", new MessageReactionRemoveAllEventHandler(identity));
 
         // TODO: Finish priority events
-        // Priority: USER_UPDATE, MESSAGE_DELETE_BULK, MESSAGE_REACTION_REMOVE_ALL, PRESENCE_UPDATE,
+        // Priority: USER_UPDATE, MESSAGE_DELETE_BULK, PRESENCE_UPDATE,
         // Future: GUILD_SYNC, GUILD_MEMBERS_CHUNK, WEBHOOKS_UPDATE, VOICE_SERVER_UPDATE, VOICE_STATE_UPDATE
         // Unknown: MESSAGE_ACK
 

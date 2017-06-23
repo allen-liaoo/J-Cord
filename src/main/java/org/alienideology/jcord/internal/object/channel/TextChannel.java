@@ -98,9 +98,9 @@ public final class TextChannel extends MessageChannel implements ITextChannel, B
     public boolean hasAllPermission(IMember member, Collection<Permission> permissions) {
         PermOverwrite overwrites = getMemberPermOverwrite(member.getId());
         for (Permission permission : permissions) {
-            if (overwrites.getDeniedPermissions().contains(permission))
-                return false;
             if (!member.getPermissions().contains(permission))
+                return false;
+            if (overwrites != null && overwrites.getDeniedPermissions().contains(permission))
                 return false;
         }
         return true;
@@ -110,9 +110,9 @@ public final class TextChannel extends MessageChannel implements ITextChannel, B
     public boolean hasAllPermission(IRole role, Collection<Permission> permissions) {
         PermOverwrite overwrites = getRolePermOverwrite(role.getId());
         for (Permission permission : permissions) {
-            if (overwrites.getDeniedPermissions().contains(permission))
-                return false;
             if (!role.getPermissions().contains(permission))
+                return false;
+            if (overwrites != null && overwrites.getDeniedPermissions().contains(permission))
                 return false;
         }
         return true;

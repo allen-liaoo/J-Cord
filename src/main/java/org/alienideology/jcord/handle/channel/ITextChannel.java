@@ -8,7 +8,7 @@ import org.alienideology.jcord.handle.guild.IGuild;
  * TextChannel - An IGuildChannel for text messages.
  * @author AlienIdeology
  */
-public interface ITextChannel extends IMessageChannel, IGuildChannel, IMention {
+public interface ITextChannel extends IGuildChannel, IMessageChannel, IMention, Comparable<ITextChannel> {
 
     /**
      * Get the guild of this text channel.
@@ -43,6 +43,20 @@ public interface ITextChannel extends IMessageChannel, IGuildChannel, IMention {
     @Override
     default String mention() {
         return "<#"+getId()+">";
+    }
+
+    /**
+     * Compare this to another TextChannel by their integer positions.
+     * @see IGuildChannel#getPosition()
+     *
+     * @param o The other TextChannel.
+     * @return the value {@code 0} if the positions are the same;
+     *         a value less than {@code 0} if this text channel's position is smaller than the other text channel; and
+     *         a value greater than {@code 0} if this text channel's position is greater than the other text channel
+     */
+    @Override
+    default int compareTo(ITextChannel o) {
+        return Integer.compare(this.getPosition(), o.getPosition());
     }
 
 }

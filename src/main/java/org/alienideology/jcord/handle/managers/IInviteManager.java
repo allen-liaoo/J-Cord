@@ -81,12 +81,18 @@ public interface IInviteManager {
     /**
      * Deletes an existing invite.
      *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manager Channels} permission.
+     *
      * @param invite The invite.
      */
     void deleteInvite(IInvite invite);
 
     /**
      * Deletes an existing invite by code.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manager Channels} permission.
      *
      * @param code The invite code.
      */

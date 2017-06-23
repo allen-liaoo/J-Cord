@@ -84,6 +84,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
     @Override
     public IMessage getMessage(String id) {
         if (latestMessage.getId().equals(id)) return latestMessage;
+        if (getHistory().getCachedMessages().get(id) != null) return getHistory().getCachedMessages().get(id);
 
         JSONObject msg = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(this.id, id).getAsJSONObject();
         return new ObjectBuilder(identity).buildMessage(msg);

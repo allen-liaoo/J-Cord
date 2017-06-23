@@ -1,5 +1,7 @@
 package org.alienideology.jcord.bot.command;
 
+import org.alienideology.jcord.handle.permission.Permission;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,7 +13,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-// TODO: Permissions field, description, and AUTO-GENERATED HELP COMMAND
+// TODO: Auto-generated help command, description.
 public @interface Command {
 
     /**
@@ -19,6 +21,13 @@ public @interface Command {
      * Different method can have different aliases.
      */
     String[] aliases();
+
+    /**
+     * Permissions required for the command to be triggered by a certain user.
+     *
+     * @return The permissions.
+     */
+    Permission[] permissions() default {};
 
     /**
      * @return True if this method can only be triggered by IGuildMessageCreateEvent.
