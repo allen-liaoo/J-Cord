@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * IChannelManager - A manager for both text and voice channels.
+ *
  * @author AlienIdeology
  */
 public interface IChannelManager {

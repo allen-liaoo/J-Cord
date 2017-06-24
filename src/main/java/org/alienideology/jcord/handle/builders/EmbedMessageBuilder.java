@@ -44,15 +44,17 @@ public final class EmbedMessageBuilder {
             throw exception;
         }
 
-        EmbedMessage embed = new EmbedMessage(null, null, null, "", timeStamp == null ? null : timeStamp.toString(),
+        return new EmbedMessage(null, null, null, "", timeStamp == null ? null : timeStamp.toString(),
                 null, null, null, false, false, false)
+            .setTitle(title)
+            .setUrl(url)
+            .setDescription(description)
             .setColor(color)
+            .setAuthor(author)
             .addFields(fields.toArray(new IEmbedMessage.Field[fields.size()]))
             .setThumbnail(thumbnail)
             .setImage(image)
             .setFooter(footer);
-
-        return embed;
     }
 
     /**

@@ -3,7 +3,8 @@ package org.alienideology.jcord.util;
 import java.util.regex.Pattern;
 
 /**
- * MessageUtils - Message and String utilities
+ * MessageUtils - Message and String utilities.
+ *
  * @author AlienIdeology
  */
 public class MessageUtils {

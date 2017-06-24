@@ -57,8 +57,12 @@ public interface IMessageChannel extends IChannel {
      * Send a string message.
      *
      * @param message The message to be sent.
-     * @throws IllegalArgumentException If the message is more than 2000 characters.
-     * @exception PermissionException If the user lack Send Messages permission
+     * @exception IllegalArgumentException
+     *          If the message is more than 2000 characters.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          The message channel is a conversation between two bots.
+     * @exception PermissionException
+     *          If the user lack Send Messages permission
      * @return The message sent.
      */
     IMessage sendMessage(String message);
@@ -68,8 +72,12 @@ public interface IMessageChannel extends IChannel {
      *
      * @param format The string to be formatted and send.
      * @param args The arguments referenced by the format string.
-     * @exception  IllegalArgumentException If the message is more than 2000 characters.
-     * @exception PermissionException If the user lack {@code Send Messages} permission
+     * @exception IllegalArgumentException
+     *          If the message is more than 2000 characters.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          The message channel is a conversation between two bots.
+     * @exception PermissionException
+     *          If the user lack Send Messages permission
      * @return The message sent.
      */
     IMessage sendMessageFormat(String format, Object... args);
@@ -78,7 +86,12 @@ public interface IMessageChannel extends IChannel {
      * Send a message built by StringMessageBuilder
      *
      * @param message The StringMessage built by {@link StringMessageBuilder}.
-     * @exception PermissionException If the user lack {@code Send Messages} permission
+     * @exception IllegalArgumentException
+     *          If the message is more than 2000 characters.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          The message channel is a conversation between two bots.
+     * @exception PermissionException
+     *          If the user lack Send Messages permission
      * @return The message sent.
      */
     IMessage sendMessage(IStringMessage message);
@@ -87,8 +100,12 @@ public interface IMessageChannel extends IChannel {
      * Send an embed message.
      *
      * @param embed The EmbedMessage built by {@link EmbedMessageBuilder}.
-     * @exception  IllegalStateException If the embed message is built but the embed is empty.
-     * @exception PermissionException If the user lack {@code Send Messages} permission
+     * @exception IllegalArgumentException
+     *          If the message is more than 2000 characters.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          The message channel is a conversation between two bots.
+     * @exception PermissionException
+     *          If the user lack Send Messages permission
      * @return The message sent.
      */
     IMessage sendMessage(IEmbedMessage embed);
@@ -103,6 +120,8 @@ public interface IMessageChannel extends IChannel {
      *          </ul>
      * @exception IllegalArgumentException
      *          If the file is greater than {@code 8 MB}, which is the size limit of an attachment.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          The message channel is a conversation between two bots.
      *
      * @param file The file attachment.
      * @param message The message.
@@ -126,6 +145,8 @@ public interface IMessageChannel extends IChannel {
      *          </ul>
      * @exception IllegalArgumentException
      *          If the file is greater than {@code 8 MB}, which is the size limit of an attachment.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          The message channel is a conversation between two bots.
      *
      * @param file The file attachment.
      * @param format The string to be formatted and send.
@@ -150,6 +171,8 @@ public interface IMessageChannel extends IChannel {
      *          </ul>
      * @exception IllegalArgumentException
      *          If the file is greater than {@code 8 MB}, which is the size limit of an attachment.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          The message channel is a conversation between two bots.
      *
      * @param file The file attachment.
      * @param message The message built by {@link StringMessageBuilder}.

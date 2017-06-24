@@ -2,6 +2,7 @@ package org.alienideology.jcord.bot.command;
 
 /**
  * CommandResponder - All command classes must implements CommandResponder in order to be added to the framework.
+ *
  * @author AlienIdeology
  */
 public interface CommandResponder {
@@ -36,6 +37,12 @@ public interface CommandResponder {
                     .setDescription(help_msg);
                 return embed;
             }
+
+            @Command (aliases = {"help ping"}
+            public String onPingHelpCommand() {
+                return "Ping command is for checking the api's speed.
+            }
+
         }
 
         The parameters Guild and Member will be the MessageCreateEvent#getGuild and MessageCreateEvent#getMember, respectively.

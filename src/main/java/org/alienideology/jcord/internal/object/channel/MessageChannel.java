@@ -1,6 +1,7 @@
 package org.alienideology.jcord.internal.object.channel;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.handle.builders.StringMessageBuilder;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
@@ -28,7 +29,7 @@ import org.alienideology.jcord.internal.object.message.EmbedMessage;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.StringMessage;
 import org.alienideology.jcord.internal.object.user.User;
-import org.alienideology.jcord.util.FileUtils;
+import org.alienideology.jcord.util.DataUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -114,6 +115,10 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     private Message send(JSONObject json) {
         checkContentLength(json.getString("content"));
+        if (isPrivate && identity.getType() == IdentityType.BOT) { // Cannot send a private message from bot to bot
+            throw new ErrorResponseException(ErrorResponse.CANNOT_SEND_MESSAGES_TO_THIS_USER);
+        }
+
         if (!isPrivate && !((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.SEND_MESSAGES)) {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.SEND_MESSAGES);
         }
@@ -141,12 +146,18 @@ public class MessageChannel extends Channel implements IMessageChannel {
     }
 
     private IMessage attach(File file, JSONObject message) throws IOException {
-        if (!isPrivate && !((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.SEND_MESSAGES)) {
-            throw new PermissionException(Permission.ADMINISTRATOR, Permission.SEND_MESSAGES);
-        }
+        if (isPrivate) {
+            if (identity.getType() == IdentityType.BOT) { // Cannot send a private message from bot to bot
+                throw new ErrorResponseException(ErrorResponse.CANNOT_SEND_MESSAGES_TO_THIS_USER);
+            }
+        } else {
+            if (!((ITextChannel) this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.SEND_MESSAGES)) {
+                throw new PermissionException(Permission.ADMINISTRATOR, Permission.SEND_MESSAGES);
+            }
 
-        if (!isPrivate && !((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.ATTACH_FILES)) {
-            throw new PermissionException(Permission.ADMINISTRATOR, Permission.ATTACH_FILES);
+            if (!((ITextChannel) this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.ATTACH_FILES)) {
+                throw new PermissionException(Permission.ADMINISTRATOR, Permission.ATTACH_FILES);
+            }
         }
 
         if (!file.exists() || file.isDirectory() || !file.canRead()) {
@@ -353,7 +364,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     @Override
     public void addReaction(String messageId, String unicode) {
-        react(messageId, FileUtils.encodeToUrl(unicode));
+        react(messageId, DataUtils.encodeToUrl(unicode));
     }
 
     @Override
@@ -382,7 +393,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     @Override
     public void removeReaction(IMember member, String messageId, String unicode) {
-        unreact(member, messageId, FileUtils.encodeToUrl(unicode));
+        unreact(member, messageId, DataUtils.encodeToUrl(unicode));
     }
 
     @Override

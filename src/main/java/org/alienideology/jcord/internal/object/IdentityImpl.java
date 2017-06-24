@@ -8,6 +8,7 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.IdentityType;
+import org.alienideology.jcord.bot.Bot;
 import org.alienideology.jcord.bot.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.EventManager;
@@ -49,6 +50,8 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     private WebSocket socket;
     public Connection CONNECTION = Connection.OFFLINE;
 
+    public Bot bot;
+
     private EventManager manager;
 
     private IUser self;
@@ -60,35 +63,53 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     public IdentityImpl(IdentityType type, WebSocketFactory wsFactory) {
         this.type = type;
         this.wsFactory = wsFactory;
+        this.bot = new Bot(this);
         this.selfManager = new SelfManager(this);
     }
 
+    @Override
     public IdentityImpl revive() throws IOException {
         logout();
         login(token);
         return this;
     }
 
+    @Override
     public EventManager getEventManager() {
         return manager;
     }
 
+    @Override
     public List<DispatcherAdaptor> getDispatchers () {
         return manager.getDispatcherAdaptors();
     }
 
+    @Override
     public List<Object> getSubscribers() {
         return manager.getEventSubscribers();
     }
 
+    @Override
     public List<CommandFramework> getFrameworks() {
         return manager.getCommandFrameworks();
     }
 
+    @Override
+    public IdentityType getType() {
+        return type;
+    }
+
+    @Override
     public String getToken () {
         return token;
     }
 
+    @Override
+    public Bot getAsBot() {
+        return bot;
+    }
+
+    @Override
     public IUser getSelf() {
         return self;
     }
@@ -313,7 +334,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     }
 
     public IdentityImpl setEventManager(EventManager manager) {
-        this.manager = manager;
+        this.manager = manager.setIdentity(this);
         return this;
     }
 
@@ -379,29 +400,6 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
                 ", CONNECTION=" + CONNECTION +
                 ", self=" + self +
                 '}';
-    }
-
-    public enum Connection {
-        CONNECTING,
-        RESUMING,
-        CONNECTED,
-        READY,
-        OFFLINE;
-
-        /**
-         * @return Is the connection open.
-         */
-        public boolean isConnected() {
-            return this == CONNECTED || this == READY;
-        }
-
-        /**
-         * @return Is the connection ready to fire event.
-         */
-        public boolean isReady() {
-            return this == READY;
-        }
-
     }
 
 }

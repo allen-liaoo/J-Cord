@@ -3,6 +3,7 @@ package org.alienideology.jcord.internal.exception;
 /**
  * HigherHierarchyException - When the identity tries to modify a member or role higher than it's hierarchy,
  * this exception is fired.
+ *
  * @author AlienIdeology
  */
 public class HigherHierarchyException extends RuntimeException {

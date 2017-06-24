@@ -1,5 +1,6 @@
 package org.alienideology.jcord.event.handler;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.gateway.ResumedEvent;
 import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
@@ -58,7 +59,7 @@ public class GatewayEventHandler extends EventHandler {
 
                 fireEvent(new ReadyEvent(identity, gateway, sequence, session_id));
 
-                identity.CONNECTION = IdentityImpl.Connection.READY;
+                identity.CONNECTION = Identity.Connection.READY;
             } catch (Exception e) {
                 LOG.error(e);
             }
@@ -66,11 +67,11 @@ public class GatewayEventHandler extends EventHandler {
         /* Resume Event */
         } else {
 
-            identity.CONNECTION = IdentityImpl.Connection.RESUMING;
+            identity.CONNECTION = Identity.Connection.RESUMING;
 
             fireEvent(new ResumedEvent(identity, gateway, sequence));
 
-            identity.CONNECTION = IdentityImpl.Connection.READY;
+            identity.CONNECTION = Identity.Connection.READY;
 
         }
     }

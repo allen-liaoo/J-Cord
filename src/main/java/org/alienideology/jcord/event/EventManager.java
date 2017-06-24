@@ -1,6 +1,12 @@
 package org.alienideology.jcord.event;
 
+import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.IdentityType;
+import org.alienideology.jcord.bot.PostAgent;
 import org.alienideology.jcord.bot.command.CommandFramework;
+import org.alienideology.jcord.event.guild.GuildCreateEvent;
+import org.alienideology.jcord.event.guild.GuildDeleteEvent;
+import org.alienideology.jcord.event.guild.GuildUnavailableEvent;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,6 +20,7 @@ import java.util.List;
  * @author AlienIdeology
  */
 public class EventManager {
+    private Identity identity;
 
     private List<DispatcherAdaptor> dispatchers = new ArrayList<>();
 
@@ -84,11 +91,13 @@ public class EventManager {
 
     @SuppressWarnings("unchecked")
     public void onEvent(Event event) {
+        /* Dispatcher Adaptors */
         dispatchers.forEach(d -> d.dispatchEvent(event));
 
+        /* Event Subscribers */
         List<Class<? extends Event>> classes = new ArrayList<>(methods.keySet());
-
         Class<? extends Event> eventClass = event.getClass();
+
         for (;;) {
             for (Class<? extends Event> param : methods.keySet()) {
 
@@ -107,6 +116,18 @@ public class EventManager {
             if (eventClass == Event.class) break;
         }
 
+        /* Post Status */
+        if (identity != null && identity.getType() == IdentityType.BOT) {
+            if (event instanceof GuildCreateEvent || event instanceof GuildUnavailableEvent || event instanceof GuildDeleteEvent) {
+                identity.getAsBot().getPostAgents().forEach(PostAgent::post);
+            }
+        }
+
+    }
+
+    public EventManager setIdentity(Identity identity) {
+        this.identity = identity;
+        return this;
     }
 
     private class ObjectContainer {

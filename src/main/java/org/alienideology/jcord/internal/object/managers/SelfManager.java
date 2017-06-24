@@ -9,7 +9,7 @@ import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.util.FileUtils;
+import org.alienideology.jcord.util.DataUtils;
 import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
@@ -46,7 +46,7 @@ public final class SelfManager implements ISelfManager {
 
     @Override
     public void modifyAvatar(BufferedImage image) throws IOException {
-        String encoding = FileUtils.encodeIcon(image);
+        String encoding = DataUtils.encodeIcon(image);
         modifySelf(new JSONObject().put("avatar", encoding));
     }
 

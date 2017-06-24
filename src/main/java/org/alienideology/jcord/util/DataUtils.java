@@ -12,9 +12,11 @@ import java.net.URLEncoder;
 import java.util.Base64;
 
 /**
+ * DataUtils - Utilities for I/O and data.
+ *
  * @author AlienIdeology
  */
-public class FileUtils {
+public class DataUtils {
 
     public static String encodeIcon(BufferedImage image) throws IOException {
         ByteArrayOutputStream byteoutput = new ByteArrayOutputStream();

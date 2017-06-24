@@ -17,8 +17,26 @@ import java.lang.annotation.Target;
 public @interface Command {
 
     /**
+     * The name of a command.
+     * This can be accessed when building a help command.
+     *
+     * @return The name.
+     */
+    String name() default "";
+
+    /**
+     * The description of a command.
+     * This can be accessed when building a help command.
+     *
+     * @return The description
+     */
+    String description() default "";
+
+    /**
      * An array of aliases for this command.
      * Different method can have different aliases.
+     *
+     * @return An array of aliases that would trigger the command.
      */
     String[] aliases();
 

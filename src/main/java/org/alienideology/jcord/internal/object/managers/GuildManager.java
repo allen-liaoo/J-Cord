@@ -25,7 +25,7 @@ import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.Role;
-import org.alienideology.jcord.util.FileUtils;
+import org.alienideology.jcord.util.DataUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -108,7 +108,7 @@ public final class GuildManager implements IGuildManager {
 
     @Override
     public void modifyIcon(BufferedImage image) throws IOException {
-        String encoding = FileUtils.encodeIcon(image);
+        String encoding = DataUtils.encodeIcon(image);
         requestModify(new JSONObject().put("icon", encoding));
     }
 
@@ -119,7 +119,7 @@ public final class GuildManager implements IGuildManager {
 
     @Override
     public void modifySplash(BufferedImage image) throws IOException {
-        String encoding = FileUtils.encodeIcon(image);
+        String encoding = DataUtils.encodeIcon(image);
         requestModify(new JSONObject().put("splash", encoding));
     }
 

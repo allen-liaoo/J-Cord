@@ -14,6 +14,8 @@ import org.json.JSONObject;
 import java.util.Collection;
 
 /**
+ * PermOverwrite - A channel setting that overwrite permissions of a guild member or role.
+ *
  * @author AlienIdeology
  */
 public class PermOverwrite extends DiscordObject implements ISnowFlake, Buildable {

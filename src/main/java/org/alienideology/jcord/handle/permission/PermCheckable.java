@@ -5,6 +5,7 @@ import java.util.Collection;
 
 /**
  * PermCheckable - An object that can be checked with permissions.
+ *
  * @author AlienIdeology
  */
 public interface PermCheckable {

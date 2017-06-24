@@ -4,6 +4,7 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.event.handler.*;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -41,6 +42,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
     /**
      * The listener for Gateway messages.
+     *
      * @param identity The identity this gateway belongs to.
      * @param webSocket The WebSocket where events are fired.
      */
@@ -54,7 +56,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         LOG.info("[CONNECTION] Connected");
-        identity.CONNECTION = IdentityImpl.Connection.CONNECTED;
+        identity.CONNECTION = Identity.Connection.CONNECTED;
 
         if (session_id == null || session_id.isEmpty()) {
             sendIdentification();
@@ -113,7 +115,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     @Override
     public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
         LOG.info("[CONNECTION] Disconnected");
-        identity.CONNECTION = IdentityImpl.Connection.OFFLINE;
+        identity.CONNECTION = Identity.Connection.OFFLINE;
         DisconnectionCode code = DisconnectionCode.getCode(serverCloseFrame.getCloseCode());
         if(closedByServer) {
             handleError(new RuntimeException("Connection closed: "+code.code+"\tBy reason: "+code.message));
@@ -259,7 +261,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     }
 
     private void sendResume() {
-        identity.CONNECTION = IdentityImpl.Connection.RESUMING;
+        identity.CONNECTION = Identity.Connection.RESUMING;
         JSONObject resume = new JSONObject()
             .put("op", OPCode.RESUME.key)
             .put("d", new JSONObject()

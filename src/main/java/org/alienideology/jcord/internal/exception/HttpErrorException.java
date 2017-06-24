@@ -3,6 +3,8 @@ package org.alienideology.jcord.internal.exception;
 import org.alienideology.jcord.internal.gateway.HttpCode;
 
 /**
+ * HttpErrorException - An exception for Http Error Codes.
+ *
  * @author AlienIdeology
  */
 public class HttpErrorException extends RuntimeException {

@@ -1,6 +1,8 @@
 # J-Cord
 ~~Another~~ A Discord API Wrapper for Java <br />
 
+[![](https://jitpack.io/v/AlienIdeology/J-Cord.svg)](https://jitpack.io/#AlienIdeology/J-Cord)
+
 ## Features
 - Events Handling and Dispatching
 - CommandFramework Support
@@ -106,27 +108,38 @@ Identity bot = new IdentityBuilder()
             )
     )
     ```
-- PostAgent (Post bot status to websites): <br />
- 1. Create a `Bot` object
+- PostAgent (Post bot status to websites):
+ - Setting up
+    1. [DiscordBots](https://bots.discord.pw/)
+        ```java
+        PostAgent DiscordBotsAgent = PostAgent.DISCORD_BOTS
+            .setIdentity(identity) // Set the Identity object, which is used to post shard and guild count
+            .setAPIToken(YOUR_TOKEN_HERE) // The token for Discord Bots API
+            .post(); // Post the status
+        ```
+    2. [Discord Bot List](https://discordbots.org/)
+        ```java
+        PostAgent DiscordBotsAgent = PostAgent.DISCORD_BOT_LIST
+            .setIdentity(identity)
+            .setAPIToken(YOUR_TOKEN_HERE) // The token for Discord Bot List API
+            .post(); // Post the status
+        ```
+    3. [Discord List Bots](https://bots.discordlist.net/)
+        ```java
+        PostAgent DiscordBotsAgent = PostAgent.DISCORD_LIST
+                .setIdentity(identity)
+                .addPostField("token", YOUR_TOKEN_HERE) // The token for Discord List API
+                .post(); // Post the status
+        ```
+ - Post Automatically <br />
+    After setting up the post agent, you can add it to the `Bot`:
     ```java
     // Build Identity
-    Bot bot = new Bot(identity);
-    PostAgent agent = bot.getPostAgent();
+    identity.getAsBot().addPostAgent(agent);
     ```
- 2. Post status (Can chain methods)
-    1. DiscordBots
-        ```java
-        agent.toDiscordBots(YOUR_API_TOKEN);
-        ```
-    2. Discord Bot List
-        ```java
-        agent.toDiscordBotList(YOUR_API_TOKEN);
-        ```
-    3. Discord List Bots
-        ```java
-        agent.toDiscordListBots(YOUR_API_TOKEN);
-        ```
-    Note: You must create an account and get a token from one of the websites first! <br />
+    The bot status will automatically be posted on GuildCreateEvent, GuildUnavailableEvent, and GuildDeleteEvent.
+
+
 For more examples, see [ExampleBot.java](/src/test/java/ExampleBot.java).
 ### OAuth
 Coming soon~~ <br />

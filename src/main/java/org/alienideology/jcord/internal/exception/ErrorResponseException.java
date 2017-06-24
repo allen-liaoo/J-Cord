@@ -4,6 +4,7 @@ import org.alienideology.jcord.internal.gateway.ErrorResponse;
 
 /**
  * ErrorResponseException - An exception for Json ErrorResponse
+ *
  * @author AlienIdeology
  */
 public class ErrorResponseException extends RuntimeException {

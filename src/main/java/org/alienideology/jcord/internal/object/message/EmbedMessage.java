@@ -1,14 +1,14 @@
 package org.alienideology.jcord.internal.object.message;
 
-import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.handle.message.IEmbedMessage;
+import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.user.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.awt.Color;
+import java.awt.*;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -42,7 +42,6 @@ public final class EmbedMessage extends Message implements IEmbedMessage, Builda
 
     @Override
     public JSONObject toJson() {
-
         JSONObject json = new JSONObject();
         if (title != null) json.put("title", title);
         if (url != null) json.put("url", url);
@@ -82,6 +81,8 @@ public final class EmbedMessage extends Message implements IEmbedMessage, Builda
             if (footer.getIconUrl() != null) footerJson.put("icon_url", footer.getIconUrl());
             json.put("footer", footerJson);
         }
+
+        System.out.println(json.toString(4));
 
         JSONObject msg = new JSONObject()
             .put("content", "")

@@ -8,6 +8,7 @@ import java.util.Collection;
 
 /**
  * OverwriteCheckable - An object that can be checked with {@link PermOverwrite}.
+ *
  * @author AlienIdeology
  */
 public interface OverwriteCheckable {

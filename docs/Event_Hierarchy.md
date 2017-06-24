@@ -66,6 +66,7 @@ Event - Whenever a change happens to an entity, an event get fired.
        - TextChannelDeleteEvent
        - VoiceChannelDeleteEvent
      - PrivateChannelDeleteEvent
+   - TypingStartEvent
     <br />
  - MessageEvent - Events that are related to a message.
    - MessageCreateEvent
@@ -79,3 +80,6 @@ Event - Whenever a change happens to an entity, an event get fired.
      - PrivateMessageDeleteEvent
    - MessagePinUpdateEvent - This is just a internal event that discord fired.
      It is not possible to get the pinned message from this event.
+   - MessageReactionAddEvent
+   - MessageReactionRemoveEvent
+   - MessageReactionRemoveAllEvent

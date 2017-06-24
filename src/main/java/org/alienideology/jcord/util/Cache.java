@@ -4,11 +4,15 @@ import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.ISnowFlake;
 
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Spliterator;
 import java.util.function.Consumer;
 
 /**
  * Cache - Cache objects into a customized list.
+ *
  * @author AlienIdeology
  */
 public class Cache <T extends ISnowFlake> {

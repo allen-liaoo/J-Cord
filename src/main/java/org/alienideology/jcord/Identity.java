@@ -1,6 +1,7 @@
 package org.alienideology.jcord;
 
 import com.sun.istack.internal.Nullable;
+import org.alienideology.jcord.bot.Bot;
 import org.alienideology.jcord.bot.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.EventManager;
@@ -61,6 +62,13 @@ public interface Identity {
     List<CommandFramework> getFrameworks();
 
     /**
+     * Get the identity type.
+     *
+     * @return The identity type.
+     */
+    IdentityType getType();
+
+    /**
      * Get the token of this identity.
      * Remember to keep the token secret.
      * Bot tokens will looks like {@code Bot Your.Token.Here}.
@@ -69,6 +77,15 @@ public interface Identity {
      * @return The string token.
      */
     String getToken();
+
+    /**
+     * Get this identity as a {@link Bot}.
+     * If the identity is a {@link IdentityType#CLIENT}, then this will returns null.
+     *
+     * @return The bot.
+     */
+    @Nullable
+    Bot getAsBot();
 
     /**
      * Get the self user of this identity.
@@ -237,5 +254,27 @@ public interface Identity {
      * @return A list of channels.
      */
     List<IPrivateChannel> getPrivateChannels();
-    
+
+    enum Connection {
+        CONNECTING,
+        RESUMING,
+        CONNECTED,
+        READY,
+        OFFLINE;
+
+        /**
+         * @return Is the connection open.
+         */
+        public boolean isConnected() {
+            return this == CONNECTED || this == READY;
+        }
+
+        /**
+         * @return Is the connection ready to fire event.
+         */
+        public boolean isReady() {
+            return this == READY;
+        }
+
+    }
 }
