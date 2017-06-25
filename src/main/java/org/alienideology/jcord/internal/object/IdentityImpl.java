@@ -63,7 +63,6 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     public IdentityImpl(IdentityType type, WebSocketFactory wsFactory) {
         this.type = type;
         this.wsFactory = wsFactory;
-        this.bot = new Bot(this);
         this.selfManager = new SelfManager(this);
     }
 
@@ -344,6 +343,9 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
 
     public void setSelf (User selfUser) {
         this.self = selfUser;
+
+        // Initialize this after self user is built
+        this.bot = new Bot(this);
     }
 
     public void addUser (User user) {

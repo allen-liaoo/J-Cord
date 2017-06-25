@@ -10,7 +10,7 @@ import java.util.Collection;
 
 /**
  * IMemberManager - The manager that manages and perform actions upon a member.
- * If the action involves multiple members or scopes in the guild level (For example: kick, ban, unban), then the
+ * If the action involves multiple members or scopes in the guild level (For bot: kick, ban, unban), then the
  * method can be found in {@link IGuildManager}.
  *
  * @author AlienIdeology

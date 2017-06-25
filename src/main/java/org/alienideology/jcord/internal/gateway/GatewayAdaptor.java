@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.zip.Inflater;
 
 /**
- * GatewayAdaptor - Communication client for Discord GateWay
+ * GatewayAdaptor - Communication java.client for Discord GateWay
  *
  * @author AlienIdeology
  */

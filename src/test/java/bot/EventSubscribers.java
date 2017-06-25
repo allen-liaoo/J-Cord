@@ -1,4 +1,4 @@
-package example;
+package bot;
 
 import org.alienideology.jcord.event.EventSubscriber;
 import org.alienideology.jcord.event.guild.member.GuildMemberJoinEvent;

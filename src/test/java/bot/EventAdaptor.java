@@ -1,4 +1,4 @@
-package example;
+package bot;
 
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
@@ -36,7 +36,7 @@ public class EventAdaptor extends DispatcherAdaptor {
         if (event.getMessage().isFromSelf())
             return;
 
-        // The below documentation uses this message as an example:
+        // The below documentation uses this message as an bot:
         // Message: "=avatar me"
 
         String message = event.getMessage().getContent();
@@ -91,7 +91,7 @@ public class EventAdaptor extends DispatcherAdaptor {
             // 3. A HashMap of <alias, CommandClass>
             // 4. Reflection
 
-            // The example code below uses the first choice
+            // The bot code below uses the first choice
             if (alias != null) {
                 if (alias.equals("avatar")) {
 

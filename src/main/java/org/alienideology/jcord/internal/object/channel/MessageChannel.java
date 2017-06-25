@@ -84,6 +84,10 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     @Override
     public IMessage getMessage(String id) {
+        if (!isPrivate && !((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.READ_MESSAGE_HISTORY)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.READ_MESSAGE_HISTORY);
+        }
+
         if (latestMessage.getId().equals(id)) return latestMessage;
         if (getHistory().getCachedMessages().get(id) != null) return getHistory().getCachedMessages().get(id);
 
@@ -252,7 +256,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
         return new ObjectBuilder(identity).buildMessage(msg);
     }
 
-    // TODO: Latest Message ID is sometimes deleted, so this might not work multiple times. Find fix...
     @Override
     public void bulkDeleteMessages(boolean throwEx, List<IMessage> messages) {
         if (isPrivate) {

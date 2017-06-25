@@ -12,6 +12,7 @@ import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.apache.commons.logging.impl.SimpleLog;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,10 +26,20 @@ import java.util.function.Consumer;
  */
 public final class Requester {
 
+    public SimpleLog LOG;
+
     private HttpPath path;
-    private IdentityImpl identity;
+    private String token;
     private HttpRequest request;
     private boolean useJson;
+
+    /**
+     * Constructor for non-identity tokens
+     */
+    public Requester(String token, HttpPath path) {
+        this.token = token;
+        this.path = path;
+    }
 
     /**
      * Constructor for JSON requests
@@ -41,7 +52,8 @@ public final class Requester {
      * Constructor for JSON requests
      */
     public Requester(IdentityImpl identity, HttpPath path, boolean useJson) {
-        this.identity = identity;
+        this.LOG = identity.LOG;
+        this.token = identity.getToken();
         this.path = path;
         this.useJson = useJson;
     }
@@ -224,7 +236,7 @@ public final class Requester {
     }
 
     private void processRequest(HttpRequest request, String path) {
-        request.header("Authorization", identity.getToken())
+        request.header("Authorization", token)
                 .header("User-Agent", "DiscordBot ($"+path+", $"+ JCord.VERSION+")");
         if (useJson) request.header("Content-Type", "application/json");
     }
@@ -259,12 +271,12 @@ public final class Requester {
         final Headers headers = response.getHeaders();
         if (headers.containsKey("Retry-After")) { // Rate limited
             Long retryAfter = Long.parseLong(headers.getFirst("Retry-After")); // In milliseconds
-            identity.LOG.error("You are being rate limited! Automatically blocked the thread.\n" +
+            LOG.error("You are being rate limited! Automatically blocked the thread.\n" +
                     "(Request: "+path.toString()+" | Retry after: "+retryAfter+" ms)");
             try {
                 Thread.sleep(retryAfter);
             } catch (InterruptedException e) {
-                identity.LOG.error("Error when blocking thread for rate limit: ");
+                LOG.error("Error when blocking thread for rate limit: ");
                 e.printStackTrace();
             }
         }

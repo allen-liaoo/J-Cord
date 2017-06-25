@@ -1,10 +1,10 @@
-group = 'com.github.AlienIdeology'
-version = '0.1.0-SNAPSHOT'
-
 plugins {
     id 'java'
     id 'maven'
 }
+
+group = 'com.github.AlienIdeology'
+version = '0.1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -14,8 +14,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.mashape.unirest:unirest-java:1.4.9'
     compile 'com.neovisionaries:nv-websocket-client:2.2'
+    compile 'com.mashape.unirest:unirest-java:1.4.9'
     compile 'org.json:json:20160212'
 
     compile 'org.apache.commons:commons-lang3:3.4'

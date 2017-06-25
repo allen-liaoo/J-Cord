@@ -1,15 +1,18 @@
 # J-Cord
-~~Another~~ A Discord API Wrapper for Java <br />
-
 [![](https://jitpack.io/v/AlienIdeology/J-Cord.svg)](https://jitpack.io/#AlienIdeology/J-Cord)
+<br />
+~~Another~~ A Discord API Wrapper for Java
 
 ## Features
-- Events Handling and Dispatching
-- CommandFramework Support
-- Emoji Support
+- Builders and managers to makes managing and creating objects easier.
+- Multiple choices for receiving events.
+- Built in, easy to use Command Framework via Reflection.
+- Get emojis by aliases use in Discord. No more external emoji dependencies.
+- Post bot status to bot listing websites automatically.
+- ~~Built in support for Webhooks and OAuth~~ Soon™
 
 ## Download
-- Jar (Coming soon)
+- Jar (Soon™)
 - Gradle (In your `build.gradle` file)
 ```gradle
 repositories {
@@ -36,8 +39,10 @@ dependencies {
 </dependency>
 ```
 
-## How to Use
+## Support
+[Discord Support Server](https://discord.gg/6UDkwb4)
 
+## How to Use
 ### Bot & Selfbot
 - Build an Identity
 ```java
@@ -109,7 +114,7 @@ Identity bot = new IdentityBuilder()
     )
     ```
 - PostAgent (Post bot status to websites):
- - Setting up
+  - Setting Up the Agent
     1. [DiscordBots](https://bots.discord.pw/)
         ```java
         PostAgent DiscordBotsAgent = PostAgent.DISCORD_BOTS
@@ -131,7 +136,18 @@ Identity bot = new IdentityBuilder()
                 .addPostField("token", YOUR_TOKEN_HERE) // The token for Discord List API
                 .post(); // Post the status
         ```
- - Post Automatically <br />
+    4. Custom website
+        ```java
+        PostAgent DiscordBotsAgent = new PostAgent(identity)
+                .setAPIName("Discord Bla Bla Bla Bots Bla Bla Bla List") // Isn't the name typically like that?
+                .setPostUrl("same_api_endpoint") // An API EndPoint URL
+                .setJsonShardIDKey("shard_id") // The json field for shard ID (0 based)
+                .setJsonShardKey("shad_count") // The json field for shard count
+                .setJsonServerKey("server_count") // The server count
+                .addPostField("some_json_key", "some_value") // Add whatever is required
+                .post(); // Or you can use .post(Consumer<MultipartBody>) to add custom fields or headers, too
+        ```
+  - Post Automatically <br />
     After setting up the post agent, you can add it to the `Bot`:
     ```java
     // Build Identity
@@ -139,15 +155,21 @@ Identity bot = new IdentityBuilder()
     ```
     The bot status will automatically be posted on GuildCreateEvent, GuildUnavailableEvent, and GuildDeleteEvent.
 
+For more examples, see this [example bot](/src/test/java/bot/).
 
-For more examples, see [ExampleBot.java](/src/test/java/ExampleBot.java).
-### OAuth
-Coming soon~~ <br />
-### Webhook
-Coming soon~~ <br />
+## Contributing
+Please fork this project, and read [Contribution Documentation](/docs/Contribution.md).
+
+## External Dependencies
+- [NV Websocket Client](https://github.com/TakahikoKawasaki/nv-websocket-client) `v2.2`
+- [Unirest for Java](https://github.com/Mashape/unirest-java) `v1.4.9`
+- [JSON-java](https://github.com/stleary/JSON-java) `v20160212`
+- [Apache Commons Lang 3](https://commons.apache.org/proper/commons-lang/) `v3.4`
+- [Apache Commons IO](https://commons.apache.org/proper/commons-io/) `2.5`
 
 ## More
 - Javadocs: [AlienIdeology.Github.io/J-Cord/](https://alienideology.github.io/J-Cord/)
-- For seeing into the future, read [Todo.md](/docs/Todo.md)
-- Also read [Object_Hierarchy.md](/docs/Object_Hierarchy.md)
+- For features coming soon, read [Todo.md](/docs/Todo.md)
+- Also read [Object Hierarchy](/docs/Object_Hierarchy.md) and [Event Hierarchy](/docs/Event_Hierarchy.md)
 for more information about this project's structure.
+- Don't forget to check out the wiki section!

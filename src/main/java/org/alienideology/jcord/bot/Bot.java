@@ -14,14 +14,12 @@ import java.util.List;
 public class Bot {
 
     private Identity identity;
-    private final String id;
 
     private final List<PostAgent> postAgent;
     private final BotInviteBuilder inviteBuilder;
 
     public Bot(Identity identity) {
         this.identity = identity;
-        this.id = identity.getSelf().getId();
         this.postAgent = new ArrayList<>();
         this.inviteBuilder = new BotInviteBuilder(identity.getSelf().getId());
     }
@@ -31,7 +29,7 @@ public class Bot {
     }
 
     public String getBotId() {
-        return id;
+        return identity.getSelf().getId();
     }
 
     public List<PostAgent> getPostAgents() {

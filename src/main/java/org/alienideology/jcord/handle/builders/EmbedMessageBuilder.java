@@ -250,7 +250,7 @@ public final class EmbedMessageBuilder {
 
     /**
      * Set the TimeStamp of this embed to Instant#now from the provided time zone.
-     * @param zone The time zone of this client.
+     * @param zone The time zone of this java.client.
      * @return EmbedMessageBuilder for chaining.
      */
     public EmbedMessageBuilder setTimeStampNow(ZoneId zone) {

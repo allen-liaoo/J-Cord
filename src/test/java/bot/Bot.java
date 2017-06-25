@@ -1,4 +1,4 @@
-package example;
+package bot;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.IdentityBuilder;
@@ -21,37 +21,32 @@ public class Bot {
 
     public Identity bot;
     public CommandFramework framework;
-    public IGuild defaultGuild;
 
     public static void main(String[] args) {
         // Start the bot
-        Bot starter = new Bot();
+        Bot main = new Bot();
     }
 
     // Initialize fields
     public Bot() {
         // Constructing the Command Framework
-        framework = new CommandFramework()
-
-                // Set the prefix
-                // There can be multiple prefixes
-                // For example, the prefix sets are
-                // 1. =
-                // 2. Bot mention (user mention, without nickname)
-                // 3. Bot mention with nickname. (Member mention)
-                .setPrefixes("=", bot.getSelf().mention(), bot.getSelf().mention(true))
-
-                // Register Command Responders
-                // The responders will have methods that is annotated as a command.
-                .registerCommandResponders(new Commands(this));
+        framework = new CommandFramework();
 
         setUpIdentity();
 
-        printInformation();
+        // Set the prefix
+        // There can be multiple prefixes
+        // For bot, the prefix sets are
+        // 1. =
+        // 2. Bot mention (user mention, without nickname)
+        // 3. Bot mention with nickname. (Member mention)
+        framework.setPrefixes("=", bot.getSelf().mention(), bot.getSelf().mention(true))
 
-        // Get a guild by ID.
-        // I would recommend storing the important guilds.
-        defaultGuild = bot.getGuild("311250670068170752");
+            // Register Command Responders
+            // The responders will have methods that is annotated as a command.
+            .registerCommandResponders(new Commands(this));
+
+        playGround();
     }
 
     // Build the identity using IdentityBuilder
@@ -101,8 +96,8 @@ public class Bot {
         }
     }
 
-    // This method prints information about all the guilds and channels this bot can see.
-    private void printInformation() {
+    // Test the API here :D
+    private void playGround() {
         for (IGuild guild : bot.getGuilds()) {
             System.out.println("Guild:\t" + guild.getName());
             for (ITextChannel tc : guild.getTextChannels()) {
@@ -116,6 +111,7 @@ public class Bot {
         for (IPrivateChannel dm : bot.getPrivateChannels()) {
             System.out.println("DM:\t" + dm.getRecipient().getName());
         }
+
     }
 
 }

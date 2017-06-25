@@ -81,7 +81,7 @@ public class PostAgent {
     }
 
     /**
-     * Set the API service name. For example, {@code Discord Bots}.
+     * Set the API service name. For bot, {@code Discord Bots}.
      * This method is used for logging.
      *
      * @param name The api name.

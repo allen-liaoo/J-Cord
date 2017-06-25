@@ -13,7 +13,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-// TODO: Auto-generated help command, description.
 public @interface Command {
 
     /**

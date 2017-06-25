@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * IdentityImpl - The identity of a bot (without shards), a shard, or a human (client)
+ * IdentityImpl - The identity of a bot (without shards), a shard, or a human (java.client)
  * @author AlienIdeology
  */
 public interface Identity {

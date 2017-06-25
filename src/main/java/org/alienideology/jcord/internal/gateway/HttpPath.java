@@ -181,6 +181,22 @@ public final class HttpPath {
 
     }
 
+    public static class OAuth {
+
+        public final static HttpPath GET_CURRENT_APPLICATION_INFORMATION = new HttpPath(GET, "/oauth2/applications/@me");
+
+        public final static String AUTHORIZATION = DISCORD_API_URL + "/oauth2/authorize";
+
+        public final static HttpPath TOKEN = new HttpPath(POST,
+                "/oauth2/token?client_id={client.id}&client_secret={client.secret}" +
+                "&code={authorize.code}&redirect_uri={callback.uri}&grant_type=authorization_code");
+
+        public final static HttpPath REVOCATION = new HttpPath(POST,
+                "/oauth2/token/revoke?client_id={client.id}&client_secret={client.secret}" +
+                "&refresh_token={refresh.token}&grant_type=refresh_token");
+
+    }
+
     public static class Webhook {
 
         /* Webhook Getters */

@@ -1,4 +1,4 @@
-package example;
+package bot;
 
 import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.bot.command.Command;
@@ -28,7 +28,7 @@ public class Commands implements CommandResponder {
     }
 
     // Sub commands can be achieve simply by extending the aliases.
-    // For example, the "Hey there" is a sub command of "Hey".
+    // For bot, the "Hey there" is a sub command of "Hey".
     // The method will be called when the message starts with "hey there".
     @Command(name = "Hey there", description = "Wassup!", aliases = "hey there")
     public String onHeyThere() {

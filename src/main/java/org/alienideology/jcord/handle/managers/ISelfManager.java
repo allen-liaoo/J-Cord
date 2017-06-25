@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 /**
  * ISelfManager - A manager that manages self user.
- * This managers is for both bot and client, which means setting email or password is not supported.
+ * This managers is for both bot and java.client, which means setting email or password is not supported.
  *
  * @author AlienIdeology
  */

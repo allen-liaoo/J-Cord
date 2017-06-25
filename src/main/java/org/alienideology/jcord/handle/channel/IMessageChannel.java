@@ -48,6 +48,9 @@ public interface IMessageChannel extends IChannel {
     /**
      * Get a message by id
      *
+     * @exception PermissionException
+     *          If the identity does not have {@code Read Message History} permission.
+     *
      * @param id The id of the message
      * @return The message object
      */
