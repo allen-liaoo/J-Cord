@@ -82,10 +82,8 @@ public final class EmbedMessage extends Message implements IEmbedMessage, Builda
             json.put("footer", footerJson);
         }
 
-        System.out.println(json.toString(4));
-
         JSONObject msg = new JSONObject()
-            .put("content", "")
+            .put("content", content)
             .put("embed", json);
 
         return msg;

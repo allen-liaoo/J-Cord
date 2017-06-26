@@ -389,6 +389,7 @@ public final class ObjectBuilder {
 
         /* EmbedMessage */
         } else {
+            // TODO: Allow multiple embeds in a message.
 
             JSONObject embed = json.getJSONArray("embeds").getJSONObject(0);
 

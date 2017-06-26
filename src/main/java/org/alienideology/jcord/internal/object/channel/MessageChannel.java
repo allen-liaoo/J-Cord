@@ -2,7 +2,7 @@ package org.alienideology.jcord.internal.object.channel;
 
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.IdentityType;
-import org.alienideology.jcord.handle.builders.StringMessageBuilder;
+import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.MessageHistory;
@@ -97,13 +97,13 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     @Override
     public IMessage sendMessage(String message) {
-        send(((StringMessage) new StringMessageBuilder().setContent(message).build()).toJson());
+        send(((StringMessage) new MessageBuilder().setContent(message).build()).toJson());
         return latestMessage;
     }
 
     @Override
     public IMessage sendMessageFormat(String format, Object... args) {
-        sendMessage(new StringMessageBuilder().appendContentFormat(format, args).build().toString());
+        sendMessage(new MessageBuilder().appendContentFormat(format, args).build().toString());
         return latestMessage;
     }
 
@@ -136,7 +136,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     @Override
     public IMessage sendAttachment(File file, String message) throws IOException {
-        return attach(file, ((StringMessage) new StringMessageBuilder().setContent(message).build()).toJson());
+        return attach(file, ((StringMessage) new MessageBuilder().setContent(message).build()).toJson());
     }
 
     @Override
@@ -183,12 +183,12 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     @Override
     public IMessage editMessage(String messageId, String message) {
-        return edit(((StringMessage) new StringMessageBuilder().setContent(message).build()).toJson(), messageId);
+        return edit(((StringMessage) new MessageBuilder().setContent(message).build()).toJson(), messageId);
     }
 
     @Override
     public IMessage editMessageFormat(String messageId, String format, Object... args) {
-        return edit(((StringMessage)new StringMessageBuilder().appendContentFormat(format, args).build()).toJson(), messageId);
+        return edit(((StringMessage)new MessageBuilder().appendContentFormat(format, args).build()).toJson(), messageId);
     }
 
     @Override

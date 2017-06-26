@@ -5,7 +5,7 @@ import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.builders.EmbedMessageBuilder;
-import org.alienideology.jcord.handle.builders.StringMessageBuilder;
+import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
@@ -53,7 +53,7 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
      * Reply to this message
      * @see IMessageChannel#sendMessage(IStringMessage)
      *
-     * @param message The StringMessage built by {@link StringMessageBuilder}
+     * @param message The StringMessage built by {@link MessageBuilder}
      * @return The message sent.
      */
     default IMessage reply(IStringMessage message) {
@@ -97,7 +97,7 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
     /**
      * Edit this message
      *
-     * @param message The IStringMessage built by {@link StringMessageBuilder}.
+     * @param message The IStringMessage built by {@link MessageBuilder}.
      * @return The message edited
      */
     default IMessage edit(IStringMessage message) {

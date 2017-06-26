@@ -27,14 +27,14 @@ IDiscordObject - Entities such as Guild, User, or Channel.
  - EmojiTable - A collection of Default Discord Emojis.
    - Emoji - An unicode emoji in Discord.
 
-#### Guild
+### Guild
 IGuild - A collection of users and channels, often referred to in the UI as a server.
  - IMember - A user representation in a guild.
  - IRole - A label that can be put on a set of guild members.
  - IGuildEmoji - A custom emoji that can be used within a guild.
  - Region (Enumeration) - Used for guild voice channel connection.
 
-#### Channel
+### Channel
 IChannel - A communication pipeline.
  - IMessageChannel - A channel that allows users to send message.
    - ITextChannel - A GuildChannel for text messages. (GuildChannel)
@@ -44,25 +44,25 @@ IChannel - A communication pipeline.
  - IVoiceChannel - A GuildChannel for audio connections. (GuildChannel)
  - IGuildChannel (Interface) - A Channel that exist in a guild.
 
-#### Message
+### Message
 IMessage - A text bubble some user just said.
  - IStringMessage - Normal messages that only contains string.
  - IEmbedMessage - Embed messages that can by sent by bot.
  - IReaction - A emoji that users reacted under a message.
 
-#### User
+### User
 IUser - A base entity, can be a member of guild/private channel, and bot/human.
  - Presence - A status of a user, containing information about the user online status and game.
    - Game - A playing or streaming status of a user.
    - OnlineStatus (Enumeration) - The online status of a user.
 
-#### Permission
+### Permission
 Permission (Enumeration) - A way to limit and grant certain abilities to members.
  - PermCheckable - An object that can be checked with permissions.
  - PermOverwrite - A channel setting that overwrite permissions of a guild member or role.
  - OverwriteCheckable - An object that can be checked with PermOverwrites.
 
-#### Managers
+### Managers
  - IGuildManager - The manager that manages and perform actions upon a guild.
  - IChannelManager - A manager for both text and voice channels.
  - IInviteManager - A manager for managing invites in both a guild or a guild channel.
@@ -70,10 +70,10 @@ Permission (Enumeration) - A way to limit and grant certain abilities to members
  - IRoleManager - A manager that manages a role in the guild.
  - ISelfManager - A manager that manages self user.
 
-#### Builders
+### Builders
  - ChannelBuilder - A GuildChannel builder for creating text and voice channels.
  - RoleBuilder - A builder for creating a role in a guild.
- - StringMessageBuilder - Build a message, can be StringMessage or EmbedMessage.
+ - MessageBuilder - Build a message, can be StringMessage or EmbedMessage.
  - EmbedMessageBuilder - Build a JSONObject of an embed, used to build
    embed messages and send in channels.
 
@@ -84,6 +84,11 @@ Event - Whenever a change happens to an entity, an event get fired.
    - EventSubscriber - An annotation used to annotate methods that subscribe an event.
    - CommandFramework - See Command section. <br />
 See [Event_Hierarchy.md](/docs/Event_Hierarchy.md) for more information.
+
+## OAuth
+OAuth - Used to build applications that utilize authentication and data from the Discord API.
+ - OAuthBuilder - A builder for building instance of OAuth and OAuth authorization URL.
+ - Scope - Provides access to certain resources of a user account.
 
 ## Exception
  - HigherHierarchyException - When the identity tries to modify a member or role higher than it's hierarchy, this exception is fired.

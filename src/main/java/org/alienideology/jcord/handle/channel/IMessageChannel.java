@@ -3,7 +3,7 @@ package org.alienideology.jcord.handle.channel;
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.builders.EmbedMessageBuilder;
-import org.alienideology.jcord.handle.builders.StringMessageBuilder;
+import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
@@ -86,9 +86,9 @@ public interface IMessageChannel extends IChannel {
     IMessage sendMessageFormat(String format, Object... args);
 
     /**
-     * Send a message built by StringMessageBuilder
+     * Send a message built by MessageBuilder
      *
-     * @param message The StringMessage built by {@link StringMessageBuilder}.
+     * @param message The StringMessage built by {@link MessageBuilder}.
      * @exception IllegalArgumentException
      *          If the message is more than 2000 characters.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
@@ -178,7 +178,7 @@ public interface IMessageChannel extends IChannel {
      *          The message channel is a conversation between two bots.
      *
      * @param file The file attachment.
-     * @param message The message built by {@link StringMessageBuilder}.
+     * @param message The message built by {@link MessageBuilder}.
      * @return The message sent.
      * @throws IOException
      *          <ul>
@@ -212,7 +212,7 @@ public interface IMessageChannel extends IChannel {
      * Edit a message by ID
      *
      * @param messageId The message ID
-     * @param message The IStringMessage built by {@link StringMessageBuilder}.
+     * @param message The IStringMessage built by {@link MessageBuilder}.
      * @return The message edited
      */
     IMessage editMessage(String messageId, IStringMessage message);

@@ -1,0 +1,8 @@
+language: java
+jdk: oraclejdk7
+
+deploy:
+  skip_cleanup: true
+
+notifications:
+email: wcliaw610@gmail.com

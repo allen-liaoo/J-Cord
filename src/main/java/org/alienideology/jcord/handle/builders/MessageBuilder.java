@@ -5,24 +5,27 @@ import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.message.IStringMessage;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
+import org.alienideology.jcord.internal.object.message.EmbedMessage;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.StringMessage;
 
 /**
- * StringMessageBuilder - A builder for building string messages.
+ * MessageBuilder - A builder for building messages.
+ *
  * @author AlienIdeology
  */
-public final class StringMessageBuilder {
+public final class MessageBuilder {
 
     private final EmojiTable emojis = new EmojiTable();
 
     private StringBuilder content;
+    private EmbedMessage embed;
     private boolean isTTS = false;
 
     /**
      * Default Constructor
      */
-    public StringMessageBuilder() {
+    public MessageBuilder() {
         this.content = new StringBuilder("");
     }
 
@@ -31,7 +34,7 @@ public final class StringMessageBuilder {
      *
      * @param content The content of this message.
      */
-    public StringMessageBuilder(String content) {
+    public MessageBuilder(String content) {
         this.content = new StringBuilder(content);
     }
 
@@ -54,9 +57,9 @@ public final class StringMessageBuilder {
      * Set the content of this message.
      *
      * @param content The content of this message.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder setContent(String content) {
+    public MessageBuilder setContent(String content) {
         this.content = new StringBuilder(content);
         return this;
     }
@@ -65,9 +68,9 @@ public final class StringMessageBuilder {
      * Append content to this message.
      *
      * @param content The object of the content to be appended.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendContent(Object content) {
+    public MessageBuilder appendContent(Object content) {
         this.content.append(String.valueOf(content));
         return this;
     }
@@ -77,9 +80,9 @@ public final class StringMessageBuilder {
      *
      * @param format The string format.
      * @param args The varargs to be formatted.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendContentFormat(String format, Object... args) {
+    public MessageBuilder appendContentFormat(String format, Object... args) {
         this.content.append(String.format(format, args));
         return this;
     }
@@ -87,9 +90,9 @@ public final class StringMessageBuilder {
     /**
      * Append a line to the content.
      *
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendLine() {
+    public MessageBuilder appendLine() {
         this.content.append("\n");
         return this;
     }
@@ -97,9 +100,9 @@ public final class StringMessageBuilder {
     /**
      * Escape the markdowns for this message.
      *
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder escapeMarkdowns() {
+    public MessageBuilder escapeMarkdowns() {
         this.content.insert(0, "\\");
         return this;
     }
@@ -108,9 +111,9 @@ public final class StringMessageBuilder {
      * Append italic words to the content.
      *
      * @param italics The string to be italics.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendItalics(String italics) {
+    public MessageBuilder appendItalics(String italics) {
         this.content.append("*").append(italics).append("*");
         return this;
     }
@@ -119,9 +122,9 @@ public final class StringMessageBuilder {
      * Append bold words to the content.
      *
      * @param bold The string to be bold.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendBold(String bold) {
+    public MessageBuilder appendBold(String bold) {
         this.content.append("**").append(bold).append("**");
         return this;
     }
@@ -130,9 +133,9 @@ public final class StringMessageBuilder {
      * Append strikeouts to the content.
      *
      * @param strikeout The string to be strikeouts
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendStrikeout(String strikeout) {
+    public MessageBuilder appendStrikeout(String strikeout) {
         this.content.append("~~").append(strikeout).append("~~");
         return this;
     }
@@ -141,9 +144,9 @@ public final class StringMessageBuilder {
      * Append underline words to the content.
      *
      * @param underline The string to be underlined.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendUnderline(String underline) {
+    public MessageBuilder appendUnderline(String underline) {
         this.content.append("__").append(underline).append("__");
         return this;
     }
@@ -152,9 +155,9 @@ public final class StringMessageBuilder {
      * Append one line code block to the content.
      *
      * @param code The string to be included in he code block.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendCode(String code) {
+    public MessageBuilder appendCode(String code) {
         this.content.append("`").append(code).append("`");
         return this;
     }
@@ -162,9 +165,9 @@ public final class StringMessageBuilder {
     /**
      * Append a default code block without language specified.
      * @param code The code inside this code block.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendCodeBlock(String code) {
+    public MessageBuilder appendCodeBlock(String code) {
         appendCodeBlock("", code);
         return this;
     }
@@ -173,9 +176,9 @@ public final class StringMessageBuilder {
      * Append a code block with language specified.
      * @param language The name of the language.
      * @param code The code inside this code block.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendCodeBlock(String language, String code) {
+    public MessageBuilder appendCodeBlock(String language, String code) {
         this.content.append("```").append(language)
                 .append("\n\n").append(code)
                 .append("```\n");
@@ -186,9 +189,9 @@ public final class StringMessageBuilder {
      * Append a mention to the content.
      *
      * @param mention An object that implements IMention.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendMention(IMention mention) {
+    public MessageBuilder appendMention(IMention mention) {
         this.content.append(mention.mention());
         return this;
     }
@@ -197,9 +200,9 @@ public final class StringMessageBuilder {
      * Append a guild mention to the content.
      *
      * @param guildEmoji An GuildEmoji to be appended.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendGuildEmoji(GuildEmoji guildEmoji) {
+    public MessageBuilder appendGuildEmoji(GuildEmoji guildEmoji) {
         this.content.append(guildEmoji.mention());
         return this;
     }
@@ -208,9 +211,9 @@ public final class StringMessageBuilder {
      * Append an Emoji to the content by its alias.
      *
      * @param alias An alias of an Emoji object.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendEmoji(String alias) {
+    public MessageBuilder appendEmoji(String alias) {
         this.content.append(emojis.getByAlias(alias) != null ? emojis.getByAlias(alias).getUnicode() : "");
         return this;
     }
@@ -219,9 +222,9 @@ public final class StringMessageBuilder {
      * Append an Emoji to the content.
      *
      * @param emoji An native Emoji object.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder appendEmoji(EmojiTable.Emoji emoji) {
+    public MessageBuilder appendEmoji(EmojiTable.Emoji emoji) {
         this.content.append(emoji.getUnicode());
         return this;
     }
@@ -230,10 +233,21 @@ public final class StringMessageBuilder {
      * Set the TTS of this message.
      *
      * @param TTS True if this message is a tts message.
-     * @return StringMessageBuilder for chaining.
+     * @return MessageBuilder for chaining.
      */
-    public StringMessageBuilder setTTS(boolean TTS) {
+    public MessageBuilder setTTS(boolean TTS) {
         isTTS = TTS;
+        return this;
+    }
+
+    /**
+     * Set the embed part of this message.
+     *
+     * @param embed The embed message built by {@link EmbedMessageBuilder}.
+     * @return MessageBuilder for chaining.
+     */
+    public MessageBuilder setEmbed(EmbedMessage embed) {
+        this.embed = embed;
         return this;
     }
 

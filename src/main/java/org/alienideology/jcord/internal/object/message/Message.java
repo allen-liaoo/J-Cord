@@ -37,6 +37,7 @@ public class Message extends DiscordObject implements IMessage {
     protected String content;
     private final OffsetDateTime createdTime;
 
+    // TODO: Add "protected List<EmbedMessage> embeds;"
     protected List<User> mentions;
     protected List<Role> mentionedRoles;
     private List<Attachment> attachments;
@@ -47,6 +48,7 @@ public class Message extends DiscordObject implements IMessage {
     private boolean mentionedEveryone;
     private boolean isPinned;
 
+    // TODO: Change Embed Message's hierarchy. Merge StringMessage with Message, make EmbedMessage a separate object.
     public Message (IdentityImpl identity, String id, User author, String content, String createdTime,
                     List<User> mentions, List<Role> mentionedRoles, List<Attachment> attachments, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
         super(identity);

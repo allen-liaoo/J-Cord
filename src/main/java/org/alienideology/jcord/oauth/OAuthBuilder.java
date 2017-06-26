@@ -2,7 +2,6 @@ package org.alienideology.jcord.oauth;
 
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.util.DataUtils;
-import sun.jvm.hotspot.opto.HaltNode;
 
 /**
  * OAuthBuilder - A builder for building instance of OAuth and OAuth authorization URL.
