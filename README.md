@@ -137,20 +137,20 @@ new EventManager().registerCommandFrameworks(
   3. [Discord List Bots](https://bots.discordlist.net/)
     ```java
     PostAgent agent = PostAgent.DISCORD_LIST
-            .setIdentity(identity)
-            .addPostField("token", YOUR_TOKEN_HERE) // The token for Discord List API
-            .post(); // Post the status
+        .setIdentity(identity)
+        .addPostField("token", YOUR_TOKEN_HERE) // The token for Discord List API
+        .post(); // Post the status
     ```
   4. Custom website
     ```java
     PostAgent agent = new PostAgent(identity)
-            .setAPIName("Discord Bla Bla Bla Bots Bla Bla Bla List") // Isn't the name typically like that?
-            .setPostUrl("same_api_endpoint") // An API EndPoint URL
-            .setJsonShardIDKey("shard_id") // The json field for shard ID (0 based)
-            .setJsonShardKey("shad_count") // The json field for shard count
-            .setJsonServerKey("server_count") // The server count
-            .addPostField("some_json_key", "some_value") // Add whatever is required
-            .post(); // Or you can use .post(Consumer<MultipartBody>) to add custom fields or headers, too
+        .setAPIName("Discord Bla Bla Bla Bots Bla Bla Bla List") // Isn't the name typically like that?
+        .setPostUrl("same_api_endpoint") // An API EndPoint URL
+        .setJsonShardIDKey("shard_id") // The json field for shard ID (0 based)
+        .setJsonShardKey("shad_count") // The json field for shard count
+        .setJsonServerKey("server_count") // The server count
+        .addPostField("some_json_key", "some_value") // Add whatever is required
+        .post(); // Or you can use .post(Consumer<MultipartBody>) to add custom fields or headers, too
     ```
  - Post Automatically <br />
     After setting up the post agent, you can add it to the `Bot`:
@@ -183,9 +183,9 @@ OAuth application = builder
 ### Emoji
 - Using `EmojiTable`
 ```java
-EmojiTable table = JCord.EMOJI_TABLE;
 // Do not create a new instance of a emoji table
 // Since it takes up so much resources
+EmojiTable table = JCord.EMOJI_TABLE;
 ```
 - Get an Emoji by an attribute:
 ```java
@@ -199,14 +199,14 @@ emoji = table.getByAlias(":joy:");
 
 emoji = table.getByUnicode("\uD83D\uDE02");
 
-// All the code above gets the emoji 😂
+// All the methods above returns the emoji 😂
 ```
 - Get Emojis:
 ```java
 List<EmojiTable.Emoji> emojis;
 
-emojis = table.getByCategory(EmojiTable.Category.PEOPLE); // Returns a list of emojis that falls into the people category
 emojis = table.getEmojis(); // Returns all emojis in Discord
+emojis = table.getByCategory(EmojiTable.Category.PEOPLE); // Returns a list of emojis that falls into the people category
 ```
 
 ## Examples
@@ -216,7 +216,7 @@ emojis = table.getEmojis(); // Returns all emojis in Discord
 ## Contributing
 Please fork this project, and read [Contribution Documentation](/docs/Contribution.md).
 
-## External Dependencies
+## Dependencies
 - [NV Websocket Client](https://github.com/TakahikoKawasaki/nv-websocket-client) `v2.2`
 - [Unirest for Java](https://github.com/Mashape/unirest-java) `v1.4.9`
 - [JSON-java](https://github.com/stleary/JSON-java) `v20160212`
