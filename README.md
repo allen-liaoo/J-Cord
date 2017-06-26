@@ -120,28 +120,28 @@ new EventManager().registerCommandFrameworks(
 ```
 #### PostAgent
  - Setting Up the Agent
-  1. [DiscordBots](https://bots.discord.pw/)
+   1. [DiscordBots](https://bots.discord.pw/)
     ```java
     PostAgent agent = PostAgent.DISCORD_BOTS
         .setIdentity(identity) // Set the Identity object, which is used to post shard and guild count
         .setAPIToken(YOUR_TOKEN_HERE) // The token for Discord Bots API
         .post(); // Post the status
     ```
-  2. [Discord Bot List](https://discordbots.org/)
+   2. [Discord Bot List](https://discordbots.org/)
     ```java
     PostAgent agent = PostAgent.DISCORD_BOT_LIST
         .setIdentity(identity)
         .setAPIToken(YOUR_TOKEN_HERE) // The token for Discord Bot List API
         .post(); // Post the status
     ```
-  3. [Discord List Bots](https://bots.discordlist.net/)
+   3. [Discord List Bots](https://bots.discordlist.net/)
     ```java
     PostAgent agent = PostAgent.DISCORD_LIST
         .setIdentity(identity)
         .addPostField("token", YOUR_TOKEN_HERE) // The token for Discord List API
         .post(); // Post the status
     ```
-  4. Custom website
+   4. Custom website
     ```java
     PostAgent agent = new PostAgent(identity)
         .setAPIName("Discord Bla Bla Bla Bots Bla Bla Bla List") // Isn't the name typically like that?
