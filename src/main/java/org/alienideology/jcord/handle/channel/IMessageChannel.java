@@ -2,14 +2,13 @@ package org.alienideology.jcord.handle.channel;
 
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.EmojiTable;
-import org.alienideology.jcord.handle.builders.EmbedMessageBuilder;
+import org.alienideology.jcord.handle.builders.EmbedBuilder;
 import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
-import org.alienideology.jcord.handle.message.IEmbedMessage;
+import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.message.IMessage;
-import org.alienideology.jcord.handle.message.IStringMessage;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.PermissionException;
 
@@ -88,7 +87,7 @@ public interface IMessageChannel extends IChannel {
     /**
      * Send a message built by MessageBuilder
      *
-     * @param message The StringMessage built by {@link MessageBuilder}.
+     * @param message The IMessage built by {@link MessageBuilder}.
      * @exception IllegalArgumentException
      *          If the message is more than 2000 characters.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
@@ -97,12 +96,12 @@ public interface IMessageChannel extends IChannel {
      *          If the user lack Send Messages permission
      * @return The message sent.
      */
-    IMessage sendMessage(IStringMessage message);
+    IMessage sendMessage(IMessage message);
 
     /**
      * Send an embed message.
      *
-     * @param embed The EmbedMessage built by {@link EmbedMessageBuilder}.
+     * @param embed The Embed built by {@link EmbedBuilder}.
      * @exception IllegalArgumentException
      *          If the message is more than 2000 characters.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
@@ -111,7 +110,7 @@ public interface IMessageChannel extends IChannel {
      *          If the user lack Send Messages permission
      * @return The message sent.
      */
-    IMessage sendMessage(IEmbedMessage embed);
+    IMessage sendMessage(IEmbed embed);
 
     /**
      * Send an attachment with the string message.
@@ -187,7 +186,7 @@ public interface IMessageChannel extends IChannel {
      *              <li>If the file is not readable.</li>
      *          </ul>
      */
-    IMessage sendAttachment(File file, IStringMessage message) throws IOException;
+    IMessage sendAttachment(File file, IMessage message) throws IOException;
 
     /**
      * Edit a string message by ID
@@ -212,19 +211,19 @@ public interface IMessageChannel extends IChannel {
      * Edit a message by ID
      *
      * @param messageId The message ID
-     * @param message The IStringMessage built by {@link MessageBuilder}.
+     * @param message The IMessage built by {@link MessageBuilder}.
      * @return The message edited
      */
-    IMessage editMessage(String messageId, IStringMessage message);
+    IMessage editMessage(String messageId, IMessage message);
 
     /**
      * Edit an embed message by ID
      *
      * @param messageId The message ID
-     * @param message The IEmbedMessage built by {@link EmbedMessageBuilder}.
+     * @param message The IEmbed built by {@link EmbedBuilder}.
      * @return The message edited
      */
-    IMessage editMessage(String messageId, IEmbedMessage message);
+    IMessage editMessage(String messageId, IEmbed message);
 
     /**
      * Delete a message by ID.

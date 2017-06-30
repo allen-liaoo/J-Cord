@@ -134,7 +134,7 @@ new EventManager().registerCommandFrameworks(
         .setAPIToken(YOUR_TOKEN_HERE) // The token for Discord Bot List API
         .post(); // Post the status
     ```
-   3. [Discord List Bots](https://bots.discordlist.net/)
+   3. [Discord List](https://bots.discordlist.net/)
     ```java
     PostAgent agent = PostAgent.DISCORD_LIST
         .setIdentity(identity)
@@ -227,6 +227,6 @@ Please fork this project, and read [Contribution Documentation](/docs/Contributi
 - Javadocs: [AlienIdeology.Github.io/J-Cord/](https://alienideology.github.io/J-Cord/)
 - Todo List: [Todo.md](/docs/Todo.md)
 - Project structure:
- - [Object Hierarchy.md](/docs/Object_Hierarchy.md)
- - [Event Hierarchy.md](/docs/Event_Hierarchy.md)
+  - [Object Hierarchy.md](/docs/Object_Hierarchy.md)
+  - [Event Hierarchy.md](/docs/Event_Hierarchy.md)
 - Don't forget to check out the [wiki section](https://github.com/AlienIdeology/J-Cord/wiki)!

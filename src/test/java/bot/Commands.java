@@ -3,8 +3,8 @@ package bot;
 import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.bot.command.Command;
 import org.alienideology.jcord.bot.command.CommandResponder;
-import org.alienideology.jcord.handle.builders.EmbedMessageBuilder;
-import org.alienideology.jcord.handle.message.IEmbedMessage;
+import org.alienideology.jcord.handle.builders.EmbedBuilder;
+import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.permission.Permission;
 
 import java.time.Instant;
@@ -37,8 +37,8 @@ public class Commands implements CommandResponder {
 
     // A simple implementation of help command
     @Command(name = "Help", description = "A list of commands", aliases = {"help", "commands", "list"})
-    public IEmbedMessage onHelp() {
-        EmbedMessageBuilder message = new EmbedMessageBuilder()
+    public IEmbed onHelp() {
+        EmbedBuilder message = new EmbedBuilder()
                 .setTitle("Commands", null)
                 .setTimeStamp(Instant.now())
                 .setDescription("This bot is made in J-Cord :)\n")

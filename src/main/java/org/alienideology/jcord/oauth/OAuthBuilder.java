@@ -73,8 +73,9 @@ public class OAuthBuilder {
         StringBuilder baseUrl = new StringBuilder(HttpPath.OAuth.AUTHORIZATION).append("?client_id=").append(clientId);
 
         if (scopes != null) {
+            baseUrl.append("&scope=");
             for (Scope scope : scopes) {
-               baseUrl.append("&scope=").append(scope.key).append(" ");
+               baseUrl.append(scope.key).append(" ");
             }
         }
 

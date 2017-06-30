@@ -4,7 +4,7 @@ import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
-import org.alienideology.jcord.handle.builders.EmbedMessageBuilder;
+import org.alienideology.jcord.handle.builders.EmbedBuilder;
 import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
@@ -15,7 +15,6 @@ import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.object.message.Message;
-import org.alienideology.jcord.internal.object.message.StringMessage;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -25,6 +24,11 @@ import java.util.List;
  * @author AlienIdeology
  */
 public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessage> {
+
+    /**
+     * The max content length of a message.
+     */
+    int MAX_CONTENT_LENGTH = 2000;
 
     /**
      * Reply to this message, starting with mentioning the message's author
@@ -51,23 +55,23 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
 
     /**
      * Reply to this message
-     * @see IMessageChannel#sendMessage(IStringMessage)
+     * @see IMessageChannel#sendMessage(IMessage)
      *
-     * @param message The StringMessage built by {@link MessageBuilder}
+     * @param message The IMessage built by {@link MessageBuilder}
      * @return The message sent.
      */
-    default IMessage reply(IStringMessage message) {
+    default IMessage reply(IMessage message) {
         return getChannel().sendMessage(message);
     }
 
     /**
      * Reply to this message
-     * @see IMessageChannel#sendMessage(IEmbedMessage)
+     * @see IMessageChannel#sendMessage(IEmbed)
      *
-     * @param message The EmbedMessage built by {@link EmbedMessageBuilder}
+     * @param message The Embed built by {@link EmbedBuilder}
      * @return The message sent.
      */
-    default IMessage reply(IEmbedMessage message) {
+    default IMessage reply(IEmbed message) {
         return getChannel().sendMessage(message);
     }
 
@@ -97,20 +101,20 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
     /**
      * Edit this message
      *
-     * @param message The IStringMessage built by {@link MessageBuilder}.
+     * @param message The IMessage built by {@link MessageBuilder}.
      * @return The message edited
      */
-    default IMessage edit(IStringMessage message) {
+    default IMessage edit(IMessage message) {
         return getChannel().editMessage(getId(), message);
     }
 
     /**
      * Edit an embed message by ID
      *
-     * @param message The IEmbedMessage built by {@link EmbedMessageBuilder}.
+     * @param message The IEmbed built by {@link EmbedBuilder}.
      * @return The message edited
      */
-    default IMessage edit(IEmbedMessage message) {
+    default IMessage edit(IEmbed message) {
         return getChannel().editMessage(getId(), message);
     }
 
@@ -255,9 +259,23 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
     /**
      * Get the string content of this message.
      *
-     * @return The string content, or null for embed messages.
+     * @return The string content.
      */
     String getContent();
+
+    /**
+     * Process the original content of this message.
+     *
+     * @param noMention Should process mention or not. <br />
+     *                      Original: <@ID> <br />
+     *                      Processed: @NickName/Username#Discriminator
+     *
+     * @param noMarkdown Should include markdown or not. <br />
+     *                      Original: **```java\n\nhi```** <br />
+     *                      Processed: hi
+     * @return The message processed.
+     */
+    String getProcessedContent(boolean noMention, boolean noMarkdown);
 
     /**
      * Get the guild this message belongs to.
@@ -315,6 +333,13 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
     IMember getMember();
 
     /**
+     * Get the {@link org.alienideology.jcord.internal.object.message.Embed}s attached to this message.
+     *
+     * @return A list of embeds.
+     */
+    List<IEmbed> getEmbeds();
+
+    /**
      * Get the mentioned users of this message.
      *
      * @return A list of mentioned users.
@@ -362,9 +387,7 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
     /**
      * @return True if this message is an embed message.
      */
-    default boolean isEmbed() {
-    return !(this instanceof StringMessage);
-    }
+    boolean isEmbed();
 
     /**
      * @return True if this message was sent as a TTS (Text to Speech) message.

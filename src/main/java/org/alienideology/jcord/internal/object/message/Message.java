@@ -2,17 +2,22 @@ package org.alienideology.jcord.internal.object.message;
 
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
+import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.user.User;
+import org.json.JSONObject;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -23,32 +28,27 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-public class Message extends DiscordObject implements IMessage {
-
-    /* Constant */
-    public final static int MAX_CONTENT_LENGTH = 2000;
+public class Message extends DiscordObject implements IMessage, Buildable {
 
     /* Instance Field */
-    protected MessageChannel channel;
+    private MessageChannel channel;
 
-    protected final String id;
-    protected final User author;
+    private final String id;
+    private final User author;
 
-    protected String content;
+    private String content;
     private final OffsetDateTime createdTime;
 
-    // TODO: Add "protected List<EmbedMessage> embeds;"
-    protected List<User> mentions;
-    protected List<Role> mentionedRoles;
+    private List<IEmbed> embeds;
+    private List<User> mentions;
+    private List<Role> mentionedRoles;
     private List<Attachment> attachments;
     private List<IReaction> reactions;
 
-    protected boolean isTTS;
-
+    private boolean isTTS;
     private boolean mentionedEveryone;
     private boolean isPinned;
 
-    // TODO: Change Embed Message's hierarchy. Merge StringMessage with Message, make EmbedMessage a separate object.
     public Message (IdentityImpl identity, String id, User author, String content, String createdTime,
                     List<User> mentions, List<Role> mentionedRoles, List<Attachment> attachments, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
         super(identity);
@@ -56,6 +56,7 @@ public class Message extends DiscordObject implements IMessage {
         this.author = author;
         this.content = content;
         this.createdTime = createdTime == null ? null : OffsetDateTime.parse(createdTime);
+        this.embeds = new ArrayList<>();
         this.mentions = mentions;
         this.mentionedRoles = mentionedRoles;
         this.attachments = attachments;
@@ -66,8 +67,119 @@ public class Message extends DiscordObject implements IMessage {
     }
 
     @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject()
+                .put("content", content);
+        if (isTTS) json.put("tts", true);
+        if (!this.embeds.isEmpty()) {
+            // Only get the first embed's json
+            // Because the identity can not send multiple embeds as http request
+            json.put("embed", ((Embed) embeds.get(0)).toJson());
+        }
+        return json;
+    }
+
+    @Override
     public String getContent() {
         return content;
+    }
+
+    public String getProcessedContent(boolean noMention, boolean noMarkdown) {
+        String process = content;
+        if (noMention) {
+
+            /* Message from TextChannel */
+            if (!channel.isPrivate()) {
+                /* Member Mentions */
+                for (IMember member : getMentionedMembers()) {
+                    process = process.replaceAll(member.mention(), "@" +
+                            (member.getNickname().isEmpty()?member.getUser().getName():member.getNickname())
+                            +"#"+member.getUser().getDiscriminator());
+                }
+
+                /* TextChannel Mentions */
+                for (ITextChannel tc : getGuild().getTextChannels()) {
+                    process = process.replaceAll(tc.mention(), "#"+tc.getName());
+                }
+
+                /* Role Mentions */
+                for (Role role : mentionedRoles) {
+                    process = process.replaceAll(role.mention(), "@"+role.getName());
+                }
+
+                for (IGuildEmoji emoji : getGuild().getGuildEmojis()) {
+                    process = process.replaceAll(emoji.mention(), ":"+emoji.getName()+":");
+                }
+
+            /* Message from PrivateChannel */
+            } else {
+                /* User Mentions */
+                for (User user : mentions) {
+                    process = process.replaceAll(user.mention(), "@"+user.getName()+"#"+user.getDiscriminator());
+                }
+            }
+
+            // TODO: EmojiTable Mentions
+
+        }
+
+        if (noMarkdown) {
+            process = stripSimpleMarkdown(process);
+//            final String codeBlock = "```";
+//
+//            String temp = "";
+//            int lastClose = 0;
+//
+//            /* Code Blocks */
+//            while (process.contains(codeBlock)) {
+//                int open = process.indexOf(codeBlock);
+//                int close = process.lastIndexOf(codeBlock);
+//
+//                /* Simple Markdowns */
+//                temp += stripSimpleMarkdown(process.substring(lastClose, open));
+//
+//                System.out.println(open+"\t"+close);
+//                System.out.println(process.indexOf("\n"));
+//
+//                // Code block is matched
+//                if (open != close) {
+//                    String newString = process.substring(0, open) +
+//                            process.substring((process.indexOf("\n") >= close-1 || !process.contains("\n")) ? open+3 : process.indexOf("\n"), close);
+//                    if (process.length() > close+3)
+//                        newString += process.substring(close);
+//                    temp += newString;
+//                } else {
+//                    break;
+//                }
+//                temp += stripSimpleMarkdown(process.substring(close));
+//                lastClose = close;
+        }
+//            process = temp;
+
+//        }
+        return process;
+    }
+
+    private String stripSimpleMarkdown (String md) {
+        final String[] MARKDOWNS = new String[] {"***", "**", "*", "~~", "__"};
+        for (String markdown : MARKDOWNS) {
+            System.out.println(markdown);
+            while (md.contains(markdown)) {
+                int open = md.indexOf(markdown);
+                int close = md.lastIndexOf(markdown);
+                // Markdown is matched
+                if (open != close) {
+                    String newString = md.substring(0, open) + md.substring(open+markdown.length(), close);
+                    if (md.length() > close+markdown.length())
+                        newString += md.substring(close);
+                    System.out.println(newString);
+                    md = newString;
+                } else {
+                    break;
+                }
+            }
+        }
+        return md;
     }
 
     @Override
@@ -98,6 +210,11 @@ public class Message extends DiscordObject implements IMessage {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public List<IEmbed> getEmbeds() {
+        return embeds;
     }
 
     @Override
@@ -142,7 +259,7 @@ public class Message extends DiscordObject implements IMessage {
 
     @Override
     public boolean isEmbed() {
-        return !(this instanceof StringMessage);
+        return embeds == null || embeds.isEmpty();
     }
 
     @Override
@@ -188,12 +305,19 @@ public class Message extends DiscordObject implements IMessage {
                 "channel=" + channel +
                 ", id='" + id + '\'' +
                 ", author=" + author +
+                ", content='" + content + '\'' +
                 '}';
     }
 
     public Message setChannel(MessageChannel channel) {
         this.channel = channel;
         return this;
+    }
+
+    public Message addEmbed(IEmbed embeds) {
+        this.embeds.add(embeds);
+        return this;
+
     }
 
     public void setReactions(List<IReaction> reactions) {

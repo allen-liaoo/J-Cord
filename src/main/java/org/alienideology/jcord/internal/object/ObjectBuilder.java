@@ -23,10 +23,9 @@ import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 import org.alienideology.jcord.internal.object.guild.Member;
 import org.alienideology.jcord.internal.object.guild.Role;
-import org.alienideology.jcord.internal.object.message.EmbedMessage;
+import org.alienideology.jcord.internal.object.message.Embed;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.Reaction;
-import org.alienideology.jcord.internal.object.message.StringMessage;
 import org.alienideology.jcord.internal.object.user.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,6 +37,7 @@ import java.util.List;
 
 /**
  * A builder for building DiscordObjects
+ *
  * @author AlienIdeology
  */
 public final class ObjectBuilder {
@@ -338,7 +338,6 @@ public final class ObjectBuilder {
      */
     public Message buildMessage (JSONObject json) {
         handleBuildError(json);
-        Message message;
 
         String id = json.getString("id");
         String channel_id = json.getString("channel_id");
@@ -379,19 +378,20 @@ public final class ObjectBuilder {
             attachments.add(new Message.Attachment(attachmentId, filename, size, url));
         }
 
+        /* Booleans */
         boolean isTTS = json.getBoolean("tts");
         boolean mentionedEveryone = json.getBoolean("mention_everyone");
         boolean isPinned = json.has("pinned") && json.getBoolean("pinned");
 
-        /* StringMessage */
-        if (!content.isEmpty() || json.getJSONArray("embeds").length() == 0) {
-            message =  new StringMessage(identity, id, author, content, timeStamp, mentions, mentionsRole, attachments, isTTS, mentionedEveryone, isPinned);
+        Message message =  new Message(identity, id, author, content, timeStamp, mentions, mentionsRole, attachments, isTTS, mentionedEveryone, isPinned);
 
-        /* EmbedMessage */
-        } else {
-            // TODO: Allow multiple embeds in a message.
+        /* Channel */
+        message.setChannel((MessageChannel) identity.getMessageChannel(channel_id));  // Set channel may be null for MessageChannel's LastMessage
 
-            JSONObject embed = json.getJSONArray("embeds").getJSONObject(0);
+        /* Embeds */
+        JSONArray embeds = json.getJSONArray("embeds");
+        for (int i = 0; i < embeds.length(); i++) {
+            JSONObject embed = embeds.getJSONObject(i);
 
             String title = embed.has("title") ? embed.getString("title") : null;
             String description = embed.has("description") ? embed.getString("description") : null;
@@ -399,7 +399,7 @@ public final class ObjectBuilder {
             String time_stamp = embed.has("timestamp") ? embed.getString("timestamp") : null;
             int color = embed.has("color") ? embed.getInt("color") : 0;
 
-            EmbedMessage embedMessage =  new EmbedMessage(identity, id, author, content, timeStamp, mentions, mentionsRole, attachments, isTTS, mentionedEveryone, isPinned)
+            Embed embedMessage = new Embed()
                     .setTitle(title)
                     .setDescription(description)
                     .setUrl(embed_url)
@@ -413,19 +413,19 @@ public final class ObjectBuilder {
                 String url = emAuthor.has("embed_url") ? emAuthor.getString("embed_url") : null;
                 String icon_url = emAuthor.has("icon_url") ? emAuthor.getString("icon_url") : null;
                 String proxy_url = emAuthor.has("proxy_icon_url") ? emAuthor.getString("proxy_icon_url") : null;
-                embedMessage.setAuthor(new EmbedMessage.Author(name, url, icon_url, proxy_url));
+                embedMessage.setAuthor(new Embed.Author(name, url, icon_url, proxy_url));
             }
 
             if (embed.has("fields")) {
                 JSONArray fields = embed.getJSONArray("fields");
 
-                for (int i = 0; i < fields.length(); i++) {
-                    JSONObject field = fields.getJSONObject(i);
+                for (int j = 0; j < fields.length(); j++) {
+                    JSONObject field = fields.getJSONObject(j);
 
                     String name = field.getString("name");
                     String value = field.getString("value");
                     boolean inline = field.getBoolean("inline");
-                    embedMessage.addFields(new EmbedMessage.Field(name, value, inline));
+                    embedMessage.addFields(new Embed.Field(name, value, inline));
                 }
             }
 
@@ -436,22 +436,22 @@ public final class ObjectBuilder {
                 int height = thumbnail.getInt("height");
                 int width = thumbnail.getInt("width");
 
-                embedMessage.setThumbnail(new EmbedMessage.Thumbnail(url, proxy_url, height, width));
+                embedMessage.setThumbnail(new Embed.Thumbnail(url, proxy_url, height, width));
             }
 
             if (embed.has("video")) {
                 JSONObject video = embed.getJSONObject("video");
-                String url = video.getString("url");
+                String url = video.isNull("url") ? null : video.getString("url");
                 int height = video.getInt("height");
                 int width = video.getInt("width");
-                embedMessage.setVideo(new EmbedMessage.Video(url, height, width));
+                embedMessage.setVideo(new Embed.Video(url, height, width));
             }
 
             if (embed.has("provider")) {
-                JSONObject video = embed.getJSONObject("provider");
-                String name = video.getString("name");
-                String url = video.getString("url");
-                embedMessage.setProvider(new EmbedMessage.Provider(name, url));
+                JSONObject provider = embed.getJSONObject("provider");
+                String name = provider.getString("name");
+                String url = provider.isNull("url") ? null : provider.getString("url");
+                embedMessage.setProvider(new Embed.Provider(name, url));
             }
 
             if (embed.has("image")) {
@@ -460,7 +460,7 @@ public final class ObjectBuilder {
                 String proxy_url = image.getString("proxy_url");
                 int height = image.getInt("height");
                 int width = image.getInt("width");
-                embedMessage.setImage(new EmbedMessage.Image(url, proxy_url , height, width));
+                embedMessage.setImage(new Embed.Image(url, proxy_url, height, width));
             }
 
             if (embed.has("footer")) {
@@ -469,11 +469,11 @@ public final class ObjectBuilder {
                 String name = footer.has("name") ? footer.getString("name") : null;
                 String icon_url = footer.has("icon_url") ? footer.getString("icon_url") : null;
                 String proxy_url = footer.has("proxy_icon_url") ? footer.getString("proxy_icon_url") : null;
-                embedMessage.setFooter(new EmbedMessage.Footer(name, icon_url, proxy_url));
+                embedMessage.setFooter(new Embed.Footer(name, icon_url, proxy_url));
             }
-            message = embedMessage;
+
+            message.addEmbed(embedMessage);
         }
-        message.setChannel((MessageChannel) identity.getMessageChannel(channel_id));  // Set channel may be null for MessageChannel's LastMessage
 
         /* Reactions */
         // Build this at last because GuildEmoji requires Message#getGuild, which can only be called after setting channel

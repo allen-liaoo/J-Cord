@@ -21,7 +21,7 @@ public interface CommandResponder {
             }
         }
 
-        Returning String, MessageBuilder, or EmbedMessageBuilder will automatically be sent back to the
+        Returning String, MessageBuilder, or EmbedBuilder will automatically be sent back to the
         MessageChannel (MessageCreateEvent#getChannel)
      */
 
@@ -31,8 +31,8 @@ public interface CommandResponder {
             private final String help_msg = "WELP!!!";
 
             @Command (aliases = {"help", "commands", "list commands"}, guildOnly = true} // aliases support whitespaces in between.
-            public EmbedMessageBuilder onHelpCommand(Guild guild, Member member) {
-                EmbedMessageBuilder embed = new EmbedMessageBuilder()
+            public EmbedBuilder onHelpCommand(Guild guild, Member member) {
+                EmbedBuilder embed = new EmbedBuilder()
                     .setTitle(member.getName(), null)
                     .setDescription(help_msg);
                 return embed;

@@ -9,9 +9,8 @@ import org.alienideology.jcord.handle.channel.MessageHistory;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
-import org.alienideology.jcord.handle.message.IEmbedMessage;
+import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.message.IMessage;
-import org.alienideology.jcord.handle.message.IStringMessage;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -25,9 +24,8 @@ import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.guild.Guild;
-import org.alienideology.jcord.internal.object.message.EmbedMessage;
+import org.alienideology.jcord.internal.object.message.Embed;
 import org.alienideology.jcord.internal.object.message.Message;
-import org.alienideology.jcord.internal.object.message.StringMessage;
 import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.util.DataUtils;
 import org.json.JSONArray;
@@ -97,7 +95,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     @Override
     public IMessage sendMessage(String message) {
-        send(((StringMessage) new MessageBuilder().setContent(message).build()).toJson());
+        send(((Message) new MessageBuilder().setContent(message).build()).toJson());
         return latestMessage;
     }
 
@@ -108,13 +106,13 @@ public class MessageChannel extends Channel implements IMessageChannel {
     }
 
     @Override
-    public IMessage sendMessage(IStringMessage message) {
-        return send(((StringMessage)message).toJson());
+    public IMessage sendMessage(IMessage message) {
+        return send(((Message)message).toJson());
     }
 
     @Override
-    public IMessage sendMessage(IEmbedMessage embed) {
-        return send(((EmbedMessage) embed).toJson());
+    public IMessage sendMessage(IEmbed embed) {
+        return send(((Message) new MessageBuilder().setEmbed(embed).build()).toJson());
     }
 
     private Message send(JSONObject json) {
@@ -136,7 +134,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     @Override
     public IMessage sendAttachment(File file, String message) throws IOException {
-        return attach(file, ((StringMessage) new MessageBuilder().setContent(message).build()).toJson());
+        return attach(file, ((Message) new MessageBuilder().setContent(message).build()).toJson());
     }
 
     @Override
@@ -145,8 +143,8 @@ public class MessageChannel extends Channel implements IMessageChannel {
     }
 
     @Override
-    public IMessage sendAttachment(File file, IStringMessage message) throws IOException {
-        return attach(file, ((StringMessage) message).toJson());
+    public IMessage sendAttachment(File file, IMessage message) throws IOException {
+        return attach(file, ((Message) message).toJson());
     }
 
     private IMessage attach(File file, JSONObject message) throws IOException {
@@ -183,22 +181,22 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     @Override
     public IMessage editMessage(String messageId, String message) {
-        return edit(((StringMessage) new MessageBuilder().setContent(message).build()).toJson(), messageId);
+        return edit(((Message) new MessageBuilder().setContent(message).build()).toJson(), messageId);
     }
 
     @Override
     public IMessage editMessageFormat(String messageId, String format, Object... args) {
-        return edit(((StringMessage)new MessageBuilder().appendContentFormat(format, args).build()).toJson(), messageId);
+        return edit(((Message)new MessageBuilder().appendContentFormat(format, args).build()).toJson(), messageId);
     }
 
     @Override
-    public IMessage editMessage(String messageId, IStringMessage message) {
-        return edit(((StringMessage) message).toJson(), messageId);
+    public IMessage editMessage(String messageId, IMessage message) {
+        return edit(((Message) message).toJson(), messageId);
     }
 
     @Override
-    public IMessage editMessage(String messageId, IEmbedMessage message) {
-        return edit(((EmbedMessage) message).toJson(), messageId);
+    public IMessage editMessage(String messageId, IEmbed message) {
+        return edit(((Message) new MessageBuilder().setEmbed(message).build()).toJson(), messageId);
     }
 
     private Message edit(JSONObject json, String id) {
@@ -224,7 +222,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
     }
 
     private void checkContentLength(String content) {
-        if (content.length() > Message.MAX_CONTENT_LENGTH) {  // Message content can by up to 2000 characters
+        if (content.length() > IMessage.MAX_CONTENT_LENGTH) {  // Message content can by up to 2000 characters
             IllegalArgumentException exception = new IllegalArgumentException("String messages can only contains up to 2000 characters.");
             exception.printStackTrace();
             throw new IllegalArgumentException();

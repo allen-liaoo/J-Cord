@@ -2,12 +2,11 @@ package org.alienideology.jcord.handle.builders;
 
 import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.IMention;
+import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.message.IMessage;
-import org.alienideology.jcord.handle.message.IStringMessage;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
-import org.alienideology.jcord.internal.object.message.EmbedMessage;
+import org.alienideology.jcord.internal.object.message.Embed;
 import org.alienideology.jcord.internal.object.message.Message;
-import org.alienideology.jcord.internal.object.message.StringMessage;
 
 /**
  * MessageBuilder - A builder for building messages.
@@ -19,7 +18,7 @@ public final class MessageBuilder {
     private final EmojiTable emojis = new EmojiTable();
 
     private StringBuilder content;
-    private EmbedMessage embed;
+    private IEmbed embed;
     private boolean isTTS = false;
 
     /**
@@ -41,16 +40,19 @@ public final class MessageBuilder {
     /**
      * Build a string message.
      *
-     * @see org.alienideology.jcord.handle.channel.IMessageChannel#sendMessage(IStringMessage)
-     * @see org.alienideology.jcord.handle.channel.IMessageChannel#editMessage(String, IStringMessage)
-     * @see IMessage#edit(IStringMessage)
-     * @see IMessage#reply(IStringMessage)
+     * @see org.alienideology.jcord.handle.channel.IMessageChannel#sendMessage(IMessage)
+     * @see org.alienideology.jcord.handle.channel.IMessageChannel#editMessage(String, IMessage)
+     * @see IMessage#edit(IMessage)
+     * @see IMessage#reply(IMessage)
      *
      * @return The string message.
      */
-    public IStringMessage build() {
-        return new StringMessage(null, null, null, content.toString(), null,
+    public IMessage build() {
+        Message message = new Message(null, null, null, content.toString(), null,
                 null, null, null, isTTS, false, false);
+        if (embed != null)
+                message.addEmbed(embed);
+        return message;
     }
 
     /**
@@ -243,10 +245,10 @@ public final class MessageBuilder {
     /**
      * Set the embed part of this message.
      *
-     * @param embed The embed message built by {@link EmbedMessageBuilder}.
+     * @param embed The embed message built by {@link EmbedBuilder}.
      * @return MessageBuilder for chaining.
      */
-    public MessageBuilder setEmbed(EmbedMessage embed) {
+    public MessageBuilder setEmbed(IEmbed embed) {
         this.embed = embed;
         return this;
     }
@@ -262,7 +264,7 @@ public final class MessageBuilder {
      * @return true if the content of this message is longer than the max limit.
      */
     public boolean isTooLong() {
-        return content.length() > Message.MAX_CONTENT_LENGTH;
+        return content.length() > IMessage.MAX_CONTENT_LENGTH;
     }
 
     /**

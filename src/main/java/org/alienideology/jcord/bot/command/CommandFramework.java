@@ -7,9 +7,8 @@ import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
-import org.alienideology.jcord.handle.message.IEmbedMessage;
+import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.message.IMessage;
-import org.alienideology.jcord.handle.message.IStringMessage;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.Channel;
@@ -205,10 +204,10 @@ public class CommandFramework {
                     /* Reply with return values */
                     if (invoked instanceof String) {
                         event.getChannel().sendMessage((String) invoked);
-                    } else if (invoked instanceof IStringMessage) {
-                        event.getChannel().sendMessage((IStringMessage) invoked);
-                    } else if (invoked instanceof IEmbedMessage) {
-                        event.getChannel().sendMessage((IEmbedMessage) invoked);
+                    } else if (invoked instanceof IMessage) {
+                        event.getChannel().sendMessage((IMessage) invoked);
+                    } else if (invoked instanceof IEmbed) {
+                        event.getChannel().sendMessage((IEmbed) invoked);
                     }
                 } catch (IllegalAccessException | InvocationTargetException e1) {
                     e1.printStackTrace();

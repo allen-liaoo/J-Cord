@@ -45,9 +45,8 @@ IChannel - A communication pipeline.
  - IGuildChannel (Interface) - A Channel that exist in a guild.
 
 ### Message
-IMessage - A text bubble some user just said.
- - IStringMessage - Normal messages that only contains string.
- - IEmbedMessage - Embed messages that can by sent by bot.
+IMessage - A text with embeds or attachments that can be sent by anyone.
+ - IEmbed - Embeds that can by sent by bot.
  - IReaction - A emoji that users reacted under a message.
 
 ### User
@@ -73,7 +72,7 @@ Permission (Enumeration) - A way to limit and grant certain abilities to members
 ### Builders
  - ChannelBuilder - A GuildChannel builder for creating text and voice channels.
  - RoleBuilder - A builder for creating a role in a guild.
- - MessageBuilder - Build a message, can be StringMessage or EmbedMessage.
+ - MessageBuilder - Build a message.
  - EmbedMessageBuilder - Build a JSONObject of an embed, used to build
    embed messages and send in channels.
 

@@ -1,10 +1,7 @@
 package org.alienideology.jcord.internal.object.message;
 
-import org.alienideology.jcord.handle.message.IEmbedMessage;
+import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.internal.object.Buildable;
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.guild.Role;
-import org.alienideology.jcord.internal.object.user.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -18,7 +15,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public final class EmbedMessage extends Message implements IEmbedMessage, Buildable {
+public final class Embed implements IEmbed, Buildable {
 
     private String title;
     private String description = "";
@@ -35,9 +32,7 @@ public final class EmbedMessage extends Message implements IEmbedMessage, Builda
     private Image image = null;
     private Footer footer = null;
 
-    public EmbedMessage(IdentityImpl identity, String id, User author, String content, String timeStamp,
-                        List<User> mentions, List<Role> mentionedRoles, List<Attachment> attachments, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
-        super(identity, id, author, content, timeStamp, mentions, mentionedRoles, attachments, isTTs, mentionedEveryone, isPinned);
+    public Embed() {
     }
 
     @Override
@@ -59,7 +54,7 @@ public final class EmbedMessage extends Message implements IEmbedMessage, Builda
         }
         if (!fields.isEmpty()) {
             JSONArray array = new JSONArray();
-            for (IEmbedMessage.Field field : fields) {
+            for (IEmbed.Field field : fields) {
                 array.put(new JSONObject()
                         .put("name", field.getName())   // NonNull
                         .put("value", field.getValue())   // NonNull
@@ -81,12 +76,7 @@ public final class EmbedMessage extends Message implements IEmbedMessage, Builda
             if (footer.getIconUrl() != null) footerJson.put("icon_url", footer.getIconUrl());
             json.put("footer", footerJson);
         }
-
-        JSONObject msg = new JSONObject()
-            .put("content", content)
-            .put("embed", json);
-
-        return msg;
+        return json;
     }
 
     @Override
@@ -149,62 +139,62 @@ public final class EmbedMessage extends Message implements IEmbedMessage, Builda
         return footer;
     }
 
-    public EmbedMessage setTitle(String title) {
+    public Embed setTitle(String title) {
         this.title = title;
         return this;
     }
 
-    public EmbedMessage setDescription(String description) {
+    public Embed setDescription(String description) {
         this.description = description;
         return this;
     }
 
-    public EmbedMessage setUrl(String url) {
+    public Embed setUrl(String url) {
         this.url = url;
         return this;
     }
 
-    public EmbedMessage setTimeStamp(OffsetDateTime timeStamp) {
+    public Embed setTimeStamp(OffsetDateTime timeStamp) {
         TimeStamp = timeStamp;
         return this;
     }
 
-    public EmbedMessage setColor(Color color) {
+    public Embed setColor(Color color) {
         this.color = color;
         return this;
     }
 
-    public EmbedMessage setAuthor(Author author) {
+    public Embed setAuthor(Author author) {
         this.author = author;
         return this;
     }
 
-    public EmbedMessage addFields(Field... fields) {
+    public Embed addFields(Field... fields) {
         this.fields.addAll(Arrays.asList(fields));
         return this;
     }
 
-    public EmbedMessage setThumbnail(Thumbnail thumbnail) {
+    public Embed setThumbnail(Thumbnail thumbnail) {
         this.thumbnail = thumbnail;
         return this;
     }
 
-    public EmbedMessage setVideo(Video video) {
+    public Embed setVideo(Video video) {
         this.video = video;
         return this;
     }
 
-    public EmbedMessage setProvider(Provider provider) {
+    public Embed setProvider(Provider provider) {
         this.provider = provider;
         return this;
     }
 
-    public EmbedMessage setImage(Image image) {
+    public Embed setImage(Image image) {
         this.image = image;
         return this;
     }
 
-    public EmbedMessage setFooter(Footer footer) {
+    public Embed setFooter(Footer footer) {
         this.footer = footer;
         return this;
     }

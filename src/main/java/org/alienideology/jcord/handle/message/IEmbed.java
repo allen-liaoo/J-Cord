@@ -1,16 +1,17 @@
 package org.alienideology.jcord.handle.message;
 
-import org.alienideology.jcord.internal.object.message.EmbedMessage;
+import org.alienideology.jcord.internal.object.message.Embed;
 
 import java.awt.*;
 import java.time.OffsetDateTime;
 
 /**
- * EmbedMessage - A message that can only be sent by a bot or webhook.
+ * Embed - A message that can only be sent by a bot or webhook.
  * The message have a special block embed surround it.
+ *
  * @author AlienIdeology
  */
-public interface IEmbedMessage extends IMessage {
+public interface IEmbed {
 
     /**
      * Get the title of the embed.
@@ -52,47 +53,47 @@ public interface IEmbedMessage extends IMessage {
      *
      * @return The author field.
      */
-    EmbedMessage.Author getAuthorField();
+    Embed.Author getAuthorField();
 
     /**
      * @return A list of fields of this embed.
      */
-    java.util.List<EmbedMessage.Field> getFields();
+    java.util.List<Embed.Field> getFields();
 
     /**
      * Get the thumbnail of this embed.
      *
      * @return The thumbnail.
      */
-    EmbedMessage.Thumbnail getThumbnail();
+    Embed.Thumbnail getThumbnail();
 
     /**
      * Get the video field of this embed.
      *
      * @return The video.
      */
-    EmbedMessage.Video getVideo();
+    Embed.Video getVideo();
 
     /**
      * Get the provider field of this embed.
      *
      * @return The provider.
      */
-    EmbedMessage.Provider getProvider();
+    Embed.Provider getProvider();
 
     /**
      * Get the image of this embed.
      *
      * @return The image.
      */
-    EmbedMessage.Image getImage();
+    Embed.Image getImage();
 
     /**
      * Get the footer of this embed.
      *
      * @return The footer.
      */
-    EmbedMessage.Footer getFooter();
+    Embed.Footer getFooter();
 
     class Author {
         private String name;
