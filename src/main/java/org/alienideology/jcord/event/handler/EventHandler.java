@@ -28,11 +28,12 @@ public abstract class EventHandler {
     }
 
     /**
-     * Fire events in every DispatcherAdaptor
+     * Dispatch events in every DispatcherAdaptor
+     *
      * @param event The event to get fired
      */
-    public void fireEvent (Event event) {
-        identity.getEventManager().onEvent(event);
+    public void dispatchEvent(Event event) {
+        identity.getEventManager().dispatchEvent(event);
     }
 
     /**

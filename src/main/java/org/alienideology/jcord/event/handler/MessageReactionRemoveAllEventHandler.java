@@ -28,7 +28,7 @@ public class MessageReactionRemoveAllEventHandler extends EventHandler {
         Message message = (Message) channel.getMessage(json.getString("message_id"));
         MessageReactionRemoveAllEvent event = new MessageReactionRemoveAllEvent(identity, sequence, channel, message, new ArrayList<>(message.getReactions()));
         message.getReactions().clear();
-        fireEvent(event);
+        dispatchEvent(event);
     }
 
 }

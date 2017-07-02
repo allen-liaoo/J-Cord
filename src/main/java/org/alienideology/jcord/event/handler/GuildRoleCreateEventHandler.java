@@ -21,7 +21,7 @@ public class GuildRoleCreateEventHandler extends EventHandler {
         Role role = builder.buildRole(json.getJSONObject("role"), guild);
         guild.addRole(role);
 
-        fireEvent(new GuildRoleCreateEvent(identity, guild, sequence, role));
+        dispatchEvent(new GuildRoleCreateEvent(identity, guild, sequence, role));
     }
 
 }

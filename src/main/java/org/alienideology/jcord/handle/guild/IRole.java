@@ -98,7 +98,7 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, PermCheckab
     /**
      * Check if this role can modify attributes of another member.
      * A role can only manage members that have a lower role.
-     * Note that this method does not checks the role's permissions.
+     * Note that this event does not checks the role's permissions.
      *
      * @param member The member to check with.
      * @return True if the other member is modifiable.
@@ -110,7 +110,7 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, PermCheckab
     /**
      * Check if this role can modify attributes of another role.
      * A role can only manages roles that are lower than this role.
-     * Note that this method checks the role's permissions. ({@code Manage Roles} permission)
+     * Note that this event checks the role's permissions. ({@code Manage Roles} permission)
      * @see IMember#getHighestRole()
      *
      * @param role The role to check with.
@@ -122,7 +122,7 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, PermCheckab
 
     /**
      * Check if this role can modify attributes of a guild emoji.
-     * Note that this method checks the role's permissions. ({@code Manage Emojis} permission)
+     * Note that this event checks the role's permissions. ({@code Manage Emojis} permission)
      *
      * @param emoji The emoji to check with.
      * @return True if the emoji is modifiable.

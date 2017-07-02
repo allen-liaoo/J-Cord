@@ -260,7 +260,7 @@ public final class EmbedBuilder {
 
     /**
      * Set the TimeStamp of this embed to Instant#now.
-     * This method uses UTC as the time zone.
+     * This event uses UTC as the time zone.
      * See EmbedBuilder#setTimeStampNow for more information.
      * @return EmbedBuilder for chaining.
      */

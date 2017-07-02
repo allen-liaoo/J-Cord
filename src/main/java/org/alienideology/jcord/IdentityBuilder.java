@@ -64,7 +64,7 @@ public final class IdentityBuilder {
 
     /**
      * Define the identity type to be build.
-     * This method must be used before building the identity.
+     * This event must be used before building the identity.
      * @param type Bot or Human
      * @return IdentityBuilder for chaining.
      */
@@ -75,7 +75,7 @@ public final class IdentityBuilder {
 
     /**
      * Define the token of this identity.
-     * This method must be used before building the identity.
+     * This event must be used before building the identity.
      * @param token The token from Discord Bot application page or user token.
      * @return IdentityBuilder for chaining.
      */

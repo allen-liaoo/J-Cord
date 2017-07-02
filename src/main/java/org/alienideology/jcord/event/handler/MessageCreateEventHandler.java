@@ -23,9 +23,9 @@ public class MessageCreateEventHandler extends EventHandler {
             MessageChannel channel = (MessageChannel) message.getChannel();
             channel.setLatestMessage(message);
             if (channel.isPrivate()) {
-                fireEvent(new PrivateMessageCreateEvent(identity, sequence, channel, message));
+                dispatchEvent(new PrivateMessageCreateEvent(identity, sequence, channel, message));
             } else {
-                fireEvent(new GuildMessageCreateEvent(identity, sequence, channel, message));
+                dispatchEvent(new GuildMessageCreateEvent(identity, sequence, channel, message));
             }
         } catch (Exception e) {
             e.printStackTrace();

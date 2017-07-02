@@ -25,11 +25,11 @@ public class GuildDeleteEventHandler extends EventHandler {
         if (unavailable) {
             Guild unavail = (Guild) identity.getGuild(id);
             unavail.setUnavailable(true);
-            fireEvent(new GuildUnavailableEvent(identity, unavail, sequence));
+            dispatchEvent(new GuildUnavailableEvent(identity, unavail, sequence));
         } else {
             Guild deleted = (Guild) identity.getGuild(id);
             identity.removeGuild(id);
-            fireEvent(new GuildDeleteEvent(identity, deleted, sequence, OffsetDateTime.now()));
+            dispatchEvent(new GuildDeleteEvent(identity, deleted, sequence, OffsetDateTime.now()));
         }
     }
 }

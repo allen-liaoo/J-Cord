@@ -20,6 +20,6 @@ public class GuildMemberRemoveEventHandler extends EventHandler {
         Guild guild = (Guild) identity.getGuild(json.getString("guild_id"));
         Member member = guild.removeMember(json.getJSONObject("user").getString("id"));
 
-        fireEvent(new GuildMemberLeaveEvent(identity, guild, sequence, member));
+        dispatchEvent(new GuildMemberLeaveEvent(identity, guild, sequence, member));
     }
 }

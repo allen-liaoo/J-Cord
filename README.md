@@ -60,7 +60,7 @@ Identity bot = new IdentityBuilder()
     .build(true);
 ```
 #### Event
-EventManager (Ways to subscribe to events): <br />
+- Ways to subscribe to events: <br />
 1. Use `DispatcherAdaptor` <br />
 Objects registered as adaptors must extends DispatcherAdaptor. <br />
 DispatcherAdaptor example:
@@ -97,6 +97,29 @@ new EventManager().registerEventSubscriber(
     new ExampleSubscriber()
 )
 ```
+- Wait for an Event
+    - Asynchronously (Perform the consumer action when a specified event is dispatched before the timeout)
+    ```java
+    // Get the Event Manager
+    eventManager.<MessageCreateEvent>onNext(
+        event -> event.getUser().isSelf(), // Only get message create events that are from the identity
+        event -> System.out.println("I just said: " + event.getMessage().getContent(), // Perform actions
+        3000, // Timeouts in millisecond
+        () -> System.out.println("Still no response after 30 seconds!") // Actions to perform if timeout exceeds
+    );
+    ```
+    - Synchronously (Blocking the thread until event dispatched or timeout exceeds)
+    ```java
+    // Get the Event Manager
+    MessageCreateEvent event = eventManager.waitForNext(
+        event -> event.getUser().isSelf(), // Only get message create events that are from the identity
+        3000, // Timeouts in millisecond
+        () -> System.out.println("Still no response after 30 seconds!") // Actions to perform if timeout exceeds
+    );
+
+    System.out.println("I just said: " + event.getMessage().getContent()
+
+    ```
 #### Command System
  1. Create classes that implements CommandResponder (Empty interface)
  2. Annotate methods as @Command

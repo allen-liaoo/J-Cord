@@ -107,7 +107,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
 
     /**
      * Get the name of this member.
-     * If this member has a nickname, this method will return the nickname. If not, this will returns the username.
+     * If this member has a nickname, this event will return the nickname. If not, this will returns the username.
      *
      * @return A not-null string of this member's name.
      */
@@ -170,7 +170,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
     /**
      * Check if this member can modify attributes of another member.
      * A member can only manage members that have a lower role.
-     * Note that this method does not checks the member's permissions.
+     * Note that this event does not checks the member's permissions.
      *
      * @param member The member to check with.
      * @return True if the other member is modifiable.
@@ -182,7 +182,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
     /**
      * Check if this member can modify attributes of another role.
      * A member can only manages roles that are lower than the member's highest role.
-     * Note that this method checks the member's permissions. ({@code Manage Roles} permission)
+     * Note that this event checks the member's permissions. ({@code Manage Roles} permission)
      * @see #getHighestRole()
      *
      * @param role The role to check with.
@@ -194,7 +194,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
 
     /**
      * Check if this member can modify attributes of a guild emoji.
-     * Note that this method checks the member's permissions. ({@code Manage Emojis} permission)
+     * Note that this event checks the member's permissions. ({@code Manage Emojis} permission)
      *
      * @param emoji The emoji to check with.
      * @return True if the emoji is modifiable.

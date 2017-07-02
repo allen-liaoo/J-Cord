@@ -6,6 +6,7 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.ExceptionEvent;
+import org.alienideology.jcord.event.guild.GuildEvent;
 import org.alienideology.jcord.event.handler.*;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.object.IdentityImpl;
@@ -215,7 +216,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
      * @param exception The exception being caught
      */
     private void handleError(Exception exception) {
-        identity.getEventManager().onEvent(new ExceptionEvent(identity, exception));
+        identity.getEventManager().dispatchEvent(new ExceptionEvent(identity, exception));
     }
 
     private void sendHeartBeat() {
@@ -308,13 +309,14 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         eventHandler.put("MESSAGE_CREATE", new MessageCreateEventHandler(identity));
         eventHandler.put("MESSAGE_UPDATE", new MessageUpdateEventHandler(identity));
         eventHandler.put("MESSAGE_DELETE", new MessageDeleteEventHandler(identity));
+        eventHandler.put("MESSAGE_DELETE_BULK", new MessageDeleteBulkEventHandler(identity));
         eventHandler.put("CHANNEL_PINS_UPDATE", new ChannelPinsUpdateEventHandler(identity));
         eventHandler.put("MESSAGE_REACTION_ADD", new MessageReactionEventHandler(identity, true));
         eventHandler.put("MESSAGE_REACTION_REMOVE", new MessageReactionEventHandler(identity, false));
         eventHandler.put("MESSAGE_REACTION_REMOVE_ALL", new MessageReactionRemoveAllEventHandler(identity));
 
         // TODO: Finish priority events
-        // Priority: USER_UPDATE, MESSAGE_DELETE_BULK, PRESENCE_UPDATE,
+        // Priority: USER_UPDATE, PRESENCE_UPDATE
         // Future: GUILD_SYNC, GUILD_MEMBERS_CHUNK, WEBHOOKS_UPDATE, VOICE_SERVER_UPDATE, VOICE_STATE_UPDATE
         // Unknown: MESSAGE_ACK
 

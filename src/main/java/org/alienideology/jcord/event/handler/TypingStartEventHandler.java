@@ -21,7 +21,7 @@ public class TypingStartEventHandler extends EventHandler {
         User user = (User) identity.getUser(json.getString("user_id"));
         int timeStamp = json.getInt("timestamp");
 
-        fireEvent(new TypingStartEvent(identity, sequence, channel, user, timeStamp));
+        dispatchEvent(new TypingStartEvent(identity, sequence, channel, user, timeStamp));
     }
 
 }

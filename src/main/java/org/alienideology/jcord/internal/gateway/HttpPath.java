@@ -233,7 +233,7 @@ public final class HttpPath {
     @Override
     public String toString() {
         return "HttpPath{" +
-                "method=" + method +
+                "event=" + method +
                 ", path='" + path + '\'' +
                 '}';
     }

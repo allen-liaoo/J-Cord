@@ -44,27 +44,27 @@ public class GuildRoleUpdateEventHandler extends EventHandler {
             if (!Objects.equals(role.getName(), name)) {
                 String oldname = role.getName();
                 role.setName(name);
-                fireEvent(new GuildRoleNameUpdateEvent(identity, guild, sequence, role, oldname));
+                dispatchEvent(new GuildRoleNameUpdateEvent(identity, guild, sequence, role, oldname));
             }
 
             if (!Objects.equals(role.getPosition(), position)) {
                 int oldpos = role.getPosition();
                 role.setPosition(position);
-                fireEvent(new GuildRolePositionUpdateEvent(identity, guild, sequence, role, oldpos));
+                dispatchEvent(new GuildRolePositionUpdateEvent(identity, guild, sequence, role, oldpos));
             }
 
             if (!Objects.equals(role.getColor(), color)) {
                 Color color1 = role.getColor();
                 role.setColor(color);
-                fireEvent(new GuildRoleColorUpdateEvent(identity, guild, sequence, role, color1));
+                dispatchEvent(new GuildRoleColorUpdateEvent(identity, guild, sequence, role, color1));
             }
 
             if (role.isSeparateListed() != isSeparateListed) {
-                fireEvent(new GuildRoleSeparateListedUpdateEvent(identity, guild, sequence, role, !isSeparateListed));
+                dispatchEvent(new GuildRoleSeparateListedUpdateEvent(identity, guild, sequence, role, !isSeparateListed));
             }
 
             if (role.canMention() != canMention) {
-                fireEvent(new GuildRoleMentionUpdateEvent(identity, guild, sequence, role, !canMention));
+                dispatchEvent(new GuildRoleMentionUpdateEvent(identity, guild, sequence, role, !canMention));
             }
 
             List<Permission> perms = Permission.getPermissionsByLong(permissions);
@@ -91,7 +91,7 @@ public class GuildRoleUpdateEventHandler extends EventHandler {
             role.setPermissionsLong(permissions);
 
             if (allowed.size() > 0 || denied.size() > 0) {
-                fireEvent(new GuildRolePermissionsUpdateEvent(identity, guild, sequence, role, allowed, denied));
+                dispatchEvent(new GuildRolePermissionsUpdateEvent(identity, guild, sequence, role, allowed, denied));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -36,7 +36,7 @@ public class GuildCreateEventHandler extends EventHandler {
 
         } else {
             Guild newGuild = builder.buildGuild(json);
-            fireEvent(new GuildCreateEvent(identity, newGuild, sequence));
+            dispatchEvent(new GuildCreateEvent(identity, newGuild, sequence));
         }
 
     }

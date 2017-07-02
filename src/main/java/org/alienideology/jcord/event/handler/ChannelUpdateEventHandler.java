@@ -50,19 +50,19 @@ public class ChannelUpdateEventHandler extends EventHandler {
             TextChannel nChannel = (TextChannel) newChannel;
 
             if (!Objects.equals(oChannel.getName(), nChannel.getName())) {
-                fireEvent(new TextChannelNameUpdateEvent(identity, sequence, nChannel, oChannel, null));
+                dispatchEvent(new TextChannelNameUpdateEvent(identity, sequence, nChannel, oChannel, null));
             }
 
             if (!Objects.equals(oChannel.getPosition(), nChannel.getPosition())) {
-                fireEvent(new TextChannelPositionUpdateEvent(identity, sequence, nChannel, oChannel));
+                dispatchEvent(new TextChannelPositionUpdateEvent(identity, sequence, nChannel, oChannel));
             }
 
             if (overwrites.size() > 0) {
-                fireEvent(new TextChannelPermissionsUpdateEvent(identity, sequence, nChannel, oChannel, overwrites));
+                dispatchEvent(new TextChannelPermissionsUpdateEvent(identity, sequence, nChannel, oChannel, overwrites));
             }
 
             if (!Objects.equals(oChannel.getTopic(), nChannel.getTopic())) {
-                fireEvent(new TextChannelTopicUpdateEvent(identity, sequence, nChannel, oChannel));
+                dispatchEvent(new TextChannelTopicUpdateEvent(identity, sequence, nChannel, oChannel));
             }
 
         } else {
@@ -74,23 +74,23 @@ public class ChannelUpdateEventHandler extends EventHandler {
             VoiceChannel nChannel = (VoiceChannel) newChannel;
 
             if (!Objects.equals(oChannel.getName(), nChannel.getName())) {
-                fireEvent(new VoiceChannelNameUpdateEvent(identity, sequence, nChannel, oChannel));
+                dispatchEvent(new VoiceChannelNameUpdateEvent(identity, sequence, nChannel, oChannel));
             }
 
             if (!Objects.equals(oChannel.getPosition(), nChannel.getPosition())) {
-                fireEvent(new VoiceChannelPositionUpdateEvent(identity, sequence, nChannel, oChannel));
+                dispatchEvent(new VoiceChannelPositionUpdateEvent(identity, sequence, nChannel, oChannel));
             }
 
             if (overwrites.size() > 0) {
-                fireEvent(new VoiceChannelPermissionsUpdateEvent(identity, sequence, nChannel, oChannel, overwrites));
+                dispatchEvent(new VoiceChannelPermissionsUpdateEvent(identity, sequence, nChannel, oChannel, overwrites));
             }
 
             if (!Objects.equals(oChannel.getBitrate(), nChannel.getBitrate())) {
-                fireEvent(new VoiceChannelBitrateUpdateEvent(identity, sequence, nChannel, oChannel));
+                dispatchEvent(new VoiceChannelBitrateUpdateEvent(identity, sequence, nChannel, oChannel));
             }
 
             if (!Objects.equals(oChannel.getUserLimit(), nChannel.getUserLimit())) {
-                fireEvent(new VoiceChannelUserLimitUpdateEvent(identity, sequence, nChannel, oChannel));
+                dispatchEvent(new VoiceChannelUserLimitUpdateEvent(identity, sequence, nChannel, oChannel));
             }
         }
 

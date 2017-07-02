@@ -223,7 +223,7 @@ public interface IGuildManager {
 
     /**
      * Get the value of members than can be pruned.
-     * The default days of this method is 7.
+     * The default days of this event is 7.
      * @see #pruneMembers(int) For more information on pruning members.
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Kick Members} {@code Administrator} permissions.
@@ -252,7 +252,7 @@ public interface IGuildManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Kick Members} {@code Administrator} permissions.
      *
-     * The default days of this method is 7.
+     * The default days of this event is 7.
      */
     void pruneMembers();
 

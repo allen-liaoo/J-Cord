@@ -28,15 +28,15 @@ public class ChannelDeleteEventHandler extends EventHandler {
 
         if (channel.isType(IChannel.Type.PRIVATE)) {
             identity.removePrivateChannel(channel.getId());
-            fireEvent(new PrivateChannelDeleteEvent(identity, sequence, channel, timeStamp));
+            dispatchEvent(new PrivateChannelDeleteEvent(identity, sequence, channel, timeStamp));
         } else {
             Guild guild = (Guild) ((IGuildChannel) channel).getGuild();
             if (channel.isType(IChannel.Type.TEXT)) {
                 guild.removeTextChannel(channel.getId());
-                fireEvent(new TextChannelDeleteEvent(identity, sequence, channel, timeStamp, guild));
+                dispatchEvent(new TextChannelDeleteEvent(identity, sequence, channel, timeStamp, guild));
             } else {
                 guild.removeVoiceChannel(channel.getId());
-                fireEvent(new VoiceChannelDeleteEvent(identity, sequence, channel, timeStamp, guild));
+                dispatchEvent(new VoiceChannelDeleteEvent(identity, sequence, channel, timeStamp, guild));
             }
         }
     }

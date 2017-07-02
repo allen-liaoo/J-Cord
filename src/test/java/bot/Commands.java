@@ -21,7 +21,7 @@ public class Commands implements CommandResponder {
     }
 
     // A simple hey command
-    // This method will not be called when the message starts with "hey there" instead of "hey"
+    // This event will not be called when the message starts with "hey there" instead of "hey"
     @Command(name = "Hey", description = "Hello!", aliases = {"hi", "hello", "hey"}, permissions = Permission.ADMINISTRATOR, guildOnly = true)
     public String onHey() {
         return "hi";
@@ -29,7 +29,7 @@ public class Commands implements CommandResponder {
 
     // Sub commands can be achieve simply by extending the aliases.
     // For bot, the "Hey there" is a sub command of "Hey".
-    // The method will be called when the message starts with "hey there".
+    // The event will be called when the message starts with "hey there".
     @Command(name = "Hey there", description = "Wassup!", aliases = "hey there")
     public String onHeyThere() {
         return "wassup";

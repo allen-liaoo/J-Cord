@@ -96,7 +96,7 @@ public interface ISelfManager {
     /**
      * Leave a guild.
      * Do not use {@link IGuildManager#kickMember(IMember)} to kick the self user,
-     * use this method instead.
+     * use this event instead.
      *
      * @param guild The guild to leave.
      */

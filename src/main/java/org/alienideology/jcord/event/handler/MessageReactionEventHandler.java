@@ -44,7 +44,7 @@ public class MessageReactionEventHandler extends EventHandler {
                             .put("emoji", emojiJson), message);
             message.addReaction(reaction);
 
-            fireEvent(new MessageReactionAddEvent(identity, sequence, channel, message, user, reaction));
+            dispatchEvent(new MessageReactionAddEvent(identity, sequence, channel, message, user, reaction));
         } else {
 
             Reaction reaction = null;
@@ -65,7 +65,7 @@ public class MessageReactionEventHandler extends EventHandler {
             }
             message.removeReaction(reaction);
 
-            fireEvent(new MessageReactionRemoveEvent(identity, sequence, channel, message, user, reaction));
+            dispatchEvent(new MessageReactionRemoveEvent(identity, sequence, channel, message, user, reaction));
         }
     }
 

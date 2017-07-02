@@ -40,7 +40,7 @@ public class GuildMemberUpdateEventHandler extends EventHandler {
             if (!Objects.equals(member.getNickname(), nickname)) {
                 String oldNick = member.getNickname();
                 member.setNickname(nickname);
-                fireEvent(new GuildMemberNicknameUpdateEvent(identity, guild, sequence, member, oldNick));
+                dispatchEvent(new GuildMemberNicknameUpdateEvent(identity, guild, sequence, member, oldNick));
             }
 
             JSONArray rolesJson = json.getJSONArray("roles");
@@ -67,7 +67,7 @@ public class GuildMemberUpdateEventHandler extends EventHandler {
             member.removeRoles(removedRoles);
 
             if (removedRoles.size() > 0) {
-                fireEvent(new GuildMemberRemoveRoleEvent(identity, guild, sequence, member, removedRoles));
+                dispatchEvent(new GuildMemberRemoveRoleEvent(identity, guild, sequence, member, removedRoles));
             }
 
             // Add Role
@@ -83,7 +83,7 @@ public class GuildMemberUpdateEventHandler extends EventHandler {
             }
 
             if (addedRoles.size() > 0) {
-                fireEvent(new GuildMemberAddRoleEvent(identity, guild, sequence, member, addedRoles));
+                dispatchEvent(new GuildMemberAddRoleEvent(identity, guild, sequence, member, addedRoles));
             }
         } catch (Exception e) {
             e.printStackTrace();

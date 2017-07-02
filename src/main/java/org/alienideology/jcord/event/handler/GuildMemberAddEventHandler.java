@@ -20,7 +20,7 @@ public class GuildMemberAddEventHandler extends EventHandler {
         Member member = builder.buildMemberById(json, json.getString("guild_id"));
         ((Guild) member.getGuild()).addMember(member);
 
-        fireEvent(new GuildMemberJoinEvent(identity, (Guild) member.getGuild(), sequence, member));
+        dispatchEvent(new GuildMemberJoinEvent(identity, (Guild) member.getGuild(), sequence, member));
     }
 
 }

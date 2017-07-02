@@ -57,7 +57,7 @@ public class GatewayEventHandler extends EventHandler {
                 identity.setSelf(builder.buildUser(json.getJSONObject("user")));
                 LOG.info("[READY] Self");
 
-                fireEvent(new ReadyEvent(identity, gateway, sequence, session_id));
+                dispatchEvent(new ReadyEvent(identity, gateway, sequence, session_id));
 
                 identity.CONNECTION = Identity.Connection.READY;
             } catch (Exception e) {
@@ -69,7 +69,7 @@ public class GatewayEventHandler extends EventHandler {
 
             identity.CONNECTION = Identity.Connection.RESUMING;
 
-            fireEvent(new ResumedEvent(identity, gateway, sequence));
+            dispatchEvent(new ResumedEvent(identity, gateway, sequence));
 
             identity.CONNECTION = Identity.Connection.READY;
 

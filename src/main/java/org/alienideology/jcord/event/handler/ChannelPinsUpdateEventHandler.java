@@ -20,7 +20,7 @@ public class ChannelPinsUpdateEventHandler extends EventHandler {
 
         MessageChannel channel = (MessageChannel) identity.getMessageChannel(json.getString("channel_id"));
         String timeStamp = json.isNull("last_pin_timestamp") ? null : json.getString("last_pin_timestamp");
-        fireEvent(new MessagePinUpdateEvent(identity, sequence, channel, null, timeStamp));
+        dispatchEvent(new MessagePinUpdateEvent(identity, sequence, channel, null, timeStamp));
     }
 
 }

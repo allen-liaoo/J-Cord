@@ -30,15 +30,15 @@ public class ChannelCreateEventHandler extends EventHandler {
             channel = builder.buildPrivateChannel(json);
             identity.addPrivateChannel((PrivateChannel) channel);
 
-            fireEvent(new PrivateChannelCreateEvent(identity, sequence, channel));
+            dispatchEvent(new PrivateChannelCreateEvent(identity, sequence, channel));
         } else {
             channel = (Channel) builder.buildGuildChannel(json);
             Guild guild = (Guild) ((IGuildChannel) channel).getGuild();
             guild.addGuildChannel((IGuildChannel) channel);
             if (channel.isType(IChannel.Type.TEXT)) {
-                fireEvent(new TextChannelCreateEvent(identity, sequence, channel, guild));
+                dispatchEvent(new TextChannelCreateEvent(identity, sequence, channel, guild));
             } else {
-                fireEvent(new VoiceChannelCreateEvent(identity, sequence, channel, guild));
+                dispatchEvent(new VoiceChannelCreateEvent(identity, sequence, channel, guild));
             }
         }
     }

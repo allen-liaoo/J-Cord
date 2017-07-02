@@ -19,7 +19,7 @@ public enum HttpCode {
     UNAUTHORIZED (401, "The Authorization header was missing or invalid"),
     FORBIDDEN (403, "The Authorization token you passed did not have permission to the resource"),
     NOT_FOUND (404, "The resource at the location specified doesn't exist"),
-    METHOD_NOT_ALLOWED (405, "The HTTP method used is not valid for the location specified"),
+    METHOD_NOT_ALLOWED (405, "The HTTP event used is not valid for the location specified"),
     TOO_MANY_REQUESTS (429, "Too many requests, rate limited"),
 
     /* Server Side */

@@ -639,7 +639,7 @@ public final class ObjectBuilder {
      */
     private void handleBuildError (JSONObject json) {
         if (json.has("code")) {
-            identity.getEventManager().onEvent(new ExceptionEvent(identity,
+            identity.getEventManager().dispatchEvent(new ExceptionEvent(identity,
                     new ErrorResponseException(ErrorResponse.getByKey(json.getInt("code")))));
         }
     }

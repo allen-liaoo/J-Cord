@@ -14,13 +14,22 @@ repositories {
 }
 
 dependencies {
+    // WebSocket and WebServer
     compile 'com.neovisionaries:nv-websocket-client:2.2'
     compile 'org.nanohttpd:nanohttpd:2.2.0'
+
+    // Http Methods
     compile 'com.mashape.unirest:unirest-java:1.4.9'
+
+    // Json
     compile 'org.json:json:20160212'
 
+    // Commons
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'commons-io:commons-io:2.5'
+
+    // Type Resolver
+    compile 'net.jodah:typetools:0.5.0'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

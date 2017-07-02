@@ -260,7 +260,7 @@ public interface IMessageChannel extends IChannel {
      * @exception PermissionException
      *          If the identity does not have {@code Manage Messages} permission.
      *
-     * @param throwEx If true, the the method will check and throw exceptions.
+     * @param throwEx If true, the the event will check and throw exceptions.
      *                If false, the exceptions below will be ignored.
      *
      * @throws org.alienideology.jcord.internal.exception.ErrorResponseException

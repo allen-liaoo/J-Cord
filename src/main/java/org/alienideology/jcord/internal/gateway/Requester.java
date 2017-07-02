@@ -65,7 +65,7 @@ public final class Requester {
      */
 
     /**
-     *  Chaining request method.
+     *  Chaining request event.
      */
     public Requester request(String... params) {
         requestHttp((Object[]) params);

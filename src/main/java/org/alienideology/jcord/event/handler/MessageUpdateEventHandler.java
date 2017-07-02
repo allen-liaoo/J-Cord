@@ -23,9 +23,9 @@ public class MessageUpdateEventHandler extends EventHandler {
 
         if (!edited.isFromSelf()) { // Not from self
             if (channel.isPrivate()) {
-                fireEvent(new PrivateMessageUpdateEvent(identity, sequence, channel, edited));
+                dispatchEvent(new PrivateMessageUpdateEvent(identity, sequence, channel, edited));
             } else {
-                fireEvent(new GuildMessageUpdateEvent(identity, sequence, channel, edited));
+                dispatchEvent(new GuildMessageUpdateEvent(identity, sequence, channel, edited));
             }
         }
     }

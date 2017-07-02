@@ -46,7 +46,7 @@ public class GuildEmojisUpdateEventHandler extends EventHandler {
             }
 
             if (isDeleted) {
-                fireEvent(new GuildEmojiDeleteEvent(identity, guild, sequence, (GuildEmoji) emoji, OffsetDateTime.now()));
+                dispatchEvent(new GuildEmojiDeleteEvent(identity, guild, sequence, (GuildEmoji) emoji, OffsetDateTime.now()));
                 guild.removeGuildEmoji(emoji.getId());
             }
         }
@@ -58,17 +58,17 @@ public class GuildEmojisUpdateEventHandler extends EventHandler {
             GuildEmoji newEmoji = builder.buildEmoji(emojiJson, guild); // Automatically add emoji to guild if appropriate
 
             if (emoji == null) { // New emoji, not cached yet
-                fireEvent(new GuildEmojiUploadEvent(identity, guild, sequence, newEmoji)); // Emoji get added to the guild automatically
+                dispatchEvent(new GuildEmojiUploadEvent(identity, guild, sequence, newEmoji)); // Emoji get added to the guild automatically
             } else {
                 guild.removeGuildEmoji(emoji.getId());
                 guild.addGuildEmoji(newEmoji); // Builder ignores the new emoji because the emoji list already contains the old one
 
                 if (!Objects.equals(emoji.getName(), newEmoji.getName())) {
-                    fireEvent(new GuildEmojiNameUpdateEvent(identity, guild, sequence, newEmoji, emoji));
+                    dispatchEvent(new GuildEmojiNameUpdateEvent(identity, guild, sequence, newEmoji, emoji));
                 }
 
                 if (!Objects.equals(emoji.getUsableRoles(), emoji.getUsableRoles())) {
-                    fireEvent(new GuildEmojiRolesUpdateEvent(identity, guild, sequence, newEmoji, emoji));
+                    dispatchEvent(new GuildEmojiRolesUpdateEvent(identity, guild, sequence, newEmoji, emoji));
                 }
             }
         }

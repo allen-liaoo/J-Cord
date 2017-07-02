@@ -27,9 +27,9 @@ public class MessageDeleteEventHandler extends EventHandler {
         if (channel != null) {
 
             if (channel.isPrivate()) {
-                fireEvent(new PrivateMessageDeleteEvent(identity, sequence, channel, msg_id, OffsetDateTime.from(Instant.now())));
+                dispatchEvent(new PrivateMessageDeleteEvent(identity, sequence, channel, msg_id, OffsetDateTime.from(Instant.now())));
             } else {
-                fireEvent(new GuildMessageDeleteEvent(identity, sequence, channel, msg_id, OffsetDateTime.from(Instant.now())));
+                dispatchEvent(new GuildMessageDeleteEvent(identity, sequence, channel, msg_id, OffsetDateTime.from(Instant.now())));
             }
 
         } else {

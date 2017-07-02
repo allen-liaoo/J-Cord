@@ -21,7 +21,7 @@ public class PresenceUpdateEventHandler extends EventHandler {
         Presence oldPresence = user.getPresence();
         builder.buildPresence(json, user); // Presence are automatically set to the user
 
-        fireEvent(new PresenceUpdateEvent(identity, sequence, user, oldPresence));
+        dispatchEvent(new PresenceUpdateEvent(identity, sequence, user, oldPresence));
     }
 
 }

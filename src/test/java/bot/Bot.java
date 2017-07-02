@@ -4,7 +4,10 @@ import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.bot.command.CommandFramework;
+import org.alienideology.jcord.event.Event;
 import org.alienideology.jcord.event.EventManager;
+import org.alienideology.jcord.event.message.MessageCreateEvent;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
@@ -111,6 +114,8 @@ public class Bot {
         for (IPrivateChannel dm : bot.getPrivateChannels()) {
             System.out.println("DM:\t" + dm.getRecipient().getName());
         }
+
+        MessageCreateEvent event = bot.getEventManager().waitForNext(e -> e.getUser().isSelf());
 
     }
 

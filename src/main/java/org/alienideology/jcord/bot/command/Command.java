@@ -33,7 +33,7 @@ public @interface Command {
 
     /**
      * An array of aliases for this command.
-     * Different method can have different aliases.
+     * Different event can have different aliases.
      *
      * @return An array of aliases that would trigger the command.
      */
@@ -47,13 +47,13 @@ public @interface Command {
     Permission[] permissions() default {};
 
     /**
-     * @return True if this method can only be triggered by IGuildMessageCreateEvent.
+     * @return True if this event can only be triggered by IGuildMessageCreateEvent.
      * Default is false: Can be trigger by all events.
      */
     boolean guildOnly() default false;
 
     /**
-     * @return True if this method can only be triggered by PrivateMessageCreateEvent.
+     * @return True if this event can only be triggered by PrivateMessageCreateEvent.
      * Default is false: Can be trigger by all events.
      */
     boolean privateOnly() default false;

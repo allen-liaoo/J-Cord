@@ -119,7 +119,7 @@ public interface IChannelManager {
 
     /**
      * Modify the topic of a {@link ITextChannel}.
-     * It is important to understand that this method will only work for text channels.
+     * It is important to understand that this event will only work for text channels.
      * Use empty or null topic parameter to reset the topic to none.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
@@ -136,7 +136,7 @@ public interface IChannelManager {
 
     /**
      * Modify the bitrate of a {@link IVoiceChannel}.
-     * Note that this method will only work for voice channels.
+     * Note that this event will only work for voice channels.
      *
      * If the guild is a normal guild, the bitrate cannot be higher than {@value #VOICE_CHANNEL_BITRATE_MAX}.
      * If the guild is a VIP guild, then the bitrate limit is {@value #VOICE_CHANNEL_BITRATE_VIP_MAX}.
@@ -159,7 +159,7 @@ public interface IChannelManager {
 
     /**
      * Modify the user limit of a {@link IVoiceChannel}.
-     * This method will only work for voice channels.
+     * This event will only work for voice channels.
      * Use 0 for no user limits. Note that negative limits will throw {@link IllegalArgumentException}.
      * @see IVoiceChannel#getUserLimit() For more information on user limit.
      *

@@ -334,7 +334,7 @@ public final class GuildManager implements IGuildManager {
     @Override
     public ITextChannel createTextChannel(ITextChannel channel) {
         // Fires Channel Create Gateway Event
-        // Automatically build the channel and add to identity in this method.
+        // Automatically build the channel and add to identity in this event.
         // So the event will not override the channel built here.
         return (ITextChannel) createChannel(((TextChannel) channel).toJson());
     }
