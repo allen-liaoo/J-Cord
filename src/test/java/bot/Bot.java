@@ -88,9 +88,11 @@ public class Bot {
                                     .registerCommandFrameworks(framework)
                     )
 
-                    // Set the Logger Mode for this identity
-                    // I use ALL because I need to debug the system
-                    .setLogMode(LogMode.ALL)
+                    // Set the Logger for this identity
+                    .setLogger(logger ->
+                            logger.setMode(LogMode.ALL) // We use LoggerMode.ALL for debugging the system
+                            .setShowDate(false) // The logger will not show the dates for the log
+                    )
 
                     // Build the identity blocking the thread
                     // To prevent the program from doing any farther actions until the identity is build.
@@ -119,6 +121,8 @@ public class Bot {
         for (IPrivateChannel dm : bot.getPrivateChannels()) {
             System.out.println("DM:\t" + dm.getRecipient().getName());
         }
+
+        System.out.println(bot.getGuild("311250670068170752").getCreatedTime());
 
     }
 

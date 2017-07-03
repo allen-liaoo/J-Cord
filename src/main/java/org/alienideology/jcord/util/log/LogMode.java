@@ -1,28 +1,31 @@
 package org.alienideology.jcord.util.log;
 
 /**
- * LogMode - The logger mode, used to filter logs.
+ * LogMode - The logger mode, used to filter logs for the {@link JCordLogger}.
+ *
+ * @see JCordLogger
+ * @see LogLevel
  *
  * @author AlienIdeology
  */
 public enum LogMode {
     /**
-     * Log all messages, down to {@link LogLevel#TRACE} level.
+     * Includes logs from all {@link LogLevel}.
      */
     ALL,
 
     /**
-     * Log important messages, down to {@link LogLevel#INFO} level.
+     * Includes important logs, from {@link LogLevel#FETAL} to {@link LogLevel#INFO}.
      */
     ON,
 
     /**
-     * Log only error messages, down to {@link LogLevel#WARN} level.
+     * Only includes error logs, from {@link LogLevel#FETAL} to {@link LogLevel#WARN}.
      */
     SOME,
 
     /**
-     * Log no messages
+     * Does not includes any log.
      */
     OFF
 }

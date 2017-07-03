@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class IdentityImpl implements org.alienideology.jcord.Identity {
 
-    public JCordLogger LOG = new JCordLogger(this);
+    public JCordLogger LOG;
 
     private IdentityType type;
     private String token;
@@ -60,10 +60,11 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     private List<IGuild> guilds = new ArrayList<>();
     private List<IPrivateChannel> privateChannels = new ArrayList<>();
 
-    public IdentityImpl(IdentityType type, WebSocketFactory wsFactory) {
+    public IdentityImpl(IdentityType type, WebSocketFactory wsFactory, JCordLogger logger) {
         this.type = type;
         this.wsFactory = wsFactory;
         this.selfManager = new SelfManager(this);
+        this.LOG = logger;
     }
 
     @Override

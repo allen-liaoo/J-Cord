@@ -30,7 +30,7 @@ public class DataUtils {
         try {
             return URLEncoder.encode(toEncode, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            JCord.LOGGER.log(LogLevel.FETAL, "UnsupportedEncodingException when encoding to url!");
+            JCord.LOG.log(LogLevel.FETAL, e);
         }
         return null;
     }

@@ -18,7 +18,7 @@ import java.util.function.Consumer;
  */
 public class PostAgent {
 
-    public static JCordLogger LOG = new JCordLogger("Post-Agent");
+    public static JCordLogger LOG = new JCordLogger("PostAgent");
 
     /**
      * Default API Post Agent for <a href="https://bots.discord.pw/">Discord Bots</a>.

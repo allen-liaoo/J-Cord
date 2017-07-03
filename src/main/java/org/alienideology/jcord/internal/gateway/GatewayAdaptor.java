@@ -27,7 +27,7 @@ import java.util.zip.Inflater;
 public final class GatewayAdaptor extends WebSocketAdapter {
 
     public static int GATEWAY_VERSION = 5;
-    public JCordLogger LOG = new JCordLogger(this);
+    public JCordLogger LOG;
 
     private IdentityImpl identity;
     private WebSocket webSocket;
@@ -51,7 +51,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     public GatewayAdaptor(IdentityImpl identity, WebSocket webSocket) {
         this.identity = identity;
         this.webSocket = webSocket;
-        LOG.setMode(identity.LOG.getMode());
+        LOG = identity.LOG.clone(this);
         setEventHandler();
     }
 

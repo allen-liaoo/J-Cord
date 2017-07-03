@@ -8,6 +8,8 @@ import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 import org.alienideology.jcord.internal.object.message.Embed;
 import org.alienideology.jcord.internal.object.message.Message;
 
+import java.util.Arrays;
+
 /**
  * MessageBuilder - A builder for building messages.
  *
@@ -100,67 +102,38 @@ public final class MessageBuilder {
     }
 
     /**
-     * Escape the markdowns for this message.
+     * Append a markdown to the content.
+     * There are specific methods for code blocks.
+     * @see #appendCodeBlock(String)
+     * @see #appendCodeBlock(String, String)
      *
+     * @param content The string to be italics.
+     * @param type The markdown type.
      * @return MessageBuilder for chaining.
      */
-    public MessageBuilder escapeMarkdowns() {
-        this.content.insert(0, "\\");
+    public MessageBuilder appendMarkdown(String content, MarkdownType type) {
+        this.content.append(type.markdown).append(content).append(type.markdown_backward);
         return this;
     }
 
     /**
-     * Append italic words to the content.
+     * Append multiple markdowns to the content.
+     * Markdowns can be layered, for example, {@code ~~**This is strikeout with bold**~~}.
+     * <p>Strikeout with bold</p> can be achieved by using:
+     * <pre>#appendMarkdowns("This is strikeout with bold", MarkdownType.STRIKEOUT, MarkdownType.BOLD)</pre>
      *
-     * @param italics The string to be italics.
+     * @param content The string to be italics.
+     * @param types The varargs of markdown types.
      * @return MessageBuilder for chaining.
      */
-    public MessageBuilder appendItalics(String italics) {
-        this.content.append("*").append(italics).append("*");
-        return this;
-    }
-
-    /**
-     * Append bold words to the content.
-     *
-     * @param bold The string to be bold.
-     * @return MessageBuilder for chaining.
-     */
-    public MessageBuilder appendBold(String bold) {
-        this.content.append("**").append(bold).append("**");
-        return this;
-    }
-
-    /**
-     * Append strikeouts to the content.
-     *
-     * @param strikeout The string to be strikeouts
-     * @return MessageBuilder for chaining.
-     */
-    public MessageBuilder appendStrikeout(String strikeout) {
-        this.content.append("~~").append(strikeout).append("~~");
-        return this;
-    }
-
-    /**
-     * Append underline words to the content.
-     *
-     * @param underline The string to be underlined.
-     * @return MessageBuilder for chaining.
-     */
-    public MessageBuilder appendUnderline(String underline) {
-        this.content.append("__").append(underline).append("__");
-        return this;
-    }
-
-    /**
-     * Append one line code block to the content.
-     *
-     * @param code The string to be included in he code block.
-     * @return MessageBuilder for chaining.
-     */
-    public MessageBuilder appendCode(String code) {
-        this.content.append("`").append(code).append("`");
+    public MessageBuilder appendMarkdowns(String content, MarkdownType... types) {
+        for (MarkdownType type : types) {
+            this.content.append(type.markdown);
+        }
+        this.content.append(content);
+        for (int i = types.length; i > 0; i--) {
+            this.content.append(types[i].markdown_backward);
+        }
         return this;
     }
 
@@ -184,6 +157,16 @@ public final class MessageBuilder {
         this.content.append("```").append(language)
                 .append("\n\n").append(code)
                 .append("```\n");
+        return this;
+    }
+
+    /**
+     * Escape the markdowns for this message.
+     *
+     * @return MessageBuilder for chaining.
+     */
+    public MessageBuilder escapeMarkdowns() {
+        this.content.insert(0, "\\");
         return this;
     }
 
@@ -228,6 +211,30 @@ public final class MessageBuilder {
      */
     public MessageBuilder appendEmoji(EmojiTable.Emoji emoji) {
         this.content.append(emoji.getUnicode());
+        return this;
+    }
+
+    /**
+     * Append a link to the content.
+     * If the link does not start with http or https,
+     * it will automatically be prefixed with {@code https://}.
+     * Discord automatically embed the link for the client's view. To disable that,
+     * passes {@code true} to the {@code shouldAutoEmbed} parameter.
+     * For more information about Auto Embed, see <a href="https://support.discordapp.com/hc/en-us/articles/206342858--How-do-I-disable-auto-embed-">this support article</a>.
+     *
+     * @param link The link to append, might not start with http or https.
+     * @param shouldAutoEmbed True to let discord embed the link, false otherwise.
+     * @return MessageBuilder for chaining.
+     */
+    public MessageBuilder appendLink(String link, boolean shouldAutoEmbed) {
+        if (link.startsWith("http") || link.startsWith("https")) {
+            link = "https://" + link;
+        }
+        if (shouldAutoEmbed) {
+            this.content.append(link);
+        } else {
+            this.content.append("<").append(link).append(">");
+        }
         return this;
     }
 
@@ -298,6 +305,28 @@ public final class MessageBuilder {
      */
     public boolean isTTS() {
         return isTTS;
+    }
+
+    public enum MarkdownType {
+        ITALICS ("*"),
+
+        BOLD ("**"),
+
+        STRIKEOUT ("~~"),
+
+        UNDERLINE ("__"),
+
+        CODE ("`"),
+
+        CODE_BLOCK ("```");
+
+        public String markdown;
+        public String markdown_backward;
+
+        MarkdownType(String markdown) {
+            this.markdown = markdown;
+            this.markdown_backward = new StringBuilder(markdown).reverse().toString();
+        }
     }
 
 }

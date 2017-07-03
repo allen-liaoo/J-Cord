@@ -101,6 +101,10 @@ OAuth - Used to build applications that utilize authentication and data from the
  - Seekable - Multi-threaded future.
  - DataUtils - Utilities for I/O and data.
  - MessageUtils - Message and String utilities.
+ - Log
+   - JCordLogger - Official Logger for JCord.
+   - LogMode - The logger mode, used to filter logs for the JCordLogger.
+   - LogLevel - The logger level, used to indicate the log types.
 
 ## Gateway (Internal)
 Gateway - The communication between J-Cord and Discord API.

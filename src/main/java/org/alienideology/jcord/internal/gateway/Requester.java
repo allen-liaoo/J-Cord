@@ -220,7 +220,7 @@ public final class Requester {
             case OPTIONS:
                 request = Unirest.options(processedPath); break;
         }
-        processRequest(request, processedPath);
+        processRequest(request);
         this.request = request;
         return request;
     }
@@ -236,9 +236,8 @@ public final class Requester {
         return processedPath;
     }
 
-    private void processRequest(HttpRequest request, String path) {
-        request.header("Authorization", token)
-                .header("User-Agent", "DiscordBot ($"+path+", $"+ JCord.VERSION+")");
+    private void processRequest(HttpRequest request) {
+        request.header("Authorization", token);
         if (useJson) request.header("Content-Type", "application/json");
     }
 
