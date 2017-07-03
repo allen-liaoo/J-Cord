@@ -3,7 +3,7 @@ package org.alienideology.jcord.util.log;
 /**
  * LogLevel - The logger level, used to indicate the log types.
  *
- * @see JCordLogger
+ * @see Logger
  * @see LogMode
  *
  * @author AlienIdeology

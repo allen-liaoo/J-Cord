@@ -11,14 +11,14 @@ import static org.alienideology.jcord.util.log.LogLevel.*;
 import static org.alienideology.jcord.util.log.LogMode.*;
 
 /**
- * JCordLogger - Official Logger for JCord.
+ * Logger - Official Logger for JCord.
  *
  * @see LogMode
  * @see LogLevel
  *
  * @author AlienIdeology
  */
-public class JCordLogger implements Serializable {
+public class Logger implements Serializable {
 
     private String name;
     private LogMode mode;
@@ -38,7 +38,7 @@ public class JCordLogger implements Serializable {
      *
      * @param clazz the object.
      */
-    public JCordLogger(Object clazz) {
+    public Logger(Object clazz) {
         this(ON, clazz.getClass().getSimpleName());
     }
 
@@ -48,7 +48,7 @@ public class JCordLogger implements Serializable {
      * @param mode The log mode.
      * @param clazz The object.
      */
-    public JCordLogger(LogMode mode, Object clazz) {
+    public Logger(LogMode mode, Object clazz) {
         this(mode, clazz.getClass().getSimpleName());
     }
 
@@ -57,7 +57,7 @@ public class JCordLogger implements Serializable {
      *
      * @param name The name.
      */
-    public JCordLogger(String name) {
+    public Logger(String name) {
         this(ON, name);
     }
 
@@ -67,9 +67,9 @@ public class JCordLogger implements Serializable {
      * @param mode The log mode.
      * @param name The name.
      */
-    public JCordLogger(LogMode mode, String name) {
+    public Logger(LogMode mode, String name) {
         this.name = name == null ? "UNKNOWN" : name;
-        this.mode = mode == null ? SOME : mode;
+        this.mode = mode == null ? ON : mode;
         printStream = System.err;
         this.showDate = true;
         this.showTime = true;
@@ -156,9 +156,9 @@ public class JCordLogger implements Serializable {
      * Default name for an object is the class name, get by {@link Class#getSimpleName()}.
      *
      * @param name The name.
-     * @return JCordLogger for chaining.
+     * @return Logger for chaining.
      */
-    public JCordLogger setName(String name) {
+    public Logger setName(String name) {
         this.name = name;
         return this;
     }
@@ -177,9 +177,9 @@ public class JCordLogger implements Serializable {
      * Default mode is {@link LogMode#ON}.
      *
      * @param mode The mode.
-     * @return JCordLogger for chaining.
+     * @return Logger for chaining.
      */
-    public JCordLogger setMode(LogMode mode) {
+    public Logger setMode(LogMode mode) {
         this.mode = mode;
         return this;
     }
@@ -223,9 +223,9 @@ public class JCordLogger implements Serializable {
      * Default stream is {@link System#err}.
      *
      * @param printStream The stream to print to.
-     * @return JCordLogger for chaining.
+     * @return Logger for chaining.
      */
-    public JCordLogger setPrintStream(PrintStream printStream) {
+    public Logger setPrintStream(PrintStream printStream) {
         this.printStream = printStream;
         return this;
     }
@@ -243,9 +243,9 @@ public class JCordLogger implements Serializable {
      * Set if the logger should show the logs' date.
      *
      * @param showDate True to show the date of the log.
-     * @return JCordLogger for chaining.
+     * @return Logger for chaining.
      */
-    public JCordLogger setShowDate(boolean showDate) {
+    public Logger setShowDate(boolean showDate) {
         this.showDate = showDate;
         return this;
     }
@@ -273,9 +273,9 @@ public class JCordLogger implements Serializable {
      * Default date format is {@code yy.MM.dd}. For example, {@code 17.07.02}.
      *
      * @param dateFormatter The formatter.
-     * @return JCordLogger for chaining.
+     * @return Logger for chaining.
      */
-    public JCordLogger setDateFormatter(SimpleDateFormat dateFormatter) {
+    public Logger setDateFormatter(SimpleDateFormat dateFormatter) {
         this.dateFormatter = dateFormatter;
         return this;
     }
@@ -293,9 +293,9 @@ public class JCordLogger implements Serializable {
      * Set if the logger should show time or not.
      *
      * @param showTime True to show the time.
-     * @return JCordLogger for chaining.
+     * @return Logger for chaining.
      */
-    public JCordLogger setShowTime(boolean showTime) {
+    public Logger setShowTime(boolean showTime) {
         this.showTime = showTime;
         return this;
     }
@@ -314,9 +314,9 @@ public class JCordLogger implements Serializable {
      * Default time format is {@code HH:mm:ss}. For example, {@code 08.18.35}.
      *
      * @param timeFormatter The time formatter.
-     * @return JCordLogger for chaining.
+     * @return Logger for chaining.
      */
-    public JCordLogger setTimeFormatter(SimpleDateFormat timeFormatter) {
+    public Logger setTimeFormatter(SimpleDateFormat timeFormatter) {
         this.timeFormatter = timeFormatter;
         return this;
     }
@@ -327,7 +327,7 @@ public class JCordLogger implements Serializable {
      * @param clazz The new object.
      * @return A cloned logger.
      */
-    public JCordLogger clone(Object clazz) {
+    public Logger clone(Object clazz) {
         return clone(clazz.getClass().getSimpleName());
     }
 
@@ -337,9 +337,9 @@ public class JCordLogger implements Serializable {
      * @param name The new name.
      * @return A cloned logger.
      */
-    public JCordLogger clone(String name) {
+    public Logger clone(String name) {
         name = name == null ? this.name : name;
-        return new JCordLogger(mode, name)
+        return new Logger(mode, name)
                 .setPrintStream(printStream)
                 .setShowDate(showDate)
                 .setDateFormatter(dateFormatter)

@@ -2,14 +2,13 @@ package org.alienideology.jcord.internal.object.message;
 
 import com.sun.istack.internal.Nullable;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
-import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.message.IReaction;
+import org.alienideology.jcord.handle.message.MessageProcessor;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.internal.object.DiscordObject;
@@ -36,6 +35,7 @@ public class Message extends DiscordObject implements IMessage, Buildable {
     private final String id;
     private final User author;
 
+    private MessageProcessor messageProcessor;
     private String content;
     private final OffsetDateTime createdTime;
 
@@ -64,6 +64,7 @@ public class Message extends DiscordObject implements IMessage, Buildable {
         this.isTTS = isTTs;
         this.mentionedEveryone = mentionedEveryone;
         this.isPinned = isPinned;
+        this.messageProcessor = new MessageProcessor(this);
     }
 
     @Override
@@ -80,106 +81,13 @@ public class Message extends DiscordObject implements IMessage, Buildable {
     }
 
     @Override
+    public MessageProcessor getMessageProcessor() {
+        return null;
+    }
+
+    @Override
     public String getContent() {
         return content;
-    }
-
-    public String getProcessedContent(boolean noMention, boolean noMarkdown) {
-        String process = content;
-        if (noMention) {
-
-            /* Message from TextChannel */
-            if (!channel.isPrivate()) {
-                /* Member Mentions */
-                for (IMember member : getMentionedMembers()) {
-                    process = process.replaceAll(member.mention(), "@" +
-                            (member.getNickname().isEmpty()?member.getUser().getName():member.getNickname())
-                            +"#"+member.getUser().getDiscriminator());
-                }
-
-                /* TextChannel Mentions */
-                for (ITextChannel tc : getGuild().getTextChannels()) {
-                    process = process.replaceAll(tc.mention(), "#"+tc.getName());
-                }
-
-                /* Role Mentions */
-                for (Role role : mentionedRoles) {
-                    process = process.replaceAll(role.mention(), "@"+role.getName());
-                }
-
-                for (IGuildEmoji emoji : getGuild().getGuildEmojis()) {
-                    process = process.replaceAll(emoji.mention(), ":"+emoji.getName()+":");
-                }
-
-            /* Message from PrivateChannel */
-            } else {
-                /* User Mentions */
-                for (User user : mentions) {
-                    process = process.replaceAll(user.mention(), "@"+user.getName()+"#"+user.getDiscriminator());
-                }
-            }
-
-            // TODO: EmojiTable Mentions
-
-        }
-
-        if (noMarkdown) {
-            process = stripSimpleMarkdown(process);
-//            final String codeBlock = "```";
-//
-//            String temp = "";
-//            int lastClose = 0;
-//
-//            /* Code Blocks */
-//            while (process.contains(codeBlock)) {
-//                int open = process.indexOf(codeBlock);
-//                int close = process.lastIndexOf(codeBlock);
-//
-//                /* Simple Markdowns */
-//                temp += stripSimpleMarkdown(process.substring(lastClose, open));
-//
-//                System.out.println(open+"\t"+close);
-//                System.out.println(process.indexOf("\n"));
-//
-//                // Code block is matched
-//                if (open != close) {
-//                    String newString = process.substring(0, open) +
-//                            process.substring((process.indexOf("\n") >= close-1 || !process.contains("\n")) ? open+3 : process.indexOf("\n"), close);
-//                    if (process.length() > close+3)
-//                        newString += process.substring(close);
-//                    temp += newString;
-//                } else {
-//                    break;
-//                }
-//                temp += stripSimpleMarkdown(process.substring(close));
-//                lastClose = close;
-        }
-//            process = temp;
-
-//        }
-        return process;
-    }
-
-    private String stripSimpleMarkdown (String md) {
-        final String[] MARKDOWNS = new String[] {"***", "**", "*", "~~", "__"};
-        for (String markdown : MARKDOWNS) {
-            System.out.println(markdown);
-            while (md.contains(markdown)) {
-                int open = md.indexOf(markdown);
-                int close = md.lastIndexOf(markdown);
-                // Markdown is matched
-                if (open != close) {
-                    String newString = md.substring(0, open) + md.substring(open+markdown.length(), close);
-                    if (md.length() > close+markdown.length())
-                        newString += md.substring(close);
-                    System.out.println(newString);
-                    md = newString;
-                } else {
-                    break;
-                }
-            }
-        }
-        return md;
     }
 
     @Override

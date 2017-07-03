@@ -257,25 +257,19 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
     }
 
     /**
+     * Get the {@link MessageProcessor} for this message.
+     * The processor is used to read the message content and get specified sequences of it.
+     *
+     * @return The processor.
+     */
+    MessageProcessor getMessageProcessor();
+
+    /**
      * Get the string content of this message.
      *
      * @return The string content.
      */
     String getContent();
-
-    /**
-     * Process the original content of this message.
-     *
-     * @param noMention Should process mention or not. <br />
-     *                      Original: <@ID> <br />
-     *                      Processed: @NickName/Username#Discriminator
-     *
-     * @param noMarkdown Should include markdown or not. <br />
-     *                      Original: **```java\n\nhi```** <br />
-     *                      Processed: hi
-     * @return The message processed.
-     */
-    String getProcessedContent(boolean noMention, boolean noMarkdown);
 
     /**
      * Get the guild this message belongs to.

@@ -25,7 +25,7 @@ import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.SelfManager;
 import org.alienideology.jcord.internal.object.user.User;
-import org.alienideology.jcord.util.log.JCordLogger;
+import org.alienideology.jcord.util.log.Logger;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ import java.util.List;
  */
 public final class IdentityImpl implements org.alienideology.jcord.Identity {
 
-    public JCordLogger LOG;
+    public Logger LOG;
 
     private IdentityType type;
     private String token;
@@ -60,7 +60,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
     private List<IGuild> guilds = new ArrayList<>();
     private List<IPrivateChannel> privateChannels = new ArrayList<>();
 
-    public IdentityImpl(IdentityType type, WebSocketFactory wsFactory, JCordLogger logger) {
+    public IdentityImpl(IdentityType type, WebSocketFactory wsFactory, Logger logger) {
         this.type = type;
         this.wsFactory = wsFactory;
         this.selfManager = new SelfManager(this);

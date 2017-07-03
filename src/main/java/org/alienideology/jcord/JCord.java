@@ -2,8 +2,7 @@ package org.alienideology.jcord;
 
 import com.mashape.unirest.http.Unirest;
 import org.alienideology.jcord.handle.EmojiTable;
-import org.alienideology.jcord.util.log.JCordLogger;
-import org.alienideology.jcord.util.log.LogMode;
+import org.alienideology.jcord.util.log.Logger;
 
 /**
  * JCord - Information about this library.
@@ -35,7 +34,7 @@ public final class JCord {
     /**
      * Global logger for the API
      */
-    public final static JCordLogger LOG = new JCordLogger("JCord");
+    public final static Logger LOG = new Logger("JCord");
 
     /**
      * Global Emoji Table

@@ -9,9 +9,8 @@ import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.event.handler.*;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.util.log.JCordLogger;
+import org.alienideology.jcord.util.log.Logger;
 import org.alienideology.jcord.util.log.LogLevel;
-import org.alienideology.jcord.util.log.LogMode;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -27,7 +26,7 @@ import java.util.zip.Inflater;
 public final class GatewayAdaptor extends WebSocketAdapter {
 
     public static int GATEWAY_VERSION = 5;
-    public JCordLogger LOG;
+    public Logger LOG;
 
     private IdentityImpl identity;
     private WebSocket webSocket;

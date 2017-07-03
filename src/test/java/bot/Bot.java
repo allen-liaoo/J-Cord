@@ -3,6 +3,7 @@ package bot;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
+import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.bot.command.CommandFramework;
 import org.alienideology.jcord.event.Event;
 import org.alienideology.jcord.event.EventManager;
@@ -121,8 +122,6 @@ public class Bot {
         for (IPrivateChannel dm : bot.getPrivateChannels()) {
             System.out.println("DM:\t" + dm.getRecipient().getName());
         }
-
-        System.out.println(bot.getGuild("311250670068170752").getCreatedTime());
 
     }
 

@@ -7,7 +7,7 @@ import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.util.log.JCordLogger;
+import org.alienideology.jcord.util.log.Logger;
 import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,7 +18,7 @@ import org.json.JSONObject;
 public class GatewayEventHandler extends EventHandler {
 
     private final GatewayAdaptor gateway;
-    private final JCordLogger LOG;
+    private final Logger LOG;
 
     public GatewayEventHandler(IdentityImpl identity, GatewayAdaptor gateway) {
         super(identity);

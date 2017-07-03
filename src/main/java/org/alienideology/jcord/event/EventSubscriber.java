@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * EventSubscriber - An annotation used to annotate methods that subscribe an event
+ * EventSubscriber - An annotation used to annotate methods that subscribe an event.
+ *
  * @author AlienIdeology
  */
 @Retention(RetentionPolicy.RUNTIME)

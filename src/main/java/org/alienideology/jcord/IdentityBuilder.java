@@ -5,10 +5,7 @@ import org.alienideology.jcord.event.EventManager;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.util.log.JCordLogger;
-import org.alienideology.jcord.util.log.LogLevel;
-import org.alienideology.jcord.util.log.LogMode;
-import sun.rmi.runtime.Log;
+import org.alienideology.jcord.util.log.Logger;
 
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -27,7 +24,7 @@ public final class IdentityBuilder {
     private String token;
 
     private EventManager manager;
-    private JCordLogger logger = new JCordLogger("Identity");
+    private Logger logger = new Logger("Identity");
 
     /**
      * Default Constructor
@@ -112,7 +109,7 @@ public final class IdentityBuilder {
      * @param logger The Logger that will be used in {@link Identity}.
      * @return IdentityBuilder for chaining.
      */
-    public IdentityBuilder setLogger(Consumer<JCordLogger> logger) {
+    public IdentityBuilder setLogger(Consumer<Logger> logger) {
         logger.accept(this.logger);
         return this;
     }

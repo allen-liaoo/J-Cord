@@ -293,7 +293,7 @@ public final class EmbedBuilder {
 
     private void validateUrl(String field, String url) {
         if (url == null || url.isEmpty()) return;
-        if (!url.matches(MessageUtils.PATTERN_IS_URL.pattern())) {
+        if (!url.matches(MessageUtils.PATTERN_URL.pattern())) {
             IllegalArgumentException exception = new IllegalArgumentException("The value of the \""+field+"\" is not a valid url!");
             exception.printStackTrace();
             throw exception;

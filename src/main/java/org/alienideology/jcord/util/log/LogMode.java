@@ -1,9 +1,9 @@
 package org.alienideology.jcord.util.log;
 
 /**
- * LogMode - The logger mode, used to filter logs for the {@link JCordLogger}.
+ * LogMode - The logger mode, used to filter logs for the {@link Logger}.
  *
- * @see JCordLogger
+ * @see Logger
  * @see LogLevel
  *
  * @author AlienIdeology

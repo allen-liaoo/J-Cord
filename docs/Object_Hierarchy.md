@@ -48,6 +48,7 @@ IChannel - A communication pipeline.
 IMessage - A text with embeds or attachments that can be sent by anyone.
  - IEmbed - Embeds that can by sent by bot.
  - IReaction - A emoji that users reacted under a message.
+ - MessageProcessor - The processor of a message. This can process the whole message, or act like a reader with a cursor.
 
 ### User
 IUser - A base entity, can be a member of guild/private channel, and bot/human.
@@ -102,7 +103,7 @@ OAuth - Used to build applications that utilize authentication and data from the
  - DataUtils - Utilities for I/O and data.
  - MessageUtils - Message and String utilities.
  - Log
-   - JCordLogger - Official Logger for JCord.
+   - Logger - Official Logger for JCord.
    - LogMode - The logger mode, used to filter logs for the JCordLogger.
    - LogLevel - The logger level, used to indicate the log types.
 
