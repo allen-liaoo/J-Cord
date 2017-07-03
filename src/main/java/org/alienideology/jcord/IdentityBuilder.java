@@ -5,6 +5,9 @@ import org.alienideology.jcord.event.EventManager;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.util.log.LogLevel;
+import org.alienideology.jcord.util.log.LogMode;
+import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -21,6 +24,7 @@ public final class IdentityBuilder {
     private String token;
 
     private EventManager manager;
+    private LogMode mode;
 
     /**
      * Default Constructor
@@ -38,6 +42,7 @@ public final class IdentityBuilder {
     @Deprecated
     public org.alienideology.jcord.Identity build () throws IllegalArgumentException, ErrorResponseException, IOException {
         IdentityImpl id =  new IdentityImpl(type, new WebSocketFactory());
+        if (mode != null) id.LOG.setMode(mode);
         id.login(token).setEventManager(manager);
         return id;
     }
@@ -85,14 +90,39 @@ public final class IdentityBuilder {
     }
 
     /**
-     * Validate the current token.
-     * Note that if the {@link IdentityType} is not set, then this will always returns false.
+     * Set the event managers of this identity
+     * @param manager The event managers
+     * @return IdentityBuilder for chaining.
+     */
+    public IdentityBuilder setEventManager(EventManager manager) {
+        this.manager = manager;
+        return this;
+    }
+
+    /**
+     * Set the logger mode of this identity.
+     *
+     * @param mode The LogMode.
+     * @return IdentityBuilder for chaining.
+     */
+    public IdentityBuilder setLogMode(LogMode mode) {
+        this.mode = mode;
+        return this;
+    }
+
+    /**
+     * Validate the given token.
+     *
      * @return True if the token is valid.
      */
-    public boolean isTokenValid() {
+    public static boolean isTokenValid(String token, IdentityType type) {
         if (token == null || !token.matches(TOKEN_PATTERN.pattern())) return false;
         try {
-            IdentityImpl test = (IdentityImpl) build();
+            IdentityImpl test = (IdentityImpl) new IdentityBuilder()
+                    .setIdentityType(type)
+                    .useToken(token)
+                    .build();
+
             test.logout();
         } catch (ErrorResponseException ere) {
             if (ere.getResponse().equals(ErrorResponse.INVALID_AUTHENTICATION_TOKEN))
@@ -103,13 +133,4 @@ public final class IdentityBuilder {
         return true;
     }
 
-    /**
-     * Set the event managers of this identity
-     * @param manager The event managers
-     * @return IdentityBuilder for chaining.
-     */
-    public IdentityBuilder setEventManager(EventManager manager) {
-        this.manager = manager;
-        return this;
-    }
 }

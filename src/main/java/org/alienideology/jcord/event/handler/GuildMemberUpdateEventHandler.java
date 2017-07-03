@@ -8,6 +8,7 @@ import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.Member;
 import org.alienideology.jcord.internal.object.guild.Role;
+import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -31,7 +32,7 @@ public class GuildMemberUpdateEventHandler extends EventHandler {
             Member member = (Member) guild.getMember(json.getJSONObject("user").getString("id"));
 
             if (member == null) {
-                identity.LOG.fatal("[UNKNOWN MEMBER] [MEMBER_UPDATE_EVENT]");
+                identity.LOG.log(LogLevel.FETAL, "[UNKNOWN MEMBER] [MEMBER_UPDATE_EVENT]");
                 return;
             }
 

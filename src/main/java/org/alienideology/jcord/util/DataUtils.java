@@ -1,6 +1,7 @@
 package org.alienideology.jcord.util;
 
 import org.alienideology.jcord.JCord;
+import org.alienideology.jcord.util.log.LogLevel;
 import org.apache.commons.codec.binary.StringUtils;
 
 import javax.imageio.ImageIO;
@@ -29,7 +30,7 @@ public class DataUtils {
         try {
             return URLEncoder.encode(toEncode, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            JCord.LOGGER.fatal("UnsupportedEncodingException when encoding to url!");
+            JCord.LOGGER.log(LogLevel.FETAL, "UnsupportedEncodingException when encoding to url!");
         }
         return null;
     }

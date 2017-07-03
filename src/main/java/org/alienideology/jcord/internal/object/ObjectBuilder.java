@@ -27,6 +27,7 @@ import org.alienideology.jcord.internal.object.message.Embed;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.Reaction;
 import org.alienideology.jcord.internal.object.user.User;
+import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -119,7 +120,7 @@ public final class ObjectBuilder {
                 }
 
             } catch (RuntimeException e) {
-                identity.LOG.error("Building guild channels. (Guild: "+guild.toString()+")", e);
+                identity.LOG.log(LogLevel.FETAL, "Building guild channels. (Guild: "+guild.toString()+")", e);
             }
 
             /* Build Members */
@@ -133,7 +134,7 @@ public final class ObjectBuilder {
                 }
 
             } catch (RuntimeException e) {
-                identity.LOG.error("Building guild members. (Guild: "+guild.toString()+")", e);
+                identity.LOG.log(LogLevel.FETAL,"Building guild members. (Guild: "+guild.toString()+")", e);
             }
 
             guild.setOwner(owner).setChannels(afk_channel, embed_channel);
@@ -153,7 +154,7 @@ public final class ObjectBuilder {
         try {
             guild = new Requester(identity, HttpPath.Guild.GET_GUILD).request(id).getAsJSONObject();
         } catch (RuntimeException e) {
-            identity.LOG.error("Building Guild By ID (ID: "+id+")", e);
+            identity.LOG.log(LogLevel.FETAL, "Building Guild By ID (ID: "+id+")", e);
             throw new IllegalArgumentException("Invalid ID!");
         }
         return buildGuild(guild);
@@ -219,7 +220,7 @@ public final class ObjectBuilder {
         try {
             gChannel = new Requester(identity, HttpPath.Channel.GET_CHANNEL).request(id).getAsJSONObject();
         } catch (RuntimeException e) {
-            identity.LOG.error("Building IGuildChannel By ID (ID: "+id+")", e);
+            identity.LOG.log(LogLevel.FETAL, "Building IGuildChannel By ID (ID: "+id+")", e);
             throw new IllegalArgumentException("Invalid ID!");
         }
         return buildGuildChannel(gChannel);

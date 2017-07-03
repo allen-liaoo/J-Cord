@@ -1,7 +1,8 @@
 package org.alienideology.jcord;
 
 import org.alienideology.jcord.handle.EmojiTable;
-import org.apache.commons.logging.impl.SimpleLog;
+import org.alienideology.jcord.util.log.JCordLogger;
+import org.alienideology.jcord.util.log.LogMode;
 
 /**
  * JCord - Information about this library.
@@ -11,7 +12,7 @@ import org.apache.commons.logging.impl.SimpleLog;
 public final class JCord {
 
     public final static String VERSION = "0.0.7";
-    public final static SimpleLog LOGGER = new SimpleLog("JCord");
+    public final static JCordLogger LOGGER = new JCordLogger("JCord");
 
     public final static EmojiTable EMOJI_TABLE = new EmojiTable();
 

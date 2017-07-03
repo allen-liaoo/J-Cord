@@ -9,22 +9,24 @@
  - [x] Guild
   - [x] Member
   - [x] Role
- - [ ] User (Half-Done, sync presence)
- - [ ] Channel (Half-Done, Missing Actions, Permission Overrides)
+ - [x] User
+ - [ ] Channel (Half-Done, Missing Group)
   - [x] GuildChannel
       - [x] TextChannel
       - [x] VoiceChannel
   - [x] PrivateChannel
   - [ ] Group
   - IChannelManager (For both text and voice)
- - [x] Member
  - [x] Message
- - [ ] Permission (Half-Done, Missing permissions overrides for channels)
+ - [x] Permission
  - [x] Emoji
- - [ ] Invite
- - [ ] InviteBuilder
+ - [x] Invite
+ - [x] InviteBuilder
  - [ ] Webhook
 
-### Event
- - [ ] Events corresponding to Discord Objects.
- - [ ] onNext?Event (A consumer method that get triggered when the next ?event are fired.
+### Planned Features
+1. Logger
+2. MessageProcessor
+3. Webhook actions
+4. Built-in Terminal Command System
+5. Built-in Audio Player

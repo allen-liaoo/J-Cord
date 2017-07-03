@@ -6,11 +6,12 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.ExceptionEvent;
-import org.alienideology.jcord.event.guild.GuildEvent;
 import org.alienideology.jcord.event.handler.*;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.apache.commons.logging.impl.SimpleLog;
+import org.alienideology.jcord.util.log.JCordLogger;
+import org.alienideology.jcord.util.log.LogLevel;
+import org.alienideology.jcord.util.log.LogMode;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -26,7 +27,7 @@ import java.util.zip.Inflater;
 public final class GatewayAdaptor extends WebSocketAdapter {
 
     public static int GATEWAY_VERSION = 5;
-    public SimpleLog LOG = new SimpleLog("Gateway");
+    public JCordLogger LOG = new JCordLogger(this);
 
     private IdentityImpl identity;
     private WebSocket webSocket;
@@ -50,13 +51,13 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     public GatewayAdaptor(IdentityImpl identity, WebSocket webSocket) {
         this.identity = identity;
         this.webSocket = webSocket;
-        LOG.setLevel(SimpleLog.LOG_LEVEL_ALL);
+        LOG.setMode(identity.LOG.getMode());
         setEventHandler();
     }
 
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
-        LOG.info("[CONNECTION] Connected");
+        LOG.log(LogLevel.INFO, "[CONNECTION] Connected");
         identity.CONNECTION = Identity.Connection.CONNECTED;
 
         if (session_id == null || session_id.isEmpty()) {
@@ -115,12 +116,12 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
     @Override
     public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
-        LOG.info("[CONNECTION] Disconnected");
+        LOG.log(LogLevel.INFO, "[CONNECTION] Disconnected");
         identity.CONNECTION = Identity.Connection.OFFLINE;
         DisconnectionCode code = DisconnectionCode.getCode(serverCloseFrame.getCloseCode());
         if(closedByServer) {
             handleError(new RuntimeException("Connection closed: "+code.code+"\tBy reason: "+code.message));
-            LOG.error(code+"\t"+code.message);
+            LOG.log(LogLevel.FETAL, code+"\t"+code.message);
         }
     }
 
@@ -140,7 +141,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             case HELLO: {
                 interval = json.getJSONObject("d").getLong("heartbeat_interval");
                 sendHeartBeat();
-                LOG.info("[RECEIVED] Hello");
+                LOG.log(LogLevel.DEBUG, "[RECEIVED] Hello");
                 break;
             }
             /* Client Side HandShake */
@@ -150,7 +151,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             /* Heartbeat */
             case HEARTBEAT_ACK:
             case HEARTBEAT: {
-                LOG.info("[HEART] "+code);
+                LOG.log(LogLevel.TRACE, "[HEART] "+code);
                 break;
             }
             case RESUME: {
@@ -158,7 +159,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
                 sendHeartBeat();
             }
             default: {
-                LOG.error("[UNKNOWN] OP Code/Message : " +message);
+                LOG.log(LogLevel.FETAL, "[UNKNOWN] OP Code/Message : " +message);
             }
         }
     }
@@ -175,18 +176,18 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         EventHandler handler = eventHandler.get(key);
 
         if (handler == null) {
-            LOG.fatal("[UNKNOWN] Event: " + key + json.toString(4));
+            LOG.log(LogLevel.FETAL, "[UNKNOWN] Event: " + key + json.toString(4));
         } else {
 
             switch (key) {
                 case "READY": {
                     session_id = event.getString("session_id");
-                    LOG.info("[RECEIVED] Ready Event");
+                    LOG.log(LogLevel.DEBUG, "[RECEIVED] Ready Event");
                     break;
                 }
                 case "RESUMED": {
                     session_id = event.getString("session_id");
-                    LOG.info("[RECEIVED] Resumed Event");
+                    LOG.log(LogLevel.DEBUG, "[RECEIVED] Resumed Event");
                     break;
                 }
                 default: {
@@ -220,7 +221,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     }
 
     private void sendHeartBeat() {
-        LOG.info("[HEART] Interval: "+interval);
+        LOG.log(LogLevel.TRACE, "[HEART] Interval: "+interval);
         webSocket.setPingInterval(interval);
         heart = new Thread(() -> {
             while (identity.CONNECTION.isConnected()) {
@@ -232,7 +233,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
                 try {
                     Thread.sleep(interval);
                 } catch (InterruptedException e) {
-                    LOG.error(e);
+                    LOG.log(LogLevel.FETAL, e);
                 }
             }
         });
@@ -258,7 +259,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             );
 
         webSocket.sendText(identify.toString());
-        LOG.info("[SENT] Identification");
+        LOG.log(LogLevel.DEBUG, "[SENT] Identification");
     }
 
     private void sendResume() {
@@ -272,7 +273,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             );
 
         webSocket.sendText(resume.toString());
-        LOG.info("[SENT] Resume");
+        LOG.log(LogLevel.DEBUG, "[SENT] Resume");
     }
 
     private void setEventHandler() {
@@ -316,7 +317,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         eventHandler.put("MESSAGE_REACTION_REMOVE_ALL", new MessageReactionRemoveAllEventHandler(identity));
 
         // TODO: Finish priority events
-        // Priority: USER_UPDATE, PRESENCE_UPDATE
+        // Priority: USER_UPDATE
         // Future: GUILD_SYNC, GUILD_MEMBERS_CHUNK, WEBHOOKS_UPDATE, VOICE_SERVER_UPDATE, VOICE_STATE_UPDATE
         // Unknown: MESSAGE_ACK
 

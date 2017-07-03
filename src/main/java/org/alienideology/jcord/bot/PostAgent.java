@@ -4,7 +4,9 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.body.MultipartBody;
 import org.alienideology.jcord.Identity;
-import org.apache.commons.logging.impl.SimpleLog;
+import org.alienideology.jcord.util.log.JCordLogger;
+import org.alienideology.jcord.util.log.LogLevel;
+import org.alienideology.jcord.util.log.LogMode;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
@@ -16,7 +18,7 @@ import java.util.function.Consumer;
  */
 public class PostAgent {
 
-    public static SimpleLog LOG = new SimpleLog("Post-Agent");
+    public static JCordLogger LOG = new JCordLogger("Post-Agent");
 
     /**
      * Default API Post Agent for <a href="https://bots.discord.pw/">Discord Bots</a>.
@@ -202,9 +204,9 @@ public class PostAgent {
             }
 
             String response = body.asString().getBody();
-            LOG.info("[RESPONSE] " + ((name == null) ? "" : "[API: " + name + "] ") + response);
+            LOG.log(LogLevel.INFO, "[RESPONSE] " + ((name == null) ? "" : "[API: " + name + "] ") + response);
         } catch (UnirestException e) {
-            LOG.error(e);
+            LOG.log(LogLevel.FETAL, e);
         }
         return this;
     }

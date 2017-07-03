@@ -4,6 +4,7 @@ import org.alienideology.jcord.event.message.MessageReactionRemoveAllEvent;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.message.Message;
+import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class MessageReactionRemoveAllEventHandler extends EventHandler {
     public void dispatchEvent(JSONObject json, int sequence) {
         MessageChannel channel = (MessageChannel) identity.getMessageChannel(json.getString("channel_id"));
         if (channel == null) {
-            identity.LOG.error("[UNKNOWN CHANNEL] [MESSAGE_REACTION_REMOVE_ALL]");
+            identity.LOG.log(LogLevel.FETAL, "[UNKNOWN CHANNEL] [MESSAGE_REACTION_REMOVE_ALL]");
             return;
         }
 

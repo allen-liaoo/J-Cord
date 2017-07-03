@@ -8,6 +8,7 @@ import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.Reaction;
 import org.alienideology.jcord.internal.object.user.User;
+import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONObject;
 
 /**
@@ -27,7 +28,7 @@ public class MessageReactionEventHandler extends EventHandler {
         MessageChannel channel = (MessageChannel) identity.getMessageChannel(json.getString("channel_id"));
 
         if (channel == null) {
-            identity.LOG.error("[UNKNOWN MESSAGE] [MESSAGE_REACTION_ADD/REMOVE]");
+            identity.LOG.log(LogLevel.FETAL, "[UNKNOWN MESSAGE] [MESSAGE_REACTION_ADD/REMOVE]");
             return;
         }
 

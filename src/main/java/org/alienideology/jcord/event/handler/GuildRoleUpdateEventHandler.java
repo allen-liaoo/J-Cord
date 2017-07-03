@@ -5,6 +5,7 @@ import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.Role;
+import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONObject;
 
 import java.awt.*;
@@ -28,7 +29,7 @@ public class GuildRoleUpdateEventHandler extends EventHandler {
             JSONObject roleJson = json.getJSONObject("role");
 
             if (guild == null) {
-                identity.LOG.fatal("[UNKNOWN GUILD] [GUILD_ROLE_UPDATE_EVENT]");
+                identity.LOG.log(LogLevel.FETAL, "[UNKNOWN GUILD] [GUILD_ROLE_UPDATE_EVENT]");
                 return;
             }
 

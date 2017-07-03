@@ -7,7 +7,8 @@ import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.apache.commons.logging.impl.SimpleLog;
+import org.alienideology.jcord.util.log.JCordLogger;
+import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,7 +18,7 @@ import org.json.JSONObject;
 public class GatewayEventHandler extends EventHandler {
 
     private final GatewayAdaptor gateway;
-    private final SimpleLog LOG;
+    private final JCordLogger LOG;
 
     public GatewayEventHandler(IdentityImpl identity, GatewayAdaptor gateway) {
         super(identity);
@@ -42,7 +43,7 @@ public class GatewayEventHandler extends EventHandler {
                     builder.buildGuild(get); // Guild added to identity automatically
                 }
 
-                LOG.info("[READY] Guilds: " + guilds.length());
+                LOG.log(LogLevel.INFO, "[READY] Guilds: " + guilds.length());
 
                 /* Create PrivateChannels */
                 JSONArray pms = json.getJSONArray("private_channels");
@@ -51,17 +52,17 @@ public class GatewayEventHandler extends EventHandler {
 
                     builder.buildPrivateChannel(pm);
                 }
-                LOG.info("[READY] Private Channels: " + pms.length());
+                LOG.log(LogLevel.INFO, "[READY] Private Channels: " + pms.length());
 
                 /* Initialize Self User */
                 identity.setSelf(builder.buildUser(json.getJSONObject("user")));
-                LOG.info("[READY] Self");
+                LOG.log(LogLevel.INFO, "[READY] Self");
 
                 dispatchEvent(new ReadyEvent(identity, gateway, sequence, session_id));
 
                 identity.CONNECTION = Identity.Connection.READY;
             } catch (Exception e) {
-                LOG.error(e);
+                LOG.log(LogLevel.ERROR, e);
             }
 
         /* Resume Event */

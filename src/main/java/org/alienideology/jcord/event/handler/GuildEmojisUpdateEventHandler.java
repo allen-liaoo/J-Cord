@@ -8,6 +8,7 @@ import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
+import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,7 +29,7 @@ public class GuildEmojisUpdateEventHandler extends EventHandler {
         Guild guild = (Guild) identity.getGuild(json.getString("guild_id"));
 
         if (guild == null) {
-            identity.LOG.fatal("[UNKNOWN GUILD] [GUILD_EMOJIS_UPDATE_EVENT]");
+            identity.LOG.log(LogLevel.FETAL, "[UNKNOWN GUILD] [GUILD_EMOJIS_UPDATE_EVENT]");
             return;
         }
 

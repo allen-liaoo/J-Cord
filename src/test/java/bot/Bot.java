@@ -12,6 +12,7 @@ import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.util.log.LogMode;
 
 import java.io.IOException;
 
@@ -87,6 +88,10 @@ public class Bot {
                                     .registerCommandFrameworks(framework)
                     )
 
+                    // Set the Logger Mode for this identity
+                    // I use ALL because I need to debug the system
+                    .setLogMode(LogMode.ALL)
+
                     // Build the identity blocking the thread
                     // To prevent the program from doing any farther actions until the identity is build.
                     // If you want to build the identity asynchronously,
@@ -114,8 +119,6 @@ public class Bot {
         for (IPrivateChannel dm : bot.getPrivateChannels()) {
             System.out.println("DM:\t" + dm.getRecipient().getName());
         }
-
-        MessageCreateEvent event = bot.getEventManager().waitForNext(e -> e.getUser().isSelf());
 
     }
 

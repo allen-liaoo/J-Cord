@@ -4,6 +4,7 @@ import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.message.dm.PrivateMessageDeleteEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageDeleteEvent;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
+import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONObject;
 
 import java.time.Instant;
@@ -33,7 +34,7 @@ public class MessageDeleteEventHandler extends EventHandler {
             }
 
         } else {
-            identity.LOG.error("Unknown message channel for a MessageDeleteEvent!");
+            identity.LOG.log(LogLevel.FETAL, "Unknown message channel for a MessageDeleteEvent!");
         }
     }
 }

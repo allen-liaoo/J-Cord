@@ -12,7 +12,8 @@ import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.apache.commons.logging.impl.SimpleLog;
+import org.alienideology.jcord.util.log.JCordLogger;
+import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +27,7 @@ import java.util.function.Consumer;
  */
 public final class Requester {
 
-    public SimpleLog LOG;
+    public JCordLogger LOG;
 
     private HttpPath path;
     private String token;
@@ -271,12 +272,12 @@ public final class Requester {
         final Headers headers = response.getHeaders();
         if (headers.containsKey("Retry-After")) { // Rate limited
             Long retryAfter = Long.parseLong(headers.getFirst("Retry-After")); // In milliseconds
-            LOG.error("You are being rate limited! Automatically blocked the thread.\n" +
+            LOG.log(LogLevel.ERROR, "You are being rate limited! Automatically blocked the thread.\n" +
                     "(Request: "+path.toString()+" | Retry after: "+retryAfter+" ms)");
             try {
                 Thread.sleep(retryAfter);
             } catch (InterruptedException e) {
-                LOG.error("Error when blocking thread for rate limit: ");
+                LOG.log(LogLevel.ERROR, "Error when blocking thread for rate limit: ", null);
                 e.printStackTrace();
             }
         }
