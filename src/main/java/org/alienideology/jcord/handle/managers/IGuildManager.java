@@ -13,8 +13,8 @@ import org.alienideology.jcord.handle.guild.Region;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
+import org.alienideology.jcord.util.Icon;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
 
@@ -146,20 +146,9 @@ public interface IGuildManager {
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
      * @throws IOException When decoding image.
      *
-     * @param image The image file.
+     * @param icon The image file.
      */
-    void modifyIcon(BufferedImage image) throws IOException;
-
-    /**
-     * Modify the guild's icon.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
-     * @throws IOException When decoding image.
-     *
-     * @param imagePath The image file path.
-     */
-    void modifyIcon(String imagePath) throws IOException;
+    void modifyIcon(Icon icon) throws IOException;
 
     /**
      * Modify the guild's splash icon. This is VIP guild only.
@@ -168,20 +157,9 @@ public interface IGuildManager {
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
      * @throws IOException When decoding image.
      *
-     * @param image The image file.
+     * @param icon The image.
      */
-    void modifySplash(BufferedImage image) throws IOException;
-
-    /**
-     * Modify the guild's splash icon. This is VIP guild only.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
-     * @throws IOException When decoding image.
-     *
-     * @param imagePath The image file path.
-     */
-    void modifySplash(String imagePath) throws IOException;
+    void modifySplash(Icon icon) throws IOException;
 
     /*
         ---------------------

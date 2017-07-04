@@ -13,7 +13,7 @@ import org.alienideology.jcord.internal.object.message.Message;
  *
  * @author AlienIdeology
  */
-public final class MessageBuilder {
+public class MessageBuilder {
 
     private final EmojiTable emojis = new EmojiTable();
 

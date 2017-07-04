@@ -1,12 +1,13 @@
 package org.alienideology.jcord.internal.object.user;
 
-import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.managers.IWebhookManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.managers.WebhookManager;
 
 /**
  * @author AlienIdeology
@@ -14,10 +15,12 @@ import org.alienideology.jcord.internal.object.IdentityImpl;
 public class Webhook extends DiscordObject implements IWebhook {
 
     private final String id;
+    private final WebhookManager manager;
 
     private IGuild guild;
     private ITextChannel channel;
-    private IUser author;
+    private IUser owner;
+    private IUser user;
     private String defaultName;
     private String defaultAvatar;
     private String token;
@@ -25,6 +28,12 @@ public class Webhook extends DiscordObject implements IWebhook {
     public Webhook(IdentityImpl identity, String id) {
         super(identity);
         this.id = id;
+        this.manager = new WebhookManager(this);
+    }
+
+    @Override
+    public IWebhookManager getWebhookManager() {
+        return manager;
     }
 
     @Override
@@ -38,8 +47,13 @@ public class Webhook extends DiscordObject implements IWebhook {
     }
 
     @Override
-    public IUser getAuthor() {
-        return author;
+    public IUser getOwner() {
+        return owner;
+    }
+
+    @Override
+    public IUser getUser() {
+        return user;
     }
 
     @Override
@@ -64,28 +78,39 @@ public class Webhook extends DiscordObject implements IWebhook {
 
     /*-----------------------Setters------------------------*/
 
-    public void setGuild(IGuild guild) {
+    public Webhook setGuild(IGuild guild) {
         this.guild = guild;
+        return this;
     }
 
-    public void setChannel(ITextChannel channel) {
+    public Webhook setChannel(ITextChannel channel) {
         this.channel = channel;
+        return this;
     }
 
-    public void setAuthor(IUser author) {
-        this.author = author;
+    public Webhook setOwner(IUser owner) {
+        this.owner = owner;
+        return this;
     }
 
-    public void setDefaultName(String defaultName) {
+    public Webhook setUser(IUser user) {
+        this.user = user;
+        return this;
+    }
+
+    public Webhook setDefaultName(String defaultName) {
         this.defaultName = defaultName;
+        return this;
     }
 
-    public void setDefaultAvatar(String defaultAvatar) {
+    public Webhook setDefaultAvatar(String defaultAvatar) {
         this.defaultAvatar = defaultAvatar;
+        return this;
     }
 
-    public void setToken(String token) {
+    public Webhook setToken(String token) {
         this.token = token;
+        return this;
     }
 
 }

@@ -18,7 +18,6 @@ public class MessageCreateEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        System.out.println(json.toString(4));
         Message message = builder.buildMessage(json);
         try {
             MessageChannel channel = (MessageChannel) message.getChannel();

@@ -26,11 +26,12 @@ import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.util.DataUtils;
+import org.alienideology.jcord.util.Icon;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -107,25 +108,13 @@ public final class GuildManager implements IGuildManager {
     }
 
     @Override
-    public void modifyIcon(BufferedImage image) throws IOException {
-        String encoding = DataUtils.encodeIcon(image);
-        requestModify(new JSONObject().put("icon", encoding));
+    public void modifyIcon(Icon icon) throws IOException {
+        requestModify(new JSONObject().put("icon", icon.getData()));
     }
 
     @Override
-    public void modifyIcon(String imagePath) throws IOException {
-        modifyIcon(ImageIO.read(new File(imagePath)));
-    }
-
-    @Override
-    public void modifySplash(BufferedImage image) throws IOException {
-        String encoding = DataUtils.encodeIcon(image);
-        requestModify(new JSONObject().put("splash", encoding));
-    }
-
-    @Override
-    public void modifySplash(String imagePath) throws IOException {
-        modifySplash(ImageIO.read(new File(imagePath)));
+    public void modifySplash(Icon icon) throws IOException {
+        requestModify(new JSONObject().put("splash", icon.getData()));
     }
 
     private void requestModify(JSONObject json) {

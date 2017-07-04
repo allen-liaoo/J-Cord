@@ -27,6 +27,7 @@ import org.alienideology.jcord.internal.object.message.Embed;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.Reaction;
 import org.alienideology.jcord.internal.object.user.User;
+import org.alienideology.jcord.internal.object.user.Webhook;
 import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -281,14 +282,59 @@ public final class ObjectBuilder {
     }
 
     /**
-     * Build a user object (webhook) base on provided json.
+     * Build a webhook base on provided json.
      *
-     * @param json The json of this webhook user object (Does not contains webhook id)
-     * @param webhookId The webhook id
-     * @return The User(Webhook) object
+     * @param json The json of this webhook user object.
+     * @return The Webhook object
      */
-    public User buildWebHook (JSONObject json, String webhookId) {
-        return buildUser(json.put("webhook_id", webhookId));
+    public Webhook buildWebhook(JSONObject json) {
+        String id = json.getString("id");
+        Webhook webhook = new Webhook(identity, id);
+
+        String guild_id = json.getString("guild_id");
+        String channel_id = json.getString("channel_id");
+
+        String name = json.getString("name");
+        String avatar = json.getString("avatar");
+        String token = json.getString("token");
+
+        /* Owner */
+        if (json.has("user")) {
+            webhook.setOwner(buildUser(json.getJSONObject("user")));
+        }
+
+        /* User */
+        JSONObject user = new JSONObject()
+                .put("username", name)
+                .put("discriminator", "0000")
+                .put("webhook_id", id) // Makes IUser#isWebhook == true
+                .put("avatar", avatar)
+                .put("bot", true);
+        webhook.setUser(buildUser(user));
+
+        webhook.setGuild(identity.getGuild(guild_id))
+            .setChannel(identity.getTextChannel(channel_id))
+            .setDefaultName(name)
+            .setDefaultAvatar(avatar)
+            .setToken(token);
+        return webhook;
+    }
+
+    /**
+     * Build a webhook by an id.
+     *
+     * @param id The id of the webhook.
+     * @return The webhook built.
+     */
+    public Webhook buildWebhookById(String id) {
+        JSONObject wh;
+        try {
+            wh = new Requester(identity, HttpPath.Webhook.GET_WEBHOOK).request(id).getAsJSONObject();
+        } catch (RuntimeException e) {
+            identity.LOG.log(LogLevel.FETAL, "Building Webhook By ID (ID: "+id+")", e);
+            throw new IllegalArgumentException("Invalid ID!");
+        }
+        return buildWebhook(wh);
     }
 
     /**
@@ -345,7 +391,7 @@ public final class ObjectBuilder {
 
         /* Build User (Can be Webhook) */
         User author = json.has("webhook_id") && !json.isNull("webhook_id") ?
-                buildWebHook(json.getJSONObject("author"), json.getString("webhook_id")) :
+                buildUser(json.getJSONObject("author").put("webhook_id", json.getString("webhook_id"))) :
                 buildUser(json.getJSONObject("author"));
 
         String content = json.getString("content");

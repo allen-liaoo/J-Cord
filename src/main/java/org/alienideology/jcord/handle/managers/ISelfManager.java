@@ -5,8 +5,8 @@ import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
+import org.alienideology.jcord.util.Icon;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
@@ -49,18 +49,10 @@ public interface ISelfManager {
     /**
      * Modify the avatar of this identity.
      *
-     * @param image The buffered avatar.
+     * @param icon The avatar.
      * @throws IOException When decoding image.
      */
-    void modifyAvatar(BufferedImage image) throws IOException;
-
-    /**
-     * Modify the avatar of this identity.
-     *
-     * @param path The avatar file path.
-     * @throws IOException When decoding image.
-     */
-    void modifyAvatar(String path) throws IOException;
+    void modifyAvatar(Icon icon) throws IOException;
 
     /**
      * Set the online status of this user.
