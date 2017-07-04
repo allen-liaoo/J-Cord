@@ -108,17 +108,19 @@ public class MessageProcessor {
 
         final String content;
         final int end;
+        boolean found = true;
         if (!matcher.find()) {
             content = "";
             end = content.length();
-            jumpTo(content.length());
+            found = false;
         } else {
             content = matcher.group();
             end = matcher.end();
-            jumpTo(cursor + matcher.end());
         }
 
-        return new Token(content, cursor, end);
+        Token token = new Token(content, cursor, end);
+        jumpTo(found ? cursor + matcher.end() : content.length());
+        return token;
     }
 
     /**
@@ -129,15 +131,57 @@ public class MessageProcessor {
      * @return The next line as a token.
      */
     public Token getNextLine() {
-        if (hasNext()) {
+        if (!hasNext()) {
             throw new IllegalArgumentException("Next \"Line\" not found!");
         }
         int end = remain.indexOf("\n");
         if (end == -1) { // No new line found
             end = remain.length();
         }
-        jump(end);
-        return new Token(content.substring(cursor, end), cursor, cursor + end);
+        Token token = new Token(content.substring(cursor, end), cursor, cursor + end);
+        jumpTo(cursor + end);
+        return token;
+    }
+
+    /**
+     * Check if the remaining content contains the markdowns combined.
+     * For example, {@link org.alienideology.jcord.handle.message.IMessage.Markdown#STRIKEOUT}
+     * combined with {@link org.alienideology.jcord.handle.message.IMessage.Markdown#ITALICS} would result in
+     * {@code ~~*}.
+     *
+     * @param markdowns The markdowns to check with.
+     * @return True if the remaining content contains the markdowns.
+     */
+    public boolean hasNextMarkdowns(IMessage.Markdown... markdowns) {
+        return remain.contains(IMessage.Markdown.getCombinedString(false, markdowns));
+    }
+
+    /**
+     * Get the next content that has the markdowns.
+     * For example, getting a content such as {@code ~~*Strike and italics!*~~} requires to pass {@link org.alienideology.jcord.handle.message.IMessage.Markdown#ITALICS}
+     * and {@link org.alienideology.jcord.handle.message.IMessage.Markdown#STRIKEOUT} in the parameter.
+     *
+     * @exception IllegalArgumentException If there is no characters remain.
+     * @param markdowns The markdowns to get.
+     * @return The content that has the markdownds surrounding it.
+     */
+    public Token getNextMarkdowns(IMessage.Markdown... markdowns) {
+        final String openMarkdowns = IMessage.Markdown.getCombinedString(false, markdowns);
+        final int start = remain.indexOf(openMarkdowns);
+        if (start == -1 || !hasNextMarkdowns(markdowns)) {
+            throw new IllegalArgumentException("Next \"Markdown\" not found!");
+        }
+
+        final String newS = remain.substring(start);
+        final String closeMarkdowns = IMessage.Markdown.getCombinedString(true, markdowns);
+        final int end = newS.indexOf(closeMarkdowns);
+        if (end == -1) {
+            throw new IllegalArgumentException("Next \"Markdown\" not found!");
+        }
+
+        Token token = new Token(remain.substring(start, end), cursor + start, cursor + end);
+        jumpTo(cursor + end);
+        return token;
     }
 
     /**
@@ -157,13 +201,14 @@ public class MessageProcessor {
      * @return The string found.
      */
     public Token getNextString(String s) {
-        if (hasNextString(s)) {
+        if (!hasNextString(s)) {
             throw new IllegalArgumentException("Next \"Sequence\" not found!");
         }
         final int start = remain.indexOf(s);
         final int end = cursor + start + s.length();
-        jumpTo(end);
-        return new Token(remain.substring(start, s.length()), cursor + start, end);
+        Token token = new Token(remain.substring(start, s.length()), cursor + start, end);
+        jumpTo(cursor + end);
+        return token;
     }
 
     /**
@@ -193,14 +238,15 @@ public class MessageProcessor {
      * @return A regex token, contains the matcher.
      */
     public RegexToken getNextByRegex(Pattern pattern) {
-        if (matchesRegex(pattern)) {
+        if (!matchesRegex(pattern)) {
             throw new IllegalArgumentException("Next \"Regex Match\" not found!");
         }
 
         Matcher matcher = pattern.matcher(remain);
         final int end = cursor + matcher.end();
-        jumpTo(end);
-        return new RegexToken(matcher.group(), cursor + matcher.start(), end, matcher);
+        RegexToken token = new RegexToken(matcher.group(), cursor + matcher.start(), end, matcher);
+        jumpTo(cursor + end);
+        return token;
     }
 
     /**
@@ -423,7 +469,7 @@ public class MessageProcessor {
 
         private Matcher matcher;
 
-        public RegexToken(String content, int start, int end, Matcher matcher) {
+        RegexToken(String content, int start, int end, Matcher matcher) {
             super(content, start, end);
             this.matcher = matcher;
         }
@@ -443,7 +489,7 @@ public class MessageProcessor {
 
         private T mention;
 
-        public GenericToken(String content, int start, int end, T mention) {
+        GenericToken(String content, int start, int end, T mention) {
             super(content, start, end);
             this.mention = mention;
         }

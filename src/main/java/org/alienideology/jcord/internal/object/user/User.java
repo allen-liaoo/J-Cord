@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-public final class User extends DiscordObject implements IUser {
+public class User extends DiscordObject implements IUser {
 
     private final String id;
 

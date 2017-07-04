@@ -448,4 +448,46 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
 
     }
 
+    /**
+     * Types of markdown support in Discord
+     */
+    enum Markdown {
+
+        ITALICS ("*"),
+
+        BOLD ("**"),
+
+        STRIKEOUT ("~~"),
+
+        UNDERLINE ("__"),
+
+        CODE ("`"),
+
+        CODE_BLOCK ("```");
+
+        public String markdown;
+        public String markdown_backward;
+
+        Markdown(String markdown) {
+            this.markdown = markdown;
+            this.markdown_backward = new StringBuilder(markdown).reverse().toString();
+        }
+
+        /**
+         * Get the combined string from multiple markdowns.
+         *
+         * @param reverse True to reverse the string
+         * @param markdowns The markdowns to combine.
+         * @return The combined markdowns
+         */
+        public static String getCombinedString(boolean reverse, Markdown... markdowns) {
+            StringBuilder sb = new StringBuilder();
+            for (IMessage.Markdown type : markdowns) {
+                sb.append(type.markdown);
+            }
+            if (reverse) sb.reverse();
+            return sb.toString();
+        }
+    }
+
 }

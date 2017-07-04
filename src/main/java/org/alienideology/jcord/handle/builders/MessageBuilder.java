@@ -1,14 +1,12 @@
 package org.alienideology.jcord.handle.builders;
 
 import org.alienideology.jcord.handle.EmojiTable;
+import org.alienideology.jcord.handle.IInvite;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
-import org.alienideology.jcord.internal.object.message.Embed;
 import org.alienideology.jcord.internal.object.message.Message;
-
-import java.util.Arrays;
 
 /**
  * MessageBuilder - A builder for building messages.
@@ -102,38 +100,22 @@ public final class MessageBuilder {
     }
 
     /**
-     * Append a markdown to the content.
-     * There are specific methods for code blocks.
-     * @see #appendCodeBlock(String)
-     * @see #appendCodeBlock(String, String)
-     *
-     * @param content The string to be italics.
-     * @param type The markdown type.
-     * @return MessageBuilder for chaining.
-     */
-    public MessageBuilder appendMarkdown(String content, MarkdownType type) {
-        this.content.append(type.markdown).append(content).append(type.markdown_backward);
-        return this;
-    }
-
-    /**
      * Append multiple markdowns to the content.
      * Markdowns can be layered, for example, {@code ~~**This is strikeout with bold**~~}.
      * <p>Strikeout with bold</p> can be achieved by using:
-     * <pre>#appendMarkdowns("This is strikeout with bold", MarkdownType.STRIKEOUT, MarkdownType.BOLD)</pre>
+     * <pre>#appendMarkdowns("This is strikeout with bold", Markdown.STRIKEOUT, Markdown.BOLD)</pre>
+     * There are specific methods for code block markdowns.
+     * @see #appendCodeBlock(String)
+     * @see #appendCodeBlock(String, String)
      *
      * @param content The string to be italics.
      * @param types The varargs of markdown types.
      * @return MessageBuilder for chaining.
      */
-    public MessageBuilder appendMarkdowns(String content, MarkdownType... types) {
-        for (MarkdownType type : types) {
-            this.content.append(type.markdown);
-        }
-        this.content.append(content);
-        for (int i = types.length; i > 0; i--) {
-            this.content.append(types[i].markdown_backward);
-        }
+    public MessageBuilder appendMarkdowns(String content, IMessage.Markdown... types) {
+        this.content.append(IMessage.Markdown.getCombinedString(false, types))
+                .append(content)
+                .append(IMessage.Markdown.getCombinedString(true, types));
         return this;
     }
 
@@ -218,9 +200,10 @@ public final class MessageBuilder {
      * Append a link to the content.
      * If the link does not start with http or https,
      * it will automatically be prefixed with {@code https://}.
+     * <br />
      * Discord automatically embed the link for the client's view. To disable that,
      * passes {@code true} to the {@code shouldAutoEmbed} parameter.
-     * For more information about Auto Embed, see <a href="https://support.discordapp.com/hc/en-us/articles/206342858--How-do-I-disable-auto-embed-">this support article</a>.
+     * For more information about Auto Embed, see <a href="https://support.discordapp.com/hc/en-us/articles/206342858--How-do-I-disable-auto-embed-">this article</a>.
      *
      * @param link The link to append, might not start with http or https.
      * @param shouldAutoEmbed True to let discord embed the link, false otherwise.
@@ -235,6 +218,17 @@ public final class MessageBuilder {
         } else {
             this.content.append("<").append(link).append(">");
         }
+        return this;
+    }
+
+    /**
+     * Append an invite to the content.
+     *
+     * @param invite The invite to be appended.
+     * @return MessageBuilder for chaining.
+     */
+    public MessageBuilder appendInvite(IInvite invite) {
+        this.content.append("https://discord.gg/").append(invite.getCode()).append("/");
         return this;
     }
 
@@ -305,28 +299,6 @@ public final class MessageBuilder {
      */
     public boolean isTTS() {
         return isTTS;
-    }
-
-    public enum MarkdownType {
-        ITALICS ("*"),
-
-        BOLD ("**"),
-
-        STRIKEOUT ("~~"),
-
-        UNDERLINE ("__"),
-
-        CODE ("`"),
-
-        CODE_BLOCK ("```");
-
-        public String markdown;
-        public String markdown_backward;
-
-        MarkdownType(String markdown) {
-            this.markdown = markdown;
-            this.markdown_backward = new StringBuilder(markdown).reverse().toString();
-        }
     }
 
 }
