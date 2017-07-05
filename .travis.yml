@@ -2,6 +2,7 @@ language: java
 jdk: oraclejdk8
 
 deploy:
+  before_script: cd src/main/java/org/alienideology/jcord
   skip_cleanup: true
 
 notifications:
