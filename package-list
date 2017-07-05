@@ -38,4 +38,6 @@ org.alienideology.jcord.internal.object.guild
 org.alienideology.jcord.internal.object.managers
 org.alienideology.jcord.internal.object.message
 org.alienideology.jcord.internal.object.user
+org.alienideology.jcord.oauth
 org.alienideology.jcord.util
+org.alienideology.jcord.util.log
