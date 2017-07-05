@@ -294,8 +294,8 @@ public final class ObjectBuilder {
         String guild_id = json.getString("guild_id");
         String channel_id = json.getString("channel_id");
 
-        String name = json.getString("name");
-        String avatar = json.getString("avatar");
+        String name = json.has("name") && !json.isNull("name") ? json.getString("name") : null;
+        String avatar = json.has("avatar") && !json.isNull("avatar") ? json.getString("avatar") : null;
         String token = json.getString("token");
 
         /* Owner */

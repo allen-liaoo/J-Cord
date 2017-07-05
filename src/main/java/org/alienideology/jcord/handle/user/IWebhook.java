@@ -5,13 +5,13 @@ import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.IWebhookManager;
+import org.alienideology.jcord.internal.gateway.HttpPath;
 
 /**
  * IWebhook - A low effort way to send messages to channels.
  *
  * @author AlienIdeology
  */
-// TODO: IGuild#getWebhooks, ITextChannel#getWebhooks, Webhook#delete
 public interface IWebhook extends IDiscordObject, ISnowFlake {
 
     /**
@@ -71,5 +71,15 @@ public interface IWebhook extends IDiscordObject, ISnowFlake {
      * @return The token.
      */
     String getToken();
+
+    /**
+     * Get the route that the webhook used to post requests in order to send message to a channel.
+     * You may also use {@link IWebhookManager#execute(IWebhookManager.WebhookMessageBuilder)} to send message.
+     *
+     * @return The webhook {@code POST} route.
+     */
+    default String getPostUrl() {
+        return HttpPath.DISCORD_API_URL + "/webhooks/" + getId() + "/" + getToken();
+    }
 
 }

@@ -3,19 +3,21 @@ package bot;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.IdentityBuilder;
 import org.alienideology.jcord.IdentityType;
-import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.bot.command.CommandFramework;
-import org.alienideology.jcord.event.Event;
 import org.alienideology.jcord.event.EventManager;
-import org.alienideology.jcord.event.message.MessageCreateEvent;
-import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.user.IWebhook;
+import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.gateway.Requester;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.util.log.LogMode;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * A simple test bot for J-Cord

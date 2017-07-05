@@ -1,7 +1,7 @@
 package org.alienideology.jcord.handle.guild;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
@@ -10,6 +10,7 @@ import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.managers.IGuildManager;
 import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.object.guild.Guild;
 
 import java.util.Arrays;
@@ -124,24 +125,30 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     Guild.MFA getMFALevel();
 
     /**
+     * Get the guild owner.
+     *
      * @return The owner of this guild.
      */
     IMember getOwner();
 
     /**
+     * Get a list of users belong to this guild.
+     *
      * @return A list of users of this guild.
      */
     List<IUser> getUsers();
 
     /**
     * Get the member instance of the identity.
+     *
     * @return The member instance
     */
-    @NotNull
+    @org.jetbrains.annotations.NotNull
     IMember getSelfMember();
 
     /**
-    * Get a member by id
+    * Get a member by id.
+     *
     * @param id The specified id
     * @return a Member or null if no member was found.
     */
@@ -149,12 +156,23 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     IMember getMember(String id);
 
     /**
+     * Get a list of members belong to this guild.
+     *
      * @return A list of members of this guild.
      */
     List<IMember> getMembers();
 
     /**
+     * Get a list of webhooks belong to this guild.
+     * It is recommended to cache the returned list, since this
+     *
+     * @return A list of webhooks.
+     */
+    List<IWebhook> getWebhooks();
+
+    /**
     * Get a role by id.
+     *
     * @param id The specified id
     * @return a Role or null if no role was found.
     */
@@ -162,18 +180,23 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     IRole getRole(String id);
 
     /**
+     * Get the {@code @everyone} role.
+     *
      * @return The @everyone role of this guild.
      */
     @NotNull
     IRole getEveryoneRole();
 
     /**
+     * Get all roles in this guild.
+     *
      * @return A list of roles for this guild.
      */
     List<IRole> getRoles();
 
     /**
     * Get a guild emoji by id.
+     *
     * @param id The specified id
     * @return a GuildEmoji or null if no emoji was found.
     */
@@ -181,6 +204,8 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     IGuildEmoji getGuildEmoji(String id);
 
     /**
+     * Get all guild emojis in this guild.
+     *
      * @return A list of server custom emojis this guild has.
      */
     List<IGuildEmoji> getGuildEmojis();
@@ -203,6 +228,7 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
 
     /**
     * Get a text channel by id.
+     *
     * @param id The specified id
     * @return a TextChannel or null if no channel was found.
     */
@@ -218,6 +244,8 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     ITextChannel getDefaultChannel();
 
     /**
+     * Get a list of text channels belong to this guild.
+     *
      * @return A list of text channels this guild has.
      */
     List<ITextChannel> getTextChannels();
@@ -231,6 +259,8 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     IVoiceChannel getVoiceChannel(String id);
 
     /**
+     * Get a list of voice channels belong to this guild.
+     *
      * @return A list of voice channels this guild has.
      */
     List<IVoiceChannel> getVoiceChannels();

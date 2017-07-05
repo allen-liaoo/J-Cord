@@ -1,6 +1,6 @@
 package org.alienideology.jcord.event.channel.dm;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 import org.alienideology.jcord.event.channel.ChannelCreateEvent;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.internal.object.IdentityImpl;

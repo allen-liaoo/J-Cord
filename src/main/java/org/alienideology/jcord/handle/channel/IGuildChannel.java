@@ -1,6 +1,6 @@
 package org.alienideology.jcord.handle.channel;
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.IChannelManager;

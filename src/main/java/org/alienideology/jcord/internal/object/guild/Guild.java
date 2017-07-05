@@ -1,22 +1,28 @@
 package org.alienideology.jcord.internal.object.guild;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.*;
 import org.alienideology.jcord.handle.managers.IGuildManager;
 import org.alienideology.jcord.handle.managers.IInviteManager;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.handle.user.IWebhook;
+import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.alienideology.jcord.internal.object.managers.GuildManager;
 import org.alienideology.jcord.internal.object.managers.InviteManager;
 import org.alienideology.jcord.internal.object.user.User;
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -216,6 +222,22 @@ public final class Guild extends DiscordObject implements IGuild {
     @Override
     public List<IMember> getMembers() {
         return Collections.unmodifiableList(members);
+    }
+
+    @Override
+    public List<IWebhook> getWebhooks() {
+        if (!getSelfMember().hasPermissions(true, Permission.MANAGE_WEBHOOKS)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS);
+        }
+
+        JSONArray whs = new Requester(identity, HttpPath.Webhook.GET_GUILD_WEBHOOKS).request(id)
+                .getAsJSONArray();
+        List<IWebhook> webhooks = new ArrayList<>();
+        ObjectBuilder builder = new ObjectBuilder(identity);
+        for (int i = 0; i < whs.length(); i++) {
+            webhooks.add(builder.buildWebhook(whs.getJSONObject(i)));
+        }
+        return webhooks;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.alienideology.jcord.event.message;
 
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;

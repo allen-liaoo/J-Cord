@@ -1,11 +1,9 @@
 package org.alienideology.jcord.util.log;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.io.StringWriter;
+import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
+import java.util.function.Predicate;
 
 import static org.alienideology.jcord.util.log.LogLevel.*;
 import static org.alienideology.jcord.util.log.LogMode.*;
@@ -13,8 +11,11 @@ import static org.alienideology.jcord.util.log.LogMode.*;
 /**
  * Logger - Official Logger for JCord.
  *
- * @see LogMode
- * @see LogLevel
+ * This logger supports printing 2 streams, one as default, one as the error output.
+ * It can also logs to files with individual filters attach to the file, making logging customisable.
+ *
+ * @see LogMode For different modes of this logger, used to turn on/off and filter logger output.
+ * @see LogLevel For different levels of this logger.
  *
  * @author AlienIdeology
  */
@@ -24,6 +25,9 @@ public class Logger implements Serializable {
     private LogMode mode;
 
     private PrintStream printStream;
+    private PrintStream errorStream;
+
+    private List<FileLog> fileLogs;
 
     private boolean showDate;
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("yy.MM.dd");
@@ -70,7 +74,9 @@ public class Logger implements Serializable {
     public Logger(LogMode mode, String name) {
         this.name = name == null ? "UNKNOWN" : name;
         this.mode = mode == null ? ON : mode;
-        printStream = System.err;
+        this.printStream = System.out;
+        this.errorStream = System.err;
+        this.fileLogs =  new ArrayList<>();
         this.showDate = true;
         this.showTime = true;
     }
@@ -145,8 +151,27 @@ public class Logger implements Serializable {
             sb.append("\n").append(sw.toString());
         }
 
-        // Writes to console
-        printStream.println(sb.toString());
+        // Writes to default print streams
+        if (level.isError() || throwable != null) {
+            errorStream.println(sb.toString());
+        } else {
+            printStream.println(sb.toString());
+        }
+
+        // Writes to files
+        Writer writer;
+        for (FileLog file : fileLogs) {
+            if (file.filter.test(level)) {
+                try {
+                    writer = new BufferedWriter(new FileWriter(file.file));
+                    writer.write(sb.toString());
+                    writer.close();
+                } catch (IOException e) {
+                    errorStream.println("Error while writing to file: " + file);
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     //-------------------------Getters & Setters-------------------------
@@ -219,8 +244,18 @@ public class Logger implements Serializable {
     }
 
     /**
+     * Disable the logger's print stream.
+     *
+     * @return Logger for chaining.
+     */
+    public Logger disablePrintStream() {
+        this.printStream = null;
+        return this;
+    }
+
+    /**
      * Set the stream this logger will print to.
-     * Default stream is {@link System#err}.
+     * Default stream is {@link System#out}.
      *
      * @param printStream The stream to print to.
      * @return Logger for chaining.
@@ -237,6 +272,36 @@ public class Logger implements Serializable {
      */
     public PrintStream getPrintStream() {
         return printStream;
+    }
+
+    /**
+     * Disable the logger's error stream.
+     *
+     * @return Logger for chaining.
+     */
+    public Logger disableErrorStream() {
+        this.errorStream = null;
+        return this;
+    }
+
+    /**
+     * Set the error stream this logger will print errors to.
+     *
+     * @param errorStream The stream.
+     * @return Logger for chaining.
+     */
+    public Logger setErrorStream(PrintStream errorStream) {
+        this.errorStream = errorStream;
+        return this;
+    }
+
+    /**
+     * Get the error stream this logger will print errors to.
+     *
+     * @return The stream.
+     */
+    public PrintStream getErrorStream() {
+        return errorStream;
     }
 
     /**
@@ -322,6 +387,55 @@ public class Logger implements Serializable {
     }
 
     /**
+     * Get the file logs added to the logger, waiting to be write to.
+     *
+     * @return A list of file logs.
+     */
+    public List<FileLog> getFileLogs() {
+        return fileLogs;
+    }
+
+    /**
+     * Add a file to the logger output.
+     * You can filter the logs by using the following predicate,
+     * or pass {@code null} to the predicate to get all logs (that are granted by the {@link LogMode}).
+     *
+     * @exception IllegalArgumentException
+     *          <ul>
+     *              <li>If the file does not exist or is read-only.</li>
+     *              <li>If the file is already added.</li>
+     *          </ul>
+     * @param filter The log filter.
+     * @param file The file to output to.
+     * @return Logger for chaining.
+     */
+    public Logger addFileLog(Predicate<LogLevel> filter, File file) {
+        if (!file.exists() || !file.canWrite()) {
+            throw new IllegalArgumentException("Cannot write to the file!");
+        }
+
+        if (fileLogs.stream().anyMatch(fl -> fl.file.equals(file))) {
+            throw new IllegalArgumentException("Cannot register an existed file log!");
+        }
+
+        fileLogs.add(new FileLog(filter == null ? level -> true : filter, file));
+        return this;
+    }
+
+    /**
+     * Remove a file from the logger.
+     * If the file was not added, then this method will do nothing and return.
+     *
+     * @param file The file to remove.
+     * @return Logger for chaining.
+     */
+    public Logger removeFileLog(File file) {
+        Optional<FileLog> first = fileLogs.stream().filter(fl -> fl.file.equals(file)).findFirst();
+        first.ifPresent(fileLog -> fileLogs.remove(fileLog));
+        return this;
+    }
+
+    /**
      * Clone the logger settings by passing a new object.
      *
      * @param clazz The new object.
@@ -345,6 +459,29 @@ public class Logger implements Serializable {
                 .setDateFormatter(dateFormatter)
                 .setShowTime(showTime)
                 .setTimeFormatter(timeFormatter);
+    }
+
+    /**
+     * A file in the logger with a filter attach to it.
+     */
+    public static class FileLog {
+
+        Predicate<LogLevel> filter;
+        File file;
+
+        FileLog(Predicate<LogLevel> filter, File file) {
+            this.filter = filter;
+            this.file = file;
+        }
+
+        public Predicate<LogLevel> getFilter() {
+            return filter;
+        }
+
+        public File getFile() {
+            return file;
+        }
+
     }
 
 }

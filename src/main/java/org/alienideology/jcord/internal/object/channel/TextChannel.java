@@ -9,8 +9,13 @@ import org.alienideology.jcord.handle.managers.IChannelManager;
 import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.permission.Permission;
+import org.alienideology.jcord.handle.user.IWebhook;
+import org.alienideology.jcord.internal.exception.PermissionException;
+import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.Buildable;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.ChannelManager;
 import org.alienideology.jcord.internal.object.managers.InviteManager;
@@ -172,6 +177,22 @@ public final class TextChannel extends MessageChannel implements ITextChannel, B
     @Override
     public String getTopic() {
         return topic;
+    }
+
+    @Override
+    public List<IWebhook> getWebhooks() {
+        if (!hasPermission(guild.getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS);
+        }
+
+        JSONArray whs = new Requester(identity, HttpPath.Webhook.GET_CHANNEL_WEBHOOKS).request(id)
+                .getAsJSONArray();
+        List<IWebhook> webhooks = new ArrayList<>();
+        ObjectBuilder builder = new ObjectBuilder(identity);
+        for (int i = 0; i < whs.length(); i++) {
+            webhooks.add(builder.buildWebhook(whs.getJSONObject(i)));
+        }
+        return webhooks;
     }
 
     @Override

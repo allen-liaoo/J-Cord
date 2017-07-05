@@ -1,16 +1,14 @@
 package org.alienideology.jcord.internal.object.managers;
 
 import org.alienideology.jcord.handle.managers.IWebhookManager;
-import org.alienideology.jcord.handle.message.IMessage;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IWebhook;
+import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.ObjectBuilder;
-import org.alienideology.jcord.internal.object.channel.MessageChannel;
-import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.user.Webhook;
-import org.alienideology.jcord.util.Icon;
+import org.alienideology.jcord.handle.Icon;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -43,6 +41,10 @@ public class WebhookManager implements IWebhookManager {
     }
 
     private void modify(JSONObject json) {
+        if (!getChannel().hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS);
+        }
+
         new Requester((IdentityImpl) getIdentity(), HttpPath.Webhook.MODIFY_WEBHOOK)
                 .request(webhook.getId())
                 .updateRequestWithBody(request -> request.body(json))
@@ -50,17 +52,19 @@ public class WebhookManager implements IWebhookManager {
     }
 
     @Override
-    public IMessage execute(WebhookMessageBuilder webhookMB) {
-        return exe(webhookMB.getJson());
-    }
-
-    private IMessage exe(JSONObject json) {
-        JSONObject msg = new Requester((IdentityImpl) getIdentity(), HttpPath.Webhook.EXECUTE_WEBHOOK)
+    public void execute(WebhookMessageBuilder webhookMB) {
+        new Requester((IdentityImpl) getIdentity(), HttpPath.Webhook.EXECUTE_WEBHOOK)
                 .request(webhook.getId(), webhook.getToken())
-                .updateRequestWithBody(http -> http.body(json)).getAsJSONObject();
-        Message message = new ObjectBuilder((IdentityImpl) getIdentity()).buildMessage(msg);
-        ((MessageChannel) message.getChannel()).setLatestMessage(message);
-        return message;
+                .updateRequestWithBody(http -> http.body(webhookMB.getJson())).performRequest();
     }
 
+    @Override
+    public void delete() {
+        if (!getChannel().hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS);
+        }
+
+        new Requester((IdentityImpl) getIdentity(), HttpPath.Webhook.DELETE_WEBHOOK).request(webhook.getId())
+                .performRequest();
+    }
 }

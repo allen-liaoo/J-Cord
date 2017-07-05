@@ -1,6 +1,6 @@
 package org.alienideology.jcord.event.message;
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.message.IReaction;

@@ -24,8 +24,10 @@ IDiscordObject - Entities such as Guild, User, or Channel.
  - ISnowFake  - Objects that has ID.
  - IMention - Objects that are mentionable.
  - IInvite - A piece of url used to invite users to a guild.
+ - Icon - An encoded(base64) image, can be an avatar or picture.
  - EmojiTable - A collection of Default Discord Emojis.
    - Emoji - An unicode emoji in Discord.
+   - Category - Emoji categories in Discord.
 
 ### Guild
 IGuild - A collection of users and channels, often referred to in the UI as a server.
@@ -55,6 +57,7 @@ IUser - A base entity, can be a member of guild/private channel, and bot/human.
  - Presence - A status of a user, containing information about the user online status and game.
    - Game - A playing or streaming status of a user.
    - OnlineStatus (Enumeration) - The online status of a user.
+ - IWebhook - A low effort way to send messages to channels.
 
 ### Permission
 Permission (Enumeration) - A way to limit and grant certain abilities to members.
@@ -68,6 +71,7 @@ Permission (Enumeration) - A way to limit and grant certain abilities to members
  - IInviteManager - A manager for managing invites in both a guild or a guild channel.
  - IMemberManager - The manager that manages and perform actions upon a member.
  - IRoleManager - A manager that manages a role in the guild.
+ - IWebhookManager - A manager for modifying, executing and deleting webhooks.
  - ISelfManager - A manager that manages self user.
 
 ### Builders
@@ -81,7 +85,7 @@ Permission (Enumeration) - A way to limit and grant certain abilities to members
 Event - Whenever a change happens to an entity, an event get fired.
  - EventManager - The manager of DispatcherAdaptors, EvenSubscribers and CommandFrameworks.
    - DispatcherAdaptor - Event listener used to listen to events and perform actions.
-   - EventSubscriber - An annotation used to annotate methods that subscribe an event.
+   - EventSubscriber (Annotation) - An annotation used to annotate methods that subscribe an event.
    - CommandFramework - See Command section. <br />
 See [Event_Hierarchy.md](/docs/Event_Hierarchy.md) for more information.
 
@@ -95,13 +99,13 @@ OAuth - Used to build applications that utilize authentication and data from the
  - PermissionException - When the identity request an action that it does not have permission to do so, a PermissionException is thrown.
  - RateLimitException - An exception for gateway rate limits.
  - ErrorResponseException - An exception for Json Error Responses.
- - httpErrorException - An exception for Http Error Codes.
+ - HttpErrorException - An exception for Http Error Codes.
+ - ScopeException - When the identity try to access a resource outside of its scopes.
 
 ## Utility
  - Cache - Cache objects into a customized list.
  - Seekable - Multi-threaded future.
  - DataUtils - Utilities for I/O and data.
- - MessageUtils - Message and String utilities.
  - Log
    - Logger - Official Logger for JCord.
    - LogMode - The logger mode, used to filter logs for the JCordLogger.

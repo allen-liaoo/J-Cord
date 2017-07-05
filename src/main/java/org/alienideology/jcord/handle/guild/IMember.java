@@ -1,7 +1,7 @@
 package org.alienideology.jcord.handle.guild;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;

@@ -7,7 +7,6 @@ import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.util.MessageUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,6 +20,18 @@ import java.util.regex.Pattern;
  * @author AlienIdeology
  */
 public class MessageProcessor {
+
+    public final static Pattern PATTERN_MENTIONS = Pattern.compile("<(@|@!|#|@&|:(\\w+):)[0-9]+>");
+    public final static Pattern PATTERN_MENTION_USER = Pattern.compile("<@[0-9]+>");
+    public final static Pattern PATTERN_MENTION_MEMBER = Pattern.compile("<@![0-9]+>");
+    public final static Pattern PATTERN_MENTION_ROLE = Pattern.compile("<@&[0-9]+>");
+    public final static Pattern PATTERN_MENTION_CHANNEL = Pattern.compile("<#[0-9]+>");
+    public final static Pattern PATTERN_MENTION_EMOJI = Pattern.compile("<:\\w+:[0-9]+>");
+    public final static Pattern PATTERN_WORD = Pattern.compile("(\\w)+(?=\\s|\\n|$)");
+    public final static Pattern PATTERN_URL = Pattern.compile("(https|http|attachment)(://)(.+[^\\s])([.])(.+[^\\s])");
+    public final static Pattern PATTERN_INVITE = Pattern.compile("(?i)(discord\\.gg/)([A-Za-z0-9]{5,})(?=\\b|$)");
+    public final static Pattern PATTERN_EMOJI = Pattern.compile(
+            "(?:[\\u2700-\\u27bf]|(?:\\ud83c[\\udde6-\\uddff]){2}|[\\ud800-\\udbff][\\udc00-\\udfff]|[\\u0023-\\u0039]\\ufe0f?\\u20e3|\\u3299|\\u3297|\\u303d|\\u3030|\\u24c2|\\ud83c[\\udd70-\\udd71]|\\ud83c[\\udd7e-\\udd7f]|\\ud83c\\udd8e|\\ud83c[\\udd91-\\udd9a]|\\ud83c[\\udde6-\\uddff]|[\\ud83c[\\ude01-\\ude02]|\\ud83c\\ude1a|\\ud83c\\ude2f|[\\ud83c[\\ude32-\\ude3a]|[\\ud83c[\\ude50-\\ude51]|\\u203c|\\u2049|[\\u25aa-\\u25ab]|\\u25b6|\\u25c0|[\\u25fb-\\u25fe]|\\u00a9|\\u00ae|\\u2122|\\u2139|\\ud83c\\udc04|[\\u2600-\\u26FF]|\\u2b05|\\u2b06|\\u2b07|\\u2b1b|\\u2b1c|\\u2b50|\\u2b55|\\u231a|\\u231b|\\u2328|\\u23cf|[\\u23e9-\\u23f3]|[\\u23f8-\\u23fa]|\\ud83c\\udccf|\\u2934|\\u2935|[\\u2190-\\u21ff]]]])");
 
     private final IMessage message;
     private final String content;
@@ -104,7 +115,7 @@ public class MessageProcessor {
         if (!hasNext()) {
             throw new IllegalArgumentException("Next \"Word\" not found!");
         }
-        Matcher matcher = MessageUtils.PATTERN_WORD.matcher(remain);
+        Matcher matcher = PATTERN_WORD.matcher(remain);
 
         final String content;
         final int end;
@@ -255,7 +266,7 @@ public class MessageProcessor {
      * @return True if there is still a mention left.
      */
     public boolean hasNextMention() {
-        return hasNext() && MessageUtils.PATTERN_MENTIONS.matcher(remain).find();
+        return hasNext() && PATTERN_MENTIONS.matcher(remain).find();
     }
 
     /**
@@ -266,7 +277,7 @@ public class MessageProcessor {
      * @return The next mention, with the mentioned object as the {@code String} ID.
      */
     public GenericToken<String> getNextMention() {
-        RegexToken token = getNextByRegex(MessageUtils.PATTERN_MENTIONS);
+        RegexToken token = getNextByRegex(PATTERN_MENTIONS);
         return new GenericToken<>(token.getContent(), token.getStart(), token.getEnd(), token.getMatcher().group(2));
     }
 
@@ -279,7 +290,7 @@ public class MessageProcessor {
      * @return The next user mention.
      */
     public GenericToken<IUser> getNextUserMention() {
-        RegexToken token = getNextByRegex(MessageUtils.PATTERN_MENTION_USER);
+        RegexToken token = getNextByRegex(PATTERN_MENTION_USER);
 
         return new GenericToken<>(token.getContent(), token.getStart(), token.getEnd(),
                 message.getIdentity().getUser(token.getMatcher().group(2)));
@@ -294,7 +305,7 @@ public class MessageProcessor {
      * @return The next member mention.
      */
     public GenericToken<IMember> getNextMemberMention() {
-        RegexToken token = getNextByRegex(MessageUtils.PATTERN_MENTION_MEMBER);
+        RegexToken token = getNextByRegex(PATTERN_MENTION_MEMBER);
 
         return new GenericToken<>(token.getContent(), token.getStart(), token.getEnd(),
                 message.getGuild().getMember(token.getMatcher().group(2)));
@@ -308,7 +319,7 @@ public class MessageProcessor {
      * @return The next role mention.
      */
     public GenericToken<IRole> getNextRoleMention() {
-        RegexToken token = getNextByRegex(MessageUtils.PATTERN_MENTION_ROLE);
+        RegexToken token = getNextByRegex(PATTERN_MENTION_ROLE);
 
         return new GenericToken<>(token.getContent(), token.getStart(), token.getEnd(),
                 message.getGuild().getRole(token.getMatcher().group(2)));
@@ -322,7 +333,7 @@ public class MessageProcessor {
      * @return The next text channel mention.
      */
     public GenericToken<ITextChannel> getNextChannelMention() {
-        RegexToken token = getNextByRegex(MessageUtils.PATTERN_MENTION_CHANNEL);
+        RegexToken token = getNextByRegex(PATTERN_MENTION_CHANNEL);
 
         return new GenericToken<>(token.getContent(), token.getStart(), token.getEnd(),
                 message.getGuild().getTextChannel(token.getMatcher().group(2)));
@@ -336,7 +347,7 @@ public class MessageProcessor {
      * @return The next guild emoji mention.
      */
     public GenericToken<IGuildEmoji> getNextGuildEmojiMention() {
-        RegexToken token = getNextByRegex(MessageUtils.PATTERN_MENTION_EMOJI);
+        RegexToken token = getNextByRegex(PATTERN_MENTION_EMOJI);
 
         return new GenericToken<>(token.getContent(), token.getStart(), token.getEnd(),
                 message.getGuild().getGuildEmoji(token.getMatcher().group(2)));
@@ -350,7 +361,7 @@ public class MessageProcessor {
      */
     // TODO: Test this #getNextEmoji
     public GenericToken<EmojiTable.Emoji> getNextEmoji() {
-        RegexToken token = getNextByRegex(MessageUtils.PATTERN_EMOJI);
+        RegexToken token = getNextByRegex(PATTERN_EMOJI);
 
         return new GenericToken<>(token.getContent(), token.getStart(), token.getEnd(),
                 JCord.EMOJI_TABLE.getByUnicode(token.getContent()));
@@ -364,7 +375,7 @@ public class MessageProcessor {
      * @return The next url.
      */
     public GenericToken<URL> getNextUrl() throws MalformedURLException {
-        RegexToken token = getNextByRegex(MessageUtils.PATTERN_INVITE);
+        RegexToken token = getNextByRegex(PATTERN_INVITE);
 
         return new GenericToken<>(token.getContent(), token.getStart(), token.getEnd(), new URL(token.getContent()));
     }
@@ -376,7 +387,7 @@ public class MessageProcessor {
      * @return The next invite.
      */
     public GenericToken<String> getNextInvite() {
-        RegexToken token = getNextByRegex(MessageUtils.PATTERN_INVITE);
+        RegexToken token = getNextByRegex(PATTERN_INVITE);
 
         return new GenericToken<>(token.getContent(), token.getStart(), token.getEnd(), token.getContent());
     }

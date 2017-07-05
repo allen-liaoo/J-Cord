@@ -6,7 +6,7 @@ import com.mashape.unirest.request.HttpRequest;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.bot.Bot;
 import org.alienideology.jcord.bot.command.CommandFramework;

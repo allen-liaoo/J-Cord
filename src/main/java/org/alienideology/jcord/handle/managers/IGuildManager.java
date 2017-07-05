@@ -13,7 +13,7 @@ import org.alienideology.jcord.handle.guild.Region;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
-import org.alienideology.jcord.util.Icon;
+import org.alienideology.jcord.handle.Icon;
 
 import java.io.IOException;
 import java.util.List;

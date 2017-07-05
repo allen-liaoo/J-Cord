@@ -9,13 +9,9 @@ import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.util.DataUtils;
-import org.alienideology.jcord.util.Icon;
+import org.alienideology.jcord.handle.Icon;
 import org.json.JSONObject;
 
-import javax.imageio.ImageIO;
-
-import java.io.File;
 import java.io.IOException;
 
 /**

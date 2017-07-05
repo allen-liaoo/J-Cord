@@ -1,6 +1,6 @@
 package org.alienideology.jcord;
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.bot.Bot;
 import org.alienideology.jcord.bot.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;

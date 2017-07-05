@@ -53,6 +53,26 @@ public enum LogLevel {
     }
 
     /**
+     * Check if this level is an normal log (ok).
+     * This is the opposite of {@link #isSomeMode()}.
+     *
+     * @return True if this level is an normal log.
+     */
+    public boolean isOk() {
+        return !isError();
+    }
+
+    /**
+     * Check if this level is an error log.
+     * This is the same as {@link #isSomeMode()}.
+     *
+     * @return True if this level is an error log.
+     */
+    public boolean isError() {
+        return isSomeMode();
+    }
+
+    /**
      * Check if this log level is logged with {@link LogMode#ON}.
      *
      * @return True if this level is logged with the mode.

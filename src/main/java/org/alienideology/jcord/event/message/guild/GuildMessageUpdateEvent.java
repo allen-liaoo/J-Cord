@@ -1,6 +1,6 @@
 package org.alienideology.jcord.event.message.guild;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.internal.object.IdentityImpl;

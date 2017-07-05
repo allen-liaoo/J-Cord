@@ -9,7 +9,7 @@
 - Multiple choices for receiving events.
 - Easy to use command system via reflection.
 - Post bot status to bot listing websites automatically.
-- Built in support for OAuth 2 ~~(Webhooks in the future)~~
+- Built in support for Webhook and OAuth 2
 - Get emojis by aliases use in Discord. No more external emoji dependencies.
 
 ## Download
@@ -241,10 +241,13 @@ Please fork this project, and read [Contribution Documentation](/docs/Contributi
 
 ## Dependencies
 - [NV Websocket Client](https://github.com/TakahikoKawasaki/nv-websocket-client) `v2.2`
+- [NanoHTTPD](https://github.com/NanoHttpd/nanohttpd) `v2.2.0`
 - [Unirest for Java](https://github.com/Mashape/unirest-java) `v1.4.9`
 - [JSON-java](https://github.com/stleary/JSON-java) `v20160212`
 - [Apache Commons Lang 3](https://commons.apache.org/proper/commons-lang/) `v3.4`
 - [Apache Commons IO](https://commons.apache.org/proper/commons-io/) `2.5`
+- [JetBrains Annotations](https://mvnrepository.com/artifact/org.jetbrains/annotations/) `v15.0`
+- [TypeTools](https://github.com/jhalterman/typetools) `v0.5.0`
 
 ## More
 - Javadocs: [AlienIdeology.Github.io/J-Cord/](https://alienideology.github.io/J-Cord/)

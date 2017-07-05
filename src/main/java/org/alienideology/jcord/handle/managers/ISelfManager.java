@@ -5,14 +5,14 @@ import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
-import org.alienideology.jcord.util.Icon;
+import org.alienideology.jcord.handle.Icon;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
 
 /**
  * ISelfManager - A manager that manages self user.
- * This managers is for both bot and java.client, which means setting email or password is not supported.
+ * This managers is for both bot and client, which means setting email or password is not supported.
  *
  * @author AlienIdeology
  */

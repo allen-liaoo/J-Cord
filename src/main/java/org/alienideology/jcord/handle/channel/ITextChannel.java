@@ -1,8 +1,11 @@
 package org.alienideology.jcord.handle.channel;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.user.IWebhook;
+
+import java.util.List;
 
 /**
  * TextChannel - An IGuildChannel for text messages.
@@ -25,6 +28,13 @@ public interface ITextChannel extends IGuildChannel, IMessageChannel, IMention, 
      * @return The string topic message.
      */
     String getTopic();
+
+    /**
+     * Get a list of webhooks that can send messages to this channel.
+     *
+     * @return A list of webhooks.
+     */
+    List<IWebhook> getWebhooks();
 
     /**
      * @return True if this channel is the default channel of its guild.

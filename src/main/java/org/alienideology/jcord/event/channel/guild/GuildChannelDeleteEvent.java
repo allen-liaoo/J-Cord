@@ -1,6 +1,6 @@
 package org.alienideology.jcord.event.channel.guild;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 import org.alienideology.jcord.event.channel.ChannelDeleteEvent;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.guild.IGuild;

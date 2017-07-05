@@ -1,6 +1,6 @@
 package org.alienideology.jcord.handle;
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.json.JSONObject;
 import org.json.JSONTokener;

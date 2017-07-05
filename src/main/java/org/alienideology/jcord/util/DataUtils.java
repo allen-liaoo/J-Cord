@@ -19,14 +19,14 @@ import java.util.Base64;
  */
 public class DataUtils {
 
-    public static byte[] getBytesFromImage(BufferedImage image) throws IOException {
+    public static byte[] getBytesFromImage(String fileFormat, BufferedImage image) throws IOException {
         ByteArrayOutputStream byteoutput = new ByteArrayOutputStream();
-        ImageIO.write(image, "jpeg", byteoutput);
+        ImageIO.write(image, fileFormat, byteoutput);
         return byteoutput.toByteArray();
     }
 
-    public static String encodeIcon(BufferedImage image) throws IOException {
-        return "data:image/jpeg;base64, " + byteToString(getBytesFromImage(image));
+    public static String encodeIcon(String fileFormat, BufferedImage image) throws IOException {
+        return "data:image/" + fileFormat + ";base64, " + byteToString(getBytesFromImage(fileFormat, image));
     }
 
     public static String byteToString(byte[] bytes) {

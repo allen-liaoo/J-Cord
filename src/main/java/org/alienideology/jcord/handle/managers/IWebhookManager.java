@@ -3,18 +3,15 @@ package org.alienideology.jcord.handle.managers;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.object.message.Embed;
-import org.alienideology.jcord.util.DataUtils;
-import org.alienideology.jcord.util.Icon;
+import org.alienideology.jcord.handle.Icon;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -42,6 +39,15 @@ public interface IWebhookManager {
     IWebhook getWebhook();
 
     /**
+     * Get the guild this webhook belongs to.
+     *
+     * @return The guild.
+     */
+    default IGuild getGuild() {
+        return getWebhook().getGuild();
+    }
+
+    /**
      * Get the channel this webhook can send messages to.
      *
      * @return The channel.
@@ -54,6 +60,8 @@ public interface IWebhookManager {
      * Modify the default name of this webhook.
      * The default name appears on every message, and it can be different than the webhook's username.
      *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity itself does not have {@code Manager Webhooks} permission.
      * @param name The name.
      */
     void modifyDefaultName(String name);
@@ -62,6 +70,8 @@ public interface IWebhookManager {
      * Modify the default avatar of this webhook.
      * The default avatar appears on every message, and it can be different than the webhook's user avatar.
      *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity itself does not have {@code Manager Webhooks} permission.
      * @param icon The avatar.
      * @throws IOException When decoding image.
      */
@@ -69,11 +79,20 @@ public interface IWebhookManager {
 
     /**
      * Execute the webhook by sending a message to the channel.
+     * No exception will be thrown, since webhooks are granted with
+     * {@link org.alienideology.jcord.handle.permission.Permission#ALL_TEXT_PERMS} in the channel.
      *
      * @param webhookMB The webhook message builder, used to send messages.
-     * @return The message send.
      */
-    IMessage execute(WebhookMessageBuilder webhookMB);
+    void execute(WebhookMessageBuilder webhookMB);
+
+    /**
+     * Delete this webhook.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity itself does not have {@code Manager Webhooks} permission.
+     */
+    void delete();
 
     /**
      * A simple message builder for webhooks.
@@ -84,6 +103,16 @@ public interface IWebhookManager {
         private JSONObject json = new JSONObject();
 
         public WebhookMessageBuilder() {
+        }
+
+        /**
+         * Build a webhook message.
+         * This is just a pace holder for the builder. Not using this method also works.
+         *
+         * @return The builder.
+         */
+        public WebhookMessageBuilder build() {
+            return this;
         }
 
         /**
@@ -148,29 +177,22 @@ public interface IWebhookManager {
          * Override the default avatar while sending this message.
          * This is temporary, it only overrides the message sent.
          *
-         * @param image The temporary avatar.
+         * @param icon The temporary icon.
          * @return WebhookMessageBuilder for chaining.
          */
-        public WebhookMessageBuilder overrideAvatar(BufferedImage image) throws IOException {
-            String encoding = DataUtils.encodeIcon(image);
-            json.put("avatar_url", encoding);
+        public WebhookMessageBuilder overrideAvatar(Icon icon) throws IOException {
+            json.put("avatar_url", icon.getData());
             return this;
         }
 
         /**
-         * Override the default avatar while sending this message.
-         * This is temporary, it only overrides the message sent.
+         * The Json used to post http requests internally.
          *
-         * @param path The temporary avatar's file path.
-         * @return WebhookMessageBuilder for chaining.
+         * @return The json.
          */
-        public WebhookMessageBuilder overrideAvatar(String path) throws IOException {
-            overrideAvatar(ImageIO.read(new File(path)));
-            return this;
-        }
-
         public JSONObject getJson() {
             return json;
         }
+
     }
 }

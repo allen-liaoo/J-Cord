@@ -1,4 +1,4 @@
-package org.alienideology.jcord.util;
+package org.alienideology.jcord.handle;
 
 import org.alienideology.jcord.JCord;
 
@@ -10,19 +10,20 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.alienideology.jcord.util.DataUtils;
 import org.apache.commons.io.IOUtils;
 
 /**
- * Icon - An avatar or picture.
+ * Icon - An encoded(base64) image, can be an avatar or picture.
  *
  * @author AlienIdeology
  */
-public class Icon {
+public final class Icon {
 
     private String data;
     private byte[] bytes;
 
-    public Icon(String data, byte[] bytes) {
+    Icon(String data, byte[] bytes) {
         this.data = data;
         this.bytes = bytes;
     }
@@ -45,19 +46,68 @@ public class Icon {
         return bytes;
     }
 
+    //------------------------------Statics------------------------------
+
+    /**
+     * Get the default icon (null).
+     *
+     * @return The default icon.
+     */
+    public static Icon defaultIcon() {
+        return new Icon(null, null);
+    }
+
     /**
      * Get the icon instance from the icon file path.
+     * The default {@code file format} for this method is {@code jpeg}.
      *
      * @param path The file path.
      * @return A new icon.
      * @throws IOException When decoding the icon.
      */
     public static Icon fromPath(String path) throws IOException {
+        return fromPath("jpeg", path);
+    }
+
+    /**
+     * Get the icon instance from the icon file path.
+     *
+     * @param fileFormat The image file format, jpg, jpeg, png, etc.
+     * @param path The file path.
+     * @return A new icon.
+     * @throws IOException When decoding the icon.
+     */
+    public static Icon fromPath(String fileFormat, String path) throws IOException {
         return fromImage(ImageIO.read(new File(path)));
     }
 
     /**
+     * Get the icon instance from a buffered image.
+     * The default {@code file format} for this method is {@code jpeg}.
+     *
+     * @param image The image.
+     * @return A new icon.
+     * @throws IOException When decoding the icon.
+     */
+    public static Icon fromImage(BufferedImage image) throws IOException {
+        return fromImage("jpeg", image);
+    }
+
+    /**
+     * Get the icon instance from a buffered image.
+     *
+     * @param fileFormat The image file format, jpg, jpeg, png, etc.
+     * @param image The image.
+     * @return A new icon.
+     * @throws IOException When decoding the icon.
+     */
+    public static Icon fromImage(String fileFormat, BufferedImage image) throws IOException {
+        return new Icon(DataUtils.encodeIcon(fileFormat, image), DataUtils.getBytesFromImage(fileFormat, image));
+    }
+
+    /**
      * Get the icon instance from an url.
+     * The default {@code file format} for this method is {@code jpeg}.
      *
      * @param url The image url.
      * @return A new icon.
@@ -73,6 +123,7 @@ public class Icon {
 
     /**
      * Get the icon instance from an input stream.
+     * The default {@code file format} for this method is {@code jpeg}.
      *
      * @param stream The image stream.
      * @return A new icon.
@@ -85,18 +136,8 @@ public class Icon {
     }
 
     /**
-     * Get the icon instance from a buffered image.
-     *
-     * @param image The image.
-     * @return A new icon.
-     * @throws IOException When decoding the icon.
-     */
-    public static Icon fromImage(BufferedImage image) throws IOException {
-        return new Icon(DataUtils.encodeIcon(image), DataUtils.getBytesFromImage(image));
-    }
-
-    /**
      * Get the icon instance from a byte array.
+     * The default {@code file format} for this method is {@code jpeg}.
      *
      * @param bytes The byte array.
      * @return A new icon.

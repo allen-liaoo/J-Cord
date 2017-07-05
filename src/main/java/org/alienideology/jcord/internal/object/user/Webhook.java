@@ -113,4 +113,34 @@ public class Webhook extends DiscordObject implements IWebhook {
         return this;
     }
 
+    /*---------------------Object Overrides--------------------*/
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Webhook)) return false;
+        if (!super.equals(o)) return false;
+
+        Webhook webhook = (Webhook) o;
+
+        if (!id.equals(webhook.id)) return false;
+        return token != null ? token.equals(webhook.token) : webhook.token == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + id.hashCode();
+        result = 31 * result + (token != null ? token.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Webhook{" +
+                "id='" + id + '\'' +
+                ", channel=" + channel +
+                ", defaultName='" + defaultName + '\'' +
+                '}';
+    }
 }

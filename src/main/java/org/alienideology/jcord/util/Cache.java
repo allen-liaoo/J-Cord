@@ -1,6 +1,6 @@
 package org.alienideology.jcord.util;
 
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.ISnowFlake;
 
 import java.time.OffsetDateTime;

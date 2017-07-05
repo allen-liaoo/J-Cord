@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author AlienIdeology
  */
-public class MessageHistory extends DiscordObject implements IDiscordObject {
+public final class MessageHistory extends DiscordObject implements IDiscordObject {
 
     private MessageChannel channel;
 
