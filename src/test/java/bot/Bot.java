@@ -11,7 +11,12 @@ import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.util.log.LogMode;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -20,6 +25,8 @@ import java.io.IOException;
  * @author AlienIdeology
  */
 public class Bot {
+
+    private String token;
 
     public Identity bot;
     public CommandFramework framework;
@@ -33,6 +40,8 @@ public class Bot {
     public Bot() {
         // Constructing the Command Framework
         framework = new CommandFramework();
+
+        getToken();
 
         setUpIdentity();
 
@@ -51,6 +60,17 @@ public class Bot {
         playGround();
     }
 
+    // Get the secret token from a json config file
+    private void getToken() {
+        try {
+            JSONTokener tokener = new JSONTokener(new FileInputStream(new File("/Users/liaoyilin/IdeaProjects/J-Cord/src/test/java/bot/Token.json")));
+            JSONObject obj = new JSONObject(tokener);
+            token = obj.getString("token");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Build the identity using IdentityBuilder
     // Set the token and event managers
     private void setUpIdentity() {
@@ -63,13 +83,14 @@ public class Bot {
                     .setIdentityType(IdentityType.BOT)
 
                     // Remember to keep the token secret
-                    // The token class would looks like
+                    // You may use a config file like json or yaml,
+                    // or use a java class that looks like
                     //
                     // public class Token {
                     //      public static final String YOUR_SECRET_TOKEN_HERE = "";
                     // }
                     //
-                    .useToken(Token.YOUR_SECRET_TOKEN_HERE)
+                    .useToken(token)
 
                     // Set the event manager to listen to events
                     .setEventManager(

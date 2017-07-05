@@ -26,4 +26,7 @@ hs_err_pid*
 /.idea/
 /build/
 /.gradle/
-/src/test/java/bot/Token.java
+/src/test/java/bot/Token.json
+src/main/resources/
+src/test/java/client/
+src/test/resources/
