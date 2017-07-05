@@ -9,8 +9,8 @@ import org.alienideology.jcord.internal.object.guild.Guild;
  */
 public class GuildNotificationUpdateEvent extends GuildUpdateEvent {
 
-    public GuildNotificationUpdateEvent(IdentityImpl identity, Guild newGuild, int sequence, Guild oldGuild) {
-        super(identity, newGuild, sequence, oldGuild);
+    public GuildNotificationUpdateEvent(IdentityImpl identity, int sequence, Guild newGuild, Guild oldGuild) {
+        super(identity, sequence, newGuild, oldGuild);
     }
 
     public Guild.Notification getNewNotification() {

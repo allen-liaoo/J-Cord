@@ -16,7 +16,7 @@ import org.alienideology.jcord.internal.object.guild.Guild;
 public class GuildCreateEvent extends GuildEvent {
 
     public GuildCreateEvent(IdentityImpl identity, Guild guild, int sequence) {
-        super(identity, guild, sequence);
+        super(identity, sequence, guild);
     }
 
 }

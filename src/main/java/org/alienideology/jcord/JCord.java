@@ -42,7 +42,7 @@ public final class JCord {
     public final static EmojiTable EMOJI_TABLE = new EmojiTable();
 
     static {
-        Unirest.setDefaultHeader("User-Agent", USER_AGENT);
+        Unirest.setDefaultHeader("user-agent", USER_AGENT);
     }
 
 }

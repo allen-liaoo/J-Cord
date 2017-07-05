@@ -9,7 +9,7 @@ import org.alienideology.jcord.internal.object.guild.Guild;
 public class GuildUnavailableEvent extends GuildEvent {
 
     public GuildUnavailableEvent(IdentityImpl identity, Guild guild, int sequence) {
-        super(identity, guild, sequence);
+        super(identity, sequence, guild);
     }
 
 }

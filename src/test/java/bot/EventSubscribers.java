@@ -4,6 +4,7 @@ import org.alienideology.jcord.event.EventSubscriber;
 import org.alienideology.jcord.event.guild.member.GuildMemberJoinEvent;
 import org.alienideology.jcord.event.guild.member.GuildMemberLeaveEvent;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
+import org.alienideology.jcord.event.user.update.UserAvatarUpdateEvent;
 
 /**
  * @author AlienIdeology

@@ -5,7 +5,7 @@ Event - Whenever a change happens to an entity, an event get fired.
     <br />
  - GuildEvent - Any events that happens under a guild.
    - GuildCreateEvent - Fired whenever a guild is detected. Do not use this event.
-   - GuildUpdateEvent - Fired whenever a guild's setting is changed.
+   - GuildUpdateEvent
      - GuildOwnerUpdateEvent
      - GuildRegionUpdateEvent
      - GuildIconUpdateEvent
@@ -13,15 +13,13 @@ Event - Whenever a change happens to an entity, an event get fired.
      - GuildNotificationUpdateEvent
      - GuildMFAUpdateEvent
      - GuildAFKTimeoutUpdateEvent
-
-   - GuildDeleteEvent - Fired whenever the identity left a guild, or the user deletes a guild.
+   - GuildDeleteEvent
    - GuildUnavailableEvent
    - GuildMemberEvent
      - GuildMemberJoinEvent
      - GuildMemberLeaveEvent
      - GuildMemberBanEvent
-     - GuildUnbanEvent (Special event that doesn't really counts as a GuildMemberEvent. <br />
-       There is no member getter for the event)
+     - GuildUnbanEvent (It is not possible to get a member instance of this event)
      - GuildMemberNicknameUpdateEvent
      - GuildMemberAddRoleEvent
      - GuildMemberRemoveRoleEvent
@@ -41,8 +39,6 @@ Event - Whenever a change happens to an entity, an event get fired.
        - GuildEmojiNameUpdateEvent
        - GuildEmojiRolesUpdateEvent
      - GuildEmojiDeleteEvent
-   - GuildRoleCreatedEvent - Fired whenever a role is created.
-    <br />
  - ChannelEvent
    - ChannelCreateEvent
      - GuildChannelCreateEvent
@@ -78,8 +74,16 @@ Event - Whenever a change happens to an entity, an event get fired.
    - MessageDeleteEvent
      - GuildMessageDeleteEvent
      - PrivateMessageDeleteEvent
-   - MessagePinUpdateEvent - This is just a internal event that discord fired.
+   - MessagePinUpdateEvent - This is just an internal event that discord fired.
      It is not possible to get the pinned message from this event.
    - MessageReactionAddEvent
    - MessageReactionRemoveEvent
    - MessageReactionRemoveAllEvent
+ - UserEvent
+   - UserUpdateEvent
+     - UserNameUpdateEvent
+     - UserAvatarUpdateEVent
+   - PresenceUpdateEvent
+     - OnlineStatusUpdateEvent
+     - GameUpdateEvent
+ - ExceptionEvent

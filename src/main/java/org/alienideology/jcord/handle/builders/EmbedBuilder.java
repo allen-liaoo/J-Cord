@@ -14,7 +14,7 @@ import java.util.List;
  * EmbedBuilder - A message builder for building embeds messages.
  * @author AlienIdeology
  */
-public final class EmbedBuilder {
+public final class EmbedBuilder implements Buildable<EmbedBuilder, Embed> {
 
     private String title;
     private String url;
@@ -37,6 +37,7 @@ public final class EmbedBuilder {
      * @return The embed message.
      * @throws IllegalStateException If the empty is empty. See {@link #isEmpty()}.
      */
+    @Override
     public Embed build() throws IllegalStateException {
         if (this.isEmpty()) {
             IllegalStateException exception = new IllegalStateException("Embed message may not be empty!");
@@ -71,6 +72,21 @@ public final class EmbedBuilder {
                 && thumbnail == null
                 && image == null
                 && footer == null;
+    }
+
+    @Override
+    public EmbedBuilder clear() {
+        title = null;
+        url = null;
+        description = null;
+        timeStamp = null;
+        color = null;
+        author = null;
+        fields.clear();
+        thumbnail = null;
+        image = null;
+        footer = null;
+        return this;
     }
 
     /**

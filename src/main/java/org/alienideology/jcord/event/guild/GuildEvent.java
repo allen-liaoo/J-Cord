@@ -12,7 +12,7 @@ public abstract class GuildEvent extends Event {
 
     protected Guild guild;
 
-    public GuildEvent(IdentityImpl identity, Guild guild, int sequence) {
+    public GuildEvent(IdentityImpl identity, int sequence, Guild guild) {
         super(identity, sequence);
         this.guild = guild;
     }

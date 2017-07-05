@@ -13,7 +13,7 @@ public class GuildUnbanEvent extends GuildEvent {
     private User unbannedUser;
 
     public GuildUnbanEvent(IdentityImpl identity, Guild guild, int sequence, User unbannedUser) {
-        super(identity, guild, sequence);
+        super(identity, sequence, guild);
         this.unbannedUser = unbannedUser;
     }
 

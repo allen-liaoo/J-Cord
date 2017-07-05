@@ -10,8 +10,8 @@ import org.alienideology.jcord.internal.object.guild.Guild;
  */
 public class GuildAFKTimeoutUpdateEvent extends GuildUpdateEvent {
 
-    public GuildAFKTimeoutUpdateEvent(IdentityImpl identity, Guild newGuild, int sequence, Guild oldGuild) {
-        super(identity, newGuild, sequence, oldGuild);
+    public GuildAFKTimeoutUpdateEvent(IdentityImpl identity, int sequence, Guild newGuild, Guild oldGuild) {
+        super(identity, sequence, newGuild, oldGuild);
     }
 
     public IGuild.AFKTimeout getNewAFKTimeout() {

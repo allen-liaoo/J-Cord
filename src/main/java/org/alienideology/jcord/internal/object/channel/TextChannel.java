@@ -13,7 +13,7 @@ import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
-import org.alienideology.jcord.internal.object.Buildable;
+import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.guild.Guild;
@@ -31,7 +31,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-public final class TextChannel extends MessageChannel implements ITextChannel, Buildable {
+public final class TextChannel extends MessageChannel implements ITextChannel, Jsonable {
 
     private Guild guild;
     private ChannelManager channelManager;

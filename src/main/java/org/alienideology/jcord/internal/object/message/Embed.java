@@ -1,7 +1,7 @@
 package org.alienideology.jcord.internal.object.message;
 
 import org.alienideology.jcord.handle.message.IEmbed;
-import org.alienideology.jcord.internal.object.Buildable;
+import org.alienideology.jcord.internal.object.Jsonable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public final class Embed implements IEmbed, Buildable {
+public final class Embed implements IEmbed, Jsonable {
 
     private String title;
     private String description = "";

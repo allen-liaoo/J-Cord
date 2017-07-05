@@ -9,8 +9,8 @@ import org.alienideology.jcord.internal.object.guild.Guild;
  */
 public class GuildIconUpdateEvent extends GuildUpdateEvent {
 
-    public GuildIconUpdateEvent(IdentityImpl identity, Guild newGuild, int sequence, Guild oldGuild) {
-        super(identity, newGuild, sequence, oldGuild);
+    public GuildIconUpdateEvent(IdentityImpl identity, int sequence, Guild newGuild, Guild oldGuild) {
+        super(identity, sequence, newGuild, oldGuild);
     }
 
     public String getNewIcon() {

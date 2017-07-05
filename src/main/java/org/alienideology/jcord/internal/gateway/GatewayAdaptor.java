@@ -279,7 +279,6 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         /* Gateway Event */
         eventHandler.put("READY", new GatewayEventHandler(identity, this));
         eventHandler.put("RESUMED", new GatewayEventHandler(identity, this));
-        eventHandler.put("PRESENCE_UPDATE", new PresenceUpdateEventHandler(identity));
 
         /* Guild Event */
         eventHandler.put("GUILD_CREATE", new GuildCreateEventHandler(identity));
@@ -315,12 +314,14 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         eventHandler.put("MESSAGE_REACTION_REMOVE", new MessageReactionEventHandler(identity, false));
         eventHandler.put("MESSAGE_REACTION_REMOVE_ALL", new MessageReactionRemoveAllEventHandler(identity));
 
-        // TODO: Finish priority events
-        // Priority: USER_UPDATE
-        // Future: GUILD_SYNC, GUILD_MEMBERS_CHUNK, WEBHOOKS_UPDATE, VOICE_SERVER_UPDATE, VOICE_STATE_UPDATE
-        // Unknown: MESSAGE_ACK
+        /* User Event */
+        eventHandler.put("PRESENCE_UPDATE", new PresenceUpdateEventHandler(identity));
+        eventHandler.put("USER_UPDATE", new UserUpdateEventHandler(identity));
 
+        // TODO: Finish priority events
+        // Priority: GUILD_SYNC, GUILD_MEMBERS_CHUNK, WEBHOOKS_UPDATE, VOICE_SERVER_UPDATE, VOICE_STATE_UPDATE
         // Clients: CALL_CREATE, CALL_UPDATE, CALL_DELETE, CHANNEL_RECIPIENT_ADD, CHANNEL_RECIPIENT_REMOVE, RELATIONSHIP_ADD, RELATIONSHIP_REMOVE
+        // Unknown: MESSAGE_ACK
     }
 
 }

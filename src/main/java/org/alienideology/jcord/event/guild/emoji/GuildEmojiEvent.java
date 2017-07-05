@@ -13,7 +13,7 @@ public class GuildEmojiEvent extends GuildEvent {
     protected GuildEmoji emoji;
 
     public GuildEmojiEvent(IdentityImpl identity, Guild guild, int sequence, GuildEmoji emoji) {
-        super(identity, guild, sequence);
+        super(identity, sequence, guild);
         this.emoji = emoji;
     }
 

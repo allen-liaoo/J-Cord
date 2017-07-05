@@ -1,5 +1,6 @@
 package org.alienideology.jcord.handle.builders;
 
+import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IMember;
@@ -23,7 +24,7 @@ import static org.alienideology.jcord.handle.managers.IChannelManager.VOICE_CHAN
  * @author AlienIdeology
  * @since 0.0.6
  */
-public final class ChannelBuilder {
+public final class ChannelBuilder implements Buildable<ChannelBuilder, IGuildChannel> {
 
     private String name;
 
@@ -53,6 +54,27 @@ public final class ChannelBuilder {
     public IVoiceChannel buildVoiceChannel() {
         return new VoiceChannel(null, null, null, name, 0, bitrate, userLimit)
                 .setPermOverwrites(overwrites);
+    }
+
+    /**
+     * Throws {@link UnsupportedOperationException}.
+     * Use {@link #buildTextChannel()} or {@link #buildVoiceChannel()} instead.
+     *
+     * @return nothing. {@link UnsupportedOperationException}
+     */
+    @Deprecated
+    @Override
+    public IGuildChannel build() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ChannelBuilder clear() {
+        name = null;
+        bitrate = 0;
+        userLimit = 0;
+        overwrites.clear();
+        return null;
     }
 
     /**

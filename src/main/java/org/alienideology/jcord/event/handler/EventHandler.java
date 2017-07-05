@@ -37,10 +37,11 @@ public abstract class EventHandler {
     }
 
     /**
-     * Dispatch event base on the provided json.
+     * Process and dispatch events base on the provided json.
+     *
      * @param json The json of an Discord Gateway event.
      * @param sequence The Gateway sequence.
      */
-    public abstract void dispatchEvent (JSONObject json, int sequence);
+    public abstract void dispatchEvent(JSONObject json, int sequence);
 
 }

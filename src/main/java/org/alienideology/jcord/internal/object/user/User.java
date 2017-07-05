@@ -149,7 +149,7 @@ public class User extends DiscordObject implements IUser {
     private void setAvatar() {
         this.avatar = avatar == null ?
                 String.format(HttpPath.EndPoint.DEFAULT_AVATAR, String.valueOf(Integer.parseInt(discriminator) % 5)) :
-                String.format(HttpPath.EndPoint.AVATAR, id, avatar, (avatar.startsWith("a_") ? ".gif" : ".png"));
+                String.format(HttpPath.EndPoint.AVATAR, id, avatar, (avatar.startsWith("a_") ? "gif" : "png"));
     }
 
     public void setPresence(Presence presence) {

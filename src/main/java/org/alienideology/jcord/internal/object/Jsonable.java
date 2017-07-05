@@ -6,7 +6,7 @@ import org.json.JSONObject;
  * @author AlienIdeology
  */
 @FunctionalInterface
-public interface Buildable {
+public interface Jsonable {
 
     /**
      * Build an json object, used for building an object and sent it to Discord Gateway.

@@ -13,7 +13,7 @@ public class GuildMemberEvent extends GuildEvent {
     protected Member member;
 
     public GuildMemberEvent(IdentityImpl identity, Guild guild, int sequence, Member member) {
-        super(identity, guild, sequence);
+        super(identity, sequence, guild);
         this.member = member;
     }
 

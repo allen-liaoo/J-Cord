@@ -1,5 +1,6 @@
 package org.alienideology.jcord.handle.builders;
 
+import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.IInvite;
 import org.alienideology.jcord.handle.IMention;
@@ -13,9 +14,7 @@ import org.alienideology.jcord.internal.object.message.Message;
  *
  * @author AlienIdeology
  */
-public class MessageBuilder {
-
-    private final EmojiTable emojis = new EmojiTable();
+public class MessageBuilder implements Buildable<MessageBuilder, IMessage> {
 
     private StringBuilder content;
     private IEmbed embed;
@@ -47,12 +46,21 @@ public class MessageBuilder {
      *
      * @return The string message.
      */
+    @Override
     public IMessage build() {
         Message message = new Message(null, null, null, content.toString(), null,
                 null, null, null, isTTS, false, false);
         if (embed != null)
                 message.addEmbed(embed);
         return message;
+    }
+
+    @Override
+    public MessageBuilder clear() {
+        content.setLength(0);
+        embed = null;
+        isTTS = false;
+        return this;
     }
 
     /**
@@ -181,7 +189,7 @@ public class MessageBuilder {
      * @return MessageBuilder for chaining.
      */
     public MessageBuilder appendEmoji(String alias) {
-        this.content.append(emojis.getByAlias(alias) != null ? emojis.getByAlias(alias).getUnicode() : "");
+        this.content.append(JCord.EMOJI_TABLE.getByAlias(alias) != null ? JCord.EMOJI_TABLE.getByAlias(alias).getUnicode() : "");
         return this;
     }
 

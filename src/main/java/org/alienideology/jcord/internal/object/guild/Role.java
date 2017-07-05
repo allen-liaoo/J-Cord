@@ -4,7 +4,7 @@ import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IRoleManager;
 import org.alienideology.jcord.handle.permission.Permission;
-import org.alienideology.jcord.internal.object.Buildable;
+import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.managers.RoleManager;
@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public final class Role extends DiscordObject implements IRole, Buildable {
+public final class Role extends DiscordObject implements IRole, Jsonable {
 
     private final String id;
     private final Guild guild;

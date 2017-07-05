@@ -10,7 +10,7 @@ import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.message.MessageProcessor;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.object.Buildable;
+import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
@@ -27,7 +27,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-public class Message extends DiscordObject implements IMessage, Buildable {
+public class Message extends DiscordObject implements IMessage, Jsonable {
 
     /* Instance Field */
     private MessageChannel channel;

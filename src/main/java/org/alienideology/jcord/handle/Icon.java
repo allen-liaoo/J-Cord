@@ -12,6 +12,7 @@ import java.net.URLConnection;
 
 import org.alienideology.jcord.util.DataUtils;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 
 /**
  * Icon - An encoded(base64) image, can be an avatar or picture.
@@ -20,20 +21,21 @@ import org.apache.commons.io.IOUtils;
  */
 public final class Icon {
 
-    private String data;
+    private Object data;
     private byte[] bytes;
 
-    Icon(String data, byte[] bytes) {
+    Icon(Object data, byte[] bytes) {
         this.data = data;
         this.bytes = bytes;
     }
 
     /**
      * Get the data discord required when posting http requests.
+     * Note that this is not guaranteed to be a string, But only {@link #DEFAULT_ICON} returns a {@link JSONObject#NULL} object.
      *
-     * @return The string data.
+     * @return The data, may be a string or {@link JSONObject#NULL}.
      */
-    public String getData() {
+    public Object getData() {
         return data;
     }
 
@@ -46,28 +48,34 @@ public final class Icon {
         return bytes;
     }
 
-    //------------------------------Statics------------------------------
+    //--------------------------Statics Variables------------------------------
 
     /**
-     * Get the default icon (null).
-     *
-     * @return The default icon.
+     * Discord supported {@code Jpg} image format.
      */
-    public static Icon defaultIcon() {
-        return new Icon(null, null);
-    }
+    public final static String FORMAT_JPG = "jpg";
 
     /**
-     * Get the icon instance from the icon file path.
-     * The default {@code file format} for this method is {@code jpeg}.
-     *
-     * @param path The file path.
-     * @return A new icon.
-     * @throws IOException When decoding the icon.
+     * Discord supported {@code Jpeg} image format.
      */
-    public static Icon fromPath(String path) throws IOException {
-        return fromPath("jpeg", path);
-    }
+    public final static String FORMAT_JPEG = "jpeg";
+
+    /**
+     * Discord supported {@code Jpeg} image format.
+     */
+    public final static String FORMAT_PNG = "png";
+
+    /**
+     * Discord supported {@code Gif} image format.
+     */
+    public final static String FORMAT_GIF = "gif";
+
+    /**
+     * The default icon (null).
+     */
+    public final static Icon DEFAULT_ICON = new Icon(JSONObject.NULL, new byte[0]);
+
+    //--------------------------Statics Getters------------------------------
 
     /**
      * Get the icon instance from the icon file path.
@@ -78,19 +86,19 @@ public final class Icon {
      * @throws IOException When decoding the icon.
      */
     public static Icon fromPath(String fileFormat, String path) throws IOException {
-        return fromImage(ImageIO.read(new File(path)));
+        return fromFile(fileFormat, new File(path));
     }
 
     /**
-     * Get the icon instance from a buffered image.
-     * The default {@code file format} for this method is {@code jpeg}.
+     * Get the icon instance from a file.
      *
-     * @param image The image.
+     * @param fileFormat The image file format, jpg, jpeg, png, etc.
+     * @param file The image file.
      * @return A new icon.
      * @throws IOException When decoding the icon.
      */
-    public static Icon fromImage(BufferedImage image) throws IOException {
-        return fromImage("jpeg", image);
+    public static Icon fromFile(String fileFormat, File file) throws IOException {
+        return fromImage(fileFormat, ImageIO.read(file));
     }
 
     /**
@@ -107,44 +115,44 @@ public final class Icon {
 
     /**
      * Get the icon instance from an url.
-     * The default {@code file format} for this method is {@code jpeg}.
      *
+     * @param fileFormat The image file format, jpg, jpeg, png, etc.
      * @param url The image url.
      * @return A new icon.
      * @throws IOException When decoding the icon.
      */
-    public static Icon fromUrl(String url) throws IOException {
+    public static Icon fromUrl(String fileFormat, String url) throws IOException {
         URLConnection urlConnection = new URL(url)
                 .openConnection();
         urlConnection.setRequestProperty("User-Agent", JCord.USER_AGENT);
         InputStream stream = urlConnection.getInputStream();
-        return fromStream(stream);
+        return fromStream(fileFormat, stream);
     }
 
     /**
      * Get the icon instance from an input stream.
-     * The default {@code file format} for this method is {@code jpeg}.
      *
+     * @param fileFormat The image file format, jpg, jpeg, png, etc.
      * @param stream The image stream.
      * @return A new icon.
      * @throws IOException When decoding the icon.
      */
-    public static Icon fromStream(InputStream stream) throws IOException {
-        Icon icon = fromBytes(IOUtils.toByteArray(stream));
+    public static Icon fromStream(String fileFormat, InputStream stream) throws IOException {
+        Icon icon = fromBytes(fileFormat, IOUtils.toByteArray(stream));
         stream.close();
         return icon;
     }
 
     /**
      * Get the icon instance from a byte array.
-     * The default {@code file format} for this method is {@code jpeg}.
      *
+     * @param fileFormat The image file format, jpg, jpeg, png, etc.
      * @param bytes The byte array.
      * @return A new icon.
      * @throws IOException When decoding the icon.
      */
-    public static Icon fromBytes(byte[] bytes) throws IOException {
-        return new Icon("data:image/jpeg;base64, " + DataUtils.byteToString(bytes), bytes);
+    public static Icon fromBytes(String fileFormat, byte[] bytes) throws IOException {
+        return new Icon("data:image/" + fileFormat + ";base64, " + DataUtils.byteToString(bytes), bytes);
     }
 
 }

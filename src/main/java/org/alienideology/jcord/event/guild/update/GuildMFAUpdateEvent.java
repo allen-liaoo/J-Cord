@@ -9,8 +9,8 @@ import org.alienideology.jcord.internal.object.guild.Guild;
  */
 public class GuildMFAUpdateEvent extends GuildUpdateEvent {
 
-    public GuildMFAUpdateEvent(IdentityImpl identity, Guild newGuild, int sequence, Guild oldGuild) {
-        super(identity, newGuild, sequence, oldGuild);
+    public GuildMFAUpdateEvent(IdentityImpl identity, int sequence, Guild newGuild, Guild oldGuild) {
+        super(identity, sequence, newGuild, oldGuild);
     }
 
     public Guild.MFA getNewMFA() {

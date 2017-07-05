@@ -309,7 +309,6 @@ public final class Guild extends DiscordObject implements IGuild {
     }
 
     @Override
-    @NotNull
     public ITextChannel getDefaultChannel() {
         for (TextChannel tc : textChannels) {
             if (tc.isDefaultChannel()) {

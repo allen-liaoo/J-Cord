@@ -15,7 +15,7 @@ import java.util.Collection;
  * @author AlienIdeology
  * @since 0.0.5
  */
-public final class RoleBuilder {
+public final class RoleBuilder implements Buildable<RoleBuilder, IRole> {
 
     private String name = null;
     private long permissions;
@@ -33,8 +33,19 @@ public final class RoleBuilder {
      *
      * @return the role, used to put into {@link IGuildManager#createRole(IRole)}'s parameter.
      */
+    @Override
     public IRole build() {
         return new Role(null, null, null, name, color,  -1, permissions, isSeparateListed, canMention);
+    }
+
+    @Override
+    public RoleBuilder clear() {
+        name = null;
+        permissions = 0;
+        color = null;
+        isSeparateListed = false;
+        canMention = false;
+        return this;
     }
 
     /**
@@ -145,4 +156,5 @@ public final class RoleBuilder {
         this.canMention = canMention;
         return this;
     }
+
 }

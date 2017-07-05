@@ -3,7 +3,7 @@ package org.alienideology.jcord.handle.permission;
 import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
-import org.alienideology.jcord.internal.object.Buildable;
+import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
@@ -18,7 +18,7 @@ import java.util.Collection;
  *
  * @author AlienIdeology
  */
-public class PermOverwrite extends DiscordObject implements ISnowFlake, Buildable {
+public class PermOverwrite extends DiscordObject implements ISnowFlake, Jsonable {
 
     private String id;
     private Guild guild;

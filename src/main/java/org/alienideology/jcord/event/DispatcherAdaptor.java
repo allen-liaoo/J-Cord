@@ -45,6 +45,8 @@ import org.alienideology.jcord.event.message.guild.GuildMessageDeleteEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageUpdateEvent;
 import org.alienideology.jcord.event.message.guild.IGuildMessageEvent;
 import org.alienideology.jcord.event.user.PresenceUpdateEvent;
+import org.alienideology.jcord.event.user.UserUpdateEvent;
+import org.alienideology.jcord.event.user.update.*;
 import org.alienideology.jcord.event.user.UserEvent;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 
@@ -460,14 +462,36 @@ public class DispatcherAdaptor {
 
     private void dispatchUserEvent(UserEvent event) {
         onUserEvent(event);
-        if (event instanceof PresenceUpdateEvent) {
+        if (event instanceof UserUpdateEvent) {
+            onUserUpdate((UserUpdateEvent) event);
+            if (event instanceof UserNameUpdateEvent) {
+                onUserNameUpdate((UserNameUpdateEvent) event);
+            } else if (event instanceof UserAvatarUpdateEvent) {
+                onUserAvatarUpdate((UserAvatarUpdateEvent) event);
+            }
+        } else if (event instanceof PresenceUpdateEvent) {
             onPresenceUpdate((PresenceUpdateEvent) event);
+            if (event instanceof OnlineStatusUpdateEvent) {
+                onOnlineStatusUpdate((OnlineStatusUpdateEvent) event);
+            } else if (event instanceof GameUpdateEvent) {
+                onGameUpdate((GameUpdateEvent) event);
+            }
         }
     }
 
     public void onUserEvent (UserEvent event) {}
 
+    public void onUserUpdate (UserUpdateEvent event) {}
+
+    public void onUserNameUpdate (UserNameUpdateEvent event) {}
+
+    public void onUserAvatarUpdate (UserAvatarUpdateEvent event) {}
+
     public void onPresenceUpdate (PresenceUpdateEvent event) {}
+
+    public void onOnlineStatusUpdate (OnlineStatusUpdateEvent event) {}
+
+    public void onGameUpdate (GameUpdateEvent event) {}
 
     /*
         -----------------------

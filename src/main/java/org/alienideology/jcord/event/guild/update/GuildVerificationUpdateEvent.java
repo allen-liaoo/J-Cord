@@ -9,8 +9,8 @@ import org.alienideology.jcord.internal.object.guild.Guild;
  */
 public class GuildVerificationUpdateEvent extends GuildUpdateEvent {
 
-    public GuildVerificationUpdateEvent(IdentityImpl identity, Guild newGuild, int sequence, Guild oldGuild) {
-        super(identity, newGuild, sequence, oldGuild);
+    public GuildVerificationUpdateEvent(IdentityImpl identity, int sequence, Guild newGuild, Guild oldGuild) {
+        super(identity, sequence, newGuild, oldGuild);
     }
 
     public Guild.Verification getNewVerification() {

@@ -10,8 +10,8 @@ import org.alienideology.jcord.internal.object.guild.Member;
  */
 public class GuildOwnerUpdateEvent extends GuildUpdateEvent {
 
-    public GuildOwnerUpdateEvent(IdentityImpl identity, Guild guild, int sequence, Guild oldGuild) {
-        super(identity, guild, sequence, oldGuild);
+    public GuildOwnerUpdateEvent(IdentityImpl identity, int sequence, Guild guild, Guild oldGuild) {
+        super(identity, sequence, guild, oldGuild);
     }
 
     public Member getNewOwner() {

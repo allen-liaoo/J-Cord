@@ -13,7 +13,7 @@ public class GuildDeleteEvent extends GuildEvent {
     private final OffsetDateTime timeStamp;
 
     public GuildDeleteEvent(IdentityImpl identity, Guild guild, int sequence, OffsetDateTime timeStamp) {
-        super(identity, guild, sequence);
+        super(identity, sequence, guild);
         this.timeStamp = timeStamp;
     }
 

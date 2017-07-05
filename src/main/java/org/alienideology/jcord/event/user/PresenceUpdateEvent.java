@@ -9,7 +9,7 @@ import org.alienideology.jcord.internal.object.user.User;
  */
 public class PresenceUpdateEvent extends UserEvent {
 
-    private Presence oldPresence;
+    protected Presence oldPresence;
 
     public PresenceUpdateEvent(IdentityImpl identity, int sequence, User user, Presence oldPresence) {
         super(identity, sequence, user);

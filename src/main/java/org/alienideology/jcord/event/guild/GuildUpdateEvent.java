@@ -10,8 +10,8 @@ public class GuildUpdateEvent extends GuildEvent {
 
     protected final Guild oldGuild;
 
-    public GuildUpdateEvent(IdentityImpl identity, Guild newGuild, int sequence, Guild oldGuild) {
-        super(identity, newGuild, sequence);
+    public GuildUpdateEvent(IdentityImpl identity, int sequence, Guild newGuild, Guild oldGuild) {
+        super(identity, sequence, newGuild);
         this.oldGuild = oldGuild;
     }
 

@@ -9,7 +9,7 @@ import org.alienideology.jcord.handle.managers.IChannelManager;
 import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.permission.Permission;
-import org.alienideology.jcord.internal.object.Buildable;
+import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.ChannelManager;
@@ -24,7 +24,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-public final class VoiceChannel extends Channel implements IVoiceChannel, Buildable {
+public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonable {
 
     private Guild guild;
     private ChannelManager channelManager;

@@ -10,8 +10,8 @@ import org.alienideology.jcord.internal.object.guild.Guild;
  */
 public class GuildRegionUpdateEvent extends GuildUpdateEvent {
 
-    public GuildRegionUpdateEvent(IdentityImpl identity, Guild guild, int sequence, Guild oldGuild) {
-        super(identity, guild, sequence, oldGuild);
+    public GuildRegionUpdateEvent(IdentityImpl identity, int sequence, Guild guild, Guild oldGuild) {
+        super(identity, sequence, guild, oldGuild);
     }
 
     public Region getNewRegion() {
