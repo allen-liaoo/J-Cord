@@ -1,6 +1,5 @@
 package org.alienideology.jcord;
 
-import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.bot.Bot;
 import org.alienideology.jcord.bot.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
@@ -10,6 +9,8 @@ import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.ISelfManager;
 import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.handle.user.IWebhook;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.List;
@@ -116,6 +117,23 @@ public interface Identity {
      * @return A list of users.
      */
     List<IUser> getUsers();
+
+    /**
+     * Get a webhook by ID.
+     *
+     * @param id The webhook ID.
+     * @return The webhook, or null if no webhook found.
+     */
+    @Nullable
+    IWebhook getWebhook(String id);
+
+    /**
+     * Get a list of webhooks this identity has a mutual guild with.
+     * This only includes webhooks that the identity has permission to manage.
+     *
+     * @return A list of webhooks.
+     */
+    List<IWebhook> getWebhooks();
 
     /**
      * Get a guild by ID.

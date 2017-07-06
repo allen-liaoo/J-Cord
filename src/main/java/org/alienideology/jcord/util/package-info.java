@@ -1,5 +1,6 @@
 /**
- * All Utilities JCord need.
+ * All Utilities J-Cord needed.
+ *
  * @since 0.0.1
  * @author AlienIdeology
  */

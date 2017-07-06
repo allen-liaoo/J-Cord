@@ -1,4 +1,4 @@
-package org.alienideology.jcord.oauth;
+package org.alienideology.jcord.handle.oauth;
 
 import java.util.Arrays;
 import java.util.Collection;

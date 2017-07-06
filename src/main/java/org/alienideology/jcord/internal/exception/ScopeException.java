@@ -1,6 +1,6 @@
 package org.alienideology.jcord.internal.exception;
 
-import org.alienideology.jcord.oauth.Scope;
+import org.alienideology.jcord.handle.oauth.Scope;
 
 import java.util.Arrays;
 

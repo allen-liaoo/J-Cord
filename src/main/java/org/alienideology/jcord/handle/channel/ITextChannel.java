@@ -1,9 +1,10 @@
 package org.alienideology.jcord.handle.channel;
 
-import org.jetbrains.annotations.NotNull;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.user.IWebhook;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -30,8 +31,20 @@ public interface ITextChannel extends IGuildChannel, IMessageChannel, IMention, 
     String getTopic();
 
     /**
+     * Get a webhook by id.
+     * If the identity does not have {@code Manager Webhooks} permission, then this will always returns null.
+     *
+     * @param id The webhook id.
+     * @return The webhook found.
+     */
+    @Nullable
+    IWebhook getWebhook(String id);
+
+    /**
      * Get a list of webhooks that can send messages to this channel.
      *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manager Webhooks} permission.
      * @return A list of webhooks.
      */
     List<IWebhook> getWebhooks();

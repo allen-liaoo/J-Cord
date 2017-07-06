@@ -2,7 +2,7 @@
 [![](https://jitpack.io/v/AlienIdeology/J-Cord.svg)](https://jitpack.io/#AlienIdeology/J-Cord)
 [![Build Status](https://travis-ci.org/AlienIdeology/J-Cord.svg?branch=master)](https://travis-ci.org/AlienIdeology/J-Cord)
 <br />
-~~Another~~ A Discord API Wrapper for Java
+A Discord API Wrapper for Java
 
 ## Features
 - Builders and managers to makes creating and managing discord objects easier.
@@ -13,7 +13,7 @@
 - Get emojis by aliases use in Discord. No more external emoji dependencies.
 
 ## Download
-- Jar (Soon™)
+- Jar - [See the latest release](https://github.com/AlienIdeology/J-Cord/releases/latest)
 - Gradle (In your `build.gradle` file)
 ```gradle
 repositories {

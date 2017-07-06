@@ -13,13 +13,14 @@ import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
-import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.ChannelManager;
 import org.alienideology.jcord.internal.object.managers.InviteManager;
 import org.alienideology.jcord.internal.object.message.Message;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -65,7 +66,6 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
             }
             json.put("permission_overwrites", perms);
         }
-        System.out.println(json.toString(4));
         return json;
     }
 
@@ -177,6 +177,16 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
     @Override
     public String getTopic() {
         return topic;
+    }
+
+    @Override
+    public @Nullable IWebhook getWebhook(String id) {
+        for (IWebhook webhook : getWebhooks()) {
+            if (webhook.getId().equals(id)) {
+                return webhook;
+            }
+        }
+        return null;
     }
 
     @Override

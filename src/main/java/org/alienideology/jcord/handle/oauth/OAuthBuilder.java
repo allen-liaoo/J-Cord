@@ -1,4 +1,4 @@
-package org.alienideology.jcord.oauth;
+package org.alienideology.jcord.handle.oauth;
 
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.util.DataUtils;
@@ -77,6 +77,7 @@ public class OAuthBuilder {
             for (Scope scope : scopes) {
                baseUrl.append(scope.key).append(" ");
             }
+            baseUrl.deleteCharAt(baseUrl.length()-1);
         }
 
         if (redirectUrl != null) {

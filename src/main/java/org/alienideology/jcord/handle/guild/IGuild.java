@@ -1,7 +1,5 @@
 package org.alienideology.jcord.handle.guild;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
@@ -12,6 +10,8 @@ import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.object.guild.Guild;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -163,9 +163,21 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     List<IMember> getMembers();
 
     /**
+     * Get a webhook by id.
+     * If the identity does not have {@code Manager Webhooks} permission, then this will always returns {@code null}.
+     *
+     * @param id The webhook id.
+     * @return The webhook found, or null if no webhook has been found.
+     */
+    @Nullable
+    IWebhook getWebhook(String id);
+
+    /**
      * Get a list of webhooks belong to this guild.
      * It is recommended to cache the returned list, since this
      *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manager Webhooks} permission.
      * @return A list of webhooks.
      */
     List<IWebhook> getWebhooks();

@@ -1,4 +1,4 @@
-package org.alienideology.jcord.oauth;
+package org.alienideology.jcord.handle.oauth;
 
 import fi.iki.elonen.NanoHTTPD;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -21,17 +21,47 @@ public class OAuth {
     private String redirectUrl;
     private Scope[] scopes;
 
-    /* Authorization */
-    private String accessToken;
-    private String refreshToken;
-    private long expireIn;
-    private long initIn;
-
     OAuth(String clientId, String clientSecret, String redirectUrl, Scope[] scopes) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUrl = redirectUrl;
         this.scopes = scopes;
+    }
+
+    /**
+     * Get the client ID of this OAuth. It is used in authorization.
+     *
+     * @return The client ID.
+     */
+    public String getClientId() {
+        return clientId;
+    }
+
+    /**
+     * Get the client secret of this OAuth. It is used in authorization.
+     *
+     * @return The client secret.
+     */
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    /**
+     * Get the redirect of this OAuth. It is used to get access token from an user.
+     *
+     * @return The redirect url.
+     */
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    /**
+     * Get the scopes of this oauth.
+     *
+     * @return The scopes.
+     */
+    public Scope[] getScopes() {
+        return scopes;
     }
 
     /**
@@ -50,7 +80,8 @@ public class OAuth {
                 .getAsJSONObject();
 
         if (!response.has("error") || !response.has("code")) {
-            parseJson(response);
+            System.out.println(response.toString(4));
+            // TODO: Parse Json and initialize objects
         } else {
             throw new ErrorResponseException(response.get("error") instanceof Integer ? response.getInt("error") : -1, response.getString("message"));
         }
@@ -59,22 +90,35 @@ public class OAuth {
     }
 
     /**
-     * This set up a server from the {@link #redirectUrl} and bind to the sepcified port.
-     * Then the server will wait for user's authorization. If the user authorized the application,
-     * the server will get a redirected url with the authorization code as a query param.
+     * Automatically set up a local server and get the access token.
+     *
+     * This calls {@link #authorizeAt(int)} with port 8080.
+     *
+     * @return OAuth for chaining.
+     */
+    public OAuth autoAuthorize() {
+        return authorizeAt(8080);
+    }
+
+    /**
+     * This set up a server from the {@link #redirectUrl} and bind to the specified port.
+     * Then the server will wait for users' authorization. If a user authorized the application,
+     * the server will get a redirected url with the authorization code as a query param, then cache the user.
      *
      * @param port The port.
      * @return OAuth for chaining.
      */
     public OAuth authorizeAt(int port) {
         try {
-            NanoHTTPD server = new NanoHTTPD(redirectUrl, port) {
+            NanoHTTPD server = new NanoHTTPD(port) {
                 @Override
                 public Response serve(IHTTPSession session) {
                     if (session.getParms().get("code") != null) {
                         authorize(session.getParms().get("code"));
+                        System.out.println(session.getParms().get("code"));
                     } else if (session.getParms().get("error") != null) {
                         // TODO: throw errors
+                        System.out.println(session.getParms().get("error"));
                     }
                     return null;
                 }
@@ -86,55 +130,6 @@ public class OAuth {
         }
 
         return this;
-    }
-
-    /**
-     * Automatically authorize the application and get the access token.
-     *
-     * This calls {@link #authorizeAt(int)} with port 8080.
-     *
-     * @return OAuth for chaining.
-     */
-    public OAuth autoAuthorize() {
-        return authorizeAt(8080);
-    }
-
-    /**
-     * Refresh the access token.
-     * This revokes the access token by posting a http request with the refresh token.
-     * If the access token is still functional, then this will not perform any action.
-     *
-     * @return OAuth for chaining.
-     */
-    public OAuth refreshToken() {
-        if (shouldRefresh()) {
-            JSONObject response = new Requester(refreshToken, HttpPath.OAuth.REVOCATION)
-                    .request(clientSecret, clientSecret, refreshToken)
-                    .updateRequestWithBody(request -> request.header("Content-Type", "application/x-www-form-urlencoded"))
-                    .getAsJSONObject();
-
-            if (!response.has("error")) {
-                parseJson(response);
-            } else {
-                throw new ErrorResponseException(response.get("error") instanceof Integer ? response.getInt("error") : -1, response.getString("message"));
-            }
-        }
-
-        return this;
-    }
-
-    private boolean shouldRefresh() {
-        return System.currentTimeMillis() >
-                expireIn * 1000 + initIn; // Add the expired value, in seconds, with the initial time.
-    }
-
-    private void parseJson(JSONObject response) {
-        accessToken = response.getString("access_token");
-        refreshToken = response.getString("refresh_token");
-        expireIn = response.getLong("expires_in");
-        initIn = System.currentTimeMillis();
-
-        // TODO: What about Webhook? ("webhook" json)
     }
 
 }

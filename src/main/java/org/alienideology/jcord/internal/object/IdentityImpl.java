@@ -6,7 +6,7 @@ import com.mashape.unirest.request.HttpRequest;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
-import org.jetbrains.annotations.Nullable;
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.bot.Bot;
 import org.alienideology.jcord.bot.command.CommandFramework;
@@ -16,7 +16,9 @@ import org.alienideology.jcord.handle.channel.*;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.ISelfManager;
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
@@ -26,6 +28,7 @@ import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.SelfManager;
 import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.util.log.Logger;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -39,7 +42,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public final class IdentityImpl implements org.alienideology.jcord.Identity {
+public final class IdentityImpl implements Identity {
 
     public Logger LOG;
 
@@ -119,6 +122,7 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         return selfManager;
     }
 
+    @Override
     @Nullable
     public IUser getUser(String id) {
         for (IUser user : users) {
@@ -129,11 +133,34 @@ public final class IdentityImpl implements org.alienideology.jcord.Identity {
         return null;
     }
 
+    @Override
     public List<IUser> getUsers() {
         return users;
     }
 
+    @Override
     @Nullable
+    public IWebhook getWebhook(String id) {
+        for (IGuild guild : guilds) {
+            IWebhook webhook = guild.getWebhook(id);
+            if (webhook != null) return webhook;
+        }
+        return null;
+    }
+
+    @Override
+    public List<IWebhook> getWebhooks() {
+        List<IWebhook> webhooks = new ArrayList<>();
+        for (IGuild guild : guilds) {
+            if (guild.getSelfMember().hasPermissions(true, Permission.MANAGE_WEBHOOKS)) {
+                webhooks.addAll(guild.getWebhooks());
+            }
+        }
+        return webhooks;
+    }
+
+    @Nullable
+    @Override
     public IGuild getGuild(String id) {
         for (IGuild guild : guilds) {
             if (guild.getId().equals(id)) {

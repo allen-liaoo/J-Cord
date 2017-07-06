@@ -19,7 +19,7 @@ Event - Whenever a change happens to an entity, an event get fired.
      - GuildMemberJoinEvent
      - GuildMemberLeaveEvent
      - GuildMemberBanEvent
-     - GuildUnbanEvent (It is not possible to get a member instance of this event)
+     - GuildUnbanEvent - It is not possible to get a member instance of this event
      - GuildMemberNicknameUpdateEvent
      - GuildMemberAddRoleEvent
      - GuildMemberRemoveRoleEvent
@@ -74,8 +74,7 @@ Event - Whenever a change happens to an entity, an event get fired.
    - MessageDeleteEvent
      - GuildMessageDeleteEvent
      - PrivateMessageDeleteEvent
-   - MessagePinUpdateEvent - This is just an internal event that discord fired.
-     It is not possible to get the pinned message from this event.
+   - MessagePinUpdateEvent - It is not possible to get the pinned message from this event.
    - MessageReactionAddEvent
    - MessageReactionRemoveEvent
    - MessageReactionRemoveAllEvent
@@ -86,4 +85,6 @@ Event - Whenever a change happens to an entity, an event get fired.
    - PresenceUpdateEvent
      - OnlineStatusUpdateEvent
      - GameUpdateEvent
+   - WebhookUpdateEvent - This can be webhook create, update or delete.
+   It is not possible to get the updated webhook from this event.
  - ExceptionEvent

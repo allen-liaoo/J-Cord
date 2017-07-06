@@ -4,4 +4,4 @@
  * @since 0.1.0
  * @author AlienIdeology
  */
-package org.alienideology.jcord.oauth;
+package org.alienideology.jcord.handle.oauth;
