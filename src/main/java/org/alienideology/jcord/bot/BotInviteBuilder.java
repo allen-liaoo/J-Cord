@@ -1,7 +1,7 @@
 package org.alienideology.jcord.bot;
 
+import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.gateway.HttpPath;
-import org.alienideology.jcord.internal.object.Permission;
 
 import java.net.MalformedURLException;
 import java.net.URL;

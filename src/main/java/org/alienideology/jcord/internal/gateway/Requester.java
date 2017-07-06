@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.gateway;
 
+import com.mashape.unirest.http.Headers;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -7,13 +8,18 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
-import org.alienideology.jcord.internal.Identity;
-import org.alienideology.jcord.internal.JCord;
+import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
+import org.alienideology.jcord.internal.exception.HttpErrorException;
+import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.util.log.Logger;
+import org.alienideology.jcord.util.log.LogLevel;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.IllegalFormatException;
 import java.util.function.Consumer;
 
@@ -21,15 +27,38 @@ import java.util.function.Consumer;
  * Requester - A Http Requester for HttpPath.
  * @author AlienIdeology
  */
-public class Requester {
+public final class Requester {
+
+    public Logger LOG;
 
     private HttpPath path;
-    private Identity identity;
+    private String token;
     private HttpRequest request;
+    private boolean useJson;
 
-    public Requester(Identity identity, HttpPath path) {
-        this.identity = identity;
+    /**
+     * Constructor for non-identity tokens
+     */
+    public Requester(String token, HttpPath path) {
+        this.token = token;
         this.path = path;
+    }
+
+    /**
+     * Constructor for JSON requests
+     */
+    public Requester(IdentityImpl identity, HttpPath path) {
+        this(identity, path, true);
+    }
+
+    /**
+     * Constructor for JSON requests
+     */
+    public Requester(IdentityImpl identity, HttpPath path, boolean useJson) {
+        this.LOG = identity.LOG;
+        this.token = identity.getToken();
+        this.path = path;
+        this.useJson = useJson;
     }
 
     /*
@@ -39,10 +68,10 @@ public class Requester {
      */
 
     /**
-     *  Chaining request method.
+     *  Chaining request event.
      */
     public Requester request(String... params) {
-        requestHttp(params);
+        requestHttp((Object[]) params);
         return this;
     }
 
@@ -50,7 +79,7 @@ public class Requester {
      * @return A GetRequest to perform further action.
      */
     public GetRequest requestGet(String... params) {
-        HttpRequest request = requestHttp(params);
+        HttpRequest request = requestHttp((Object[]) params);
         return (GetRequest) request;
     }
 
@@ -58,7 +87,7 @@ public class Requester {
      * @return A HttpRequestWithBody to perform further action.
      */
     public HttpRequestWithBody requestWithBody(String... params) {
-        HttpRequest request = requestHttp(params);
+        HttpRequest request = requestHttp((Object[]) params);
         return (HttpRequestWithBody) request;
     }
 
@@ -82,7 +111,12 @@ public class Requester {
      * @param consumer Specified actions to the HttpRequestWithBody. I.e. Adding json.
      */
     public Requester updateRequestWithBody(Consumer<HttpRequestWithBody> consumer) {
-        consumer.accept((HttpRequestWithBody)request);
+        consumer.accept((HttpRequestWithBody) request);
+        return this;
+    }
+
+    public Requester setRequest(HttpRequest request) {
+        this.request = request;
         return this;
     }
 
@@ -93,13 +127,21 @@ public class Requester {
      */
 
     /**
-     * Performs requests ignoring the returning values.
+     * Performs requests
+     * @return HttpCode, the response status
      */
-    public void performRequest() {
+    public HttpCode performRequest() {
         try {
-            request.asString();
+            HttpResponse<JsonNode> response = request.asJson();
+            checkRateLimit(response);
+            handleErrorCode(response);
+            JsonNode node = response.getBody();
+            if (node != null && !node.isArray()) {
+                handleErrorResponse(node.getObject());
+            }
+            return HttpCode.getByKey(response.getStatus());
         } catch (UnirestException e) {
-            throw new RuntimeException("Fail to perform http requestHttp!");
+            throw new RuntimeException("Fail to perform http request!");
         }
     }
 
@@ -110,6 +152,7 @@ public class Requester {
         JSONObject json;
         try {
             HttpResponse<JsonNode> response = request.asJson();
+            checkRateLimit(response);
             handleErrorCode(response);
             JsonNode node = response.getBody();
 
@@ -132,6 +175,7 @@ public class Requester {
         JSONArray json;
         try {
             HttpResponse<JsonNode> response = request.asJson();
+            checkRateLimit(response);
             handleErrorCode(response);
             JsonNode node = response.getBody();
 
@@ -158,7 +202,7 @@ public class Requester {
      * @param params Parameters to be replaced.
      * @return The http request
      */
-    private HttpRequest requestHttp(String... params) {
+    private HttpRequest requestHttp(Object... params) {
         String processedPath = processPath(params);
 
         HttpRequest request = null;
@@ -178,29 +222,30 @@ public class Requester {
             case OPTIONS:
                 request = Unirest.options(processedPath); break;
         }
-        processRequest(request, processedPath);
+        processRequest(request);
         this.request = request;
         return request;
     }
 
-    private String processPath(String... params) {
+    private String processPath(Object... params) {
         String processedPath;
         try {
             processedPath = path.getPath().replaceAll("\\{(.+?)}", "%s");
-            processedPath = String.format(processedPath, (Object[]) params);
+            processedPath = String.format(processedPath, params);
         } catch (IllegalFormatException ife) {
             throw new IllegalArgumentException("[INTERNAL] Cannot perform an HttpRequest due to unmatched parameters!");
         }
         return processedPath;
     }
 
-    private void processRequest(HttpRequest request, String path) {
-        request.header("Authorization", identity.getToken())
-                .header("User-Agent", "DiscordBot ($"+path+", $"+ JCord.VERSION+")");
+    private void processRequest(HttpRequest request) {
+        request.header("Authorization", token);
+        if (useJson) request.header("Content-Type", "application/json");
     }
 
     private void handleErrorResponse(JSONObject response) {
         if (response.has("code")) {
+            if (!(response.get("code") instanceof Integer)) return;
             ErrorResponse errorResponse = ErrorResponse.getByKey(response.getInt("code"));
             if (errorResponse != ErrorResponse.UNKNOWN) {
                 throw new ErrorResponseException(errorResponse);
@@ -210,12 +255,32 @@ public class Requester {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void handleErrorCode(HttpResponse response) {
-        ErrorCode error = ErrorCode.getByKey(response.getStatus());
+        HttpCode error = HttpCode.getByKey(response.getStatus());
         if (error.isServerError() || error.isFailure()) {
-            throw new RuntimeException("[Error Code "+error.key+"] "+error.meaning);
-        } else if (error == ErrorCode.UNKNOWN){
-            throw new RuntimeException("[Unknown Error Code " + response.getStatus() +"] " + response.getStatusText());
+            if (error.equals(HttpCode.TOO_MANY_REQUESTS)) { // Rate limited
+                checkRateLimit(response);
+            } else {
+                throw new HttpErrorException(error);
+            }
+        } else if (error == HttpCode.UNKNOWN){
+            throw new HttpErrorException(response.getStatus(), response.getStatusText());
+        }
+    }
+
+    private void checkRateLimit(HttpResponse<JsonNode> response) {
+        final Headers headers = response.getHeaders();
+        if (headers.containsKey("Retry-After")) { // Rate limited
+            Long retryAfter = Long.parseLong(headers.getFirst("Retry-After")); // In milliseconds
+            LOG.log(LogLevel.ERROR, "You are being rate limited! Automatically blocked the thread.\n" +
+                    "(Request: "+path.toString()+" | Retry after: "+retryAfter+" ms)");
+            try {
+                Thread.sleep(retryAfter);
+            } catch (InterruptedException e) {
+                LOG.log(LogLevel.ERROR, "Error when blocking thread for rate limit: ", null);
+                e.printStackTrace();
+            }
         }
     }
 

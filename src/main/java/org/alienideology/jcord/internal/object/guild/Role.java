@@ -1,19 +1,29 @@
 package org.alienideology.jcord.internal.object.guild;
 
-import org.alienideology.jcord.internal.Identity;
-import org.alienideology.jcord.internal.object.*;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.managers.IRoleManager;
+import org.alienideology.jcord.handle.permission.Permission;
+import org.alienideology.jcord.internal.object.Jsonable;
+import org.alienideology.jcord.internal.object.DiscordObject;
+import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.managers.RoleManager;
+import org.json.JSONObject;
 
-import java.awt.Color;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
- * Role - A label that can be put on a set of guild members.
  * @author AlienIdeology
  */
-public class Role extends DiscordObject implements Comparable<Role>, SnowFlake, Mention {
+public final class Role extends DiscordObject implements IRole, Jsonable {
 
     private final String id;
     private final Guild guild;
+
+    private RoleManager roleManager;
 
     private String name;
     private Color color;
@@ -24,96 +34,100 @@ public class Role extends DiscordObject implements Comparable<Role>, SnowFlake, 
     private boolean isSeparateListed;
     private boolean canMention;
 
-    public Role(Identity identity, Guild guild, String id, String name, Color color, int position, long permissions, boolean isSeparateListed, boolean canMention) {
+    public Role(IdentityImpl identity, Guild guild, String id, String name, Color color, int position, long permissions, boolean isSeparateListed, boolean canMention) {
         super(identity);
         this.guild = guild;
         this.id = id;
         this.name = name;
         this.color = color;
         this.permissionsLong = permissions;
-        this.permissions = Permission.getPermissionsByLong(permissions);
+        initPermissions(permissions);
         this.position = position;
         this.isSeparateListed = isSeparateListed;
         this.canMention = canMention;
+        this.roleManager = new RoleManager(this);
     }
 
-    public Guild getGuild() {
+    @Override
+    public JSONObject toJson() {
+        JSONObject role = new JSONObject();
+        if (name != null) role.put("name", name);
+        if (permissionsLong != -1) role.put("permissions", permissionsLong);
+        if (color != null) role.put("color", color.getRGB() & 0xFFFFFF);
+        if (isSeparateListed) role.put("hoist", true);
+        if (canMention) role.put("mentionable", true);
+        return role;
+    }
+
+    private void initPermissions(Long permissionsLong) {
+        this.permissions = permissionsLong == -1 ?      // -1 sent by RoleBuilder, just a place holder
+                new ArrayList<>() : Permission.getPermissionsByLong(permissionsLong);
+    }
+
+    @Override
+    public IGuild getGuild() {
         return guild;
     }
 
+    @Override
+    public IRoleManager getRoleManager() {
+        return roleManager;
+    }
+
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Color getColor() {
         return color;
     }
 
+    @Override
     public int getPosition() {
         return position;
     }
 
-    public boolean hasPermission (Permission permission) {
-        return Permission.hasPermission (permissionsLong, permission);
-    }
-
-    /**
-     * Check if this role have all the given permissions
-     * @param permissions The varargs of permission enums to be checked
-     * @return True if the role have all given permissions
-     */
-    public boolean hasAllPermissions (Permission... permissions) {
+    @Override
+    public boolean hasAllPermissions(Permission... permissions) {
         for (Permission perm : permissions) {
-            if (!hasPermission(perm)) {
+            if (!hasPermissions(false, perm))
                 return false;
-            }
         }
         return true;
     }
 
-    /**
-     * Check if this role have one of the given permissions
-     * To check if this member have all the permissions, see #hasAllPermissions(Permission...)
-     * @param permissions The varargs of permission enums to be checked
-     * @return True if the role have one of the given permissions
-     */
-    public boolean hasPermissions (Permission... permissions) {
+    @Override
+    public boolean hasPermissions(boolean checkAdmin, Collection<Permission> permissions) {
+        if (checkAdmin) {
+            if (this.permissions.contains(Permission.ADMINISTRATOR)) return true;
+        }
         for (Permission perm : permissions) {
-            if (hasPermission(perm)) {
+            if (this.permissions.contains(perm))
                 return true;
-            }
         }
         return false;
     }
 
+    @Override
     public long getPermissionsLong() {
         return permissionsLong;
     }
 
+    @Override
     public List<Permission> getPermissions() {
         return permissions;
     }
 
+    @Override
     public boolean isSeparateListed() {
         return isSeparateListed;
     }
 
+    @Override
     public boolean canMention() {
         return canMention;
-    }
-
-    public boolean isEveryone() {
-        return position == 0;
-    }
-
-    @Override
-    public int compareTo(Role o) {
-        return (o.position > this.position) ? -1 : ((o.position == this.position) ? 0 : 1);
-    }
-
-    @Override
-    public String mention() {
-        return "<@&"+id+">";
     }
 
     @Override
@@ -137,7 +151,35 @@ public class Role extends DiscordObject implements Comparable<Role>, SnowFlake, 
 
     @Override
     public String toString() {
-        return "ID: "+id+"\tName: "+name+"  Position: "+position;
+        return "Role{" +
+                "id='" + id + '\'' +
+                ", guild=" + guild +
+                ", name='" + name + '\'' +
+                '}';
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public void setPermissionsLong(long permissionsLong) {
+        this.permissionsLong = permissionsLong;
+        initPermissions(permissionsLong);
+    }
+
+    public void setSeparateListed(boolean separateListed) {
+        isSeparateListed = separateListed;
+    }
+
+    public void setCanMention(boolean canMention) {
+        this.canMention = canMention;
+    }
 }

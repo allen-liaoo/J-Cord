@@ -1,21 +1,22 @@
 package org.alienideology.jcord.internal.object;
 
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.handle.IDiscordObject;
 
 /**
  * Generic Discord Objects
  * Such as Guild, User, Channel
  * @author AlienIdeology
  */
-public class DiscordObject {
+public class DiscordObject implements IDiscordObject {
 
-    protected final Identity identity;
+    protected final IdentityImpl identity;
 
-    protected DiscordObject(Identity identity) {
+    protected DiscordObject(IdentityImpl identity) {
         this.identity = identity;
     }
 
-    public Identity getIdentity() {
+    @Override
+    public org.alienideology.jcord.Identity getIdentity() {
         return identity;
     }
 

@@ -1,21 +1,19 @@
 package org.alienideology.jcord.internal.object.guild;
 
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.handle.guild.IGuildEmoji;
+import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.Guild;
-import org.alienideology.jcord.internal.object.Mention;
-import org.alienideology.jcord.internal.object.SnowFlake;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * GuildEmoji - A custom emoji that can be used within a guild.
  * @author AlienIdeology
  */
-public class GuildEmoji extends DiscordObject implements SnowFlake, Mention {
+public final class GuildEmoji extends DiscordObject implements IGuildEmoji {
 
     private final Guild guild;
     private final String id;
@@ -29,14 +27,14 @@ public class GuildEmoji extends DiscordObject implements SnowFlake, Mention {
     /**
      * Constructor for global guild emojis
      */
-    public GuildEmoji(Identity identity, String id, String name) {
-        this(identity, null, id, name, new ArrayList<>(), false);
+    public GuildEmoji(IdentityImpl identity, String id, String name) {
+        this(identity, null, id, name, new ArrayList<>(), true);
     }
 
     /**
      * Default Constructor
      */
-    public GuildEmoji(Identity identity, Guild guild, String id, String name, List<Role> roles, boolean requireColon) {
+    public GuildEmoji(IdentityImpl identity, Guild guild, String id, String name, List<Role> roles, boolean requireColon) {
         super(identity);
         this.guild = guild;
         this.id = id;
@@ -46,45 +44,29 @@ public class GuildEmoji extends DiscordObject implements SnowFlake, Mention {
         this.requireColon = requireColon;
     }
 
+    @Override
     public Guild getGuild() {
         return guild;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getImage() {
         return image;
     }
 
+    @Override
     public boolean isRequireColon() {
         return requireColon;
     }
 
-    public List<Role> getUsableRoles() {
-        return Collections.unmodifiableList(roles);
-    }
-
-    public boolean canBeUseBy(Member member) {
-        for (Role role : member.getRoles()) {
-            if (roles.contains(role))
-                return true;
-        }
-        return false;
-    }
-
-    public boolean canBeUseBy(Role role) {
-        if (roles.contains(role)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @Override
-    public String mention() {
-        return "<:"+name+":"+id+">";
+    public List<IRole> getUsableRoles() {
+        return Collections.unmodifiableList(roles);
     }
 
     @Override
@@ -93,8 +75,8 @@ public class GuildEmoji extends DiscordObject implements SnowFlake, Mention {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return (obj instanceof GuildEmoji) && ((GuildEmoji) obj).getId().equals(this.id);
+    public boolean equals(Object o) {
+        return (o instanceof GuildEmoji) && ((GuildEmoji) o).getId().equals(id);
     }
 
     @Override
@@ -107,7 +89,10 @@ public class GuildEmoji extends DiscordObject implements SnowFlake, Mention {
 
     @Override
     public String toString() {
-        return "ID: "+id+"\tName: "+name;
+        return "GuildEmoji{" +
+                "guild=" + guild +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
-
 }

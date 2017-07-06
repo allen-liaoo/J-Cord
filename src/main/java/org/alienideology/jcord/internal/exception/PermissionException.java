@@ -1,16 +1,21 @@
 package org.alienideology.jcord.internal.exception;
 
-import org.alienideology.jcord.internal.object.Permission;
+import org.alienideology.jcord.handle.permission.Permission;
+
+import java.util.Arrays;
 
 /**
+ * PermissionException - When the identity request an action that
+ * it does not have permission to do so, a PermissionException is thrown.
+ *
  * @author AlienIdeology
  */
 public class PermissionException extends RuntimeException {
 
-    private Permission permission;
+    private Permission[] permission;
 
-    public PermissionException(Permission permission) {
-        super("Missing permission: " + permission.toString());
+    public PermissionException(Permission... permission) {
+        super("Missing permission(s): " + Arrays.toString(permission));
         this.permission = permission;
     }
 
@@ -19,7 +24,7 @@ public class PermissionException extends RuntimeException {
         this.permission = null;
     }
 
-    public Permission getMissingPermission() {
+    public Permission[] getMissingPermissions() {
         return permission;
     }
 }

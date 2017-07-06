@@ -1,17 +1,15 @@
 package org.alienideology.jcord.internal.object.channel;
 
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.SnowFlake;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 
 import java.util.Objects;
 
 /**
- * Channel - A communication pipeline
- * Can be GuildChannel, VoiceChannel or PrivateChannel
  * @author AlienIdeology
  */
-public class Channel extends DiscordObject implements SnowFlake {
+public class Channel extends DiscordObject implements IChannel {
 
     protected final String id;
     protected final Type type;
@@ -22,21 +20,19 @@ public class Channel extends DiscordObject implements SnowFlake {
      * @param id The id of this channel
      * @param type The type of channel
      */
-    public Channel (Identity identity, String id, Type type) {
+    public Channel (IdentityImpl identity, String id, Type type) {
         super(identity);
         this.id = id;
         this.type = type;
         this.isPrivate = (type == Type.PRIVATE);
     }
 
+    @Override
     public Type getType() {
         return type;
     }
 
-    public boolean isType(Type type) {
-        return this.type.equals(type);
-    }
-
+    @Override
     public boolean isPrivate() {
         return isPrivate;
     }
@@ -62,28 +58,9 @@ public class Channel extends DiscordObject implements SnowFlake {
 
     @Override
     public String toString() {
-        return "ID: "+id;
+        return "Channel{" +
+                "id='" + id + '\'' +
+                ", type=" + type +
+                '}';
     }
-
-    /**
-     * Channel Types
-     */
-    public enum Type {
-
-        TEXT,
-        VOICE,
-        PRIVATE,
-        GROUP,
-        UNKNOWN;
-
-        public static Type getByKey (String key) {
-            for (Type type : values()) {
-                if (type.name().toLowerCase().equals(key)) {
-                    return type;
-                }
-            }
-            return UNKNOWN;
-        }
-    }
-
 }

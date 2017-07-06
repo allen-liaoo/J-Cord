@@ -1,25 +1,47 @@
 package org.alienideology.jcord.internal.object.channel;
 
-import com.sun.istack.internal.Nullable;
-import org.alienideology.jcord.internal.Identity;
-import org.alienideology.jcord.internal.Internal;
+import org.jetbrains.annotations.Nullable;
+import org.alienideology.jcord.IdentityType;
+import org.alienideology.jcord.handle.builders.MessageBuilder;
+import org.alienideology.jcord.handle.channel.IMessageChannel;
+import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.channel.MessageHistory;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IGuildEmoji;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.message.IEmbed;
+import org.alienideology.jcord.handle.message.IMessage;
+import org.alienideology.jcord.handle.permission.Permission;
+import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.internal.exception.ErrorResponseException;
+import org.alienideology.jcord.internal.exception.HigherHierarchyException;
+import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.exception.PermissionException;
+import org.alienideology.jcord.internal.gateway.ErrorResponse;
+import org.alienideology.jcord.internal.gateway.HttpCode;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
-import org.alienideology.jcord.internal.object.Guild;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
-import org.alienideology.jcord.internal.object.Permission;
-import org.alienideology.jcord.internal.object.message.EmbedMessageBuilder;
-import org.alienideology.jcord.internal.object.Message;
-import org.alienideology.jcord.internal.object.message.MessageBuilder;
+import org.alienideology.jcord.internal.object.guild.Guild;
+import org.alienideology.jcord.internal.object.message.Embed;
+import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.user.User;
+import org.alienideology.jcord.util.DataUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
- * MessageChannel - A channel that allows users to send message.
  * @author AlienIdeology
  */
-public class MessageChannel extends Channel {
+public class MessageChannel extends Channel implements IMessageChannel {
 
     private Guild guild;
     private MessageHistory history;
@@ -28,158 +50,163 @@ public class MessageChannel extends Channel {
     /**
      * Constructor for PrivateChannel
      */
-    public MessageChannel(Identity identity, String id, Type type, Message latestMessage) {
+    public MessageChannel(IdentityImpl identity, String id, Type type, Message latestMessage) {
         this(identity, id, type, null, latestMessage);
     }
 
     /**
      * Constructor for TextChannel
      */
-    public MessageChannel(Identity identity, String id, Type type, Guild guild, Message latestMessage) {
+    public MessageChannel(IdentityImpl identity, String id, Type type, Guild guild, Message latestMessage) {
         super(identity, id, type);
         this.guild = guild;
         this.history = new MessageHistory(this);
         this.latestMessage = latestMessage;
     }
 
+    @Override
     @Nullable
-    public Guild getGuild() {
+    public IGuild getGuild() {
         return guild;
     }
 
-    public Message getLatestMessage() {
+    @Override
+    public IMessage getLatestMessage() {
         return latestMessage;
     }
 
+    @Override
     public MessageHistory getHistory() {
         return history;
     }
 
-    /**
-     * Get a message by id
-     * @param id The id of the message
-     * @return The message object
-     */
-    public Message getMessage(String id) {
-        if (!isPrivate)
+    @Override
+    public IMessage getMessage(String id) {
+        if (!isPrivate && !((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.READ_MESSAGE_HISTORY)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.READ_MESSAGE_HISTORY);
+        }
+
         if (latestMessage.getId().equals(id)) return latestMessage;
+        if (getHistory().getCachedMessages().get(id) != null) return getHistory().getCachedMessages().get(id);
 
         JSONObject msg = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(this.id, id).getAsJSONObject();
         return new ObjectBuilder(identity).buildMessage(msg);
     }
 
-    /**
-     * Send a string message.
-     * @param message The message to be sent.
-     * @throws IllegalArgumentException If the message is more than 2000 characters.
-     * @exception PermissionException If the user lack Send Messages permission
-     * @return The message sent.
-     */
-    public Message sendMessage(String message) {
-        send(new MessageBuilder().setContent(message).build());
+    @Override
+    public IMessage sendMessage(String message) {
+        send(((Message) new MessageBuilder().setContent(message).build()).toJson());
         return latestMessage;
     }
 
-    /**
-     * Send a string message.
-     * @param format The string to be formatted and send.
-     * @param args The arguments referenced by the format string.
-     * @exception  IllegalArgumentException If the message is more than 2000 characters.
-     * @exception PermissionException If the user lack Send Messages permission
-     * @return The message sent.
-     */
-    public Message sendMessageFormat(String format, Object... args) {
-        sendMessage(new MessageBuilder().appendContentFormat(format, args));
+    @Override
+    public IMessage sendMessageFormat(String format, Object... args) {
+        sendMessage(new MessageBuilder().appendContentFormat(format, args).build().toString());
         return latestMessage;
     }
 
-    /**
-     * Send a message built by MessageBuilder
-     * @param message The builder
-     * @exception PermissionException If the user lack Send Messages permission
-     * @return The message sent.
-     */
-    public Message sendMessage(MessageBuilder message) {
-        return send(message.build());
+    @Override
+    public IMessage sendMessage(IMessage message) {
+        return send(((Message)message).toJson());
     }
 
-    /**
-     * Send an embed message.
-     * @param embed The EmbedMessageBuilder
-     * @exception  IllegalStateException If the embed message is built but the embed is empty.
-     * @exception PermissionException If the user lack Send Messages permission
-     * @return The message sent.
-     */
-    public Message sendMessage(EmbedMessageBuilder embed) {
-        return sendMessage(new MessageBuilder().setAsEmbed(embed));
+    @Override
+    public IMessage sendMessage(IEmbed embed) {
+        return send(((Message) new MessageBuilder().setEmbed(embed).build()).toJson());
     }
 
-    @Internal
     private Message send(JSONObject json) {
         checkContentLength(json.getString("content"));
-        if (isPrivate) {
-        } else if (!getGuild().getSelfMember().hasPermissions(true, Permission.SEND_MESSAGES)) {
-            throw new PermissionException(Permission.SEND_MESSAGES);
+        if (isPrivate && identity.getType() == IdentityType.BOT) { // Cannot send a private message from bot to bot
+            throw new ErrorResponseException(ErrorResponse.CANNOT_SEND_MESSAGES_TO_THIS_USER);
+        }
+
+        if (!isPrivate && !((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.SEND_MESSAGES)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.SEND_MESSAGES);
         }
 
         JSONObject msg = new Requester(identity, HttpPath.Channel.CREATE_MESSAGE).request(id)
-                .updateRequestWithBody(http -> http.header("Content-Type", "application/json").body(json)).getAsJSONObject();
+                .updateRequestWithBody(http -> http.body(json)).getAsJSONObject();
         Message message = new ObjectBuilder(identity).buildMessage(msg);
         setLatestMessage(message);
         return message;
     }
 
-    /**
-     * Edit a string message by ID
-     * @param messageId The message ID
-     * @param message The new string content of the message
-     * @return The message edited
-     */
-    public Message editMessage(String messageId, String message) {
-        return edit(new MessageBuilder().setContent(message).build(), messageId);
+    @Override
+    public IMessage sendAttachment(File file, String message) throws IOException {
+        return attach(file, ((Message) new MessageBuilder().setContent(message).build()).toJson());
     }
 
-    /**
-     * Format a string message by ID
-     * @param messageId The message ID
-     * @param format The string to be formatted.
-     * @param args The arguments referenced by the format string.
-     * @return The message edited
-     */
-    public Message editMessageFormat(String messageId, String format, Object... args) {
-        return edit(new MessageBuilder().appendContentFormat(format, args).build(), messageId);
+    @Override
+    public IMessage sendAttachmentFormat(File file, String format, Object... args) throws IOException {
+        return sendAttachment(file, String.format(format, args));
     }
 
-    /**
-     * Edit a message by ID
-     * @param messageId The message ID
-     * @param message The message builder
-     * @return The message edited
-     */
-    public Message editMessage(String messageId, MessageBuilder message) {
-        return edit(message.build(), messageId);
+    @Override
+    public IMessage sendAttachment(File file, IMessage message) throws IOException {
+        return attach(file, ((Message) message).toJson());
     }
 
-    /**
-     * Edit an embed message by ID
-     * @param messageId The message ID
-     * @param message The new embed of the message
-     * @return The message edited
-     */
-    public Message editMessage(String messageId, EmbedMessageBuilder message) {
-        return edit(new MessageBuilder().setAsEmbed(message).build(), messageId);
+    private IMessage attach(File file, JSONObject message) throws IOException {
+        if (isPrivate) {
+            if (identity.getType() == IdentityType.BOT) { // Cannot send a private message from bot to bot
+                throw new ErrorResponseException(ErrorResponse.CANNOT_SEND_MESSAGES_TO_THIS_USER);
+            }
+        } else {
+            if (!((ITextChannel) this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.SEND_MESSAGES)) {
+                throw new PermissionException(Permission.ADMINISTRATOR, Permission.SEND_MESSAGES);
+            }
+
+            if (!((ITextChannel) this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.ATTACH_FILES)) {
+                throw new PermissionException(Permission.ADMINISTRATOR, Permission.ATTACH_FILES);
+            }
+        }
+
+        if (!file.exists() || file.isDirectory() || !file.canRead()) {
+            throw new FileNotFoundException("The provided file to send can not be found or read from!");
+        }
+
+        if (file.length() / (1024 ^ 2) > 8) {
+            throw new IllegalArgumentException("The file provided is too large to send!");
+        }
+
+        // Get the RequestWithBody object, use it to get MultipartBody object (#field)
+        JSONObject msg = new Requester(identity, HttpPath.Channel.CREATE_MESSAGE, false)
+                .request(id).updateRequestWithBody(request ->
+                        request.field("file", file, file.getName())
+                            .field("payload_json", message.toString())).getAsJSONObject();
+
+        return new ObjectBuilder(identity).buildMessage(msg);
     }
 
-    @Internal
+    @Override
+    public IMessage editMessage(String messageId, String message) {
+        return edit(((Message) new MessageBuilder().setContent(message).build()).toJson(), messageId);
+    }
+
+    @Override
+    public IMessage editMessageFormat(String messageId, String format, Object... args) {
+        return edit(((Message)new MessageBuilder().appendContentFormat(format, args).build()).toJson(), messageId);
+    }
+
+    @Override
+    public IMessage editMessage(String messageId, IMessage message) {
+        return edit(((Message) message).toJson(), messageId);
+    }
+
+    @Override
+    public IMessage editMessage(String messageId, IEmbed message) {
+        return edit(((Message) new MessageBuilder().setEmbed(message).build()).toJson(), messageId);
+    }
+
     private Message edit(JSONObject json, String id) {
         checkContentLength(json.getString("content"));
 
         User author = new ObjectBuilder(identity).buildMessageById(this.id, id).getAuthor();
 
-        if (isPrivate) {
-        } else if (!author.isSelf()) {
+        if (!isPrivate && !author.isSelf()) {
             // Edit message from other people
-            if (!getGuild().getSelfMember().hasPermissions(true, Permission.MANAGE_MESSAGES))
+            if (!((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES))
                 throw new PermissionException(Permission.MANAGE_MESSAGES);
             // Edit message from server owner
             if (getGuild().getOwner().getUser().equals(author) && !getGuild().getSelfMember().isOwner())
@@ -194,90 +221,267 @@ public class MessageChannel extends Channel {
         return edited;
     }
 
-    /**
-     * Delete a message by ID.
-     * @param messageId The Id of the message.
-     *
-     * @exception IllegalArgumentException If this channel is a PrivateChannel and the message is from another user.
-     * @exception PermissionException If this channel is a TextChannel and the user lack Manage Messages permission to delete other's message.
-     *
-     * @return The message deleted.
-     */
-    public Message deleteMessage(String messageId) {
-        return delete(messageId);
-    }
-
-    /**
-     * Delete a message.
-     * @param message The the message.
-     *
-     * @exception IllegalArgumentException If this channel is a PrivateChannel and the message is from another user.
-     * @exception PermissionException If this channel is a TextChannel and the user lack Manage Messages permission to delete other's message.
-     *
-     * @return The message deleted.
-     */
-    public Message deleteMessage(Message message) {
-        return delete(message.getId());
-    }
-
-    @Internal
-    private Message delete(String id) {
-        User author = new ObjectBuilder(identity).buildMessageById(this.id, id).getAuthor();
-        if (!author.isSelf()) {  // Delete a message from others
-            if (isPrivate) {
-                throw new IllegalArgumentException("Cannot delete the recipient's message in a PrivateChannel!");
-            }
-            if (!getGuild().getSelfMember().hasPermissions(true, Permission.MANAGE_MESSAGES)) {
-                throw new PermissionException(Permission.MANAGE_MESSAGES);
-            }
-        }
-
-        JSONObject msg = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(this.id, id).getAsJSONObject();
-        return new ObjectBuilder(identity).buildMessage(msg);
-    }
-
-    @Internal
     private void checkContentLength(String content) {
-        if (content.length() > Message.MAX_CONTENT_LENGTH) {  // Message content can by up to 2000 characters
+        if (content.length() > IMessage.MAX_CONTENT_LENGTH) {  // Message content can by up to 2000 characters
             IllegalArgumentException exception = new IllegalArgumentException("String messages can only contains up to 2000 characters.");
             exception.printStackTrace();
             throw new IllegalArgumentException();
         }
     }
 
-    /**
-     * Pin a message by ID
-     * @param messageId The message id.
-     */
-    public void pinMessage(String messageId) {
-        pin(messageId);
+    @Override
+    public IMessage deleteMessage(String messageId) {
+        return delete(messageId);
     }
 
-    /**
-     * Pin a message
-     * @param message The message object.
-     */
-    public void pinMessage(Message message) {
-        pin(message.getId());
+    @Override
+    public IMessage deleteMessage(IMessage message) {
+        return delete(message.getId());
     }
 
-    private void pin(String id) {
-        if (isPrivate) {
-        } else if (!getGuild().getSelfMember().hasPermissions(true, Permission.MANAGE_MESSAGES)) {
-             throw new PermissionException(Permission.MANAGE_MESSAGES);
+    private Message delete(String id) {
+        User author = new ObjectBuilder(identity).buildMessageById(this.id, id).getAuthor();
+        if (!author.isSelf()) {  // Delete a message from others
+            if (isPrivate) {
+                throw new IllegalArgumentException("Cannot delete the recipient's message in a PrivateChannel!");
+            } else if (!((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES)) {
+                throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES);
+            }
         }
 
-        new Requester(identity, HttpPath.Channel.ADD_PINNED_MESSAGE).request(this.id, id).performRequest();
+        JSONObject msg = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(this.id, id).getAsJSONObject();
+
+        return new ObjectBuilder(identity).buildMessage(msg);
     }
 
-    /**
-     * [API Use Only]
-     * @param latestMessage The last message of this channel.
-     * @return MessageChannel for chaining.
-     */
-    @Internal
-    public MessageChannel setLatestMessage(Message latestMessage) {
-        this.latestMessage = latestMessage;
+    @Override
+    public void bulkDeleteMessages(boolean throwEx, List<IMessage> messages) {
+        if (isPrivate) {
+            throw new IllegalArgumentException("Cannot bulk delete messages in a PrivateChannel!");
+        } else if (!((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES);
+        }
+        if (messages.isEmpty()) {
+            throw new IllegalArgumentException("A list of messages to delete may not be empty!");
+        }
+
+        // Throw Exceptions
+        if (throwEx) {
+            for (IMessage message : messages) {
+                // Check if the message is from this channel
+                if (!message.getChannel().equals(this)) {
+                    throw new ErrorResponseException(ErrorResponse.UNKNOWN_CHANNEL);
+                }
+
+                // Check if message is older than 2 weeks
+                if (message.getCreatedTime().isBefore(message.getCreatedTime().minusWeeks(2))) {
+                    throw new IllegalArgumentException("Cannot delete messages older than two weeks!");
+                }
+            }
+        }
+
+        List<String> ids = messages.isEmpty() ? new ArrayList<>() : messages.stream().map(IMessage::getId).collect(Collectors.toList());
+
+        new Requester(identity, HttpPath.Channel.BULK_DELETE_MESSAGE).request(this.id)
+                .updateRequestWithBody(request -> request.body(new JSONObject().put("messages", ids)))
+                .performRequest();
+    }
+
+    @Override
+    public void pinMessage(String messageId) {
+        if (isPrivate) { // Ignore private messages
+        } else if (!((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES);
+        }
+
+        try {
+            new Requester(identity, HttpPath.Channel.ADD_PINNED_MESSAGE).request(this.id, id).performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.BAD_REQUEST)) {
+                throw new ErrorResponseException(ErrorResponse.UNKNOWN_MESSAGE);
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public void pinMessage(IMessage message) {
+        pinMessage(message.getId());
+    }
+
+    @Override
+    public void unpinMessage(String messageId) {
+        if (isPrivate) {
+        } else if (!((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES);
+        }
+
+        try {
+            new Requester(identity, HttpPath.Channel.DELETE_PINNED_MESSAGE).request(this.id, messageId).performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.BAD_REQUEST)) {
+                throw new ErrorResponseException(ErrorResponse.UNKNOWN_MESSAGE);
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public void unpinMessage(IMessage message) {
+        unpinMessage(message.getId());
+    }
+
+    @Override
+    public List<IUser> getReactedUsers(String messageId, String unicode) {
+        return getReacts(messageId, unicode);
+    }
+
+    @Override
+    public List<IUser> getReactedUsers(String messageId, IGuildEmoji guildEmoji) {
+        return getReacts(messageId, guildEmoji.getName()+":"+guildEmoji.getId());
+    }
+
+    private List<IUser> getReacts(String messageId, String emoji) {
+        try {
+            final JSONArray reacters = new Requester(identity, HttpPath.Channel.GET_REACTIONS).request(this.id, messageId, emoji)
+                    .getAsJSONArray();
+
+            List<IUser> users = new ArrayList<>();
+            for (int i = 0; i < reacters.length(); i++) {
+                users.add(identity.getUser(reacters.getJSONObject(i).getString("id")));
+            }
+
+            return users;
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.NOT_FOUND)) { // Can be unknown message or reaction
+                throw new ErrorResponseException(ErrorResponse.UNKNOWN);
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public void addReaction(String messageId, String unicode) {
+        react(messageId, DataUtils.encodeToUrl(unicode));
+    }
+
+    @Override
+    public void addReaction(String messageId, IGuildEmoji guildEmoji) {
+        react(messageId, guildEmoji.getName()+":"+ guildEmoji.getId());
+    }
+
+    private void react(String messageId, String emoji) {
+        if (!isPrivate && !((ITextChannel) this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.READ_MESSAGE_HISTORY)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.READ_MESSAGE_HISTORY);
+        }
+
+        try {
+            new Requester(identity, HttpPath.Channel.CREATE_REACTION).request(this.id, messageId, emoji)
+                    .performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.isPermissionException()) { // If nobody else has reacted to the message using this emoji
+                throw new PermissionException(Permission.ADD_REACTIONS);
+            } else if (ex.getCode().equals(HttpCode.NOT_FOUND)) {
+                throw new ErrorResponseException(ErrorResponse.UNKNOWN_MESSAGE);
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public void removeReaction(IMember member, String messageId, String unicode) {
+        unreact(member, messageId, DataUtils.encodeToUrl(unicode));
+    }
+
+    @Override
+    public void removeReaction(IMember member, String messageId, IGuildEmoji guildEmoji) {
+        unreact(member, messageId, guildEmoji.getName()+":"+ guildEmoji.getId());
+    }
+
+    private void unreact(IMember member, String messageId, String emoji) {
+        // Removing self reaction
+        if (member.getId().equals(identity.getSelf().getId())) {
+            try {
+                new Requester(identity, HttpPath.Channel.DELETE_REACTION_BY_SELF).request(this.id, messageId, emoji)
+                        .performRequest();
+            } catch (HttpErrorException ex) {
+                if (ex.getCode().equals(HttpCode.NOT_FOUND)) {
+                    throw new ErrorResponseException(ErrorResponse.UNKNOWN_EMOJI);
+                } else {
+                    throw ex;
+                }
+            }
+        // Remove reactions by others
+        } else {
+            if (!((ITextChannel) this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES)) {
+                throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES);
+            }
+
+            if (member.isOwner()) {
+                throw new HigherHierarchyException(HigherHierarchyException.HierarchyType.OWNER);
+            }
+            if (!getGuild().getSelfMember().canModify(member)) {
+                throw new HigherHierarchyException(HigherHierarchyException.HierarchyType.MEMBER);
+            }
+
+            try {
+                new Requester(identity, HttpPath.Channel.DELETE_REACTION_BY_USER).request(this.id, messageId, emoji, member.getId())
+                        .performRequest();
+            } catch (HttpErrorException ex) {
+                if (ex.getCode().equals(HttpCode.NOT_FOUND)) {
+                    throw new ErrorResponseException(ErrorResponse.UNKNOWN_EMOJI);
+                } else {
+                    throw ex;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void removeAllReactions(String messageId) {
+        if (isPrivate) {
+            throw new IllegalArgumentException("Cannot remove reactions in a PrivateChannel!");
+        }
+
+        if (!((ITextChannel) this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES);
+        }
+
+        try {
+            new Requester(identity, HttpPath.Channel.DELETE_REACTIOM_ALL).request(this.id, messageId)
+                    .performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.NOT_FOUND)) {
+                throw new ErrorResponseException(ErrorResponse.UNKNOWN_MESSAGE);
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public void startTyping() {
+        if (!isPrivate && !((ITextChannel) this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.SEND_MESSAGES)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.SEND_MESSAGES);
+        }
+        new Requester(identity, HttpPath.Channel.TRIGGER_TYPING_INDICATOR).request(id).performRequest();
+    }
+
+    @Override
+    public String toString() {
+        return "MessageChannel{" +
+                "id='" + id + '\'' +
+                ", isPrivate=" + isPrivate +
+                ", latestMessage=" + latestMessage +
+                '}';
+    }
+
+    public MessageChannel setLatestMessage(IMessage latestMessage) {
+        this.latestMessage = (Message) latestMessage;
         return this;
     }
 

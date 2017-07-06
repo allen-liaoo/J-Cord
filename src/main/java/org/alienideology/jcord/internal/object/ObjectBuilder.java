@@ -1,44 +1,63 @@
 package org.alienideology.jcord.internal.object;
 
-import org.alienideology.jcord.internal.Identity;
-import org.alienideology.jcord.internal.event.ExceptionEvent;
+import org.alienideology.jcord.JCord;
+import org.alienideology.jcord.event.ExceptionEvent;
+import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.guild.IGuildEmoji;
+import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.message.IReaction;
+import org.alienideology.jcord.handle.permission.PermOverwrite;
+import org.alienideology.jcord.handle.user.Game;
+import org.alienideology.jcord.handle.user.OnlineStatus;
+import org.alienideology.jcord.handle.user.Presence;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
+import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
-import org.alienideology.jcord.internal.object.channel.*;
+import org.alienideology.jcord.internal.object.channel.MessageChannel;
+import org.alienideology.jcord.internal.object.channel.PrivateChannel;
+import org.alienideology.jcord.internal.object.channel.TextChannel;
+import org.alienideology.jcord.internal.object.channel.VoiceChannel;
+import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 import org.alienideology.jcord.internal.object.guild.Member;
 import org.alienideology.jcord.internal.object.guild.Role;
-import org.alienideology.jcord.internal.object.message.EmbedMessage;
+import org.alienideology.jcord.internal.object.message.Embed;
+import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.Reaction;
-import org.alienideology.jcord.internal.object.message.StringMessage;
 import org.alienideology.jcord.internal.object.user.User;
+import org.alienideology.jcord.internal.object.user.Webhook;
+import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A builder for building DiscordObjects
+ *
  * @author AlienIdeology
  */
 public final class ObjectBuilder {
 
-    private Identity identity;
+    private IdentityImpl identity;
 
     /**
      * Default Constructor
+     *
      * @param identity The identity this built DiscordObject belongs to.
      */
-    public ObjectBuilder(Identity identity) {
+    public ObjectBuilder(IdentityImpl identity) {
         this.identity = identity;
     }
 
     /**
      * Build a guild object base on provided json.
+     *
      * The guild will be added to the identity automatically.
      * @param json The guild JSONObject
      * @return The Guild object
@@ -66,13 +85,8 @@ public final class ObjectBuilder {
             int verification_level = json.getInt("verification_level");
             int notifications_level = json.getInt("default_message_notifications");
             int mfa_level = json.getInt("mfa_level");
-//            roles = new ArrayList<Role>();
-//            json.getJSONArray("roles").forEach(role -> roles.add(new Role(identity, role.toString())));
-//            emojis = new ArrayList<Emote>();
-//            json.getJSONArray("emojis").forEach(emoji -> emoji.add(new Role(identity, emoji.toString())));
 
             Guild guild = new Guild(identity, id, name, icon, splash, region, afk_timeout, embed_enabled, verification_level, notifications_level, mfa_level);
-//                .addRoles(roles).addEmojis(emojis);
 
             // Add guilds first because channels, roles, and members have a guild field
             identity.addGuild(guild);
@@ -90,7 +104,7 @@ public final class ObjectBuilder {
             JSONArray emojis = json.getJSONArray("emojis");
             for (int i = 0; i < emojis.length(); i++) {
                 JSONObject emojiJson = emojis.getJSONObject(i);
-                guild.addGuildEmoji(buildEmoji(emojiJson, guild));
+                buildEmoji(emojiJson, guild);
             }
 
             /* Build Channels */
@@ -101,13 +115,13 @@ public final class ObjectBuilder {
                 for (int i = 0; i < guildChannels.length(); i++) {
 
                     JSONObject newChannel = guildChannels.getJSONObject(i);
-                    GuildChannel channel = buildGuildChannel(newChannel);
+                    IGuildChannel channel = buildGuildChannel(newChannel);
 
-                    guild.addGuildChannel((GuildChannel) channel);
+                    guild.addGuildChannel((IGuildChannel) channel);
                 }
 
             } catch (RuntimeException e) {
-                identity.LOG.error("Building guild channels. (Guild: "+guild.toString()+")", e);
+                identity.LOG.log(LogLevel.FETAL, "Building guild channels. (Guild: "+guild.toString()+")", e);
             }
 
             /* Build Members */
@@ -121,7 +135,7 @@ public final class ObjectBuilder {
                 }
 
             } catch (RuntimeException e) {
-                identity.LOG.error("Building guild members. (Guild: "+guild.toString()+")", e);
+                identity.LOG.log(LogLevel.FETAL,"Building guild members. (Guild: "+guild.toString()+")", e);
             }
 
             guild.setOwner(owner).setChannels(afk_channel, embed_channel);
@@ -132,6 +146,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a guild object by an id.
+     *
      * @param id The id of the guild
      * @return The guild object
      */
@@ -140,7 +155,7 @@ public final class ObjectBuilder {
         try {
             guild = new Requester(identity, HttpPath.Guild.GET_GUILD).request(id).getAsJSONObject();
         } catch (RuntimeException e) {
-            identity.LOG.error("Building Guild By ID (ID: "+id+")", e);
+            identity.LOG.log(LogLevel.FETAL, "Building Guild By ID (ID: "+id+")", e);
             throw new IllegalArgumentException("Invalid ID!");
         }
         return buildGuild(guild);
@@ -148,10 +163,11 @@ public final class ObjectBuilder {
 
     /**
      * Build a guild channel object base on provided json.
-     * @param json The GuildChannel JSONObject
-     * @return TextChannel or VoiceChannel, wrapped as a GuildChannel
+     *
+     * @param json The IGuildChannel JSONObject
+     * @return TextChannel or VoiceChannel, wrapped as a IGuildChannel
      */
-    public GuildChannel buildGuildChannel (JSONObject json) {
+    public IGuildChannel buildGuildChannel (JSONObject json) {
         handleBuildError(json);
 
         String guild_id = json.getString("guild_id");
@@ -160,34 +176,52 @@ public final class ObjectBuilder {
         int position = json.getInt("position");
         String type = json.getString("type");
 
+        /* Build PermOverwrite Objects */
+        List<PermOverwrite> overwrites = new ArrayList<>();
+        JSONArray perms = json.getJSONArray("permission_overwrites");
+
+        for (int i = 0; i < perms.length(); i++) {
+            JSONObject over = perms.getJSONObject(i);
+            String typeId = over.getString("id");
+            long allow = over.getLong("allow");
+            long deny = over.getLong("deny");
+            overwrites.add(new PermOverwrite(identity, guild_id, typeId, allow, deny));
+        }
+
         if (type.equals("text")) {
             String topic = json.isNull("topic") ? null : json.getString("topic");
             String last_msg = !json.has("last_message_id") || json.isNull("last_message_id") ? null : json.getString("last_message_id");
-            Message lastMessage = last_msg == null ? null : buildMessageById(id, last_msg);
-            TextChannel tc = new TextChannel(identity, guild_id, id, name, position, topic, lastMessage);
-            identity.addTextChannel(tc);
-            if (lastMessage != null) lastMessage.setChannel(id);
+            Message lastMessage = null;
+            if (last_msg != null) {
+                try {
+                    lastMessage = buildMessageById(id, last_msg);
+                } catch (HttpErrorException ignored) { }
+            }
+            TextChannel tc = new TextChannel(identity, guild_id, id, name, position, topic, lastMessage)
+                    .setPermOverwrites(overwrites);
+            if (lastMessage != null) lastMessage.setChannel(tc);
             return tc;
         } else {
             int bitrate = json.getInt("bitrate");
             int user_limit = json.getInt("user_limit");
-            VoiceChannel vc = new VoiceChannel(identity, guild_id, id, name, position, bitrate, user_limit);
-            identity.addVoiceChannel(vc);
+            VoiceChannel vc = new VoiceChannel(identity, guild_id, id, name, position, bitrate, user_limit)
+                    .setPermOverwrites(overwrites);
             return vc;
         }
     }
 
     /**
      * Build a guild channel object by an id.
+     *
      * @param id The id of the channel
-     * @return The GuildChannel object
+     * @return The IGuildChannel object
      */
-    public GuildChannel buildGuildChannelById (String id) {
+    public IGuildChannel buildGuildChannelById (String id) {
         JSONObject gChannel;
         try {
             gChannel = new Requester(identity, HttpPath.Channel.GET_CHANNEL).request(id).getAsJSONObject();
         } catch (RuntimeException e) {
-            identity.LOG.error("Building GuildChannel By ID (ID: "+id+")", e);
+            identity.LOG.log(LogLevel.FETAL, "Building IGuildChannel By ID (ID: "+id+")", e);
             throw new IllegalArgumentException("Invalid ID!");
         }
         return buildGuildChannel(gChannel);
@@ -195,6 +229,7 @@ public final class ObjectBuilder {
 
     /**
      * Build a private channel object base on provided json.
+     *
      * @param json The PrivateChannel JSONObject
      * @return The PrivateChannel object
      */
@@ -204,16 +239,22 @@ public final class ObjectBuilder {
         String id = json.getString("id");
         User recipient = buildUser(json.getJSONObject("recipient"));
         String last_msg = !json.has("last_message_id") || json.isNull("last_message_id") ? null : json.getString("last_message_id");
-        Message lastMessage = last_msg == null ? null : buildMessageById(id, last_msg);
+        Message lastMessage = null;
+        if (last_msg != null) {
+            try {
+                lastMessage = buildMessageById(id, last_msg);
+            } catch (HttpErrorException ignored) { }
+        }
 
         PrivateChannel dm = new PrivateChannel(identity, id, recipient, lastMessage);
         identity.addPrivateChannel(dm);
-        if (lastMessage != null) lastMessage.setChannel(id);
+        if (lastMessage != null) lastMessage.setChannel(dm);
         return dm;
     }
 
     /**
      * Build a user object base on provided json.
+     *
      * @param json The user JSONObject
      * @return The User object
      */
@@ -241,17 +282,64 @@ public final class ObjectBuilder {
     }
 
     /**
-     * Build a user object (webhook) base on provided json.
-     * @param json The json of this webhook user object (Does not contains webhook id)
-     * @param webhookId The webhook id
-     * @return The User(Webhook) object
+     * Build a webhook base on provided json.
+     *
+     * @param json The json of this webhook user object.
+     * @return The Webhook object
      */
-    public User buildWebHook (JSONObject json, String webhookId) {
-        return buildUser(json.put("webhook_id", webhookId));
+    public Webhook buildWebhook(JSONObject json) {
+        String id = json.getString("id");
+        Webhook webhook = new Webhook(identity, id);
+
+        String guild_id = json.getString("guild_id");
+        String channel_id = json.getString("channel_id");
+
+        String name = json.has("name") && !json.isNull("name") ? json.getString("name") : null;
+        String avatar = json.has("avatar") && !json.isNull("avatar") ? json.getString("avatar") : null;
+        String token = json.getString("token");
+
+        /* Owner */
+        if (json.has("user")) {
+            webhook.setOwner(buildUser(json.getJSONObject("user")));
+        }
+
+        /* User */
+        JSONObject user = new JSONObject()
+                .put("username", name)
+                .put("discriminator", "0000")
+                .put("webhook_id", id) // Makes IUser#isWebhook == true
+                .put("avatar", avatar)
+                .put("bot", true);
+        webhook.setUser(buildUser(user));
+
+        webhook.setGuild(identity.getGuild(guild_id))
+            .setChannel(identity.getTextChannel(channel_id))
+            .setDefaultName(name)
+            .setDefaultAvatar(avatar)
+            .setToken(token);
+        return webhook;
+    }
+
+    /**
+     * Build a webhook by an id.
+     *
+     * @param id The id of the webhook.
+     * @return The webhook built.
+     */
+    public Webhook buildWebhookById(String id) {
+        JSONObject wh;
+        try {
+            wh = new Requester(identity, HttpPath.Webhook.GET_WEBHOOK).request(id).getAsJSONObject();
+        } catch (RuntimeException e) {
+            identity.LOG.log(LogLevel.FETAL, "Building Webhook By ID (ID: "+id+")", e);
+            throw new IllegalArgumentException("Invalid ID!");
+        }
+        return buildWebhook(wh);
     }
 
     /**
      * Build a member object base on provided json.
+     *
      * @param json The member JSONObject
      * @return The Member object
      */
@@ -263,13 +351,13 @@ public final class ObjectBuilder {
         boolean isMute = json.getBoolean("mute");
         User user = buildUser(json.getJSONObject("user"));
 
-        List<Role> memberRoles = new ArrayList<>();
+        List<IRole> memberRoles = new ArrayList<>();
 
         if (!json.isNull("roles")) {
             JSONArray roles = json.getJSONArray("roles");
             for (int i = 0; i < roles.length(); i++) {
                 String roleId = roles.getString(i);
-                Role newRole = guild.getRole(roleId);
+                Role newRole = (Role) guild.getRole(roleId);
                 if (newRole != null) memberRoles.add(newRole);
             }
             memberRoles.add(guild.getEveryoneRole());
@@ -280,30 +368,30 @@ public final class ObjectBuilder {
 
     /**
      * Build a member object base on provided json.
+     *
      * @param json The member JSONObject
      * @return The Member object
      */
     public Member buildMemberById (JSONObject json, String guild_id) {
-        Guild guild = identity.getGuild(guild_id);
+        Guild guild = (Guild) identity.getGuild(guild_id);
         return buildMember(json, guild);
     }
 
     /**
      * Build a message object base on provided json.
+     *
      * @param json The message JSONObject
      * @return The Message object
      */
-    // TODO: Add lists (See Message object)
     public Message buildMessage (JSONObject json) {
         handleBuildError(json);
-        Message message;
 
         String id = json.getString("id");
         String channel_id = json.getString("channel_id");
 
         /* Build User (Can be Webhook) */
         User author = json.has("webhook_id") && !json.isNull("webhook_id") ?
-                buildWebHook(json.getJSONObject("author"), json.getString("webhook_id")) :
+                buildUser(json.getJSONObject("author").put("webhook_id", json.getString("webhook_id"))) :
                 buildUser(json.getJSONObject("author"));
 
         String content = json.getString("content");
@@ -313,14 +401,14 @@ public final class ObjectBuilder {
         List<User> mentions = new ArrayList<>();
         JSONArray mentionUser = json.getJSONArray("mentions");
         for (int i = 0; i < mentionUser.length(); i++) {
-            mentions.add(identity.getUser(mentionUser.getJSONObject(i).getString("id")));
+            mentions.add((User)identity.getUser(mentionUser.getJSONObject(i).getString("id")));
         }
 
         /* Mentioned Role (TextChannel only) */
         List<Role> mentionsRole = new ArrayList<>();
         JSONArray mentionRole = json.getJSONArray("mention_roles");
         for (int i = 0; i < mentionRole.length(); i++) {
-            mentionsRole.add(identity.getRole(mentionRole.getString(i)));
+            mentionsRole.add((Role) identity.getRole(mentionRole.getString(i)));
         }
 
         /* Attachments */
@@ -337,18 +425,20 @@ public final class ObjectBuilder {
             attachments.add(new Message.Attachment(attachmentId, filename, size, url));
         }
 
+        /* Booleans */
         boolean isTTS = json.getBoolean("tts");
         boolean mentionedEveryone = json.getBoolean("mention_everyone");
         boolean isPinned = json.has("pinned") && json.getBoolean("pinned");
 
-        /* StringMessage */
-        if (!content.isEmpty() || json.getJSONArray("embeds").length() == 0) {
-            message =  new StringMessage(identity, id, author, content, timeStamp, mentions, mentionsRole, attachments, isTTS, mentionedEveryone, isPinned);
+        Message message =  new Message(identity, id, author, content, timeStamp, mentions, mentionsRole, attachments, isTTS, mentionedEveryone, isPinned);
 
-        /* EmbedMessage */
-        } else {
+        /* Channel */
+        message.setChannel((MessageChannel) identity.getMessageChannel(channel_id));  // Set channel may be null for MessageChannel's LastMessage
 
-            JSONObject embed = json.getJSONArray("embeds").getJSONObject(0);
+        /* Embeds */
+        JSONArray embeds = json.getJSONArray("embeds");
+        for (int i = 0; i < embeds.length(); i++) {
+            JSONObject embed = embeds.getJSONObject(i);
 
             String title = embed.has("title") ? embed.getString("title") : null;
             String description = embed.has("description") ? embed.getString("description") : null;
@@ -356,8 +446,12 @@ public final class ObjectBuilder {
             String time_stamp = embed.has("timestamp") ? embed.getString("timestamp") : null;
             int color = embed.has("color") ? embed.getInt("color") : 0;
 
-            EmbedMessage embedMessage =  new EmbedMessage(identity, id, author, content, timeStamp, mentions, mentionsRole, attachments, isTTS, mentionedEveryone, isPinned)
-                    .setEmbed(title, description, embed_url, time_stamp, color);
+            Embed embedMessage = new Embed()
+                    .setTitle(title)
+                    .setDescription(description)
+                    .setUrl(embed_url)
+                    .setTimeStamp(time_stamp == null ? null : OffsetDateTime.parse(time_stamp))
+                    .setColor(new Color(color));
 
             if (embed.has("author")) {
                 JSONObject emAuthor = embed.getJSONObject("author");
@@ -366,19 +460,19 @@ public final class ObjectBuilder {
                 String url = emAuthor.has("embed_url") ? emAuthor.getString("embed_url") : null;
                 String icon_url = emAuthor.has("icon_url") ? emAuthor.getString("icon_url") : null;
                 String proxy_url = emAuthor.has("proxy_icon_url") ? emAuthor.getString("proxy_icon_url") : null;
-                embedMessage.setAuthor(new EmbedMessage.Author(name, url, icon_url, proxy_url));
+                embedMessage.setAuthor(new Embed.Author(name, url, icon_url, proxy_url));
             }
 
             if (embed.has("fields")) {
                 JSONArray fields = embed.getJSONArray("fields");
 
-                for (int i = 0; i < fields.length(); i++) {
-                    JSONObject field = fields.getJSONObject(i);
+                for (int j = 0; j < fields.length(); j++) {
+                    JSONObject field = fields.getJSONObject(j);
 
                     String name = field.getString("name");
                     String value = field.getString("value");
                     boolean inline = field.getBoolean("inline");
-                    embedMessage.addFields(new EmbedMessage.Field(name, value, inline));
+                    embedMessage.addFields(new Embed.Field(name, value, inline));
                 }
             }
 
@@ -389,22 +483,22 @@ public final class ObjectBuilder {
                 int height = thumbnail.getInt("height");
                 int width = thumbnail.getInt("width");
 
-                embedMessage.setThumbnail(new EmbedMessage.Thumbnail(url, proxy_url, height, width));
+                embedMessage.setThumbnail(new Embed.Thumbnail(url, proxy_url, height, width));
             }
 
             if (embed.has("video")) {
                 JSONObject video = embed.getJSONObject("video");
-                String url = video.getString("url");
+                String url = video.isNull("url") ? null : video.getString("url");
                 int height = video.getInt("height");
                 int width = video.getInt("width");
-                embedMessage.setVideo(new EmbedMessage.Video(url, height, width));
+                embedMessage.setVideo(new Embed.Video(url, height, width));
             }
 
             if (embed.has("provider")) {
-                JSONObject video = embed.getJSONObject("provider");
-                String name = video.getString("name");
-                String url = video.getString("url");
-                embedMessage.setProvider(new EmbedMessage.Provider(name, url));
+                JSONObject provider = embed.getJSONObject("provider");
+                String name = provider.getString("name");
+                String url = provider.isNull("url") ? null : provider.getString("url");
+                embedMessage.setProvider(new Embed.Provider(name, url));
             }
 
             if (embed.has("image")) {
@@ -413,7 +507,7 @@ public final class ObjectBuilder {
                 String proxy_url = image.getString("proxy_url");
                 int height = image.getInt("height");
                 int width = image.getInt("width");
-                embedMessage.setImage(new EmbedMessage.Image(url, proxy_url , height, width));
+                embedMessage.setImage(new Embed.Image(url, proxy_url, height, width));
             }
 
             if (embed.has("footer")) {
@@ -422,38 +516,21 @@ public final class ObjectBuilder {
                 String name = footer.has("name") ? footer.getString("name") : null;
                 String icon_url = footer.has("icon_url") ? footer.getString("icon_url") : null;
                 String proxy_url = footer.has("proxy_icon_url") ? footer.getString("proxy_icon_url") : null;
-                embedMessage.setFooter(new EmbedMessage.Footer(name, icon_url, proxy_url));
+                embedMessage.setFooter(new Embed.Footer(name, icon_url, proxy_url));
             }
-            message = embedMessage;
+
+            message.addEmbed(embedMessage);
         }
-        message.setChannel(channel_id);  // Set channel may be null for MessageChannel's LastMessage
 
         /* Reactions */
         // Build this at last because GuildEmoji requires Message#getGuild, which can only be called after setting channel
-        List<Reaction> reactions = new ArrayList<>();
+        List<IReaction> reactions = new ArrayList<>();
         if (json.has("reactions")) {
-            boolean isFromGuild = message.fromType(Channel.Type.TEXT);
-            EmojiTable emojis = new EmojiTable();
             JSONArray reacts = json.getJSONArray("reactions");
 
             for (int i = 0; i < reacts.length(); i++) {
                 JSONObject react = reacts.getJSONObject(i);
-                int reactedTimes = react.getInt("count");
-                boolean selfReacted = react.has("me") && react.getBoolean("me");
-
-                Reaction reaction;
-                JSONObject emoji = react.getJSONObject("emoji");
-
-                if (emoji.has("id") && !emoji.isNull("id")) {
-                    if (isFromGuild && message.getGuild() != null) {  // From recognized guild
-                        reaction = new Reaction(identity, reactedTimes, selfReacted, message.getGuild().getGuildEmoji(emoji.getString("id")));
-                    } else {    // Global guild emoji
-                        reaction = new Reaction(identity, reactedTimes, selfReacted, new GuildEmoji(identity, emoji.getString("id"), emoji.getString("name")));
-                    }
-                } else {
-                    reaction = new Reaction(identity, reactedTimes, selfReacted, emojis.getByUnicode(emoji.getString("name")));
-                }
-                reactions.add(reaction);
+                reactions.add(buildReaction(react, message));
             }
         }
         message.setReactions(reactions);
@@ -463,23 +540,20 @@ public final class ObjectBuilder {
 
     /**
      * Build a message object by an id.
+     *
      * @param channel_id The id of the channel
      * @param message_id The id of the message
      * @return The Message object
      */
     public Message buildMessageById (String channel_id, String message_id) {
         JSONObject message;
-        try {
-            message = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(channel_id, message_id).getAsJSONObject();
-        } catch (RuntimeException e) {
-            identity.LOG.error("Building Message By ID (ID: "+message_id+")", e);
-            throw new IllegalArgumentException("Invalid ID!");
-        }
+        message = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(channel_id, message_id).getAsJSONObject();
         return buildMessage(message);
     }
 
     /**
      * Build a role object base on provided json.
+     *
      * @param json The role JSONObject
      * @param guild The guild this role is in
      * @return The Message object
@@ -500,23 +574,110 @@ public final class ObjectBuilder {
 
     /**
      * Build a GuildEmoji object base on provided json.
+     *
      * @param json The emoji JSONObject
      * @param guild The guild this emoji is in
      * @return The GuildEmoji object
      */
-    public GuildEmoji buildEmoji (JSONObject json, Guild guild) {
+    public GuildEmoji buildEmoji(JSONObject json, Guild guild) {
         handleBuildError(json);
         String id = json.getString("id");
         String name = json.getString("name");
         boolean requireColon = json.has("require_colons") & json.getBoolean("require_colons");
-        List<Role> roles = new ArrayList<>();
 
+        List<Role> roles = new ArrayList<>();
         JSONArray rolesJson = json.getJSONArray("roles");
         for (int i = 0; i < rolesJson.length(); i++) {
-            Role role = guild.getRole(rolesJson.getString(i));
+            Role role = (Role) guild.getRole(rolesJson.getString(i));
             if (role != null) roles.add(role);
         }
-        return new GuildEmoji(identity, guild, id, name, roles, requireColon);
+
+        GuildEmoji emoji = new GuildEmoji(identity, guild, id, name, roles, requireColon);
+        guild.addGuildEmoji(emoji);
+        return emoji;
+    }
+
+    /**
+     * Build a reaction by provided json.
+     *
+     * @param json The reaction json.
+     * @param message The message.
+     * @return The reaction built.
+     */
+    public Reaction buildReaction(JSONObject json, Message message) {
+        int reactedTimes = json.has("count") ? json.getInt("count") : -1;
+        boolean selfReacted = json.has("me") && json.getBoolean("me");
+
+        Reaction reaction;
+        JSONObject emojiJson = json.getJSONObject("emoji");
+
+        /* Guild Emoji */
+        if (emojiJson.has("id") && !emojiJson.isNull("id")) {
+            IGuildEmoji emoji = message.getGuild().getGuildEmoji(emojiJson.getString("id"));
+            if (emoji == null) { // Global Guilc Emoji
+                reaction = new Reaction(identity, message, reactedTimes, selfReacted, new GuildEmoji(identity, emojiJson.getString("id"), emojiJson.getString("name")));
+            } else { // Guild Emoji
+                reaction = new Reaction(identity, message, reactedTimes, selfReacted, emoji);
+            }
+
+        /* Emoji */
+        } else {
+            reaction = new Reaction(identity, message, reactedTimes, selfReacted, JCord.EMOJI_TABLE.getByUnicode(emojiJson.getString("name")));
+        }
+        return reaction;
+    }
+
+    /**
+     * Built an invite with provided json.
+     *
+     * @param json The json invite object. May not contains metadata.
+     * @return The IInvite built.
+     */
+    public Invite buildInvite(JSONObject json) {
+        String code = json.getString("code");
+        Guild guild = (Guild) identity.getGuild(json.getJSONObject("guild").getString("id"));
+        IGuildChannel channel = identity.getGuildChannel(json.getJSONObject("channel").getString("id"));
+        Invite invite = new Invite(code, guild, channel);
+
+        // If the invites has metadata object
+        if (json.has("inviter")) {
+            User inviter = (User) identity.getUser(json.getJSONObject("inviter").getString("id"));
+            int uses = json.getInt("uses");
+            int maxUses = json.getInt("max_uses");
+            long maxAge = json.getLong("max_age");
+            boolean isTemporary = json.has("temporary") && json.getBoolean("temporary");
+            boolean isRevoked = json.has("revoked") && json.getBoolean("revoked");
+            String timeStamp = json.getString("created_at");
+            invite.setMetaData(inviter, uses, maxUses, maxAge, isTemporary, isRevoked, timeStamp);
+        }
+        return invite;
+    }
+
+    /**
+     * Built an user presence with provided json.
+     *
+     * @param json The json presence object.
+     * @return The presence built.
+     */
+    public Presence buildPresence(JSONObject json, User user) {
+        //OnlineStatus
+        OnlineStatus status = OnlineStatus.getByKey(json.getString("status"));
+
+        // Game
+        Game game = null;
+
+        if (json.has("game") && !json.isNull("game")) {
+            JSONObject gameJson = json.getJSONObject("game");
+            String name = gameJson.isNull("name") ? null : gameJson.getString("name");
+            String url = gameJson.has("type") && gameJson.getInt("type") == 1 ?
+                    gameJson.getString("url") : null;
+            game = new Game(identity, name, url);
+            if (game.isStreaming()) status = OnlineStatus.STREAMING;
+        }
+
+        Presence presence = new Presence(identity, user, game, status);
+        user.setPresence(presence);
+        return presence;
     }
 
     /**
@@ -525,7 +686,7 @@ public final class ObjectBuilder {
      */
     private void handleBuildError (JSONObject json) {
         if (json.has("code")) {
-            identity.getEventManager().onEvent(new ExceptionEvent(identity,
+            identity.getEventManager().dispatchEvent(new ExceptionEvent(identity,
                     new ErrorResponseException(ErrorResponse.getByKey(json.getInt("code")))));
         }
     }

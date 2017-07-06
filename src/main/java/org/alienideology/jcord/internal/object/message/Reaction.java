@@ -1,27 +1,31 @@
 package org.alienideology.jcord.internal.object.message;
 
-import org.alienideology.jcord.internal.Identity;
+import org.alienideology.jcord.handle.EmojiTable;
+import org.alienideology.jcord.handle.guild.IGuildEmoji;
+import org.alienideology.jcord.handle.message.IMessage;
+import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.EmojiTable;
-import org.alienideology.jcord.internal.object.guild.GuildEmoji;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 
 /**
- * Reaction - A emoji that users reacted under a message.
  * @author AlienIdeology
  */
-public class Reaction extends DiscordObject {
+public final class Reaction extends DiscordObject implements IReaction {
+
+    private Message message;
 
     private int reactedTimes;
     private boolean selfReacted;
 
     private EmojiTable.Emoji emoji;
-    private GuildEmoji guildEmoji;
+    private IGuildEmoji guildEmoji;
 
     /**
      * Constructor for Emoji
      */
-    public Reaction(Identity identity, int reactedTimes, boolean selfReacted, EmojiTable.Emoji emoji) {
+    public Reaction(IdentityImpl identity, Message message, int reactedTimes, boolean selfReacted, EmojiTable.Emoji emoji) {
         super(identity);
+        this.message = message;
         this.reactedTimes = reactedTimes;
         this.selfReacted = selfReacted;
         this.emoji = emoji;
@@ -31,24 +35,38 @@ public class Reaction extends DiscordObject {
     /**
      * Constructor for GuildEmoji
      */
-    public Reaction(Identity identity, int reactedTimes, boolean selfReacted, GuildEmoji guildEmoji) {
+    public Reaction(IdentityImpl identity, Message message, int reactedTimes, boolean selfReacted, IGuildEmoji guildEmoji) {
         super(identity);
+        this.message = message;
         this.reactedTimes = reactedTimes;
         this.selfReacted = selfReacted;
         this.emoji = null;
         this.guildEmoji = guildEmoji;
     }
 
+    @Override
+    public IMessage getMessage() {
+        return message;
+    }
+
+    @Override
     public int getReactedTimes() {
         return reactedTimes;
     }
 
-    public boolean isSelfReacted() {
-        return selfReacted;
+    @Override
+    public EmojiTable.Emoji getEmoji() {
+        return emoji;
     }
 
-    public boolean isGuildEmoji() {
-        return guildEmoji != null;
+    @Override
+    public IGuildEmoji getGuildEmoji() {
+        return guildEmoji;
+    }
+
+    @Override
+    public boolean isSelfReacted() {
+        return selfReacted;
     }
 
     @Override
@@ -73,10 +91,11 @@ public class Reaction extends DiscordObject {
 
     @Override
     public String toString() {
-        if (guildEmoji != null) {
-            return "Reaction: "+reactedTimes+" "+guildEmoji.getName()+" "+guildEmoji.getId()+"\t";
-        } else {
-            return "Reaction: "+reactedTimes+" "+emoji.getName()+" "+emoji.getUnicode();
-        }
+        return "Reaction{" +
+                "reactedTimes=" + reactedTimes +
+                ", emoji=" + emoji +
+                ", guildEmoji=" + guildEmoji +
+                '}';
     }
+
 }

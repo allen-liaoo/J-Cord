@@ -2,12 +2,88 @@ Event - Whenever a change happens to an entity, an event get fired.
  - GatewayEvent - Events that are fired at connection.
    - ReadyEvent - Event that fired when the Discord server is ready.
    - ResumedEvent - Event fired when reconnect to the Discord server.
+    <br />
  - GuildEvent - Any events that happens under a guild.
-   - GuildCreateEvent - Fired whenever a guild is detected.
-   - GuildDeleteEvent - Fired whenever the identity left a guild, or the user deletes a guild.
-   - GuildUnavailableEvent - Fired when a guild became unavailable.
-   - GuildRoleCreatedEvent - Fired whenever a role is created.
+   - GuildCreateEvent - Fired whenever a guild is detected. Do not use this event.
+   - GuildUpdateEvent
+     - GuildOwnerUpdateEvent
+     - GuildRegionUpdateEvent
+     - GuildIconUpdateEvent
+     - GuildVerificationUpdateEvent
+     - GuildNotificationUpdateEvent
+     - GuildMFAUpdateEvent
+     - GuildAFKTimeoutUpdateEvent
+   - GuildDeleteEvent
+   - GuildUnavailableEvent
+   - GuildMemberEvent
+     - GuildMemberJoinEvent
+     - GuildMemberLeaveEvent
+     - GuildMemberBanEvent
+     - GuildUnbanEvent (It is not possible to get a member instance of this event)
+     - GuildMemberNicknameUpdateEvent
+     - GuildMemberAddRoleEvent
+     - GuildMemberRemoveRoleEvent
+   - GuildRoleEvent
+     - GuildRoleCreateEvent
+     - GuildRoleUpdateEvent
+       - GuildRoleNameUpdateEvent
+       - GuildRolePositionUpdateEvent
+       - GuildRoleColorUpdateEvent
+       - GuildRolePermissionsUpdateEvent
+       - GuildRoleSeparateListedUpdateEvent
+       - GuildRoleMentionUpdateEvent
+     - GuildRoleDeleteEvent
+   - GuildEmojiEvent
+     - GuildEmojiUploadEvent
+     - GuildEmojiUpdateEvent
+       - GuildEmojiNameUpdateEvent
+       - GuildEmojiRolesUpdateEvent
+     - GuildEmojiDeleteEvent
+ - ChannelEvent
+   - ChannelCreateEvent
+     - GuildChannelCreateEvent
+       - TextChannelCreateEvent
+       - VoiceChannelCreateEvent
+     - PrivateChannelCreateEvent
+   - ChannelUpdateEvent
+     - TextChannelUpdateEvent
+       - TextChannelNameUpdateEvent
+       - TextChannelPositionUpdateEvent
+       - TextChannelPermissionsUpdateEvent
+       - TextChannelTopicUpdateEvent
+     - VoiceChannelUpdateEvent
+       - VoiceChannelNameUpdateEvent
+       - VoiceChannelPositionUpdateEvent
+       - VoiceChannelPermissionsUpdateEvent
+       - VoiceChannelBitrateUpdateEvent
+       - VoiceChannelUserLimitUpdateEvent
+   - ChannelDeleteEvent
+     - GuildChannelDeleteEvent
+       - TextChannelDeleteEvent
+       - VoiceChannelDeleteEvent
+     - PrivateChannelDeleteEvent
+   - TypingStartEvent
+    <br />
  - MessageEvent - Events that are related to a message.
-   - MessageCreateEvent - Fired when a message was sent.
-   - MessageUpdateEvent - Fired when a message was edited.
-   - MessageDeleteEvent - Fired when a message was deleted.
+   - MessageCreateEvent
+     - GuildMessageCreateEvent
+     - PrivateMessageCreateEvent
+   - MessageUpdateEvent
+     - GuildMessageUpdateEvent
+     - PrivateMessageUpdateEvent
+   - MessageDeleteEvent
+     - GuildMessageDeleteEvent
+     - PrivateMessageDeleteEvent
+   - MessagePinUpdateEvent - This is just an internal event that discord fired.
+     It is not possible to get the pinned message from this event.
+   - MessageReactionAddEvent
+   - MessageReactionRemoveEvent
+   - MessageReactionRemoveAllEvent
+ - UserEvent
+   - UserUpdateEvent
+     - UserNameUpdateEvent
+     - UserAvatarUpdateEVent
+   - PresenceUpdateEvent
+     - OnlineStatusUpdateEvent
+     - GameUpdateEvent
+ - ExceptionEvent

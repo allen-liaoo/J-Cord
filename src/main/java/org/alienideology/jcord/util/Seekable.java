@@ -2,10 +2,11 @@ package org.alienideology.jcord.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
 /**
+ * Seekable - Multi-threaded future.
  * @author AlienIdeology
  */
 public class Seekable<V> {

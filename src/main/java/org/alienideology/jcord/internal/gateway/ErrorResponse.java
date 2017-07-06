@@ -20,7 +20,7 @@ public enum ErrorResponse {
     UNKNOWN_ROLE (10011, "Unknown role"),
     UNKNOWN_TOKEN (10012, "Unknown token"),
     UNKNOWN_USER (10013, "Unknown user"),
-    UNKNOWN_EMOJI (10014, "Unknown EmojiTable"),
+    UNKNOWN_EMOJI (10014, "Unknown emoji"),
 
     /* Invalid Endpoint */
     INVALID_ENDPOINT_FOR_BOT (20001, "Bots cannot use this endpoint"),

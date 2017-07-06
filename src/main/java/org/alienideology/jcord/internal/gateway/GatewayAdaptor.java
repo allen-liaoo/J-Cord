@@ -4,28 +4,34 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
-import org.alienideology.jcord.internal.Identity;
-import org.alienideology.jcord.internal.event.ExceptionEvent;
-import org.alienideology.jcord.internal.event.handler.*;
+import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.event.ExceptionEvent;
+import org.alienideology.jcord.event.handler.*;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
-import org.apache.commons.logging.impl.SimpleLog;
+import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.util.log.Logger;
+import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONObject;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.Inflater;
 
 /**
- * GatewayAdaptor - Communication client for Discord GateWay
+ * GatewayAdaptor - Communication java.client for Discord GateWay
+ *
  * @author AlienIdeology
  */
 public final class GatewayAdaptor extends WebSocketAdapter {
 
     public static int GATEWAY_VERSION = 5;
-    public SimpleLog LOG = new SimpleLog("Gateway");
+    public Logger LOG;
 
-    private Identity identity;
+    private IdentityImpl identity;
     private WebSocket webSocket;
     private Thread heart;
+    private long interval;
 
     /* Used for resuming and heartbeat */
     private int sequence;
@@ -37,19 +43,20 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
     /**
      * The listener for Gateway messages.
+     *
      * @param identity The identity this gateway belongs to.
      * @param webSocket The WebSocket where events are fired.
      */
-    public GatewayAdaptor(Identity identity, WebSocket webSocket) {
+    public GatewayAdaptor(IdentityImpl identity, WebSocket webSocket) {
         this.identity = identity;
         this.webSocket = webSocket;
-        LOG.setLevel(SimpleLog.LOG_LEVEL_ALL);
+        LOG = identity.LOG.clone(this);
         setEventHandler();
     }
 
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
-        LOG.info("Connected");
+        LOG.log(LogLevel.INFO, "[CONNECTION] Connected");
         identity.CONNECTION = Identity.Connection.CONNECTED;
 
         if (session_id == null || session_id.isEmpty()) {
@@ -108,10 +115,13 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
     @Override
     public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
+        LOG.log(LogLevel.INFO, "[CONNECTION] Disconnected");
         identity.CONNECTION = Identity.Connection.OFFLINE;
         DisconnectionCode code = DisconnectionCode.getCode(serverCloseFrame.getCloseCode());
-        if(closedByServer) handleError(new RuntimeException("Connection closed: "+code.code+"\tBy reason: "+code.message));
-        LOG.error(code+"\t"+code.message);
+        if(closedByServer) {
+            handleError(new RuntimeException("Connection closed: "+code.code+"\tBy reason: "+code.message));
+            LOG.log(LogLevel.FETAL, code+"\t"+code.message);
+        }
     }
 
     /**
@@ -120,15 +130,17 @@ public final class GatewayAdaptor extends WebSocketAdapter {
      * @param message The json message
      */
     private void handleOPCode(OPCode code, String message) {
+        JSONObject json = new JSONObject(message);
         switch (code) {
             /* Event */
             case DISPATCH: {
-                handleEvent(new JSONObject(message));
+                handleEvent(json);
             }
             /* Server Side HandShake */
             case HELLO: {
-                sendHeartBeat(new JSONObject(message).getJSONObject("d").getLong("heartbeat_interval"));
-                LOG.info("[RECEIVED] Hello");
+                interval = json.getJSONObject("d").getLong("heartbeat_interval");
+                sendHeartBeat();
+                LOG.log(LogLevel.DEBUG, "[RECEIVED] Hello");
                 break;
             }
             /* Client Side HandShake */
@@ -138,15 +150,15 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             /* Heartbeat */
             case HEARTBEAT_ACK:
             case HEARTBEAT: {
-                LOG.info("Heart: "+code);
+                LOG.log(LogLevel.TRACE, "[HEART] "+code);
                 break;
             }
             case RESUME: {
                 sendIdentification();
-                sendHeartBeat(4000);
+                sendHeartBeat();
             }
             default: {
-                LOG.error("Unknown OP Code | Message : " +message);
+                LOG.log(LogLevel.FETAL, "[UNKNOWN] OP Code/Message : " +message);
             }
         }
     }
@@ -163,13 +175,18 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         EventHandler handler = eventHandler.get(key);
 
         if (handler == null) {
-            LOG.fatal("Unknown Event: "+key);// + json.toString(4));
+            LOG.log(LogLevel.FETAL, "[UNKNOWN] Event: " + key + json.toString(4));
         } else {
 
             switch (key) {
                 case "READY": {
                     session_id = event.getString("session_id");
-                    LOG.info("[RECEIVED] Ready Event");
+                    LOG.log(LogLevel.DEBUG, "[RECEIVED] Ready Event");
+                    break;
+                }
+                case "RESUMED": {
+                    session_id = event.getString("session_id");
+                    LOG.log(LogLevel.DEBUG, "[RECEIVED] Resumed Event");
                     break;
                 }
                 default: {
@@ -199,27 +216,27 @@ public final class GatewayAdaptor extends WebSocketAdapter {
      * @param exception The exception being caught
      */
     private void handleError(Exception exception) {
-        identity.getEventManager().onEvent(new ExceptionEvent(identity, exception));
+        identity.getEventManager().dispatchEvent(new ExceptionEvent(identity, exception));
     }
 
-    private void sendHeartBeat(long interval) {
-        LOG.info("Interval: "+interval);
+    private void sendHeartBeat() {
+        LOG.log(LogLevel.TRACE, "[HEART] Interval: "+interval);
         webSocket.setPingInterval(interval);
         heart = new Thread(() -> {
             while (identity.CONNECTION.isConnected()) {
                 webSocket.sendText(
                         new JSONObject()
                             .put("op", OPCode.HEARTBEAT.key)
-                            .put("d", 100).toString());
+                            .put("d", sequence).toString());
 
                 try {
                     Thread.sleep(interval);
                 } catch (InterruptedException e) {
-                    LOG.error(e);
+                    LOG.log(LogLevel.FETAL, e);
                 }
             }
         });
-        heart.setName("Heart Beat");
+        heart.setName("HEART");
         heart.start();
     }
 
@@ -241,7 +258,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             );
 
         webSocket.sendText(identify.toString());
-        LOG.info("[SENT] Identification");
+        LOG.log(LogLevel.DEBUG, "[SENT] Identification");
     }
 
     private void sendResume() {
@@ -255,7 +272,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             );
 
         webSocket.sendText(resume.toString());
-        LOG.info("[SENT] Resume");
+        LOG.log(LogLevel.DEBUG, "[SENT] Resume");
     }
 
     private void setEventHandler() {
@@ -267,12 +284,44 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         eventHandler.put("GUILD_CREATE", new GuildCreateEventHandler(identity));
         eventHandler.put("GUILD_UPDATE", new GuildUpdateEventHandler(identity));
         eventHandler.put("GUILD_DELETE", new GuildDeleteEventHandler(identity));
-        //eventHandler.put("GUILD_ROLE_CREATE", new GuildRoleCreateEvent(identity));
+        eventHandler.put("GUILD_EMOJIS_UPDATE", new GuildEmojisUpdateEventHandler(identity));
+
+        /* Member Event */
+        eventHandler.put("GUILD_BAN_ADD", new GuildBanEventHandler(identity, true));
+        eventHandler.put("GUILD_BAN_REMOVE", new GuildBanEventHandler(identity, false));
+        eventHandler.put("GUILD_MEMBER_ADD", new GuildMemberAddEventHandler(identity));
+        eventHandler.put("GUILD_MEMBER_UPDATE", new GuildMemberUpdateEventHandler(identity));
+        eventHandler.put("GUILD_MEMBER_REMOVE", new GuildMemberRemoveEventHandler(identity));
+
+        /* Role Event */
+        eventHandler.put("GUILD_ROLE_CREATE", new GuildRoleCreateEventHandler(identity));
+        eventHandler.put("GUILD_ROLE_UPDATE", new GuildRoleUpdateEventHandler(identity));
+        eventHandler.put("GUILD_ROLE_DELETE", new GuildRoleDeleteEventHandler(identity));
+
+        /* Channel Event */
+        eventHandler.put("CHANNEL_CREATE", new ChannelCreateEventHandler(identity));
+        eventHandler.put("CHANNEL_UPDATE", new ChannelUpdateEventHandler(identity));
+        eventHandler.put("CHANNEL_DELETE", new ChannelDeleteEventHandler(identity));
+        eventHandler.put("TYPING_START", new TypingStartEventHandler(identity));
 
         /* Message Event */
         eventHandler.put("MESSAGE_CREATE", new MessageCreateEventHandler(identity));
         eventHandler.put("MESSAGE_UPDATE", new MessageUpdateEventHandler(identity));
         eventHandler.put("MESSAGE_DELETE", new MessageDeleteEventHandler(identity));
+        eventHandler.put("MESSAGE_DELETE_BULK", new MessageDeleteBulkEventHandler(identity));
+        eventHandler.put("CHANNEL_PINS_UPDATE", new ChannelPinsUpdateEventHandler(identity));
+        eventHandler.put("MESSAGE_REACTION_ADD", new MessageReactionEventHandler(identity, true));
+        eventHandler.put("MESSAGE_REACTION_REMOVE", new MessageReactionEventHandler(identity, false));
+        eventHandler.put("MESSAGE_REACTION_REMOVE_ALL", new MessageReactionRemoveAllEventHandler(identity));
+
+        /* User Event */
+        eventHandler.put("PRESENCE_UPDATE", new PresenceUpdateEventHandler(identity));
+        eventHandler.put("USER_UPDATE", new UserUpdateEventHandler(identity));
+
+        // TODO: Finish priority events
+        // Priority: GUILD_SYNC, GUILD_MEMBERS_CHUNK, WEBHOOKS_UPDATE, VOICE_SERVER_UPDATE, VOICE_STATE_UPDATE
+        // Clients: CALL_CREATE, CALL_UPDATE, CALL_DELETE, CHANNEL_RECIPIENT_ADD, CHANNEL_RECIPIENT_REMOVE, RELATIONSHIP_ADD, RELATIONSHIP_REMOVE
+        // Unknown: MESSAGE_ACK
     }
 
 }

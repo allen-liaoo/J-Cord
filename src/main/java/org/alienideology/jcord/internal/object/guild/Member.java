@@ -1,29 +1,39 @@
 package org.alienideology.jcord.internal.object.guild;
 
-import org.alienideology.jcord.internal.Identity;
-import org.alienideology.jcord.internal.object.*;
+import org.jetbrains.annotations.Nullable;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.managers.IMemberManager;
+import org.alienideology.jcord.handle.permission.Permission;
+import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.internal.object.DiscordObject;
+import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.managers.MemberManager;
 import org.alienideology.jcord.internal.object.user.User;
 
 import java.time.OffsetDateTime;
 import java.util.*;
 
 /**
- * Member - A user representation in a guild.
  * @author AlienIdeology
  */
-public class Member extends DiscordObject implements SnowFlake, Mention {
+public final class Member extends DiscordObject implements IMember {
 
     private final Guild guild;
+
+    private MemberManager memberManager;
+
     private final User user;
     private String nickname;
     private OffsetDateTime joinedDate;
 
-    private List<Role> roles;
+    private List<IRole> roles;
     private List<Permission> permissions;
     private boolean isDeafened;
     private boolean isMuted;
 
-    public Member(Identity identity, Guild guild, User user, String nickname, String joinedDate, List<Role> roles, boolean isDeafened, boolean isMuted) {
+    public Member(IdentityImpl identity, Guild guild, User user, String nickname, String joinedDate, List<IRole> roles, boolean isDeafened, boolean isMuted) {
         super(identity);
         this.guild = guild;
         this.user = user;
@@ -34,42 +44,28 @@ public class Member extends DiscordObject implements SnowFlake, Mention {
         this.permissions = initPermissions();
         this.isDeafened = isDeafened;
         this.isMuted = isMuted;
+        this.memberManager = new MemberManager(this);
     }
 
-    /**
-     * Check if this member have all the given permissions
-     * @param permissions The varargs of permission enums to be checked
-     * @return True if the member have all given permissions
-     */
-    public boolean hasAllPermissions (Permission... permissions) {
+    @Override
+    public IMemberManager getMemberManager() {
+        return memberManager;
+    }
+
+    @Override
+    public boolean hasAllPermissions(Permission... permissions) {
         for (Permission perm : permissions) {
             if (!this.permissions.contains(perm))
                 return false;
         }
-
         return true;
     }
 
-    /**
-     * Check if this member have one of the given permissions.
-     * @param checkAdmin If true, returns true if the member have administrator permission.
-     * @param permissions The varargs of permission enums to be checked.
-     * @return True if the member have one of the given permissions.
-     */
-    public boolean hasPermissions (boolean checkAdmin, Permission... permissions) {
-        if (checkAdmin && hasPermissions(Permission.ADMINISTRATOR)) return true;
-        return hasPermissions(permissions);
-    }
-
-    /**
-     * Check if this member have one of the given permissions
-     * @deprecated #hasPermissions(boolean, Permission...) To check with the member having administrator permission.
-     * @see #hasAllPermissions(Permission...) To check if this member have all the permissions.
-     * @param permissions The varargs of permission enums to be checked
-     * @return True if the member have one of the given permissions
-     */
-    @Deprecated
-    public boolean hasPermissions (Permission... permissions) {
+    @Override
+    public boolean hasPermissions(boolean checkAdmin, Collection<Permission> permissions) {
+        if (checkAdmin) {
+            if (this.permissions.contains(Permission.ADMINISTRATOR) || isOwner()) return true;
+        }
         for (Permission perm : permissions) {
             if (this.permissions.contains(perm))
                 return true;
@@ -77,9 +73,9 @@ public class Member extends DiscordObject implements SnowFlake, Mention {
         return false;
     }
 
-    private List<Permission> initPermissions() {
+    public List<Permission> initPermissions() {
         Set<Permission> allPerms = new TreeSet<>();
-        for (Role role : roles) {
+        for (IRole role : roles) {
             allPerms.addAll(role.getPermissions());
         }
         List<Permission> permissions = new ArrayList<>();
@@ -87,49 +83,60 @@ public class Member extends DiscordObject implements SnowFlake, Mention {
         return permissions;
     }
 
-    public Guild getGuild() {
+    @Override
+    public IGuild getGuild() {
         return guild;
     }
 
-    public User getUser() {
+    @Override
+    public IUser getUser() {
         return user;
     }
 
+    @Override
+    @Nullable
     public String getNickname() {
         return nickname;
     }
 
+    @Override
     public OffsetDateTime getJoinedDate() {
         return joinedDate;
     }
 
-    public Role getHighestRole() {
+    @Override
+    public IRole getHighestRole() {
         return roles.isEmpty() ? null : roles.get(0);
     }
 
-    public List<Role> getRoles() {
+    @Override
+    @Nullable
+    public IRole getRole(String id) {
+        for (IRole role : roles) {
+            if (role.getId().equals(id))
+                return role;
+        }
+        return null;
+    }
+
+    @Override
+    public List<IRole> getRoles() {
         return Collections.unmodifiableList(roles);
     }
 
+    @Override
     public List<Permission> getPermissions() {
         return Collections.unmodifiableList(permissions);
     }
 
-    public boolean isOwner() {
-        return guild.getOwner().equals(this);
-    }
-
+    @Override
     public boolean isDeafened() {
         return isDeafened;
     }
 
+    @Override
     public boolean isMuted() {
         return isMuted;
-    }
-
-    @Override
-    public String mention() {
-        return "<@!"+user.getId()+">";
     }
 
     @Override
@@ -152,7 +159,31 @@ public class Member extends DiscordObject implements SnowFlake, Mention {
 
     @Override
     public String toString() {
-        return "ID: "+user.getId()+"\tNickName: "+nickname;
+        return "Member{" +
+                "guild=" + guild +
+                ", user=" + user +
+                '}';
+    }
+
+    public Member setNickname(String nickname) {
+        this.nickname = nickname;
+        return this;
+    }
+
+    public Member setRoles(List<IRole> roles) {
+        this.roles = roles;
+        return this;
+    }
+
+    public Member addRole(Role role) {
+        if (!roles.contains(role))
+            roles.add(role);
+        return this;
+    }
+
+    public Member removeRoles(Collection<IRole> roles) {
+        this.roles.removeAll(roles);
+        return this;
     }
 
 }

@@ -1,16 +1,43 @@
-group 'org.alienideology'
-version '1.0-SNAPSHOT'
+plugins {
+    id 'java'
+    id 'maven'
+    id 'com.github.johnrengelman.shadow' version '2.0.0'
+}
 
-apply plugin: 'java'
+group = 'com.github.AlienIdeology'
+version = '0.1.3-SNAPSHOT'
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile 'com.mashape.unirest:unirest-java:1.4.9'
+    // WebSocket and WebServer
     compile 'com.neovisionaries:nv-websocket-client:2.2'
+    compile 'org.nanohttpd:nanohttpd:2.2.0'
+
+    // Http Methods
+    compile 'com.mashape.unirest:unirest-java:1.4.9'
+
+    // Json
     compile 'org.json:json:20160212'
+
+    // Commons
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'commons-io:commons-io:2.5'
+
+    // Simple dependencies
+    compile 'org.jetbrains:annotations:15.0'
+    compile 'net.jodah:typetools:0.5.0'
 }
+
+shadowJar {
+    mergeServiceFiles()
+    baseName = 'J-Cord'
+    version = '0.1.3'
+}
+
+compileJava.options.encoding = 'UTF-8'

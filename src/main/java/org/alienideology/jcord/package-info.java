@@ -1,5 +1,6 @@
 /**
  * Root package for J-Cord
+ *
  * @since 0.0.1
  * @author AlienIdeology
  */

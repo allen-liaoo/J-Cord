@@ -1,3 +1,5 @@
+# Todo List
+
 ### Description
  - [x] Done : Tested and working.
  - [ ] Half-Done : Missing stuff.
@@ -8,21 +10,25 @@
   - [x] Member
   - [x] Role
  - [x] User
- - [ ] Channel (Half-Done, Missing Actions)
+ - [ ] Channel (Half-Done, Missing Group)
   - [x] GuildChannel
       - [x] TextChannel
       - [x] VoiceChannel
   - [x] PrivateChannel
   - [ ] Group
- - [x] Member
- - [ ] Message (Half-Done, Missing fields)
- - [ ] Permission (Half-Done, Missing permissions overrides for channels)
+  - [x] IChannelManager (For both text and voice)
+ - [x] Message
+ - [x] Permission
  - [x] Emoji
- - [ ] Invite
- - [ ] InviteBuilder
- - [ ] BotInviteBuilder
- - [ ] Webhook
+ - [x] Invite
+ - [x] InviteBuilder
+ - [x] Webhook
 
-### Event
- - [ ] Events corresponding to Discord Objects.
- - [ ] onNext?Event (A consumer method that get triggered when the next ?event are fired.
+### Planned Features
+1. OAuth - Get information about the authorized users and perform actions.
+2. Client - Create objects such as Group, Connection, Friend, etc.
+3. Bot - Get the bot application information.
+4. MessageProcessor - Add the ability to ignore markdowns and mentions
+5. Command Line Interface - A built in command line interface, used to get status about the identity, and shutdown, startup identities and connections.
+6. Events - Events for clients, guild members, voice states.
+6. Audio Support - Add user voice states, connections. Add a new web socket client for voice connection. Get received and sent voice data. Built-in audio players, track loaders, easy to extend and customize.
