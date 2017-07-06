@@ -384,6 +384,17 @@ public interface IGuildManager {
     ITextChannel createTextChannel(ITextChannel channel);
 
     /**
+     * Copy and create a new text channel with the same properties.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Channels} permission.
+     *
+     * @param channel The channel to clone.
+     * @return The channel cloned and created.
+     */
+    ITextChannel cloneTextChannel(ITextChannel channel);
+
+    /**
      * Create a voice channel in this guild.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
@@ -394,6 +405,17 @@ public interface IGuildManager {
      * @return The voice channel created.
      */
     IVoiceChannel createVoiceChannel(IVoiceChannel channel);
+
+    /**
+     * Copy and create a new voice channel with the same properties.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Channels} permission.
+     *
+     * @param channel The channel to clone.
+     * @return The channel cloned and created.
+     */
+    IVoiceChannel cloneVoiceChannel(IVoiceChannel channel);
 
     /**
      * Deletes a guild channel.
@@ -418,6 +440,17 @@ public interface IGuildManager {
      * @return The role created.
      */
     IRole createRole(IRole role);
+
+    /**
+     * Copy and create a role in this guild.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     *
+     * @param role The role to clone.
+     * @return The role cloned and created.
+     */
+    IRole cloneRole(IRole role);
 
     /**
      * Delete a existed role in this guild.

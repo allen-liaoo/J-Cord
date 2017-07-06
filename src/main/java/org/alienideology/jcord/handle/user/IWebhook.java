@@ -91,4 +91,27 @@ public interface IWebhook extends IDiscordObject, ISnowFlake {
         return HttpPath.DISCORD_API_URL + "/webhooks/" + getId() + "/" + getToken();
     }
 
+    /**
+     * Get the endpoint for executing this as a GitHub webhook.
+     * Referring to <a href="https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks">this introduction</a>
+     * on how do execute a GitHub webhook.
+     *
+     * @return The GitHub webhook {@code POST} route.
+     */
+    default String getGitHubWebhookUrl() {
+        return getPostUrl() + "/github";
+    }
+
+    /**
+     * Get the endpoint for executing this as a Slack webhook.
+     * Referring to <a href="https://api.slack.com/incoming-webhooks">this slack documentation</a>
+     * on how do execute a Slack webhook.
+     * Note that Discord does not support Slack's properties.
+     *
+     * @return The Slack webhook {@code POST} route.
+     */
+    default String getSlackWebhookUrl() {
+        return getPostUrl() + "/slack";
+    }
+
 }

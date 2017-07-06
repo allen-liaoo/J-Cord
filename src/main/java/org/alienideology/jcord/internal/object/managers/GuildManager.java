@@ -327,10 +327,20 @@ public final class GuildManager implements IGuildManager {
     }
 
     @Override
+    public ITextChannel cloneTextChannel(ITextChannel channel) {
+        return (ITextChannel) createChannel(((TextChannel) channel).copy().toJson());
+    }
+
+    @Override
     public IVoiceChannel createVoiceChannel(IVoiceChannel channel) {
         // Fires Channel Create Gateway Event
         // See documentations above.
         return (IVoiceChannel) createChannel(((VoiceChannel) channel).toJson());
+    }
+
+    @Override
+    public IVoiceChannel cloneVoiceChannel(IVoiceChannel channel) {
+        return (IVoiceChannel) createChannel(((VoiceChannel) channel).copy().toJson());
     }
 
     private IGuildChannel createChannel(JSONObject json) {
@@ -373,6 +383,11 @@ public final class GuildManager implements IGuildManager {
 
         return new ObjectBuilder((IdentityImpl) getIdentity()).buildRole(roleJson, guild);
 
+    }
+
+    @Override
+    public IRole cloneRole(IRole role) {
+        return createRole(((Role) role).copy());
     }
 
     @Override

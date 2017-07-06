@@ -9,8 +9,8 @@ import org.alienideology.jcord.handle.managers.IChannelManager;
 import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.permission.Permission;
-import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.ChannelManager;
 import org.alienideology.jcord.internal.object.managers.InviteManager;
@@ -56,6 +56,10 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonab
                 .put("bitrate", bitrate)
                 .put("user_limit", user_limit)
                 .put("permission_overwrites", permOverwrites);
+    }
+
+    public VoiceChannel copy() {
+        return new VoiceChannel(identity, guild.getId(), id, name, position, bitrate, user_limit);
     }
 
     @Override

@@ -44,8 +44,8 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
 
     private List<PermOverwrite> permOverwrites = new ArrayList<>();
 
-    public TextChannel(IdentityImpl identity, String guild_id, String id, String name, int position, String topic, Message lastMessagt) {
-        super(identity, id, IChannel.Type.TEXT, lastMessagt);
+    public TextChannel(IdentityImpl identity, String guild_id, String id, String name, int position, String topic, Message lastMessage) {
+        super(identity, id, IChannel.Type.TEXT, lastMessage);
         this.guild = guild_id == null ? null : (Guild) identity.getGuild(guild_id);
         this.name = name;
         this.position = position;
@@ -67,6 +67,10 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
             json.put("permission_overwrites", perms);
         }
         return json;
+    }
+
+    public TextChannel copy() {
+        return new TextChannel(identity, guild.getId(), id, name, position, topic, (Message) getLatestMessage());
     }
 
     @Override

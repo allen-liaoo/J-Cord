@@ -59,6 +59,10 @@ public final class Role extends DiscordObject implements IRole, Jsonable {
         return role;
     }
 
+    public Role copy() {
+        return new Role(identity, guild, id, name, color, position, permissionsLong, isSeparateListed, canMention);
+    }
+
     private void initPermissions(Long permissionsLong) {
         this.permissions = permissionsLong == -1 ?      // -1 sent by RoleBuilder, just a place holder
                 new ArrayList<>() : Permission.getPermissionsByLong(permissionsLong);

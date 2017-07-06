@@ -8,6 +8,7 @@ import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -35,6 +36,11 @@ public interface ISelfManager {
     List<Character> USERNAME_DISALLOWED_CHARS = Arrays.asList('@', '`', ':', '#');
 
     /**
+     * A list of disallowed user names.
+     */
+    List<String> USERNAME_DISALLOWED_NAMES = Arrays.asList("DISCORDTAG", "EVERYONE", "HERE");
+
+    /**
      * The pattern for matching valid streaming urls.
      * Discord only support twitch streams currently.
      */
@@ -53,10 +59,9 @@ public interface ISelfManager {
      *         The username must not contain characters in {@link ISelfManager#USERNAME_DISALLOWED_CHARS}.
      *     </li>
      *     <li>
-     *         The username must not equals {@code "discordtag"}, {@code "everyone}, or {@code here}.
+     *         The username must not equals {@code "discordtag"}, {@code "everyone"}, or {@code "here"}.
      *     </li>
      * </ul>
-     *
      *
      * @param username The username to be check with.
      * @return True if the username is valid.
@@ -65,18 +70,8 @@ public interface ISelfManager {
         return !(username != null && !username.isEmpty()) ||
                 username.length() >= USERNAME_LENGTH_MIN &&
                 username.length() <= USERNAME_LENGTH_MAX &&
-                !contains(username, USERNAME_DISALLOWED_CHARS) &&
-                !username.equalsIgnoreCase("discordtag") &&
-                !username.equalsIgnoreCase("everyone") &&
-                !username.equalsIgnoreCase("here");
-    }
-
-    static boolean contains(String str, List<Character> arg) {
-        for (char c : str.toCharArray()) {
-            if (arg.contains(c))
-                return true;
-        }
-        return false;
+                Collections.disjoint(Arrays.asList(username.toCharArray()), USERNAME_DISALLOWED_CHARS) &&
+                !USERNAME_DISALLOWED_NAMES.contains(username.toUpperCase());
     }
 
     /**
