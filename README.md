@@ -1,8 +1,8 @@
 # J-Cord
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/AlienIdeology/J-Cord/blob/master/LICENSE.txt)
 [![](https://jitpack.io/v/AlienIdeology/J-Cord.svg)](https://jitpack.io/#AlienIdeology/J-Cord)
 [![Build Status](https://travis-ci.org/AlienIdeology/J-Cord.svg?branch=master)](https://travis-ci.org/AlienIdeology/J-Cord)
-[![Discord](https://discordapp.com/api/guilds/324381670100828181/widget.json)](https://discord.gg/6UDkwb4)
+[![Discord](https://discordapp.com/api/guilds/324381670100828181/widget.png)](https://discord.gg/6UDkwb4)
 <br />
 A Discord API Wrapper for Java
 
