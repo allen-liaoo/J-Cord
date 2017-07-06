@@ -1,6 +1,7 @@
 package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
@@ -8,7 +9,6 @@ import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.object.message.Embed;
-import org.alienideology.jcord.handle.Icon;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,6 +21,32 @@ import java.util.Arrays;
  * @author AlienIdeology
  */
 public interface IWebhookManager {
+
+    /**
+     * The minimum length of a webhook's name.
+     */
+    int NAME_LENGTH_MIN = 2;
+
+    /**
+     * The maximum length of a webhook's name.
+     */
+    int NAME_LENGTH_MAX = 32;
+
+    /**
+     * Checks if an webhook's name is valid or not.
+     *
+     * Validations: <br />
+     * The length of the name must be between {@link IWebhookManager#NAME_LENGTH_MIN}
+     * and {@link IWebhookManager#NAME_LENGTH_MAX}.
+     *
+     * @param name The name to be check with.
+     * @return True if the name is valid.
+     */
+    static boolean isValidWebhookName(String name) {
+        return !(name != null && !name.isEmpty()) ||
+                name.length() >= NAME_LENGTH_MIN &&
+                name.length() <= NAME_LENGTH_MAX;
+    }
 
     /**
      * Get the identity this webhook appears in.
@@ -62,6 +88,9 @@ public interface IWebhookManager {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity itself does not have {@code Manager Webhooks} permission.
+     * @exception  IllegalArgumentException
+     *          If the name is not valid. See {@link IWebhookManager#isValidWebhookName(String)}
+     *
      * @param name The name.
      */
     void modifyDefaultName(String name);

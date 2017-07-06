@@ -1,6 +1,7 @@
 package org.alienideology.jcord.internal.object.managers;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.ISelfManager;
 import org.alienideology.jcord.handle.user.Game;
@@ -9,7 +10,6 @@ import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.handle.Icon;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -38,6 +38,10 @@ public final class SelfManager implements ISelfManager {
     @Override
     public void modifyUserName(String name) {
         if (name == null) name = "";
+        if (!ISelfManager.isValidUsername(name)) {
+            throw new IllegalArgumentException("The username is not valid! See UserUtil#isValidUsername(String).");
+        }
+
         modifySelf(new JSONObject().put("username", name));
     }
 

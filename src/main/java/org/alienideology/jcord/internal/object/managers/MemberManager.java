@@ -49,9 +49,12 @@ public final class MemberManager implements IMemberManager {
     public void modifyNickname(String nickname) {
         if (nickname == null) nickname = "";
         checkPerm();
+        if (!IMemberManager.isValidNickname(nickname)) {
+            throw new IllegalArgumentException("The nickname is not valid! See UserUtil#isValidNickname(String).");
+        }
 
         // Validate nickname
-        if (nickname.length() > NICKNAME_LENGTH) {
+        if (nickname.length() > NICKNAME_LENGTH_MAX) {
             throw new IllegalArgumentException("Nickname may not be longer than 32 letters!");
         }
 

@@ -20,8 +20,25 @@ public interface IMemberManager {
 
     /**
      * The maximum length of a nickname.
+     * This is the same as {@link ISelfManager#USERNAME_LENGTH_MAX}.
      */
-    int NICKNAME_LENGTH = 32;
+    int NICKNAME_LENGTH_MAX = 32;
+
+    /**
+     * Checks if an nickname is valid or not.
+     *
+     * Validations: <br />
+     * The length of the nickname must be shorter than {@link IMemberManager#NICKNAME_LENGTH_MAX}.
+     *
+     * @param nickname The nickname to be check with.
+     * @return True if the nickname is valid.
+     */
+    static boolean isValidNickname(String nickname) {
+        return !(nickname != null && !nickname.isEmpty()) ||
+                // Nickname minimum length is 1, which means there is no gap between
+                // an empty (used to reset) nickname and a actually valid nickname.
+                nickname.length() <= NICKNAME_LENGTH_MAX;
+    }
 
     /**
      * Get the identity the managers's guild belongs to.
@@ -58,7 +75,8 @@ public interface IMemberManager {
      * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException 
      *          If the member is the server owner or have higher role than the identity.
      * 
-     * @exception IllegalArgumentException If the nickname is longer than {@value #NICKNAME_LENGTH}.
+     * @exception IllegalArgumentException
+     *          If the nickname is not valid. See {@link IMemberManager#isValidNickname(String)}
      *
      * @param nickname The new nickname.
      */

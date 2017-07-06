@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.managers;
 
+import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.managers.IWebhookManager;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IWebhook;
@@ -8,7 +9,6 @@ import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.user.Webhook;
-import org.alienideology.jcord.handle.Icon;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -32,6 +32,9 @@ public class WebhookManager implements IWebhookManager {
     @Override
     public void modifyDefaultName(String name) {
         if (name == null || name.isEmpty()) return;
+        if (!IWebhookManager.isValidWebhookName(name)) {
+            throw new IllegalArgumentException("The name is not valid! See UserUtil.isValidWebhookName(String).");
+        }
         modify(new JSONObject().put("name", name));
     }
 
