@@ -1,6 +1,7 @@
 package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.builders.ChannelBuilder;
 import org.alienideology.jcord.handle.builders.RoleBuilder;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
@@ -11,11 +12,12 @@ import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.guild.Region;
 import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.handle.user.IWebhook;
+import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
-import org.alienideology.jcord.handle.Icon;
+import org.alienideology.jcord.internal.gateway.ErrorResponse;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -25,6 +27,24 @@ import java.util.List;
  * @since 0.0.4
  */
 public interface IGuildManager {
+
+    /**
+     * Checks if a guild's name is valid or not.
+     *
+     * Validations: <br />
+     * <ul>
+     *     <li>The nickname may not be null or empty.</li>
+     *     <li>The length of the nickname must be between {@link IGuild#NAME_LENGTH_MIN} and {@link IGuild#NAME_LENGTH_MAX}.</li>
+     * </ul>
+     *
+     * @param name The name to be check with.
+     * @return True if the name is valid.
+     */
+    static boolean isValidName(String name) {
+        return name != null &&
+                name.length() >= IGuild.NAME_LENGTH_MIN &&
+                name.length() <= IGuild.NAME_LENGTH_MAX;
+    }
 
     /**
      * Get the identity the guild belongs to.
@@ -55,6 +75,8 @@ public interface IGuildManager {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
+     * @exception IllegalArgumentException
+     *          If the name is not valid. See {@link #isValidName(String)}.
      *
      * @param name The string name.
      */
@@ -144,22 +166,20 @@ public interface IGuildManager {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
-     * @throws IOException When decoding image.
      *
      * @param icon The image file.
      */
-    void modifyIcon(Icon icon) throws IOException;
+    void modifyIcon(Icon icon);
 
     /**
      * Modify the guild's splash icon. This is VIP guild only.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
-     * @throws IOException When decoding image.
      *
      * @param icon The image.
      */
-    void modifySplash(Icon icon) throws IOException;
+    void modifySplash(Icon icon);
 
     /*
         ---------------------
@@ -411,5 +431,44 @@ public interface IGuildManager {
      * @param role The role to be deleted.
      */
     void deleteRole(IRole role);
+
+    /**
+     * Create a new webhook for a text channel in this guild.
+     * @see IChannelManager#createWebhook(String, Icon)
+     *
+     * @param channel The text channel.
+     * @param defaultName The default name for the webhook. Null or empty for no name.
+     * @param defaultAvatar The default avatar.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manager Webhooks} permission.
+     * @exception IllegalArgumentException
+     *          If the default name is not valid. See {@link IWebhookManager#isValidWebhookName(String)}.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the channel does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_CHANNEL
+     */
+    default void createWebhook(ITextChannel channel, String defaultName, Icon defaultAvatar) {
+        if (!channel.getGuild().equals(getGuild())) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_CHANNEL);
+        }
+        channel.getChannelManager().createWebhook(defaultName, defaultAvatar);
+    }
+
+    /**
+     * Delete a webhook.
+     *
+     * @param webhook The webhook be to deleted.
+     *
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the webhook does not belong to this guild.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
+     */
+    default void deleteWebhook(IWebhook webhook) {
+        if (!webhook.getGuild().equals(getGuild())) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_USER);
+        }
+        webhook.getWebhookManager().delete();
+    }
 
 }

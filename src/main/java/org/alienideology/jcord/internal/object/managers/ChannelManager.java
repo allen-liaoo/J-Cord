@@ -1,11 +1,16 @@
 package org.alienideology.jcord.internal.object.managers;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.Icon;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IChannelManager;
+import org.alienideology.jcord.handle.managers.IWebhookManager;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException;
@@ -111,33 +116,33 @@ public final class ChannelManager implements IChannelManager {
         Utility Checkers
      */
     public static void checkName(String name) {
-        if (name.length() < CHANNEL_NAME_LENGTH_MIN || name.length() > CHANNEL_NAME_LENGTH_MAX) {
-            throw new IllegalArgumentException("The channel's name can not be shorter than "+CHANNEL_NAME_LENGTH_MIN+
-                    " or longer than "+CHANNEL_NAME_LENGTH_MAX+" characters!");
+        if (name.length() < IGuildChannel.CHANNEL_NAME_LENGTH_MIN || name.length() > IGuildChannel.CHANNEL_NAME_LENGTH_MAX) {
+            throw new IllegalArgumentException("The channel's name can not be shorter than "+ IGuildChannel.CHANNEL_NAME_LENGTH_MIN+
+                    " or longer than "+ IGuildChannel.CHANNEL_NAME_LENGTH_MAX+" characters!");
         }
     }
 
     public static void checkTopic(String topic) {
-        if (topic.length() > TEXT_CHANNEL_TOPIC_LENGTH_MAX) {
-            throw new IllegalArgumentException("The TextChannel's topic may not be longer than"+ TEXT_CHANNEL_TOPIC_LENGTH_MAX +" characters!");
+        if (topic.length() > ITextChannel.TEXT_CHANNEL_TOPIC_LENGTH_MAX) {
+            throw new IllegalArgumentException("The TextChannel's topic may not be longer than"+ ITextChannel.TEXT_CHANNEL_TOPIC_LENGTH_MAX +" characters!");
         }
     }
 
     public static void checkBitrate(int bitrate, IGuild guild) {
-        if (bitrate < VOICE_CHANNEL_BITRATE_MIN) {
-            throw new IllegalArgumentException("The bitrate can not be lower than "+VOICE_CHANNEL_BITRATE_MIN+"!");
-        } else if (bitrate > VOICE_CHANNEL_BITRATE_MAX) {
-            if (guild.getSplash() != null && bitrate > VOICE_CHANNEL_BITRATE_VIP_MAX) { // Guild is VIP
-                throw new IllegalArgumentException("The bitrate of a vip guild can not be greater than "+VOICE_CHANNEL_BITRATE_VIP_MAX+"!");
+        if (bitrate < IVoiceChannel.VOICE_CHANNEL_BITRATE_MIN) {
+            throw new IllegalArgumentException("The bitrate can not be lower than "+ IVoiceChannel.VOICE_CHANNEL_BITRATE_MIN+"!");
+        } else if (bitrate > IVoiceChannel.VOICE_CHANNEL_BITRATE_MAX) {
+            if (guild.getSplash() != null && bitrate > IVoiceChannel.VOICE_CHANNEL_BITRATE_VIP_MAX) { // Guild is VIP
+                throw new IllegalArgumentException("The bitrate of a vip guild can not be greater than "+ IVoiceChannel.VOICE_CHANNEL_BITRATE_VIP_MAX+"!");
             } else {
-                throw new IllegalArgumentException("The bitrate of a normal guild can not be greater than "+VOICE_CHANNEL_BITRATE_MAX+"!");
+                throw new IllegalArgumentException("The bitrate of a normal guild can not be greater than "+ IVoiceChannel.VOICE_CHANNEL_BITRATE_MAX+"!");
             }
         }
     }
 
     public static void checkUserLimit(int limit) {
-        if (limit < VOICE_CHANNEL_USER_LIMIT_MIN || limit > VOICE_CHANNEL_USER_LIMIT_MAX) {
-            throw new IllegalArgumentException("The user limit may not be lower than "+VOICE_CHANNEL_USER_LIMIT_MIN+" or greater than "+VOICE_CHANNEL_USER_LIMIT_MAX+"!");
+        if (limit < IVoiceChannel.VOICE_CHANNEL_USER_LIMIT_MIN || limit > IVoiceChannel.VOICE_CHANNEL_USER_LIMIT_MAX) {
+            throw new IllegalArgumentException("The user limit may not be lower than "+ IVoiceChannel.VOICE_CHANNEL_USER_LIMIT_MIN+" or greater than "+ IVoiceChannel.VOICE_CHANNEL_USER_LIMIT_MAX+"!");
         }
     }
 
@@ -209,5 +214,27 @@ public final class ChannelManager implements IChannelManager {
                 throw ex;
             }
         }
+    }
+
+    @Override
+    public void createWebhook(String defaultName, Icon defaultAvatar) {
+        if (getGuildChannel().isType(IChannel.Type.VOICE)) {
+            throw new IllegalArgumentException("Cannot delete a webhook from a voice channel!");
+        }
+        if (!channel.hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS)) {
+            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS);
+        }
+
+        if (!IWebhookManager.isValidWebhookName(defaultName)) {
+            throw new IllegalArgumentException("The webhook to create does not have a valid name!");
+        }
+
+        new Requester((IdentityImpl) getIdentity(), HttpPath.Webhook.CREATE_WEBHOOK)
+                .request(getGuildChannel().getId())
+                .updateRequestWithBody(request ->
+                        request.body(new JSONObject()
+                            .put("name", defaultName == null ? "" : defaultName)
+                            .put("avatar", defaultAvatar.getData())))
+                .performRequest();
     }
 }

@@ -11,8 +11,6 @@ import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.user.Webhook;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
 /**
  * @author AlienIdeology
  */
@@ -33,13 +31,13 @@ public class WebhookManager implements IWebhookManager {
     public void modifyDefaultName(String name) {
         if (name == null || name.isEmpty()) return;
         if (!IWebhookManager.isValidWebhookName(name)) {
-            throw new IllegalArgumentException("The name is not valid! See UserUtil.isValidWebhookName(String).");
+            throw new IllegalArgumentException("The name is not valid!");
         }
         modify(new JSONObject().put("name", name));
     }
 
     @Override
-    public void modifyDefaultAvatar(Icon icon) throws IOException {
+    public void modifyDefaultAvatar(Icon icon) {
         modify(new JSONObject().put("avatar", icon.getData()));
     }
 

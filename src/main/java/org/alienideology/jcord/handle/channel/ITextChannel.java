@@ -15,6 +15,11 @@ import java.util.List;
 public interface ITextChannel extends IGuildChannel, IMessageChannel, IMention, Comparable<ITextChannel> {
 
     /**
+     * The maximum length of the text channel's topic.
+     */
+    int TEXT_CHANNEL_TOPIC_LENGTH_MAX = 2014;
+
+    /**
      * Get the guild of this text channel.
      *
      * @return The guild, always not null.

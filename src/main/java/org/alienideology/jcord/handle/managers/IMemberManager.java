@@ -19,16 +19,10 @@ import java.util.Collection;
 public interface IMemberManager {
 
     /**
-     * The maximum length of a nickname.
-     * This is the same as {@link ISelfManager#USERNAME_LENGTH_MAX}.
-     */
-    int NICKNAME_LENGTH_MAX = 32;
-
-    /**
      * Checks if an nickname is valid or not.
      *
      * Validations: <br />
-     * The length of the nickname must be shorter than {@link IMemberManager#NICKNAME_LENGTH_MAX}.
+     * The length of the nickname must be shorter than {@link IMember#NICKNAME_LENGTH_MAX}.
      *
      * @param nickname The nickname to be check with.
      * @return True if the nickname is valid.
@@ -37,7 +31,7 @@ public interface IMemberManager {
         return !(nickname != null && !nickname.isEmpty()) ||
                 // Nickname minimum length is 1, which means there is no gap between
                 // an empty (used to reset) nickname and a actually valid nickname.
-                nickname.length() <= NICKNAME_LENGTH_MAX;
+                nickname.length() <= IMember.NICKNAME_LENGTH_MAX;
     }
 
     /**

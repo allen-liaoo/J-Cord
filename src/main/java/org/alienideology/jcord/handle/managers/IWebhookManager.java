@@ -2,6 +2,7 @@ package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.Icon;
+import org.alienideology.jcord.handle.builders.Buildable;
 import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
@@ -12,7 +13,6 @@ import org.alienideology.jcord.internal.object.message.Embed;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -23,29 +23,19 @@ import java.util.Arrays;
 public interface IWebhookManager {
 
     /**
-     * The minimum length of a webhook's name.
-     */
-    int NAME_LENGTH_MIN = 2;
-
-    /**
-     * The maximum length of a webhook's name.
-     */
-    int NAME_LENGTH_MAX = 32;
-
-    /**
      * Checks if an webhook's name is valid or not.
      *
      * Validations: <br />
-     * The length of the name must be between {@link IWebhookManager#NAME_LENGTH_MIN}
-     * and {@link IWebhookManager#NAME_LENGTH_MAX}.
+     * The length of the name must be between {@link IWebhook#NAME_LENGTH_MIN}
+     * and {@link IWebhook#NAME_LENGTH_MAX}.
      *
      * @param name The name to be check with.
      * @return True if the name is valid.
      */
     static boolean isValidWebhookName(String name) {
         return !(name != null && !name.isEmpty()) ||
-                name.length() >= NAME_LENGTH_MIN &&
-                name.length() <= NAME_LENGTH_MAX;
+                name.length() >= IWebhook.NAME_LENGTH_MIN &&
+                name.length() <= IWebhook.NAME_LENGTH_MAX;
     }
 
     /**
@@ -102,9 +92,8 @@ public interface IWebhookManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity itself does not have {@code Manager Webhooks} permission.
      * @param icon The avatar.
-     * @throws IOException When decoding image.
      */
-    void modifyDefaultAvatar(Icon icon) throws IOException;
+    void modifyDefaultAvatar(Icon icon);
 
     /**
      * Execute the webhook by sending a message to the channel.
@@ -127,7 +116,7 @@ public interface IWebhookManager {
      * A simple message builder for webhooks.
      * Main difference to the {@link MessageBuilder} is that webhooks' messages may have temporary overridden names and avatars.
      */
-    class WebhookMessageBuilder {
+    class WebhookMessageBuilder implements Buildable<WebhookMessageBuilder, WebhookMessageBuilder> {
 
         private JSONObject json = new JSONObject();
 
@@ -140,7 +129,14 @@ public interface IWebhookManager {
          *
          * @return The builder.
          */
+        @Override
         public WebhookMessageBuilder build() {
+            return this;
+        }
+
+        @Override
+        public WebhookMessageBuilder clear() {
+            json = new JSONObject();
             return this;
         }
 
@@ -209,7 +205,7 @@ public interface IWebhookManager {
          * @param icon The temporary icon.
          * @return WebhookMessageBuilder for chaining.
          */
-        public WebhookMessageBuilder overrideAvatar(Icon icon) throws IOException {
+        public WebhookMessageBuilder overrideAvatar(Icon icon) {
             json.put("avatar_url", icon.getData());
             return this;
         }

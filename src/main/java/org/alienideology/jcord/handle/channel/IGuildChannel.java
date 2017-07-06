@@ -1,12 +1,12 @@
 package org.alienideology.jcord.handle.channel;
 
-import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.IChannelManager;
 import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.permission.OverwriteCheckable;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -16,6 +16,15 @@ import java.util.stream.Collectors;
  * @author AlienIdeology
  */
 public interface IGuildChannel extends IChannel, OverwriteCheckable, ISnowFlake {
+
+    /**
+     * The minimum length of the channel's name.
+     */
+    int CHANNEL_NAME_LENGTH_MIN = 2;
+    /**
+     * The maximum length of the channel's name.
+     */
+    int CHANNEL_NAME_LENGTH_MAX = 100;
 
     /**
      * Get the guild this channel belongs to.

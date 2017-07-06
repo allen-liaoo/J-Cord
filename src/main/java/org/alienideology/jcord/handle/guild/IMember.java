@@ -1,15 +1,16 @@
 package org.alienideology.jcord.handle.guild;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.managers.IMemberManager;
+import org.alienideology.jcord.handle.managers.ISelfManager;
 import org.alienideology.jcord.handle.permission.PermCheckable;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.managers.GuildManager;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -19,6 +20,12 @@ import java.util.List;
  * @author AlienIdeology
  */
 public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheckable, Comparable<IMember> {
+
+    /**
+     * The maximum length of a nickname.
+     * This is the same as {@link ISelfManager#USERNAME_LENGTH_MAX}.
+     */
+    int NICKNAME_LENGTH_MAX = 32;
 
     /**
      * Get the IMemberManager of this guild.

@@ -12,8 +12,6 @@ import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
 /**
  * @author AlienIdeology
  */
@@ -39,14 +37,14 @@ public final class SelfManager implements ISelfManager {
     public void modifyUserName(String name) {
         if (name == null) name = "";
         if (!ISelfManager.isValidUsername(name)) {
-            throw new IllegalArgumentException("The username is not valid! See UserUtil#isValidUsername(String).");
+            throw new IllegalArgumentException("The username is not valid!");
         }
 
         modifySelf(new JSONObject().put("username", name));
     }
 
     @Override
-    public void modifyAvatar(Icon icon) throws IOException {
+    public void modifyAvatar(Icon icon)  {
         modifySelf(new JSONObject().put("avatar", icon.getData()));
     }
 

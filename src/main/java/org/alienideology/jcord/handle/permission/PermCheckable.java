@@ -16,7 +16,17 @@ public interface PermCheckable {
      * @param permissions The varargs of permission enums to be checked.
      * @return True if the object have all given permissions.
      */
-    boolean hasAllPermissions(Permission... permissions);
+    default boolean hasAllPermissions(Permission... permissions) {
+        return hasAllPermissions(Arrays.asList(permissions));
+    }
+
+    /**
+     * Check if this object have all the given permissions.
+     *
+     * @param permissions The varargs of permission enums to be checked.
+     * @return True if the object have all given permissions.
+     */
+    boolean hasAllPermissions(Collection<Permission> permissions);
 
     /**
      * Check if this object have one of the given permissions.

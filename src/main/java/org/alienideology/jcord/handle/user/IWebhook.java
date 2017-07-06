@@ -15,6 +15,15 @@ import org.alienideology.jcord.internal.gateway.HttpPath;
 public interface IWebhook extends IDiscordObject, ISnowFlake {
 
     /**
+     * The minimum length of a webhook's name.
+     */
+    int NAME_LENGTH_MIN = 2;
+    /**
+     * The maximum length of a webhook's name.
+     */
+    int NAME_LENGTH_MAX = 32;
+
+    /**
      * Get the webhook manager that manages this webhook.
      *
      * @return The manager.

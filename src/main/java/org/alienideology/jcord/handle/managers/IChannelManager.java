@@ -1,6 +1,8 @@
 package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.Icon;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
@@ -9,6 +11,9 @@ import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.permission.Permission;
+import org.alienideology.jcord.handle.user.IWebhook;
+import org.alienideology.jcord.internal.exception.ErrorResponseException;
+import org.alienideology.jcord.internal.gateway.ErrorResponse;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,40 +24,6 @@ import java.util.List;
  * @author AlienIdeology
  */
 public interface IChannelManager {
-
-    /**
-     * The minimum length of the channel's name.
-     */
-    int CHANNEL_NAME_LENGTH_MIN = 2;
-    /**
-     * The maximum length of the channel's name.
-     */
-    int CHANNEL_NAME_LENGTH_MAX = 100;
-    /**
-     * The maximum length of the text channel's topic.
-     */
-    int TEXT_CHANNEL_TOPIC_LENGTH_MAX = 2014;
-    /**
-     * The minimum bitrate of a voice channel.
-     */
-    int VOICE_CHANNEL_BITRATE_MIN = 8000;
-    /**
-     * The maximum bitrate of a voice channel in a normal server.
-     */
-    int VOICE_CHANNEL_BITRATE_MAX = 96000;
-    /**
-     * The maximum bitrate of a voice channel in a VIP server.
-     */
-    int VOICE_CHANNEL_BITRATE_VIP_MAX = 128000;
-    /**
-     * The minimum user limit of a voice channel.
-     * {code 0} user limit refers to no limit.
-     */
-    int VOICE_CHANNEL_USER_LIMIT_MIN = 0;
-    /**
-     * The maximum user limit of a voice channel.
-     */
-    int VOICE_CHANNEL_USER_LIMIT_MAX = 99;
 
     /**
      * Get the identity this channel managers belongs to.
@@ -81,7 +52,7 @@ public interface IChannelManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          <ul>
      *              <li>If the identity do not have {@code Manage Channels} permission.</li>
-     *              <li>If the name is shorter than {@value #CHANNEL_NAME_LENGTH_MIN} or longer than {@value #CHANNEL_NAME_LENGTH_MAX}.</li>
+     *              <li>If the name is shorter than {@value IGuildChannel#CHANNEL_NAME_LENGTH_MIN} or longer than {@value IGuildChannel#CHANNEL_NAME_LENGTH_MAX}.</li>
      *          </ul>
      *
      * @param name The new name.
@@ -127,7 +98,7 @@ public interface IChannelManager {
      * @exception IllegalArgumentException
      *          <ul>
      *              <li>If the channel managers manages a {@link IVoiceChannel}.</li>
-     *              <li>If the topic is longer than {@value #TEXT_CHANNEL_TOPIC_LENGTH_MAX}.</li>
+     *              <li>If the topic is longer than {@value ITextChannel#TEXT_CHANNEL_TOPIC_LENGTH_MAX}.</li>
      *          </ul>
      *
      * @param topic The new topic.
@@ -138,8 +109,8 @@ public interface IChannelManager {
      * Modify the bitrate of a {@link IVoiceChannel}.
      * Note that this event will only work for voice channels.
      *
-     * If the guild is a normal guild, the bitrate cannot be higher than {@value #VOICE_CHANNEL_BITRATE_MAX}.
-     * If the guild is a VIP guild, then the bitrate limit is {@value #VOICE_CHANNEL_BITRATE_VIP_MAX}.
+     * If the guild is a normal guild, the bitrate cannot be higher than {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_MAX}.
+     * If the guild is a VIP guild, then the bitrate limit is {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_VIP_MAX}.
      * @see IVoiceChannel#getBitrate() For more information on bitrate.
      * @see IGuild#getSplash() Normal guilds' splash will always be null.
      *
@@ -148,9 +119,9 @@ public interface IChannelManager {
      * @exception IllegalArgumentException
      *          <ul>
      *              <li>If the channel managers manages a {@link ITextChannel}.</li>
-     *              <li>If the bitrate is smaller than {@value #VOICE_CHANNEL_BITRATE_MIN}.</li>
-     *              <li>The bitrate exceeds the limit. (For normal guild, the limit is {@value #VOICE_CHANNEL_BITRATE_MAX}.
-     *                  For VIP guild, the limit is {@value #VOICE_CHANNEL_BITRATE_VIP_MAX}.</li>
+     *              <li>If the bitrate is smaller than {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_MIN}.</li>
+     *              <li>The bitrate exceeds the limit. (For normal guild, the limit is {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_MAX}.
+     *                  For VIP guild, the limit is {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_VIP_MAX}.</li>
      *          </ul>
      *
      * @param bitrate The new bitrate.
@@ -168,25 +139,12 @@ public interface IChannelManager {
      * @exception IllegalArgumentException
      *          <ul>
      *              <li>If the channel managers manages a {@link ITextChannel}.</li>
-     *              <li>If the bitrate is smaller than {@value #VOICE_CHANNEL_USER_LIMIT_MIN} or greater than {@value #VOICE_CHANNEL_USER_LIMIT_MAX}.</li>
+     *              <li>If the bitrate is smaller than {@value IVoiceChannel#VOICE_CHANNEL_USER_LIMIT_MIN} or greater than {@value IVoiceChannel#VOICE_CHANNEL_USER_LIMIT_MAX}.</li>
      *          </ul>
      *
      * @param limit The new limit.
      */
     void modifyUserLimit(int limit);
-
-    /**
-     * Deletes the guild channel.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity do not have {@code Manage Channels} permission.
-     * @exception IllegalArgumentException
-     *          If the channel is a text channel, and the text channel is a default channel.
-     *          @see IGuild#getDefaultChannel() For more information.
-     */
-    default void deleteChannel() {
-        getGuild().getGuildManager().deleteGuildChannel(getGuildChannel());
-    }
 
     /**
      * Edit or add {@link PermOverwrite} to a member in this channel.
@@ -237,5 +195,54 @@ public interface IChannelManager {
      * @param id The id.
      */
     void deletePermOverwrite(String id);
+
+    /**
+     * Create a new webhook for this channel.
+     *
+     * @param defaultName The default name for the webhook. Null or empty for no name.
+     * @param defaultAvatar The default avatar.
+     *
+     * @exception IllegalArgumentException
+     *          If the channel managers manages a {@link IVoiceChannel}.
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manager Webhooks} permission.
+     * @exception IllegalArgumentException
+     *          If the default name is not valid. See {@link IWebhookManager#isValidWebhookName(String)}.
+     */
+    void createWebhook(String defaultName, Icon defaultAvatar);
+
+    /**
+     * Delete a webhook.
+     *
+     * @param webhook The webhook be to deleted.
+     *
+     * @exception IllegalArgumentException
+     *          If the channel managers manages a {@link IVoiceChannel}.
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the webhook does not belong to this channel.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
+     */
+    default void deleteWebhook(IWebhook webhook) {
+        if (getGuildChannel().isType(IChannel.Type.VOICE)) {
+            throw new IllegalArgumentException("Cannot delete a webhook from a voice channel!");
+        }
+        if (!webhook.getChannel().equals(getGuildChannel())) {
+            throw new ErrorResponseException(ErrorResponse.UNKNOWN_USER);
+        }
+        webhook.getWebhookManager().delete();
+    }
+
+    /**
+     * Deletes the guild channel.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity do not have {@code Manage Channels} permission.
+     * @exception IllegalArgumentException
+     *          If the channel is a text channel, and the text channel is a default channel.
+     *          @see IGuild#getDefaultChannel() For more information.
+     */
+    default void deleteChannel() {
+        getGuild().getGuildManager().deleteGuildChannel(getGuildChannel());
+    }
 
 }

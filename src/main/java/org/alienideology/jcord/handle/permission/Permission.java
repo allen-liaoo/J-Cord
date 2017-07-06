@@ -152,7 +152,7 @@ public enum Permission {
         ALL,
         GUILD_ONLY,
         CHANNEL_ONLY,
-        UNKNOWN_LEVEL;
+        UNKNOWN_LEVEL
     }
 
 }

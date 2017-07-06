@@ -2,6 +2,7 @@ package org.alienideology.jcord.internal.object.managers;
 
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
+import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IMemberManager;
 import org.alienideology.jcord.handle.permission.Permission;
@@ -50,11 +51,11 @@ public final class MemberManager implements IMemberManager {
         if (nickname == null) nickname = "";
         checkPerm();
         if (!IMemberManager.isValidNickname(nickname)) {
-            throw new IllegalArgumentException("The nickname is not valid! See UserUtil#isValidNickname(String).");
+            throw new IllegalArgumentException("The nickname is not valid!");
         }
 
         // Validate nickname
-        if (nickname.length() > NICKNAME_LENGTH_MAX) {
+        if (nickname.length() > IMember.NICKNAME_LENGTH_MAX) {
             throw new IllegalArgumentException("Nickname may not be longer than 32 letters!");
         }
 

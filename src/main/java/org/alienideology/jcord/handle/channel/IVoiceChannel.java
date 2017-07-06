@@ -7,6 +7,28 @@ package org.alienideology.jcord.handle.channel;
 public interface IVoiceChannel extends IGuildChannel, Comparable<IVoiceChannel> {
 
     /**
+     * The minimum bitrate of a voice channel.
+     */
+    int VOICE_CHANNEL_BITRATE_MIN = 8000;
+    /**
+     * The maximum bitrate of a voice channel in a normal server.
+     */
+    int VOICE_CHANNEL_BITRATE_MAX = 96000;
+    /**
+     * The maximum bitrate of a voice channel in a VIP server.
+     */
+    int VOICE_CHANNEL_BITRATE_VIP_MAX = 128000;
+    /**
+     * The minimum user limit of a voice channel.
+     * {code 0} user limit refers to no limit.
+     */
+    int VOICE_CHANNEL_USER_LIMIT_MIN = 0;
+    /**
+     * The maximum user limit of a voice channel.
+     */
+    int VOICE_CHANNEL_USER_LIMIT_MAX = 99;
+
+    /**
      * Bitrate is the value of {@code kbps} a voice channel has.
      * Higher {@code kbps} means higher voice quality, but it also effects the
      * voice quality to users on mobile or with poor connections.

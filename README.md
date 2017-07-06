@@ -1,6 +1,8 @@
 # J-Cord
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![](https://jitpack.io/v/AlienIdeology/J-Cord.svg)](https://jitpack.io/#AlienIdeology/J-Cord)
 [![Build Status](https://travis-ci.org/AlienIdeology/J-Cord.svg?branch=master)](https://travis-ci.org/AlienIdeology/J-Cord)
+[![Discord](https://discordapp.com/api/guilds/324381670100828181/widget.json)](https://discord.gg/6UDkwb4)
 <br />
 A Discord API Wrapper for Java
 
@@ -39,10 +41,13 @@ dependencies {
     <version>-SNAPSHOT</version>
 </dependency>
 ```
+Note: Using `-SNAPSHOT` as the version will automatically be the latest commit from
+branch `master`. To use the latest commit of other branches, use `BranchName-SNAPSHOT`.
+You may also use a `release tag` or `commit hash` to specify the version you intend to use.
 
 ## Support
-Ask questions at the [Discord Support Server](https://discord.gg/6UDkwb4)
-Or [open issues](https://github.com/AlienIdeology/J-Cord/issues).
+Ask questions in the [Discord Support Server](https://discord.gg/6UDkwb4)
+or [open an issue](https://github.com/AlienIdeology/J-Cord/issues).
 
 ## How to Use
 

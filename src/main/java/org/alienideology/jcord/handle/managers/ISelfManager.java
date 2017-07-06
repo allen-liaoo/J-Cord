@@ -7,7 +7,6 @@ import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -108,9 +107,8 @@ public interface ISelfManager {
      * Modify the avatar of this identity.
      *
      * @param icon The avatar.
-     * @throws IOException When decoding image.
      */
-    void modifyAvatar(Icon icon) throws IOException;
+    void modifyAvatar(Icon icon);
 
     /**
      * Set the online status of this user.

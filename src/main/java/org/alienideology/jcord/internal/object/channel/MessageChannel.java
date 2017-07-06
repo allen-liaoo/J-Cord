@@ -1,6 +1,5 @@
 package org.alienideology.jcord.internal.object.channel;
 
-import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
@@ -24,10 +23,10 @@ import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.guild.Guild;
-import org.alienideology.jcord.internal.object.message.Embed;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.util.DataUtils;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -452,7 +451,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
         }
 
         try {
-            new Requester(identity, HttpPath.Channel.DELETE_REACTIOM_ALL).request(this.id, messageId)
+            new Requester(identity, HttpPath.Channel.DELETE_REACTION_ALL).request(this.id, messageId)
                     .performRequest();
         } catch (HttpErrorException ex) {
             if (ex.getCode().equals(HttpCode.NOT_FOUND)) {

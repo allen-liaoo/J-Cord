@@ -23,6 +23,16 @@ import java.util.List;
 public interface IGuild extends IDiscordObject, ISnowFlake {
 
     /**
+     * The minimum length of a guild's name.
+     */
+    int NAME_LENGTH_MIN = 2;
+
+    /**
+     * The maximum length of a guild's name.
+     */
+    int NAME_LENGTH_MAX = 100;
+
+    /**
      * @return True if the guild is available (no temporary shortage happens to discord server)
      */
     boolean isAvailable();

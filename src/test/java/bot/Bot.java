@@ -9,9 +9,6 @@ import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.handle.oauth.OAuth;
-import org.alienideology.jcord.handle.oauth.OAuthBuilder;
-import org.alienideology.jcord.handle.oauth.Scope;
 import org.alienideology.jcord.util.log.LogMode;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -143,16 +140,16 @@ public class Bot {
             System.out.println("DM:\t" + dm.getRecipient().getName());
         }
 
-        // Temporary testing
-        // Oops the client secret
-        OAuthBuilder builder = new OAuthBuilder()
-                .setClientId("332281331784482821")
-                .setClientSecret("b6B2i079INPgEda6vEw07cwisi5xiPvA")
-                .setRedirectUrl("http://localhost:8080/callback")
-                .setScopes(Scope.IDENTIFY);
-        System.out.println(builder.buildUrl());
-        OAuth oAuth = builder.buildOAuth()
-                        .autoAuthorize();
+//        // Temporary testing
+//        // Oops the client secret
+//        OAuthBuilder builder = new OAuthBuilder()
+//                .setClientId("332281331784482821")
+//                .setClientSecret("b6B2i079INPgEda6vEw07cwisi5xiPvA")
+//                .setRedirectUrl("http://localhost:8080/callback")
+//                .setScopes(Scope.IDENTIFY);
+//        System.out.println(builder.buildUrl());
+//        OAuth oAuth = builder.buildOAuth()
+//                        .autoAuthorize();
 
     }
 

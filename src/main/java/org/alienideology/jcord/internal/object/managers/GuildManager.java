@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.managers;
 
+import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
@@ -25,11 +26,9 @@ import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.Role;
-import org.alienideology.jcord.handle.Icon;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +51,9 @@ public final class GuildManager implements IGuildManager {
     @Override
     public void modifyName(String name) {
         if (name == null || name.isEmpty()) return;
+        if (!IGuildManager.isValidName(name)) {
+            throw new IllegalArgumentException("The name is not valid!");
+        }
         requestModify(new JSONObject().put("name", name));
     }
 
@@ -104,12 +106,12 @@ public final class GuildManager implements IGuildManager {
     }
 
     @Override
-    public void modifyIcon(Icon icon) throws IOException {
+    public void modifyIcon(Icon icon) {
         requestModify(new JSONObject().put("icon", icon.getData()));
     }
 
     @Override
-    public void modifySplash(Icon icon) throws IOException {
+    public void modifySplash(Icon icon) {
         requestModify(new JSONObject().put("splash", icon.getData()));
     }
 

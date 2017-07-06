@@ -1,6 +1,5 @@
 package org.alienideology.jcord.internal.object.guild;
 
-import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
@@ -11,6 +10,7 @@ import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.managers.MemberManager;
 import org.alienideology.jcord.internal.object.user.User;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.OffsetDateTime;
 import java.util.*;
@@ -53,7 +53,7 @@ public final class Member extends DiscordObject implements IMember {
     }
 
     @Override
-    public boolean hasAllPermissions(Permission... permissions) {
+    public boolean hasAllPermissions(Collection<Permission> permissions) {
         for (Permission perm : permissions) {
             if (!this.permissions.contains(perm))
                 return false;

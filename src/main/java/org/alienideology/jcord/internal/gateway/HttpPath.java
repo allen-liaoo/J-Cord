@@ -87,6 +87,12 @@ public final class HttpPath {
         public final static HttpPath GET_GUILD_PRUNE_COUNT = new HttpPath(GET, "/guilds/{guild.id}/prune?days={days}");
         public final static HttpPath BEGIN_GUILD_PRUNE = new HttpPath(POST, "/guilds/{guild.id}/prune?days={days}");
 
+        /* GuildEmoji Action */
+        // Client Only
+        public final static HttpPath CREATE_EMOJI = new HttpPath(POST, "guilds/{guild_id}/emojis");
+        public final static HttpPath MODIFY_EMOJI = new HttpPath(PATCH, "guilds/{guild_id}/emojis/{emote_id}");
+        public final static HttpPath DELETE_EMOJI = new HttpPath(DELETE, "guilds/{guild_id}/emojis/{emote_id}");
+
         /* Integration Action */
         public final static HttpPath GET_GUILD_INTEGRATIONS = new HttpPath(GET, "/guilds/{guild.id}/integrations");
         public final static HttpPath CREATE_GUILD_INTEGRATION = new HttpPath(POST, "/guilds/{guild.id}/integrations");
@@ -129,7 +135,7 @@ public final class HttpPath {
         public final static HttpPath DELETE_REACTION_BY_SELF = new HttpPath(DELETE, "/channels/{channel.id}/messages/{message.id}/reactions/{emoji}/@me");
         public final static HttpPath DELETE_REACTION_BY_USER = new HttpPath(DELETE, "/channels/{channel.id}/messages/{message.id}/reactions/{emoji}/{user.id}");
         public final static HttpPath GET_REACTIONS = new HttpPath(GET, "/channels/{channel.id}/messages/{message.id}/reactions/{emoji}");
-        public final static HttpPath DELETE_REACTIOM_ALL = new HttpPath(DELETE, "/channels/{channel.id}/messages/{message.id}/reactions");
+        public final static HttpPath DELETE_REACTION_ALL = new HttpPath(DELETE, "/channels/{channel.id}/messages/{message.id}/reactions");
 
         /* Permission Action */
         public final static HttpPath EDIT_CHANNEL_PERMISSIONS = new HttpPath(PUT, "/channels/{channel.id}/permissions/{overwrite.id}");

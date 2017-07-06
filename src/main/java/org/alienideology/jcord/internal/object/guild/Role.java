@@ -4,9 +4,9 @@ import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IRoleManager;
 import org.alienideology.jcord.handle.permission.Permission;
-import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.managers.RoleManager;
 import org.json.JSONObject;
 
@@ -90,7 +90,7 @@ public final class Role extends DiscordObject implements IRole, Jsonable {
     }
 
     @Override
-    public boolean hasAllPermissions(Permission... permissions) {
+    public boolean hasAllPermissions(Collection<Permission> permissions) {
         for (Permission perm : permissions) {
             if (!hasPermissions(false, perm))
                 return false;
