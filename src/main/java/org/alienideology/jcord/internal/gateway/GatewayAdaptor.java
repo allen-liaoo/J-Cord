@@ -160,6 +160,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
                 LOG.log(LogLevel.TRACE, "[HEART] "+code);
                 break;
             }
+            case INVALID_SESSION:
             case RESUME: {
                 sendIdentification();
                 sendHeartBeat();
@@ -229,6 +230,11 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     private void sendHeartBeat() {
         LOG.log(LogLevel.TRACE, "[HEART] Interval: "+interval);
         webSocket.setPingInterval(interval);
+
+        if (heart != null) {
+            heart.stop();
+        }
+
         heart = new Thread(() -> {
             while (identity.CONNECTION.isConnected()) {
                 webSocket.sendText(

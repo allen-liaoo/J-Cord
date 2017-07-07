@@ -70,18 +70,28 @@ javadoc {
 
 build {
     dependsOn clean
-    dependsOn jar
+    dependsOn javadocJar
     dependsOn sourcesJar
     dependsOn shadowJar
 
-    jar.mustRunAfter clean
-    sourcesJar.mustRunAfter jar
+    javadocJar.mustRunAfter clean
+    sourcesJar.mustRunAfter javadocJar
+    shadowJar.mustRunAfter sourcesJar
+}
+
+install {
+    dependsOn clean
+    dependsOn javadocJar
+    dependsOn sourcesJar
+    dependsOn shadowJar
+
+    javadocJar.mustRunAfter clean
+    sourcesJar.mustRunAfter javadocJar
     shadowJar.mustRunAfter sourcesJar
 }
 
 artifacts {
-    archives sourcesJar
     archives javadocJar
+    archives sourcesJar
+    archives shadowJar
 }
-
-compileJava.options.encoding = 'UTF-8'
