@@ -1,14 +1,14 @@
 package org.alienideology.jcord.handle.permission;
 
-import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
-import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.Member;
 import org.alienideology.jcord.internal.object.guild.Role;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.util.Collection;
@@ -41,6 +41,7 @@ public class PermOverwrite extends DiscordObject implements ISnowFlake, Jsonable
 
     /**
      * Constructor for buildable PermOverwrite
+     * You do not need to construct any perm overwrite objects using this contructor.
      */
     public PermOverwrite(String id, Type overwriteType, long allow, long denied) {
         super(null);

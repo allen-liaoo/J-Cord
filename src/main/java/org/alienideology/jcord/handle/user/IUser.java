@@ -45,7 +45,7 @@ public interface IUser extends IDiscordObject, ISnowFlake, IMention {
     /**
      * Checks if an username is valid or not.
      *
-     * Validations: <br />
+     * Validations:
      * <ul>
      *     <li>Username may not be null or empty.</li>
      *     <li>The username's length must be between {@link #USERNAME_LENGTH_MIN} and {@link #USERNAME_LENGTH_MAX}.</li>

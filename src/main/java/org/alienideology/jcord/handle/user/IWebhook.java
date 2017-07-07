@@ -27,7 +27,7 @@ public interface IWebhook extends IDiscordObject, ISnowFlake {
     /**
      * Checks if an webhook's name is valid or not.
      *
-     * Validations: <br />
+     * Validations:
      * The length of the name must be between {@link IWebhook#NAME_LENGTH_MIN}
      * and {@link IWebhook#NAME_LENGTH_MAX}.
      *

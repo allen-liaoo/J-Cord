@@ -7,6 +7,7 @@ plugins {
 def ver = '0.1.3'
 
 group = 'com.github.AlienIdeology'
+archivesBaseName = "JCord"
 version = ver + '-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -52,8 +53,7 @@ javadoc {
     options.author()
     options.encoding = 'UTF-8'
 
-    exclude("src/main/java/org/alienideology/jcord/internal/gateway")
-    exclude("src/test/java")
+    exclude("org/alienideology/jcord/internal/gateway")
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -91,7 +91,11 @@ install {
 }
 
 artifacts {
-    archives javadocJar
     archives sourcesJar
     archives shadowJar
+    archives javadocJar
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.5'
 }

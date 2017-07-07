@@ -5,6 +5,7 @@ import org.alienideology.jcord.internal.gateway.HttpPath;
 
 /**
  * BotInviteBuilder - A builder for building bot invite URL.
+ *
  * @author AlienIdeology
  */
 public class BotInviteBuilder {

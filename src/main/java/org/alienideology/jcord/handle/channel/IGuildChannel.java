@@ -43,7 +43,7 @@ public interface IGuildChannel extends IChannel, OverwriteCheckable, ISnowFlake 
     /**
      * Checks if a guild channel's name is valid or not.
      *
-     * Validations: <br />
+     * Validations:
      * <ul>
      *     <li>The name may not be null or empty.</li>
      *     <li>The length of the nickname must be between {@link #CHANNEL_NAME_LENGTH_MIN} and {@link #CHANNEL_NAME_LENGTH_MAX}.</li>

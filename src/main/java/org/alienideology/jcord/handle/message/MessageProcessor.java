@@ -519,13 +519,13 @@ public class MessageProcessor {
     /**
      * Process the original content of this message.
      *
-     * @param noMention Should process mention or not. <br />
-     *                      Original: <@ID> <br />
-     *                      Processed: @NickName/Username#Discriminator
+     * @param noMention Should process mention or not.
+     *                      Original: {@code <@ID>}
+     *                      Processed: {@code @Name#Discriminator}
      *X
-     * @param noMarkdown Should include markdown or not. <br />
-     *                      Original: **```java\n\nhi```** <br />
-     *                      Processed: hi
+     * @param noMarkdown Should include markdown or not.
+     *                      Original: {@code **```java\n\nhi```**}
+     *                      Processed: {@code hi}
      * @return The message processed.
      */
     public String getProcessedContent(boolean noMention, boolean noMarkdown) {

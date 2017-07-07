@@ -45,7 +45,7 @@ public interface IVoiceChannel extends IGuildChannel, Comparable<IVoiceChannel> 
     /**
      * Check if a bitrate is valid in a guild.
      *
-     * Validations <br />
+     * Validations:
      * <ul>
      *     <li>The bitrate must be is greater or equal to {@link #VOICE_CHANNEL_BITRATE_MIN}.</li>
      *     <li>The bitrate is greater than {@link #VOICE_CHANNEL_BITRATE_MAX} for {@code non vip guilds},
@@ -69,7 +69,7 @@ public interface IVoiceChannel extends IGuildChannel, Comparable<IVoiceChannel> 
     /**
      * Check if a user limit is valid.
      *
-     * Validations: <br />
+     * Validations:
      * The user limit must be greater or equal to {@link #VOICE_CHANNEL_USER_LIMIT_MIN},
      * and smaller or equal to {@link #VOICE_CHANNEL_USER_LIMIT_MAX}.
      *

@@ -71,7 +71,7 @@ public final class MessageHistory extends DiscordObject implements IDiscordObjec
 
     /**
      * Get the latest message of this channel.
-     * @see #getLatestMessages(int). This is equivilant to {@code #getLatestMessages(1)}.
+     * @see #getLatestMessages(int) This is equivilant to {@code #getLatestMessages(1)}.
      *
      * @exception PermissionException
      *          If the identity does not have {@code Read Messages} permission.
@@ -176,7 +176,8 @@ public final class MessageHistory extends DiscordObject implements IDiscordObjec
      * Get the messages sent before and after a message. (Includes the message itself)
      * For bot, {@code #getMessagesAround(5)} returns a list of 6 messages, includes the message itself.
      *
-     * @exception IllegalArgumentException If the amount is <= 0 or > 100.
+     * @exception IllegalArgumentException
+     *          If the amount is smaller or euql to 0 or greater than 100.
      * @exception PermissionException
      *          If the identity does not have {@code Read Messages} permission.
      *
