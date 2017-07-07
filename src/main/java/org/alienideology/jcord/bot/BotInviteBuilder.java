@@ -3,9 +3,6 @@ package org.alienideology.jcord.bot;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 /**
  * BotInviteBuilder - A builder for building bot invite URL.
  * @author AlienIdeology
@@ -25,6 +22,8 @@ public class BotInviteBuilder {
 
     /**
      * Set the ID of the invite link.
+     *
+     * @param id The bot's ID.
      * @return BotInviteBuilder for chaining.
      */
     public BotInviteBuilder setBotId(String id) {
@@ -34,6 +33,7 @@ public class BotInviteBuilder {
 
     /**
      * Set the permissions of the invite link.
+     *
      * @param permissions The permissions
      * @return BotInviteBuilder for chaining.
      */
@@ -44,6 +44,7 @@ public class BotInviteBuilder {
 
     /**
      * Set the targeted guild of the invite link.
+     *
      * @param guildId The ID of the guild.
      * @return BotInviteBuilder for chaining.
      */
@@ -53,6 +54,8 @@ public class BotInviteBuilder {
     }
 
     /**
+     * Build the invite link.
+     *
      * @return The invite link.
      */
     public String build() {
@@ -72,14 +75,6 @@ public class BotInviteBuilder {
         }
 
         return invite;
-    }
-
-    /**
-     * @return The invite link
-     * @throws MalformedURLException
-     */
-    public URL buildURL() throws MalformedURLException {
-        return new URL(build());
     }
 
 }

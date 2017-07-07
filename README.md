@@ -238,8 +238,7 @@ emojis = table.getByCategory(EmojiTable.Category.PEOPLE); // Returns a list of e
 ```
 
 ## Examples
-- [Simple Bot](/src/test/java/bot/)
-(With DispatcherAdaptor, EventSubscriber, and CommandFramework's examples)
+- Coming soon!
 
 ## Contributing
 Please fork this project, and read [Contribution Documentation](/docs/Contribution.md).

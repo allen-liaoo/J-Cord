@@ -232,7 +232,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         webSocket.setPingInterval(interval);
 
         if (heart != null) {
-            heart.stop();
+            heart.interrupt();
         }
 
         heart = new Thread(() -> {
