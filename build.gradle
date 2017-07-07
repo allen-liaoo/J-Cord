@@ -14,8 +14,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-     jcenter()
-     maven { url "http://repo.maven.apache.org/maven2" }
+    mavenCentral()
 }
 
 dependencies {
@@ -38,10 +37,10 @@ dependencies {
     compile 'net.jodah:typetools:0.5.0'
 }
 
-compileJava {
-    classpath = sourceSets.main.compileClasspath
-    options.encoding = 'UTF-8'
-}
+//compileJava {
+//    classpath = sourceSets.main.compileClasspath
+//    options.encoding = 'UTF-8'
+//}
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
@@ -50,11 +49,11 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 javadoc {
     failOnError = false
-    options.memberLevel = JavadocMemberLevel.PROTECTED
-    options.author()
-    options.encoding = 'UTF-8'
-
-    exclude("org/alienideology/jcord/internal/gateway")
+//    options.memberLevel = JavadocMemberLevel.PROTECTED
+//    options.author()
+//    options.encoding = 'UTF-8'
+//
+//    exclude("org/alienideology/jcord/internal/gateway")
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -62,34 +61,34 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
-shadowJar {
-    mergeServiceFiles()
-    baseName = 'J-Cord'
-    version = ver
-    classifier = "withDependencies"
-}
+//shadowJar {
+//    mergeServiceFiles()
+//    baseName = 'J-Cord'
+//    version = ver
+//    classifier = "withDependencies"
+//}
 
-build {
-    dependsOn clean
-    dependsOn javadocJar
-    dependsOn sourcesJar
-    dependsOn shadowJar
+//build {
+//    dependsOn clean
+//    dependsOn javadocJar
+//    dependsOn sourcesJar
+//    dependsOn shadowJar
+//
+//    javadocJar.mustRunAfter clean
+//    sourcesJar.mustRunAfter javadocJar
+//    shadowJar.mustRunAfter sourcesJar
+//}
 
-    javadocJar.mustRunAfter clean
-    sourcesJar.mustRunAfter javadocJar
-    shadowJar.mustRunAfter sourcesJar
-}
-
-install {
-    dependsOn clean
-    dependsOn javadocJar
-    dependsOn sourcesJar
-    dependsOn shadowJar
-
-    javadocJar.mustRunAfter clean
-    sourcesJar.mustRunAfter javadocJar
-    shadowJar.mustRunAfter sourcesJar
-}
+//install {
+//    dependsOn clean
+//    dependsOn javadocJar
+//    dependsOn sourcesJar
+//    dependsOn shadowJar
+//
+//    javadocJar.mustRunAfter clean
+//    sourcesJar.mustRunAfter javadocJar
+//    shadowJar.mustRunAfter sourcesJar
+//}
 
 artifacts {
     archives sourcesJar
@@ -97,6 +96,6 @@ artifacts {
     archives javadocJar
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
-}
+//task wrapper(type: Wrapper) {
+//    gradleVersion = '3.5'
+//}
