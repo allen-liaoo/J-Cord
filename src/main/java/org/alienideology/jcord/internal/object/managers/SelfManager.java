@@ -35,8 +35,7 @@ public final class SelfManager implements ISelfManager {
 
     @Override
     public void modifyUserName(String name) {
-        if (name == null) name = "";
-        if (!ISelfManager.isValidUsername(name)) {
+        if (!IUser.isValidUsername(name)) {
             throw new IllegalArgumentException("The username is not valid!");
         }
 
@@ -67,7 +66,7 @@ public final class SelfManager implements ISelfManager {
 
     @Override
     public ISelfManager setStreaming(String name, String url) {
-        if (url != null && !url.matches(TWITCH_URL.pattern())) {
+        if (url != null && !url.matches(IUser.PATTERN_TWITCH_URL.pattern())) {
             throw new IllegalArgumentException("Streaming game type only support valid twitch urls!");
         }
 

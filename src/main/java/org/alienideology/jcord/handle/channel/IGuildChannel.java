@@ -9,6 +9,7 @@ import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -25,6 +26,39 @@ public interface IGuildChannel extends IChannel, OverwriteCheckable, ISnowFlake 
      * The maximum length of the channel's name.
      */
     int CHANNEL_NAME_LENGTH_MAX = 100;
+
+    /**
+     * The pattern for a valid channel name.
+     * Limits:
+     * <ul>
+     *     <li>The channel name only allows <pre>alphanumeric with dashes or underscores</pre>.</li>
+     *     <li>The channel name may only starts alphanumerics.</li>
+     * </ul>
+     */
+    Pattern PATTERN_CHANNEL_NAME_LIMITS =
+            Pattern.compile(
+                    "(?=[^\\W_])" + // Matches start of the string, disallowing dashes and underscores
+                    "(^[\\w-]+$)"); // Matches middle to end of the string, disallowing letters that are not alphanumerics, dashes or underscores.
+
+    /**
+     * Checks if a guild channel's name is valid or not.
+     *
+     * Validations: <br />
+     * <ul>
+     *     <li>The name may not be null or empty.</li>
+     *     <li>The length of the nickname must be between {@link #CHANNEL_NAME_LENGTH_MIN} and {@link #CHANNEL_NAME_LENGTH_MAX}.</li>
+     *     <li>The name must matches the pattern {@link #PATTERN_CHANNEL_NAME_LIMITS}.</li>
+     * </ul>
+     *
+     * @param name The name to be check with.
+     * @return True if the name is valid.
+     */
+    static boolean isValidChannelName(String name) {
+        return name != null && !name.isEmpty() &&
+                name.length() >= CHANNEL_NAME_LENGTH_MIN &&
+                name.length() <= CHANNEL_NAME_LENGTH_MAX &&
+                PATTERN_CHANNEL_NAME_LIMITS.matcher(name).find();
+    }
 
     /**
      * Get the guild this channel belongs to.

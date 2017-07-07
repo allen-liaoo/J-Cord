@@ -30,7 +30,7 @@ public class WebhookManager implements IWebhookManager {
     @Override
     public void modifyDefaultName(String name) {
         if (name == null || name.isEmpty()) return;
-        if (!IWebhookManager.isValidWebhookName(name)) {
+        if (!IWebhook.isValidWebhookName(name)) {
             throw new IllegalArgumentException("The name is not valid!");
         }
         modify(new JSONObject().put("name", name));

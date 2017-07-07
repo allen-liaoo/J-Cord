@@ -19,6 +19,17 @@ just submit a pull request! Here are some stuff to take note of:
  [1 TBS](https://en.wikipedia.org/wiki/Indent_style#Variant:_1TBS_.28OTBS.29), which the opening brackets
  are located at the end of a line.
 4. All objects (not internal) should have getters and setters.
+5. Javadocs: All parameters and exceptions requires documentation. Please use `@exception` if the
+ exception extends `RuntimeException`, and use `@throws` if the exception is checked exception.
+ Always leave one blank line between the paragraph explaining what this methods do and the parameters.
+ The order of documentations are as follows: <br />
+   1. Brief Description of the Method (Please do not make it too long)
+   2. Blank Line
+   3. Unchecked Exceptions using (`@exception`)
+   4. Check Exceptions (`@throws`)
+   5. Parameters (`@param`)
+   6. Return value (`@return`) <br />
+ You are welcome to pull requests that help enforce this javadoc style.
 
 ## Good luck!
 Now get out there and do your best! <br />

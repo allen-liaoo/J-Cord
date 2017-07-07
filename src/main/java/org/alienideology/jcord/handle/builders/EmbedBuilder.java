@@ -34,8 +34,8 @@ public final class EmbedBuilder implements Buildable<EmbedBuilder, Embed> {
     /**
      * Build an embed message.
      *
-     * @return The embed message.
      * @throws IllegalStateException If the empty is empty. See {@link #isEmpty()}.
+     * @return The embed message.
      */
     @Override
     public Embed build() throws IllegalStateException {

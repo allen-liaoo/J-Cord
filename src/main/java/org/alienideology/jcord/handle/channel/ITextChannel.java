@@ -20,6 +20,17 @@ public interface ITextChannel extends IGuildChannel, IMessageChannel, IMention, 
     int TEXT_CHANNEL_TOPIC_LENGTH_MAX = 2014;
 
     /**
+     * Check if a topic is valid.
+     * The topic length may not be longer than {@link #TEXT_CHANNEL_TOPIC_LENGTH_MAX} in length.
+     *
+     * @param topic The topic to check with.
+     * @return True if the topic is valid.
+     */
+    static boolean isValidTopic(String topic) {
+        return topic.length() > TEXT_CHANNEL_TOPIC_LENGTH_MAX;
+    }
+
+    /**
      * Get the guild of this text channel.
      *
      * @return The guild, always not null.

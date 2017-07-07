@@ -50,7 +50,7 @@ public final class MemberManager implements IMemberManager {
     public void modifyNickname(String nickname) {
         if (nickname == null) nickname = "";
         checkPerm();
-        if (!IMemberManager.isValidNickname(nickname)) {
+        if (!IMember.isValidNickname(nickname)) {
             throw new IllegalArgumentException("The nickname is not valid!");
         }
 

@@ -17,7 +17,9 @@ import org.alienideology.jcord.internal.object.message.Message;
 public class MessageBuilder implements Buildable<MessageBuilder, IMessage> {
 
     private StringBuilder content;
+
     private IEmbed embed;
+
     private boolean isTTS = false;
 
     /**

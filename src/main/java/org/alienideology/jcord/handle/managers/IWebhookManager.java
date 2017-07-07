@@ -23,22 +23,6 @@ import java.util.Arrays;
 public interface IWebhookManager {
 
     /**
-     * Checks if an webhook's name is valid or not.
-     *
-     * Validations: <br />
-     * The length of the name must be between {@link IWebhook#NAME_LENGTH_MIN}
-     * and {@link IWebhook#NAME_LENGTH_MAX}.
-     *
-     * @param name The name to be check with.
-     * @return True if the name is valid.
-     */
-    static boolean isValidWebhookName(String name) {
-        return !(name != null && !name.isEmpty()) ||
-                name.length() >= IWebhook.NAME_LENGTH_MIN &&
-                name.length() <= IWebhook.NAME_LENGTH_MAX;
-    }
-
-    /**
      * Get the identity this webhook appears in.
      *
      * @return The identity.
@@ -79,7 +63,7 @@ public interface IWebhookManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity itself does not have {@code Manager Webhooks} permission.
      * @exception  IllegalArgumentException
-     *          If the name is not valid. See {@link IWebhookManager#isValidWebhookName(String)}
+     *          If the name is not valid. See {@link IWebhook#isValidWebhookName(String)}
      *
      * @param name The name.
      */

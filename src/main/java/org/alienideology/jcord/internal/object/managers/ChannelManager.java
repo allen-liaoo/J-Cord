@@ -10,8 +10,8 @@ import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IChannelManager;
-import org.alienideology.jcord.handle.managers.IWebhookManager;
 import org.alienideology.jcord.handle.permission.Permission;
+import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
@@ -59,7 +59,9 @@ public final class ChannelManager implements IChannelManager {
 
     @Override
     public void modifyName(String name) {
-        checkName(name);
+        if (!IGuildChannel.isValidChannelName(name)) {
+            throw new IllegalArgumentException("Invalid channel name!");
+        }
         modifyChannel(new JSONObject().put("name", name));
     }
 
@@ -79,7 +81,9 @@ public final class ChannelManager implements IChannelManager {
             throw new IllegalArgumentException("Cannot modify the topic of a voice channel!");
         }
         if (topic == null) topic = "";
-        checkTopic(topic);
+        if (!ITextChannel.isValidTopic(topic)) {
+            throw new IllegalArgumentException("The TextChannel's topic may not be longer than"+ ITextChannel.TEXT_CHANNEL_TOPIC_LENGTH_MAX +" characters!");
+        }
         modifyChannel(new JSONObject().put("topic", topic));
     }
 
@@ -88,7 +92,6 @@ public final class ChannelManager implements IChannelManager {
         if (channel instanceof TextChannel) {
             throw new IllegalArgumentException("Cannot modify the bitrate of a text channel!");
         }
-
         checkBitrate(bitrate, getGuild());
 
         modifyChannel(new JSONObject().put("bitrate", bitrate));
@@ -99,7 +102,9 @@ public final class ChannelManager implements IChannelManager {
         if (channel instanceof TextChannel) {
             throw new IllegalArgumentException("Cannot modify the user limit of a text channel!");
         }
-        checkUserLimit(limit);
+        if (!IVoiceChannel.isValidUserLimit(limit)) {
+            throw new IllegalArgumentException("The user limit is not valid!");
+        }
         modifyChannel(new JSONObject().put("user_limit", limit));
     }
 
@@ -112,23 +117,7 @@ public final class ChannelManager implements IChannelManager {
                 .request(channel.getId()).updateRequestWithBody(request -> request.body(json)).performRequest();
     }
 
-    /*
-        Utility Checkers
-     */
-    public static void checkName(String name) {
-        if (name.length() < IGuildChannel.CHANNEL_NAME_LENGTH_MIN || name.length() > IGuildChannel.CHANNEL_NAME_LENGTH_MAX) {
-            throw new IllegalArgumentException("The channel's name can not be shorter than "+ IGuildChannel.CHANNEL_NAME_LENGTH_MIN+
-                    " or longer than "+ IGuildChannel.CHANNEL_NAME_LENGTH_MAX+" characters!");
-        }
-    }
-
-    public static void checkTopic(String topic) {
-        if (topic.length() > ITextChannel.TEXT_CHANNEL_TOPIC_LENGTH_MAX) {
-            throw new IllegalArgumentException("The TextChannel's topic may not be longer than"+ ITextChannel.TEXT_CHANNEL_TOPIC_LENGTH_MAX +" characters!");
-        }
-    }
-
-    public static void checkBitrate(int bitrate, IGuild guild) {
+    private void checkBitrate(int bitrate, IGuild guild) {
         if (bitrate < IVoiceChannel.VOICE_CHANNEL_BITRATE_MIN) {
             throw new IllegalArgumentException("The bitrate can not be lower than "+ IVoiceChannel.VOICE_CHANNEL_BITRATE_MIN+"!");
         } else if (bitrate > IVoiceChannel.VOICE_CHANNEL_BITRATE_MAX) {
@@ -137,12 +126,6 @@ public final class ChannelManager implements IChannelManager {
             } else {
                 throw new IllegalArgumentException("The bitrate of a normal guild can not be greater than "+ IVoiceChannel.VOICE_CHANNEL_BITRATE_MAX+"!");
             }
-        }
-    }
-
-    public static void checkUserLimit(int limit) {
-        if (limit < IVoiceChannel.VOICE_CHANNEL_USER_LIMIT_MIN || limit > IVoiceChannel.VOICE_CHANNEL_USER_LIMIT_MAX) {
-            throw new IllegalArgumentException("The user limit may not be lower than "+ IVoiceChannel.VOICE_CHANNEL_USER_LIMIT_MIN+" or greater than "+ IVoiceChannel.VOICE_CHANNEL_USER_LIMIT_MAX+"!");
         }
     }
 
@@ -225,7 +208,7 @@ public final class ChannelManager implements IChannelManager {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS);
         }
 
-        if (!IWebhookManager.isValidWebhookName(defaultName)) {
+        if (!IWebhook.isValidWebhookName(defaultName)) {
             throw new IllegalArgumentException("The webhook to create does not have a valid name!");
         }
 

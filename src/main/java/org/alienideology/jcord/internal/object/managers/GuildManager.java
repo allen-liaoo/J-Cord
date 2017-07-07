@@ -51,7 +51,7 @@ public final class GuildManager implements IGuildManager {
     @Override
     public void modifyName(String name) {
         if (name == null || name.isEmpty()) return;
-        if (!IGuildManager.isValidName(name)) {
+        if (!IGuild.isValidName(name)) {
             throw new IllegalArgumentException("The name is not valid!");
         }
         requestModify(new JSONObject().put("name", name));

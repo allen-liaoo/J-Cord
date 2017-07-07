@@ -29,24 +29,6 @@ import java.util.List;
 public interface IGuildManager {
 
     /**
-     * Checks if a guild's name is valid or not.
-     *
-     * Validations: <br />
-     * <ul>
-     *     <li>The nickname may not be null or empty.</li>
-     *     <li>The length of the nickname must be between {@link IGuild#NAME_LENGTH_MIN} and {@link IGuild#NAME_LENGTH_MAX}.</li>
-     * </ul>
-     *
-     * @param name The name to be check with.
-     * @return True if the name is valid.
-     */
-    static boolean isValidName(String name) {
-        return name != null &&
-                name.length() >= IGuild.NAME_LENGTH_MIN &&
-                name.length() <= IGuild.NAME_LENGTH_MAX;
-    }
-
-    /**
      * Get the identity the guild belongs to.
      *
      * @return The identity.
@@ -76,7 +58,7 @@ public interface IGuildManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
      * @exception IllegalArgumentException
-     *          If the name is not valid. See {@link #isValidName(String)}.
+     *          If the name is not valid. See {@link IGuild#isValidName(String)}.
      *
      * @param name The string name.
      */
@@ -476,7 +458,7 @@ public interface IGuildManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Manager Webhooks} permission.
      * @exception IllegalArgumentException
-     *          If the default name is not valid. See {@link IWebhookManager#isValidWebhookName(String)}.
+     *          If the default name is not valid. See {@link IWebhook#isValidWebhookName(String)}.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the channel does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_CHANNEL

@@ -33,6 +33,24 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     int NAME_LENGTH_MAX = 100;
 
     /**
+     * Checks if a guild's name is valid or not.
+     *
+     * Validations: <br />
+     * <ul>
+     *     <li>The name may not be null or empty.</li>
+     *     <li>The length of the name must be between {@link #NAME_LENGTH_MIN} and {@link #NAME_LENGTH_MAX}.</li>
+     * </ul>
+     *
+     * @param name The name to be check with.
+     * @return True if the name is valid.
+     */
+    static boolean isValidName(String name) {
+        return name != null && !name.isEmpty() &&
+                name.length() >= NAME_LENGTH_MIN &&
+                name.length() <= NAME_LENGTH_MAX;
+    }
+
+    /**
      * @return True if the guild is available (no temporary shortage happens to discord server)
      */
     boolean isAvailable();

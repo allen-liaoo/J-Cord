@@ -4,7 +4,6 @@ import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.managers.IMemberManager;
-import org.alienideology.jcord.handle.managers.ISelfManager;
 import org.alienideology.jcord.handle.permission.PermCheckable;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
@@ -23,9 +22,28 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
 
     /**
      * The maximum length of a nickname.
-     * This is the same as {@link ISelfManager#USERNAME_LENGTH_MAX}.
+     * This is the same as {@link IUser#USERNAME_LENGTH_MAX}.
      */
     int NICKNAME_LENGTH_MAX = 32;
+
+    /**
+     * Checks if an nickname is valid or not.
+     *
+     * Validations: <br />
+     * <ul>
+     *     <li>The name may be null or empty, used to reset member's nickname.</li>
+     *     <li>The length of the nickname must be shorter than {@link IMember#NICKNAME_LENGTH_MAX}.</li>
+     * </ul>
+     *
+     * @param nickname The nickname to be check with.
+     * @return True if the nickname is valid.
+     */
+    static boolean isValidNickname(String nickname) {
+        return  nickname == null || nickname.isEmpty() ||
+                // Nickname minimum length is 1, which means there is no gap between
+                // an empty (used to reset) nickname and a actually valid nickname.
+                nickname.length() <= NICKNAME_LENGTH_MAX;
+    }
 
     /**
      * Get the IMemberManager of this guild.

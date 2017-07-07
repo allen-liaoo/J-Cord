@@ -1,5 +1,7 @@
 package org.alienideology.jcord.handle.channel;
 
+import org.alienideology.jcord.handle.guild.IGuild;
+
 /**
  * VoiceChannel - An IGuildChannel for audio connections.
  * @author AlienIdeology
@@ -27,6 +29,56 @@ public interface IVoiceChannel extends IGuildChannel, Comparable<IVoiceChannel> 
      * The maximum user limit of a voice channel.
      */
     int VOICE_CHANNEL_USER_LIMIT_MAX = 99;
+
+    /**
+     * Check if the bitrate is valid or not.
+     * This methods checks with non VIP guilds.
+     *
+     * @param bitrate The bitrate to check with.
+     * @return True if the bitrate is valid.
+     */
+    static boolean isValidBitrate(int bitrate) {
+        return bitrate >= VOICE_CHANNEL_BITRATE_MIN &&
+                bitrate <= VOICE_CHANNEL_BITRATE_MAX;
+    }
+
+    /**
+     * Check if a bitrate is valid in a guild.
+     *
+     * Validations <br />
+     * <ul>
+     *     <li>The bitrate must be is greater or equal to {@link #VOICE_CHANNEL_BITRATE_MIN}.</li>
+     *     <li>The bitrate is greater than {@link #VOICE_CHANNEL_BITRATE_MAX} for {@code non vip guilds},
+     *     or {@link #VOICE_CHANNEL_BITRATE_VIP_MAX} for {@code vip guilds}.
+     *     </li>
+     * </ul>
+     *
+     * @param bitrate The bitrate.
+     * @param guild The guild. Used to determine of the guild is VIP or not.
+     * @return True if the bitrate is valid.
+     */
+    static boolean isValidBitrate(int bitrate, IGuild guild) {
+        if (bitrate < VOICE_CHANNEL_BITRATE_MIN) {
+            return false;
+        } else if (bitrate > VOICE_CHANNEL_BITRATE_MAX) {
+            return guild.getSplash() == null || guild.getSplash() != null && bitrate > IVoiceChannel.VOICE_CHANNEL_BITRATE_VIP_MAX;
+        }
+        return true;
+    }
+
+    /**
+     * Check if a user limit is valid.
+     *
+     * Validations: <br />
+     * The user limit must be greater or equal to {@link #VOICE_CHANNEL_USER_LIMIT_MIN},
+     * and smaller or equal to {@link #VOICE_CHANNEL_USER_LIMIT_MAX}.
+     *
+     * @param limit The user limit to check with.
+     * @return True if the limit is valid.
+     */
+    static boolean isValidUserLimit(int limit) {
+        return limit >= VOICE_CHANNEL_USER_LIMIT_MIN && limit <= VOICE_CHANNEL_USER_LIMIT_MAX;
+    }
 
     /**
      * Bitrate is the value of {@code kbps} a voice channel has.

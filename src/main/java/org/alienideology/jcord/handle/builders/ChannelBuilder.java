@@ -9,7 +9,6 @@ import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
-import org.alienideology.jcord.internal.object.managers.ChannelManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,15 +79,15 @@ public final class ChannelBuilder implements Buildable<ChannelBuilder, IGuildCha
      * The name can be set by both {@link ITextChannel} or {@link IVoiceChannel}.
      *
      * @exception IllegalArgumentException
-     *          If the name is shorter than {@value IGuildChannel#CHANNEL_NAME_LENGTH_MIN} or longer than
-     *          {@value IGuildChannel#CHANNEL_NAME_LENGTH_MAX}.
+     *          If the name is not valid. See {@link IGuildChannel#isValidChannelName(String)}.
      *
      * @param name The name of the channel.
      * @return ChannelBuilder for chaining.
      */
     public ChannelBuilder setName(String name) {
-        if (name == null) name = "";
-        ChannelManager.checkName(name);
+        if (!IGuildChannel.isValidChannelName(name)) {
+            throw new IllegalArgumentException("Invalid channel name!");
+        }
         this.name = name;
         return this;
     }
@@ -102,18 +101,17 @@ public final class ChannelBuilder implements Buildable<ChannelBuilder, IGuildCha
      *          <ul>
      *              <li>If the bitrate is smaller than {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_MIN}.</li>
      *              <li>The bitrate is greater than {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_VIP_MAX}.
-     *                  Note that the builder does not knows if the guild this channel will be created in is VIP or not, so the limit here is for VIP.
-     *                  You must check if the guild is vip or not, otherwise there might be exception thrown when creating a channel via this builder.</li>
+     *              Note that the builder does not knows if the guild this channel will be created in is VIP or not, so the limit here is for VIP.
+     *              You must check if the guild is vip or not, otherwise there might be exception thrown when creating a channel via this builder.</li>
      *          </ul>
      *
      * @param bitrate The integer bitrate.
      * @return ChannelBuilder for chaining.
      */
     public ChannelBuilder setBitrate(int bitrate) {
-        if (bitrate > IVoiceChannel.VOICE_CHANNEL_BITRATE_VIP_MAX) {
-            throw new IllegalArgumentException("The bitrate of a vip guild can not be greater than "+ IVoiceChannel.VOICE_CHANNEL_BITRATE_VIP_MAX+"!");
+        if (bitrate < IVoiceChannel.VOICE_CHANNEL_BITRATE_MIN || bitrate > IVoiceChannel.VOICE_CHANNEL_BITRATE_VIP_MAX) {
+            throw new IllegalArgumentException("Invalid bitrate!");
         }
-        try { ChannelManager.checkBitrate(bitrate, null); } catch (NullPointerException ignored) {}
         this.bitrate = bitrate;
         return this;
     }
@@ -124,14 +122,15 @@ public final class ChannelBuilder implements Buildable<ChannelBuilder, IGuildCha
      * @see IVoiceChannel#getUserLimit()
      *
      * @exception IllegalArgumentException
-     *          If the bitrate is smaller than {@value IVoiceChannel#VOICE_CHANNEL_USER_LIMIT_MIN}
-     *          or greater than {@value IVoiceChannel#VOICE_CHANNEL_USER_LIMIT_MAX}.
+     *          If the user limit is not valid. See {@link IVoiceChannel#isValidUserLimit(int)}.
      *
      * @param userLimit The user limit.
      * @return ChannelBuilder for chaining.
      */
     public ChannelBuilder setUserLimit(int userLimit) {
-        ChannelManager.checkUserLimit(userLimit);
+        if (!IVoiceChannel.isValidUserLimit(userLimit)) {
+            throw new IllegalArgumentException("The user limit is not valid!");
+        }
         this.userLimit = userLimit;
         return this;
     }

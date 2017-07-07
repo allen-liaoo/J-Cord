@@ -18,10 +18,27 @@ public interface IWebhook extends IDiscordObject, ISnowFlake {
      * The minimum length of a webhook's name.
      */
     int NAME_LENGTH_MIN = 2;
+
     /**
      * The maximum length of a webhook's name.
      */
     int NAME_LENGTH_MAX = 32;
+
+    /**
+     * Checks if an webhook's name is valid or not.
+     *
+     * Validations: <br />
+     * The length of the name must be between {@link IWebhook#NAME_LENGTH_MIN}
+     * and {@link IWebhook#NAME_LENGTH_MAX}.
+     *
+     * @param name The name to be check with.
+     * @return True if the name is valid.
+     */
+    static boolean isValidWebhookName(String name) {
+        return name == null || name.isEmpty() ||
+                name.length() >= NAME_LENGTH_MIN &&
+                name.length() <= NAME_LENGTH_MAX;
+    }
 
     /**
      * Get the webhook manager that manages this webhook.

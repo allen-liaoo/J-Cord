@@ -54,6 +54,8 @@ public interface IChannelManager {
      *              <li>If the identity do not have {@code Manage Channels} permission.</li>
      *              <li>If the name is shorter than {@value IGuildChannel#CHANNEL_NAME_LENGTH_MIN} or longer than {@value IGuildChannel#CHANNEL_NAME_LENGTH_MAX}.</li>
      *          </ul>
+     * @exception IllegalArgumentException
+     *          If the name is not valid. See {@link IGuildChannel#isValidChannelName(String)}.
      *
      * @param name The new name.
      */
@@ -119,9 +121,7 @@ public interface IChannelManager {
      * @exception IllegalArgumentException
      *          <ul>
      *              <li>If the channel managers manages a {@link ITextChannel}.</li>
-     *              <li>If the bitrate is smaller than {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_MIN}.</li>
-     *              <li>The bitrate exceeds the limit. (For normal guild, the limit is {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_MAX}.
-     *                  For VIP guild, the limit is {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_VIP_MAX}.</li>
+     *              <li>If the bitrate is not valid. See {@link IVoiceChannel#isValidBitrate(int, IGuild)} with VIP guild..</li>
      *          </ul>
      *
      * @param bitrate The new bitrate.
@@ -137,10 +137,7 @@ public interface IChannelManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity do not have {@code Manage Channels} permission.
      * @exception IllegalArgumentException
-     *          <ul>
-     *              <li>If the channel managers manages a {@link ITextChannel}.</li>
-     *              <li>If the bitrate is smaller than {@value IVoiceChannel#VOICE_CHANNEL_USER_LIMIT_MIN} or greater than {@value IVoiceChannel#VOICE_CHANNEL_USER_LIMIT_MAX}.</li>
-     *          </ul>
+     *          If the user limit is not valid. See {@link IVoiceChannel#isValidUserLimit(int)}.
      *
      * @param limit The new limit.
      */
@@ -207,7 +204,7 @@ public interface IChannelManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Manager Webhooks} permission.
      * @exception IllegalArgumentException
-     *          If the default name is not valid. See {@link IWebhookManager#isValidWebhookName(String)}.
+     *          If the default name is not valid. See {@link IWebhook#isValidWebhookName(String)}.
      */
     void createWebhook(String defaultName, Icon defaultAvatar);
 
