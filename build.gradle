@@ -70,27 +70,32 @@ javadoc {
 
 build {
     dependsOn clean
+    dependsOn javadoc
     dependsOn javadocJar
     dependsOn sourcesJar
     dependsOn shadowJar
 
-    javadocJar.mustRunAfter clean
+    javadoc.mustRunAfter clean
+    javadocJar.mustRunAfter javadoc
     sourcesJar.mustRunAfter javadocJar
     shadowJar.mustRunAfter sourcesJar
 }
 
 install {
     dependsOn clean
+    dependsOn javadoc
     dependsOn javadocJar
     dependsOn sourcesJar
     dependsOn shadowJar
 
-    javadocJar.mustRunAfter clean
+    javadoc.mustRunAfter clean
+    javadocJar.mustRunAfter javadoc
     sourcesJar.mustRunAfter javadocJar
     shadowJar.mustRunAfter sourcesJar
 }
 
 artifacts {
+    archives javadoc
     archives javadocJar
     archives sourcesJar
     archives shadowJar
