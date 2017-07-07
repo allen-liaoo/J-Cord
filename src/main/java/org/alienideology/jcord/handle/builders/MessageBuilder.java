@@ -1,9 +1,9 @@
 package org.alienideology.jcord.handle.builders;
 
-import org.alienideology.jcord.JCord;
-import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.IInvite;
 import org.alienideology.jcord.handle.IMention;
+import org.alienideology.jcord.handle.emoji.Emoji;
+import org.alienideology.jcord.handle.emoji.Emojis;
 import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
@@ -191,7 +191,7 @@ public class MessageBuilder implements Buildable<MessageBuilder, IMessage> {
      * @return MessageBuilder for chaining.
      */
     public MessageBuilder appendEmoji(String alias) {
-        this.content.append(JCord.EMOJI_TABLE.getByAlias(alias) != null ? JCord.EMOJI_TABLE.getByAlias(alias).getUnicode() : "");
+        this.content.append(Emojis.getByAlias(alias) != null ? Emojis.getByAlias(alias).getUnicode() : "");
         return this;
     }
 
@@ -201,7 +201,7 @@ public class MessageBuilder implements Buildable<MessageBuilder, IMessage> {
      * @param emoji An native Emoji object.
      * @return MessageBuilder for chaining.
      */
-    public MessageBuilder appendEmoji(EmojiTable.Emoji emoji) {
+    public MessageBuilder appendEmoji(Emoji emoji) {
         this.content.append(emoji.getUnicode());
         return this;
     }

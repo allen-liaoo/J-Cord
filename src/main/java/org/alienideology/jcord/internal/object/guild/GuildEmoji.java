@@ -25,7 +25,7 @@ public final class GuildEmoji extends DiscordObject implements IGuildEmoji {
     private boolean requireColon;
 
     /**
-     * Constructor for global guild emojis
+     * Constructor for global guild EMOJIS
      */
     public GuildEmoji(IdentityImpl identity, String id, String name) {
         this(identity, null, id, name, new ArrayList<>(), true);

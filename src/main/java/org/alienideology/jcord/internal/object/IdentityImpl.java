@@ -8,6 +8,7 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.IdentityType;
+import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.bot.Bot;
 import org.alienideology.jcord.bot.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
@@ -331,7 +332,7 @@ public final class IdentityImpl implements Identity {
 
         try {
             HttpRequest request = Unirest.get(HttpPath.Gateway.GET_GATEWAY_BOT.getPath()).header("Authorization", this.token);
-            String uri = request.asJson().getBody().getObject().getString("url") + "?encoding=json&v=" + GatewayAdaptor.GATEWAY_VERSION;
+            String uri = request.asJson().getBody().getObject().getString("url") + "?encoding=json&v=" + JCord.DISCORD_GATEWAY_VERSION;
 
             URI url = new URI(uri);
 

@@ -1,6 +1,6 @@
 package org.alienideology.jcord.internal.object.message;
 
-import org.alienideology.jcord.handle.EmojiTable;
+import org.alienideology.jcord.handle.emoji.Emoji;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.message.IReaction;
@@ -17,13 +17,13 @@ public final class Reaction extends DiscordObject implements IReaction {
     private int reactedTimes;
     private boolean selfReacted;
 
-    private EmojiTable.Emoji emoji;
+    private Emoji emoji;
     private IGuildEmoji guildEmoji;
 
     /**
      * Constructor for Emoji
      */
-    public Reaction(IdentityImpl identity, Message message, int reactedTimes, boolean selfReacted, EmojiTable.Emoji emoji) {
+    public Reaction(IdentityImpl identity, Message message, int reactedTimes, boolean selfReacted, Emoji emoji) {
         super(identity);
         this.message = message;
         this.reactedTimes = reactedTimes;
@@ -55,7 +55,7 @@ public final class Reaction extends DiscordObject implements IReaction {
     }
 
     @Override
-    public EmojiTable.Emoji getEmoji() {
+    public Emoji getEmoji() {
         return emoji;
     }
 

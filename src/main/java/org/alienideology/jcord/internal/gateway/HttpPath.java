@@ -36,7 +36,7 @@ public final class HttpPath {
         /**
          * GuildEmoji Icon - Parameter: ID
          */
-        public final static String EMOJI_ICON = DISCORD_CDN_URL+"emojis/%s.png";
+        public final static String EMOJI_ICON = DISCORD_CDN_URL+"EMOJIS/%s.png";
 
         public final static String EMOJI_URL = "https://raw.githubusercontent.com/emojione/emojione/master/emoji.json";
 
@@ -89,9 +89,9 @@ public final class HttpPath {
 
         /* GuildEmoji Action */
         // Client Only
-        public final static HttpPath CREATE_EMOJI = new HttpPath(POST, "guilds/{guild_id}/emojis");
-        public final static HttpPath MODIFY_EMOJI = new HttpPath(PATCH, "guilds/{guild_id}/emojis/{emote_id}");
-        public final static HttpPath DELETE_EMOJI = new HttpPath(DELETE, "guilds/{guild_id}/emojis/{emote_id}");
+        public final static HttpPath CREATE_EMOJI = new HttpPath(POST, "guilds/{guild_id}/EMOJIS");
+        public final static HttpPath MODIFY_EMOJI = new HttpPath(PATCH, "guilds/{guild_id}/EMOJIS/{emote_id}");
+        public final static HttpPath DELETE_EMOJI = new HttpPath(DELETE, "guilds/{guild_id}/EMOJIS/{emote_id}");
 
         /* Integration Action */
         public final static HttpPath GET_GUILD_INTEGRATIONS = new HttpPath(GET, "/guilds/{guild.id}/integrations");

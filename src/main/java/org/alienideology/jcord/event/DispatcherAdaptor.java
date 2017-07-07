@@ -23,6 +23,7 @@ import org.alienideology.jcord.event.channel.guild.voice.VoiceChannelCreateEvent
 import org.alienideology.jcord.event.channel.guild.voice.VoiceChannelDeleteEvent;
 import org.alienideology.jcord.event.channel.guild.voice.VoiceChannelUpdateEvent;
 import org.alienideology.jcord.event.channel.guild.voice.update.*;
+import org.alienideology.jcord.event.gateway.DisconnectEvent;
 import org.alienideology.jcord.event.gateway.GatewayEvent;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.gateway.ResumedEvent;
@@ -45,9 +46,12 @@ import org.alienideology.jcord.event.message.guild.GuildMessageDeleteEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageUpdateEvent;
 import org.alienideology.jcord.event.message.guild.IGuildMessageEvent;
 import org.alienideology.jcord.event.user.PresenceUpdateEvent;
-import org.alienideology.jcord.event.user.UserUpdateEvent;
-import org.alienideology.jcord.event.user.update.*;
 import org.alienideology.jcord.event.user.UserEvent;
+import org.alienideology.jcord.event.user.UserUpdateEvent;
+import org.alienideology.jcord.event.user.update.GameUpdateEvent;
+import org.alienideology.jcord.event.user.update.OnlineStatusUpdateEvent;
+import org.alienideology.jcord.event.user.update.UserAvatarUpdateEvent;
+import org.alienideology.jcord.event.user.update.UserNameUpdateEvent;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 
 /**
@@ -91,6 +95,8 @@ public class DispatcherAdaptor {
             onReady((ReadyEvent) event);
         } else if (event instanceof ResumedEvent) {
             onResume((ResumedEvent) event);
+        } else if (event instanceof DisconnectEvent) {
+            onDisconnect((DisconnectEvent) event);
         }
     }
 
@@ -99,6 +105,8 @@ public class DispatcherAdaptor {
     public void onReady (ReadyEvent event) {}
 
     public void onResume (ResumedEvent event) {}
+
+    public void onDisconnect (DisconnectEvent event) {}
 
     /**
      * Guild Events

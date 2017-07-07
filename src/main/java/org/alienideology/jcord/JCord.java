@@ -1,7 +1,6 @@
 package org.alienideology.jcord;
 
 import com.mashape.unirest.http.Unirest;
-import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.util.log.Logger;
 
 /**
@@ -37,9 +36,9 @@ public final class JCord {
     public final static Logger LOG = new Logger("JCord");
 
     /**
-     * Global Emoji Table
+     * The discord gateway version
      */
-    public final static EmojiTable EMOJI_TABLE = new EmojiTable();
+    public final static int DISCORD_GATEWAY_VERSION = 5;
 
     static {
         Unirest.setDefaultHeader("user-agent", USER_AGENT);

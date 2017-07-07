@@ -6,7 +6,7 @@ import org.alienideology.jcord.event.guild.GuildCreateEvent;
 import org.alienideology.jcord.event.message.MessageCreateEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageCreateEvent;
-import org.alienideology.jcord.handle.EmojiTable;
+import org.alienideology.jcord.handle.emoji.Emojis;
 
 import java.util.Arrays;
 
@@ -103,7 +103,7 @@ public class EventAdaptor extends DispatcherAdaptor {
 
                 } else if (alias.equals("ping")) {
 
-                    event.getChannel().sendMessage(new EmojiTable().getByAlias("ping_pong").getUnicode());
+                    event.getChannel().sendMessage(Emojis.getByAlias("ping_pong").getUnicode());
 
                 } else if (alias.equals("help")) {
 

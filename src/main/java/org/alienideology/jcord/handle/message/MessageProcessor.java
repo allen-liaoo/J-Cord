@@ -1,8 +1,8 @@
 package org.alienideology.jcord.handle.message;
 
-import org.alienideology.jcord.JCord;
-import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.emoji.Emoji;
+import org.alienideology.jcord.handle.emoji.Emojis;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
@@ -360,11 +360,11 @@ public class MessageProcessor {
      * @return The next emoji mention.
      */
     // TODO: Test this #getNextEmoji
-    public GenericToken<EmojiTable.Emoji> getNextEmoji() {
+    public GenericToken<Emoji> getNextEmoji() {
         RegexToken token = getNextByRegex(PATTERN_EMOJI);
 
         return new GenericToken<>(token.getContent(), token.getStart(), token.getEnd(),
-                JCord.EMOJI_TABLE.getByUnicode(token.getContent()));
+                Emojis.getByUnicode(token.getContent()));
     }
 
     /**
@@ -563,7 +563,7 @@ public class MessageProcessor {
             }
         }
 
-        // TODO: EmojiTable Mentions
+        // TODO: Emojis Mentions
 
         }
 

@@ -1,9 +1,9 @@
 package bot;
 
-import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.bot.command.Command;
 import org.alienideology.jcord.bot.command.CommandResponder;
 import org.alienideology.jcord.handle.builders.EmbedBuilder;
+import org.alienideology.jcord.handle.emoji.Emojis;
 import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.permission.Permission;
 
@@ -53,7 +53,7 @@ public class Commands implements CommandResponder {
             if (!name.isEmpty() || !description.isEmpty()) {
 
                 // Print it to the help list
-                message.appendDescription(JCord.EMOJI_TABLE.getByAlias(":white_medium_square:") + " " + name + " - " + description + "\n");
+                message.appendDescription(Emojis.getByAlias(":white_medium_square:") + " " + name + " - " + description + "\n");
             }
         }
 

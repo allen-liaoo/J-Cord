@@ -14,10 +14,16 @@
 Bot - The core of a Discord Bot
  - BotInviteBuilder - A builder for building bot invite URL.
  - PostAgent - An agent used to post bot status to bots websites.
+
 #### Command
  - Command (Annotation) -  A command annotation used on methods for the native command framework.
  - CommandFramework - The core command framework of J-Cord. Uses reflections to invoke methods.
  - CommandResponder - All command classes must implements CommandResponder in order to be added to the framework.
+
+#### Emoji
+ - Emojis - A collection of Default Discord Emojis.
+   - Emoji - An unicode emoji in Discord.
+   - EmojiCategory - Categories of emojis in the Discord client UI.
 
 ## Discord Objects
 IDiscordObject - Entities such as Guild, User, or Channel.
@@ -25,9 +31,6 @@ IDiscordObject - Entities such as Guild, User, or Channel.
  - IMention - Objects that are mentionable.
  - IInvite - A piece of url used to invite users to a guild.
  - Icon - An encoded(base64) image, can be an avatar or picture.
- - EmojiTable - A collection of Default Discord Emojis.
-   - Emoji - An unicode emoji in Discord.
-   - Category - Emoji categories in Discord.
 
 ### Guild
 IGuild - A collection of users and channels, often referred to in the UI as a server.

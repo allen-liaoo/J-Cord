@@ -151,6 +151,9 @@ public class Bot {
 //        OAuth oAuth = builder.buildOAuth()
 //                        .autoAuthorize();
 
+        IGuild guild = bot.getGuild("311250670068170752");
+        System.out.println(guild.getRoles());
+
     }
 
 }

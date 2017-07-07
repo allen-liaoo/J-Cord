@@ -4,8 +4,10 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '2.0.0'
 }
 
+def ver = '0.1.3'
+
 group = 'com.github.AlienIdeology'
-version = '0.1.3-SNAPSHOT'
+version = ver + '-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -34,10 +36,34 @@ dependencies {
     compile 'net.jodah:typetools:0.5.0'
 }
 
+compileJava {
+    classpath = sourceSets.main.compileClasspath
+    options.encoding = 'UTF-8'
+}
+
 shadowJar {
     mergeServiceFiles()
     baseName = 'J-Cord'
-    version = '0.1.3'
+    version = ver
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+javadoc {
+    failOnError = false
+    options.memberLevel = JavadocMemberLevel.PROTECTED
+    options.author()
+    options.encoding = 'UTF-8'
+
+    exclude("src/main/java/org/alienideology/jcord/internal/gateway")
+    exclude("src/test/java")
+}
+
+build {
+    dependsOn jar
 }
 
 compileJava.options.encoding = 'UTF-8'

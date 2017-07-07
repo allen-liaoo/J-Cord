@@ -268,6 +268,10 @@ public interface Identity {
 
     /**
      * Get a list of PrivateChannels that are open with the identity.
+     * Note that this wont be a complete list of private channels that are opened with the identity,
+     * since Discord does not provide a list of private channels.
+     * The private channels included in the list will only be channels that had fired
+     * {@link org.alienideology.jcord.event.channel.dm.PrivateChannelCreateEvent} during the socket connection.
      *
      * @return A list of channels.
      */

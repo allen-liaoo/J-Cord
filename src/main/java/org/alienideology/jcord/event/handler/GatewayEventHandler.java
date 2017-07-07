@@ -7,8 +7,8 @@ import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.util.log.Logger;
 import org.alienideology.jcord.util.log.LogLevel;
+import org.alienideology.jcord.util.log.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -35,7 +35,8 @@ public class GatewayEventHandler extends EventHandler {
 
             try {
                 /* Create Guilds */
-                // We do not use GuildCreateEvent to initialize guilds at the time.
+                // We do not use GuildCreateEvent to initialize guilds
+                // We use this to get the guilds' ID, then post http request to get guild information
                 JSONArray guilds = json.getJSONArray("guilds");
                 for (int i = 0; i < guilds.length(); i++) {
                     JSONObject guild = guilds.getJSONObject(i);
@@ -46,6 +47,8 @@ public class GatewayEventHandler extends EventHandler {
                 LOG.log(LogLevel.INFO, "[READY] Guilds: " + guilds.length());
 
                 /* Create PrivateChannels */
+                // This will not work since Discord does not send private channels on ready event
+                // Activated since 7/6/2017
                 JSONArray pms = json.getJSONArray("private_channels");
                 for (int i = 0; i < pms.length(); i++) {
                     JSONObject pm = pms.getJSONObject(i);

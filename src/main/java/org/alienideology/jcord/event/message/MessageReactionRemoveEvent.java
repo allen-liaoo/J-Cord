@@ -1,7 +1,6 @@
 package org.alienideology.jcord.event.message;
 
-import org.jetbrains.annotations.Nullable;
-import org.alienideology.jcord.handle.EmojiTable;
+import org.alienideology.jcord.handle.emoji.Emoji;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.user.IUser;
@@ -10,6 +9,7 @@ import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.Reaction;
 import org.alienideology.jcord.internal.object.user.User;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author AlienIdeology
@@ -35,7 +35,7 @@ public class MessageReactionRemoveEvent extends MessageEvent {
     }
 
     @Nullable
-    public EmojiTable.Emoji getEmoji() {
+    public Emoji getEmoji() {
         return reaction.getEmoji();
     }
 

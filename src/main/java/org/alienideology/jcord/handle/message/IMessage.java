@@ -1,13 +1,12 @@
 package org.alienideology.jcord.handle.message;
 
-import org.jetbrains.annotations.Nullable;
-import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.builders.EmbedBuilder;
 import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
+import org.alienideology.jcord.handle.emoji.Emoji;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
@@ -15,6 +14,7 @@ import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.object.message.Message;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -163,7 +163,7 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
      *
      * @param emoji The emoji.
      */
-    default void addReaction(EmojiTable.Emoji emoji) {
+    default void addReaction(Emoji emoji) {
         getChannel().addReaction(this.getId(), emoji);
     }
 
@@ -220,7 +220,7 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
      * @param member The member that reacted on the message.
      * @param emoji The emoji reaction.
      */
-    default void removeReaction(IMember member, EmojiTable.Emoji emoji) {
+    default void removeReaction(IMember member, Emoji emoji) {
         getChannel().removeReaction(member, getId(), emoji);
     }
 

@@ -33,7 +33,7 @@ public class GuildEmojisUpdateEventHandler extends EventHandler {
             return;
         }
 
-        JSONArray emojis = json.getJSONArray("emojis");
+        JSONArray emojis = json.getJSONArray("EMOJIS");
 
         // Emoji Deleted
         // The Json will be updated, but the deleted guild emoji is still in the cache.

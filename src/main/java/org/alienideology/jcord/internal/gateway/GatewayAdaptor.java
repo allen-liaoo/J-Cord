@@ -6,11 +6,12 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.ExceptionEvent;
+import org.alienideology.jcord.event.gateway.DisconnectEvent;
 import org.alienideology.jcord.event.handler.*;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.util.log.Logger;
 import org.alienideology.jcord.util.log.LogLevel;
+import org.alienideology.jcord.util.log.Logger;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -25,7 +26,6 @@ import java.util.zip.Inflater;
  */
 public final class GatewayAdaptor extends WebSocketAdapter {
 
-    public static int GATEWAY_VERSION = 5;
     public Logger LOG;
 
     private IdentityImpl identity;
@@ -117,11 +117,18 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
         LOG.log(LogLevel.INFO, "[CONNECTION] Disconnected");
         identity.CONNECTION = Identity.Connection.OFFLINE;
-        DisconnectionCode code = DisconnectionCode.getCode(serverCloseFrame.getCloseCode());
-        if(closedByServer) {
-            handleError(new RuntimeException("Connection closed: "+code.code+"\tBy reason: "+code.message));
-            LOG.log(LogLevel.FETAL, code+"\t"+code.message);
+
+        final int closeCode;
+        final String closeReason;
+        if (closedByServer) {
+            closeCode = serverCloseFrame.getCloseCode();
+            closeReason = serverCloseFrame.getCloseReason();
+        } else {
+            closeCode = clientCloseFrame.getCloseCode();
+            closeReason = clientCloseFrame.getCloseReason();
         }
+
+        identity.getEventManager().dispatchEvent(new DisconnectEvent(identity, this, 0, closedByServer, closeCode, closeReason));
     }
 
     /**

@@ -244,9 +244,9 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     IGuildEmoji getGuildEmoji(String id);
 
     /**
-     * Get all guild emojis in this guild.
+     * Get all guild EMOJIS in this guild.
      *
-     * @return A list of server custom emojis this guild has.
+     * @return A list of server custom EMOJIS this guild has.
      */
     List<IGuildEmoji> getGuildEmojis();
 

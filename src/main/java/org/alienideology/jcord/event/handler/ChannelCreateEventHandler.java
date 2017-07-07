@@ -7,7 +7,6 @@ import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.Channel;
-import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.json.JSONObject;
 
@@ -28,8 +27,6 @@ public class ChannelCreateEventHandler extends EventHandler {
 
         if (isPrivate) {
             channel = builder.buildPrivateChannel(json);
-            identity.addPrivateChannel((PrivateChannel) channel);
-
             dispatchEvent(new PrivateChannelCreateEvent(identity, sequence, channel));
         } else {
             channel = (Channel) builder.buildGuildChannel(json);

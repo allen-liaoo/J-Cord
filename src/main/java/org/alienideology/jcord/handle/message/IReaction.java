@@ -1,12 +1,12 @@
 package org.alienideology.jcord.handle.message;
 
-import org.jetbrains.annotations.Nullable;
-import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.IDiscordObject;
+import org.alienideology.jcord.handle.emoji.Emoji;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public interface IReaction extends IDiscordObject {
      * @return The emoji or null if this reaction is a GuildEmoji.
      */
     @Nullable
-    EmojiTable.Emoji getEmoji();
+    Emoji getEmoji();
 
     /**
      * Get the guild emoji object of this reaction.

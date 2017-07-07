@@ -1,8 +1,8 @@
 package org.alienideology.jcord.internal.object;
 
-import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.emoji.Emojis;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IReaction;
@@ -99,7 +99,7 @@ public final class ObjectBuilder {
             }
 
             /* Build GuildEmojis */
-            // Build this after roles because emojis have roles field
+            // Build this after roles because EMOJIS have roles field
             // Build this before channels because channel latest messages requires GuildEmoji
             JSONArray emojis = json.getJSONArray("emojis");
             for (int i = 0; i < emojis.length(); i++) {
@@ -622,7 +622,7 @@ public final class ObjectBuilder {
 
         /* Emoji */
         } else {
-            reaction = new Reaction(identity, message, reactedTimes, selfReacted, JCord.EMOJI_TABLE.getByUnicode(emojiJson.getString("name")));
+            reaction = new Reaction(identity, message, reactedTimes, selfReacted, Emojis.getByUnicode(emojiJson.getString("name")));
         }
         return reaction;
     }

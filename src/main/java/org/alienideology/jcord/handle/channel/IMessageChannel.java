@@ -1,9 +1,8 @@
 package org.alienideology.jcord.handle.channel;
 
-import org.jetbrains.annotations.Nullable;
-import org.alienideology.jcord.handle.EmojiTable;
 import org.alienideology.jcord.handle.builders.EmbedBuilder;
 import org.alienideology.jcord.handle.builders.MessageBuilder;
+import org.alienideology.jcord.handle.emoji.Emoji;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IMember;
@@ -11,6 +10,7 @@ import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.PermissionException;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -349,7 +349,7 @@ public interface IMessageChannel extends IChannel {
      * @param emoji The emoji reaction.
      * @return A list of users reacted to this reaction.
      */
-    default List<IUser> getReactedUsers(String messageId, EmojiTable.Emoji emoji) {
+    default List<IUser> getReactedUsers(String messageId, Emoji emoji) {
         return getReactedUsers(messageId, emoji.getUnicode());
     }
 
@@ -398,7 +398,7 @@ public interface IMessageChannel extends IChannel {
      * @param messageId The message ID.
      * @param emoji The emoji.
      */
-    default void addReaction(String messageId, EmojiTable.Emoji emoji) {
+    default void addReaction(String messageId, Emoji emoji) {
         addReaction(messageId, emoji.getUnicode());
     }
 
@@ -457,7 +457,7 @@ public interface IMessageChannel extends IChannel {
      * @param messageId The message's ID.
      * @param emoji The emoji reaction.
      */
-    default void removeReaction(IMember member, String messageId, EmojiTable.Emoji emoji) {
+    default void removeReaction(IMember member, String messageId, Emoji emoji) {
         removeReaction(member, messageId, emoji.getUnicode());
     }
 
