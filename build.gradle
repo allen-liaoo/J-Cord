@@ -37,11 +37,6 @@ dependencies {
     compile 'net.jodah:typetools:0.5.0'
 }
 
-//compileJava {
-//    classpath = sourceSets.main.compileClasspath
-//    options.encoding = 'UTF-8'
-//}
-
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
@@ -49,11 +44,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 javadoc {
     failOnError = false
-//    options.memberLevel = JavadocMemberLevel.PROTECTED
-//    options.author()
-//    options.encoding = 'UTF-8'
-//
-//    exclude("org/alienideology/jcord/internal/gateway")
+    options.memberLevel = JavadocMemberLevel.PROTECTED
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -61,12 +52,9 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
-//shadowJar {
-//    mergeServiceFiles()
-//    baseName = 'J-Cord'
-//    version = ver
-//    classifier = "withDependencies"
-//}
+shadowJar {
+    classifier = 'dependencies'
+}
 
 //build {
 //    dependsOn clean
@@ -95,7 +83,3 @@ artifacts {
     archives shadowJar
     archives javadocJar
 }
-
-//task wrapper(type: Wrapper) {
-//    gradleVersion = '3.5'
-//}
