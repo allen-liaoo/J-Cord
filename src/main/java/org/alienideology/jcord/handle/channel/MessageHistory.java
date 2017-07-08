@@ -145,7 +145,8 @@ public final class MessageHistory extends DiscordObject implements IDiscordObjec
     /**
      * Get the messages sent before a message. (Does not includes the message itself)
      *
-     * @exception IllegalArgumentException If the amount is <= 0 or > 100.
+     * @exception IllegalArgumentException
+     *          If the amount is smaller than 0 or greater than 100.
      * @exception PermissionException
      *          If the identity does not have {@code Read Messages} permission.
      *

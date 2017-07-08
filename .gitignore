@@ -23,9 +23,16 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+# Config
 /.idea/
-/build/
 /.gradle/
-/src/test/java/bot/Token.json
+
+# Build
+/build/classes
+/build/docs
+/build/tmp
+!/build/libs/*
+
+# Empty
 src/main/resources/
-src/test/resources/
+src/test/

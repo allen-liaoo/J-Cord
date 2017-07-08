@@ -56,28 +56,6 @@ shadowJar {
     classifier = 'dependencies'
 }
 
-//build {
-//    dependsOn clean
-//    dependsOn javadocJar
-//    dependsOn sourcesJar
-//    dependsOn shadowJar
-//
-//    javadocJar.mustRunAfter clean
-//    sourcesJar.mustRunAfter javadocJar
-//    shadowJar.mustRunAfter sourcesJar
-//}
-
-//install {
-//    dependsOn clean
-//    dependsOn javadocJar
-//    dependsOn sourcesJar
-//    dependsOn shadowJar
-//
-//    javadocJar.mustRunAfter clean
-//    sourcesJar.mustRunAfter javadocJar
-//    shadowJar.mustRunAfter sourcesJar
-//}
-
 artifacts {
     archives sourcesJar
     archives shadowJar
