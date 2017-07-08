@@ -235,7 +235,9 @@ emoji = Emojis.getByUnicode("\uD83D\uDE02");
 See this GitGub [repository](https://github.com/AlienIdeology/JCord-Examples).
 
 ## Contributing
-Please fork this project, and read [Contribution Documentation](/docs/Contribution.md).
+Please fork this project, and read [Contributing.md](/.github/CONTRIBUTING.md).
+Use [Issue Template.md](/.github/ISSUE_TEMPLATE.md) for creating issues, and
+use [Pull Request Template.md](/.github/PULL_REQUEST_TEMPLATE.md) for creating pull requests.
 
 ## Dependencies
 - [NV Websocket Client](https://github.com/TakahikoKawasaki/nv-websocket-client) `v2.2`
