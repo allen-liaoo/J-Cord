@@ -275,7 +275,7 @@ public class MessageBuilder implements Buildable<MessageBuilder, IMessage> {
      * @return true if the content of this message is longer than the max limit.
      */
     public boolean isTooLong() {
-        return content.length() > IMessage.MAX_CONTENT_LENGTH;
+        return content.length() > IMessage.CONTENT_LENGTH_MAX;
     }
 
     /**

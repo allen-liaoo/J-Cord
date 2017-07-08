@@ -153,10 +153,10 @@ public interface IUser extends IDiscordObject, ISnowFlake, IMention {
     /**
      * Gets the formatted mention of the user
      *
-     * @param val Include the nickname or not
+     * @param mentionNick Include the nickname or not
      * @return The formatted String.
      */
-    default String mention(boolean val) {
-        return val ? "<!@"+getId()+">" : "<@"+getId()+">";
+    default String mention(boolean mentionNick) {
+        return mentionNick ? "<!@"+getId()+">" : "<@"+getId()+">";
     }
 }

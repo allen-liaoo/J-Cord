@@ -15,7 +15,7 @@ A Discord API Wrapper for Java
 - Get emojis by aliases use in Discord. No more external emoji dependencies.
 
 ## Download
-- Jar - [See the latest release](https://github.com/AlienIdeology/J-Cord/releases/latest)
+- [All Jars](https://github.com/AlienIdeology/J-Cord/tree/master/build/libs)
 - Gradle (In your `build.gradle` file)
 ```gradle
 repositories {

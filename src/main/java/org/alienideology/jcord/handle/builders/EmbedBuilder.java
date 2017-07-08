@@ -58,7 +58,24 @@ public final class EmbedBuilder implements Buildable<EmbedBuilder, Embed> {
             .setFooter(footer);
     }
 
+    @Override
+    public EmbedBuilder clear() {
+        title = null;
+        url = null;
+        description = "";
+        timeStamp = null;
+        color = null;
+        author = null;
+        fields.clear();
+        thumbnail = null;
+        image = null;
+        footer = null;
+        return this;
+    }
+
     /**
+     * Check if an embed is empty or not.
+     *
      * @return True of the embed is empty.
      */
     public boolean isEmpty() {
@@ -72,21 +89,6 @@ public final class EmbedBuilder implements Buildable<EmbedBuilder, Embed> {
                 && thumbnail == null
                 && image == null
                 && footer == null;
-    }
-
-    @Override
-    public EmbedBuilder clear() {
-        title = null;
-        url = null;
-        description = null;
-        timeStamp = null;
-        color = null;
-        author = null;
-        fields.clear();
-        thumbnail = null;
-        image = null;
-        footer = null;
-        return this;
     }
 
     /**

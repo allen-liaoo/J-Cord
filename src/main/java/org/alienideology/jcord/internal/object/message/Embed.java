@@ -21,7 +21,7 @@ public final class Embed implements IEmbed, Jsonable {
     private String description = "";
     private String url;
 
-    private OffsetDateTime TimeStamp;
+    private OffsetDateTime timeStamp;
     private Color color;
 
     private Author author = null;
@@ -41,8 +41,8 @@ public final class Embed implements IEmbed, Jsonable {
         if (title != null) json.put("title", title);
         if (url != null) json.put("url", url);
         if (!description.isEmpty()) json.put("description", description);
-        if (TimeStamp != null) {
-            json.put("timestamp", TimeStamp.format(DateTimeFormatter.ISO_DATE_TIME));
+        if (timeStamp != null) {
+            json.put("timestamp", timeStamp.format(DateTimeFormatter.ISO_DATE_TIME));
         }
         if (color != null) json.put("color", color.getRGB() & 0xFFFFFF);
         if (author != null) {
@@ -80,6 +80,44 @@ public final class Embed implements IEmbed, Jsonable {
     }
 
     @Override
+    public int getTotalLength() {
+        int nLength = 0;
+        int vLength = 0;
+        // Check fields
+        for (IEmbed.Field field : fields) {
+            nLength += field.getName() == null ? 0 : field.getName().length();
+            vLength += field.getValue() == null ? 0 : field.getValue().length();
+        }
+
+        return (title == null ? 0 : title.length())
+                + (description == null ? 0 : description.length())
+                + (timeStamp == null ? 0 : timeStamp.toString().length())
+                + (author == null ? 0 : author.getName().length())
+                + (nLength + vLength)
+                + (footer == null || footer.getText() == null ? 0 : footer.getText().length());
+    }
+
+    @Override
+    public boolean canSend() {
+        if (title == null || title.length() <= IEmbed.TITLE_LENGTH_MAX &&
+                description == null || description.length() <= IEmbed.DESCRIPTION_LENGTH_MAX &&
+                fields.size() <= IEmbed.FIELD_MAX &&
+                footer == null || footer.getText() == null || footer.getText().length() <= IEmbed.FOOTER_TEXT_LENGTH_MAX) {
+
+            // Check fields
+            for (IEmbed.Field field : fields) {
+                if (field.getName().length() >= IEmbed.FIELD_NAME_LENGTH_MAX &&
+                        field.getValue().length() >= IEmbed.FIELD_VALUE_LENGTH_MAX)
+                    return false;
+            }
+
+            return getTotalLength() <= IEmbed.TOTAL_LENGTH_MAX;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public String getTitle() {
         return title;
     }
@@ -96,7 +134,7 @@ public final class Embed implements IEmbed, Jsonable {
 
     @Override
     public OffsetDateTime getTimeStamp() {
-        return TimeStamp;
+        return timeStamp;
     }
 
     @Override
@@ -155,7 +193,7 @@ public final class Embed implements IEmbed, Jsonable {
     }
 
     public Embed setTimeStamp(OffsetDateTime timeStamp) {
-        TimeStamp = timeStamp;
+        this.timeStamp = timeStamp;
         return this;
     }
 

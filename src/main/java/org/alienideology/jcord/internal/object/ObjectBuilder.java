@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object;
 
+import org.alienideology.jcord.bot.Application;
 import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.emoji.Emojis;
@@ -8,6 +9,7 @@ import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.user.Game;
+import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.handle.user.Presence;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -678,6 +680,30 @@ public final class ObjectBuilder {
         Presence presence = new Presence(identity, user, game, status);
         user.setPresence(presence);
         return presence;
+    }
+
+    public Application buildApplication(JSONObject json) {
+        String id = json.getString("id");
+        String name = json.getString("name");
+        String icon = json.getString("icon");
+        String description = json.getString("description");
+
+        String ownerId = json.getJSONObject("owner").getString("id");
+        IUser owner = identity.getUser(id);
+        if (owner == null) {
+            owner = buildUser(json.getJSONObject("owner"));
+        }
+
+        List<String> rpcOrigins = new ArrayList<>();
+        JSONArray array = json.has("rpc_origins") ? json.getJSONArray("rpc_origins") : new JSONArray();
+        for (int i = 0 ; i < array.length(); i++) {
+            rpcOrigins.add(array.getString(i));
+        }
+
+        boolean isPublicBot = json.has("bot_public") && json.getBoolean("bot_public");
+        boolean requireCodeGrant = json.has("bot_require_code_grant") && json.getBoolean("bot_require_code_grant");
+
+        return new Application(identity, id, name, icon, description, owner, rpcOrigins, isPublicBot, requireCodeGrant);
     }
 
     /**

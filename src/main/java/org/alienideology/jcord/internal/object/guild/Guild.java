@@ -197,6 +197,7 @@ public final class Guild extends DiscordObject implements IGuild {
     }
 
     @Override
+    @NotNull
     public IMember getSelfMember() {
         for (Member member : members) {
             if (member.getUser().isSelf())

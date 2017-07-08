@@ -28,7 +28,15 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
     /**
      * The max content length of a message.
      */
-    int MAX_CONTENT_LENGTH = 2000;
+    int CONTENT_LENGTH_MAX = 2000;
+
+    /**
+     * Check if a message can be sent without causing errors.
+     * This checks for content length.
+     *
+     * @return True if the embed can be sent.
+     */
+    boolean canSend();
 
     /**
      * Reply to this message, starting with mentioning the message's author
@@ -38,7 +46,7 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
      * @return The message sent.
      */
     default IMessage reply(String content) {
-        return getChannel().sendMessage(getMember().mention()+" "+content);
+        return getChannel().sendMessage(getAuthor().mention(true)+" "+content);
     }
 
     /**
@@ -50,7 +58,7 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
      * @return The message sent.
      */
     default IMessage replyFormat(String format, Object... args) {
-        return getChannel().sendMessageFormat("%s "+format, getMember().mention(), args);
+        return getChannel().sendMessageFormat("%s "+format, getAuthor().mention(true), args);
     }
 
     /**

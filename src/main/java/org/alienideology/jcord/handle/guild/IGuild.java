@@ -171,7 +171,7 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
      *
     * @return The member instance
     */
-    @org.jetbrains.annotations.NotNull
+    @NotNull
     IMember getSelfMember();
 
     /**

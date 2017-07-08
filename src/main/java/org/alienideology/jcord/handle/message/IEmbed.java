@@ -14,6 +14,56 @@ import java.time.OffsetDateTime;
 public interface IEmbed {
 
     /**
+     * The maximum length of a title.
+     */
+    int TITLE_LENGTH_MAX = 256;
+
+    /**
+     * The maximum length of a description.
+     */
+    int DESCRIPTION_LENGTH_MAX = 2048;
+
+    /**
+     * The maximum number of fields an embed is allowed to have.
+     */
+    int FIELD_MAX = 25;
+
+    /**
+     * The maximum length of a field's name.
+     */
+    int FIELD_NAME_LENGTH_MAX = 256;
+
+    /**
+     * The maximum length of a field's value.
+     */
+    int FIELD_VALUE_LENGTH_MAX = 1024;
+
+    /**
+     * The maximum length of a footer text.
+     */
+    int FOOTER_TEXT_LENGTH_MAX = 2048;
+
+    /**
+     * The maximum number of characters an embed can have.
+     */
+    int TOTAL_LENGTH_MAX = 6000;
+
+    /**
+     * Get the total characters' length of this embed.
+     *
+     * @return The total length.
+     */
+    int getTotalLength();
+
+    /**
+     * Check if an embed can be sent without causing errors.
+     * This checks for all length limits.
+     *
+     * @return True if the embed can be sent.
+     */
+    boolean canSend();
+
+    /**
      * Get the title of the embed.
      *
      * @return The string title.

@@ -221,7 +221,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
     }
 
     private void checkContentLength(String content) {
-        if (content.length() > IMessage.MAX_CONTENT_LENGTH) {  // Message content can by up to 2000 characters
+        if (content.length() > IMessage.CONTENT_LENGTH_MAX) {  // Message content can by up to 2000 characters
             IllegalArgumentException exception = new IllegalArgumentException("String messages can only contains up to 2000 characters.");
             exception.printStackTrace();
             throw new IllegalArgumentException();

@@ -12,6 +12,7 @@
 
 ### Bot
 Bot - The core of a Discord Bot
+ - Application - Information about a bot's oauth application.
  - BotInviteBuilder - A builder for building bot invite URL.
  - PostAgent - An agent used to post bot status to bots websites.
 

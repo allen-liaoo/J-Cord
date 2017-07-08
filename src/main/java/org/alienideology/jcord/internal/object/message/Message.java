@@ -1,6 +1,5 @@
 package org.alienideology.jcord.internal.object.message;
 
-import org.jetbrains.annotations.Nullable;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
@@ -10,12 +9,13 @@ import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.message.MessageProcessor;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.user.User;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.time.OffsetDateTime;
@@ -81,8 +81,13 @@ public class Message extends DiscordObject implements IMessage, Jsonable {
     }
 
     @Override
+    public boolean canSend() {
+        return content.length() <= CONTENT_LENGTH_MAX;
+    }
+
+    @Override
     public MessageProcessor getMessageProcessor() {
-        return null;
+        return messageProcessor;
     }
 
     @Override
