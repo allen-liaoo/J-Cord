@@ -38,7 +38,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
     /* Use for resuming */
     private String session_id = null;
 
-    /* <Event Name, Event Object> */
+    /* <Event Name, Event Handler> */
     public HashMap<String, EventHandler> eventHandler = new HashMap<>();
 
     /**
@@ -185,6 +185,8 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         if (handler == null) {
             LOG.log(LogLevel.FETAL, "[UNKNOWN] Event: " + key + json.toString(4));
         } else {
+            LOG.log(LogLevel.DEBUG, "[RECEIVED] " + key);
+            LOG.log(LogLevel.TRACE, "Event Json: " + json.toString(4));
 
             switch (key) {
                 case "READY": {
@@ -330,11 +332,13 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         /* User Event */
         eventHandler.put("PRESENCE_UPDATE", new PresenceUpdateEventHandler(identity));
         eventHandler.put("USER_UPDATE", new UserUpdateEventHandler(identity));
+        eventHandler.put("WEBHOOKS_UPDATE", new WebhookUpdateEventHandler(identity));
 
-        // TODO: Finish priority events
-        // Priority: GUILD_SYNC, GUILD_MEMBERS_CHUNK, WEBHOOKS_UPDATE, VOICE_SERVER_UPDATE, VOICE_STATE_UPDATE
+        // TODO: Finish priority and client events
+        // Priority: GUILD_MEMBERS_CHUNK
         // Clients: CALL_CREATE, CALL_UPDATE, CALL_DELETE, CHANNEL_RECIPIENT_ADD, CHANNEL_RECIPIENT_REMOVE, RELATIONSHIP_ADD, RELATIONSHIP_REMOVE
-        // Unknown: MESSAGE_ACK
+        // Not implementing any time soon: VOICE_SERVER_UPDATE, VOICE_STATE_UPDATE
+        // Unknown: GUILD_SYNC, MESSAGE_ACK
     }
 
 }

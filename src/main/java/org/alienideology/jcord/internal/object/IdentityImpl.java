@@ -72,7 +72,7 @@ public final class IdentityImpl implements Identity {
     }
 
     @Override
-    public IdentityImpl revive() throws IOException {
+    public IdentityImpl revive() throws ErrorResponseException, URISyntaxException, ConnectException {
         logout();
         login(token);
         return this;
@@ -323,28 +323,41 @@ public final class IdentityImpl implements Identity {
         ------------------------
      */
 
-    public IdentityImpl login (String token) throws ErrorResponseException, IllegalArgumentException, IOException {
+    public IdentityImpl login (String token) throws ErrorResponseException, URISyntaxException, ConnectException {
+        String uri;
+
         if (type == IdentityType.BOT && !token.startsWith("Bot ")) {
             this.token = "Bot " + token;
+
+            try {
+                HttpRequest request = Unirest.get(HttpPath.Gateway.GET_GATEWAY_BOT.getPath())
+                        .header("Authorization", this.token);
+                uri = request.asJson().getBody().getObject().getString("url") + "?encoding=json&v=" + JCord.DISCORD_GATEWAY_VERSION;
+                // TODO: Process shards
+            } catch (UnirestException | JSONException ex) {
+                throw new ErrorResponseException(ErrorResponse.INVALID_AUTHENTICATION_TOKEN);
+            }
         } else {
             this.token = token;
+
+            try {
+                HttpRequest request = Unirest.get(HttpPath.Gateway.GET_GATEWAY.getPath())
+                        .header("Authorization", this.token);
+                        // Authentication not require for this endpoint
+                        // But provide the token to make sure
+                uri = request.asJson().getBody().getObject().getString("url") + "?encoding=json&v=" + JCord.DISCORD_GATEWAY_VERSION;
+            } catch (UnirestException | JSONException ex) {
+                throw new ErrorResponseException(ErrorResponse.INVALID_AUTHENTICATION_TOKEN);
+            }
         }
 
         try {
-            HttpRequest request = Unirest.get(HttpPath.Gateway.GET_GATEWAY_BOT.getPath()).header("Authorization", this.token);
-            String uri = request.asJson().getBody().getObject().getString("url") + "?encoding=json&v=" + JCord.DISCORD_GATEWAY_VERSION;
-
             URI url = new URI(uri);
-
             socket = wsFactory.createSocket(url);
             socket.addListener(new GatewayAdaptor(this, socket)).connect();
-        } catch (UnirestException | JSONException ne) {
-            throw new ErrorResponseException(ErrorResponse.INVALID_AUTHENTICATION_TOKEN);
-        } catch (URISyntaxException urise) {
-            throw new ConnectException("Discord fail to provide a valid URI!");
-        } catch (IOException iow) {
-            throw new IOException("Fail to create WebSocket!");
-        } catch (WebSocketException wse) {
+        } catch (IllegalArgumentException ex) {
+            throw new URISyntaxException(uri, "Discord fail to provide a valid URI!");
+        } catch (WebSocketException | IOException ex2) {
             throw new ConnectException("Fail to connect to the Discord server!");
         }
 

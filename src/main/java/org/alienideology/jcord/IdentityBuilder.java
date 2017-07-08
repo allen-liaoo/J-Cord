@@ -7,7 +7,8 @@ import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.util.log.Logger;
 
-import java.io.IOException;
+import java.net.ConnectException;
+import java.net.URISyntaxException;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -33,32 +34,56 @@ public final class IdentityBuilder {
     }
 
     /**
-     * Build the IdentityImpl
-     * This is deprecated, see build(boolean useBlocking)
+     * Validate the given token.
      *
-     * @return The IdentityImpl
-     * @throws IllegalArgumentException If the provided token is not valid.
-     * @throws IOException If there is any connection issue.
+     * @return True if the token is valid.
      */
-    @Deprecated
-    public org.alienideology.jcord.Identity build () throws IllegalArgumentException, ErrorResponseException, IOException {
-        IdentityImpl id =  new IdentityImpl(type, new WebSocketFactory(), logger);
-        id.login(token).setEventManager(manager);
-        return id;
+    public static boolean isValidToken(String token, IdentityType type) {
+        if (token == null || !token.matches(TOKEN_PATTERN.pattern())) return false;
+        try {
+            IdentityImpl test = (IdentityImpl) new IdentityBuilder()
+                    .setIdentityType(type)
+                    .useToken(token)
+                    .build(false);
+
+            test.logout();
+        } catch (ErrorResponseException ere) {
+            if (ere.getResponse().equals(ErrorResponse.INVALID_AUTHENTICATION_TOKEN))
+                return false;
+        } catch (ConnectException | URISyntaxException e) {
+            return false;
+        }
+        return true;
     }
 
     /**
      * Build the IdentityImpl (Can choose blocking or not)
      *
-     * @param useBlocking To block the thread or not
+     * @param async To block the thread or not. Either synchronously ({@code false}) or asynchronously ({@code true}).
      * @return The IdentityImpl
-     * @throws IllegalArgumentException If the provided token is not valid.
-     * @throws IOException If there is any connection issue.
+     *
+     * @throws ErrorResponseException
+     *          If the provided token is not valid.
+     *          If you get this exception, please check if the bot's token has been revoked or not.
+     *          For clients, please copy the token again.
+     * @see ErrorResponse#INVALID_AUTHENTICATION_TOKEN
+     *
+     * @throws URISyntaxException
+     *          If Discord failed to provide a valid URI. Please contact a developer and provide the failed URI.
+     *
+     * @throws ConnectException
+     *          Can be caused by:
+     *          <ul>
+     *              <li>Fail to create web socket (Establishing connection on the library side).</li>
+     *              <li>Connecting the server failed.</li>
+     *              <li>The opening handshake failed.</li>
+     *          </ul>
      */
-    public org.alienideology.jcord.Identity build (boolean useBlocking) throws IllegalArgumentException, ErrorResponseException, IOException {
-        org.alienideology.jcord.Identity id = build();
-        if (useBlocking) {
-            while (!((IdentityImpl)id).CONNECTION.isReady()) {
+    public Identity build (boolean async) throws ErrorResponseException, URISyntaxException, ConnectException {
+        IdentityImpl id = new IdentityImpl(type, new WebSocketFactory(), logger);
+        id.login(token).setEventManager(manager);
+        if (!async) {
+            while (!(id).CONNECTION.isReady()) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ignored) {}
@@ -112,29 +137,6 @@ public final class IdentityBuilder {
     public IdentityBuilder setLogger(Consumer<Logger> logger) {
         logger.accept(this.logger);
         return this;
-    }
-
-    /**
-     * Validate the given token.
-     *
-     * @return True if the token is valid.
-     */
-    public static boolean isTokenValid(String token, IdentityType type) {
-        if (token == null || !token.matches(TOKEN_PATTERN.pattern())) return false;
-        try {
-            IdentityImpl test = (IdentityImpl) new IdentityBuilder()
-                    .setIdentityType(type)
-                    .useToken(token)
-                    .build();
-
-            test.logout();
-        } catch (ErrorResponseException ere) {
-            if (ere.getResponse().equals(ErrorResponse.INVALID_AUTHENTICATION_TOKEN))
-                return false;
-        } catch (IOException ioe) {
-            return false;
-        }
-        return true;
     }
 
 }

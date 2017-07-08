@@ -120,4 +120,32 @@ public class Application {
         return requireCodeGrant;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Application)) return false;
+
+        Application that = (Application) o;
+
+        if (!id.equals(that.id)) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        return owner != null ? owner.equals(that.owner) : that.owner == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (owner != null ? owner.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Application{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", owner=" + owner +
+                '}';
+    }
 }

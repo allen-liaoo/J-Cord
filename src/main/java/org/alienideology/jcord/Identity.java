@@ -10,9 +10,12 @@ import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.ISelfManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.IWebhook;
+import org.alienideology.jcord.internal.exception.ErrorResponseException;
+import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
+import java.net.ConnectException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -26,9 +29,25 @@ public interface Identity {
      * This logout of the account, then log back in.
      *
      * @return The identity revived.
-     * @throws IOException If fail to create WebSocket.
+     *
+     * @throws ErrorResponseException
+     *          If the identity token is not valid.
+     *          If you get this exception, please check if the bot's token has been revoked or not.
+     *          For clients, please copy the token again.
+     * @see ErrorResponse#INVALID_AUTHENTICATION_TOKEN
+     *
+     * @throws URISyntaxException
+     *          If Discord failed to provide a valid URI. Please contact a developer and provide the failed URI.
+     *
+     * @throws ConnectException
+     *          Can be caused by:
+     *          <ul>
+     *              <li>Fail to create web socket (Establishing connection on the library side).</li>
+     *              <li>Connecting the server failed.</li>
+     *              <li>The opening handshake failed.</li>
+     *          </ul>
      */
-    Identity revive() throws IOException;
+    Identity revive() throws ErrorResponseException, URISyntaxException, ConnectException;
 
     /**
      * Get the event managers of this identity.
