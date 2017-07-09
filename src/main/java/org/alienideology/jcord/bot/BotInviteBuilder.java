@@ -64,7 +64,7 @@ public class BotInviteBuilder {
             throw new IllegalStateException("Cannot build an invite when there is no bot ID set!");
         }
 
-        String invite = HttpPath.EndPoint.AUTHORIZE;
+        String invite = HttpPath.OAuth.AUTHORIZATION;
         invite += "?client_id=" + id + "&scope=bot";
 
         if (permissions != null) {

@@ -1,6 +1,6 @@
 /**
- * Bot
- * All utilities and native bot supports can be found in this package.
+ * All bot utilities can be found in this package.
+ *
  * @author AlienIdeology
  * @since 0.0.3
  */

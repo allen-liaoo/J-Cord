@@ -10,7 +10,6 @@ import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.PermissionException;
-import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
@@ -93,7 +92,6 @@ public final class Guild extends DiscordObject implements IGuild {
         isAvailable = true;
         this.name = name;
         this.icon = icon;
-        setIcon();
         this.splash = splash;
         this.region = Region.getByKey(region);
         this.afk_timeout = AFKTimeout.getByTimeout(afk_timeout);
@@ -131,7 +129,7 @@ public final class Guild extends DiscordObject implements IGuild {
     }
 
     @Override
-    public String getIcon() {
+    public String getIconHash() {
         return icon;
     }
 
@@ -384,11 +382,6 @@ public final class Guild extends DiscordObject implements IGuild {
         this.afk_channel = (VoiceChannel) getVoiceChannel(afk);
         this.embed_channel = (TextChannel) getTextChannel(embed);
         return this;
-    }
-
-    private void setIcon() {
-        this.icon = icon == null ?
-                null : String.format(HttpPath.EndPoint.GUILD_ICON, id, icon);
     }
 
     public Guild addGuildChannel (IGuildChannel... channels) {

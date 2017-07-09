@@ -9,6 +9,7 @@ import org.alienideology.jcord.handle.managers.IGuildManager;
 import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.IWebhook;
+import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -79,11 +80,22 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     String getName();
 
     /**
+     * Get the icon hash value.
+     * @see #getIconUrl() for getting icon url.
+     *
+     * @return The string icon hash.
+     */
+    String getIconHash();
+
+    /**
      * Get the icon url of this guild.
      *
      * @return The string url, or null if the guild does not have an icon.
      */
-    String getIcon();
+    default String getIconUrl() {
+        return getIconHash() == null ?
+                null : String.format(HttpPath.EndPoint.GUILD_ICON, getIconUrl(), getIconHash());
+    }
 
     /**
      * Get the splash icon url of this guild. A guild can get splash by partnering with Discord.

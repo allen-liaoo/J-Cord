@@ -3,7 +3,6 @@ package org.alienideology.jcord.handle.guild;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
-import org.alienideology.jcord.internal.object.guild.Role;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public interface IGuildEmoji extends IDiscordObject, ISnowFlake, IMention {
      *
      * @return The string image url.
      */
-    String getImage();
+    String getImageUrl();
 
     /**
      * @return True if it is requried to use colon when typing this emoji.

@@ -5,9 +5,11 @@ import com.mashape.unirest.http.HttpMethod;
 import static com.mashape.unirest.http.HttpMethod.*;
 
 /**
- * HttpPath - Used to set HttpRequest Paths and request them
+ * HttpPath - Used to set HttpRequest Paths and request them.
+ *
  * @author AlienIdeology
  */
+// TODO: Implements all endpoints
 public final class HttpPath {
 
     public final static String DISCORD_URL = "https://discordapp.com/";
@@ -16,7 +18,10 @@ public final class HttpPath {
 
     public static class EndPoint {
 
-        public final static String AUTHORIZE = DISCORD_URL+"oauth2/authorize";
+        /**
+         * Application Icon - Parameters: Application ID, Icon Hash
+         */
+        public final static String APPLICATION_ICON = DISCORD_CDN_URL+"app-icons/%s/%s.png";
 
         /**
          * Avatar - Parameters: ID, Avatar Hash
@@ -38,6 +43,9 @@ public final class HttpPath {
          */
         public final static String EMOJI_ICON = DISCORD_CDN_URL+"EMOJIS/%s.png";
 
+        /**
+         * Discord Emojis Json
+         */
         public final static String EMOJI_URL = "https://raw.githubusercontent.com/emojione/emojione/master/emoji.json";
 
     }
@@ -54,22 +62,23 @@ public final class HttpPath {
         /* Basic Action */
         public final static HttpPath GET_GUILD = new HttpPath(GET, "/guilds/{guild.id}");
         public final static HttpPath MODIFY_GUILD = new HttpPath(PATCH, "/guilds/{guild.id}");
-        public final static HttpPath DELETE_GUILD = new HttpPath(DELETE, "/guilds/{guild.id}");
+        public final static HttpPath DELETE_GUILD = new HttpPath(DELETE, "/guilds/{guild.id}"); // Client Only
 
         /* Channel Action */
         public final static HttpPath GET_GUILD_CHANNELS = new HttpPath(GET, "/guilds/{guild.id}/channels");
         public final static HttpPath CREATE_GUILD_CHANNEL = new HttpPath(POST, "/guilds/{guild.id}/channels");
-        public final static HttpPath MODIFY_GUILD_CHANNEL_POSITION = new HttpPath(PATCH, "/guilds/{guild.id}/channels");
+        public final static HttpPath MODIFY_GUILD_CHANNEL_POSITION = new HttpPath(PATCH, "/guilds/{guild.id}/channels"); // Unused
 
         /* Member Action */
-        public final static HttpPath GET_GUILD_MEMBER = new HttpPath(GET, "/guilds/{guild.id}/members/{user.id}");
+        public final static HttpPath GET_GUILD_MEMBER = new HttpPath(GET, "/guilds/{guild.id}/members/{user.id}"); // Unused
         public final static HttpPath LIST_GUILD_MEMBERS = new HttpPath(GET, "/guilds/{guild.id}/members");
-        public final static HttpPath ADD_GUILD_MEMBER = new HttpPath(PUT, "/guilds/{guild.id}/members/{user.id}");
+
+        public final static HttpPath ADD_GUILD_MEMBER = new HttpPath(PUT, "/guilds/{guild.id}/members/{user.id}"); // OAuth Only
         public final static HttpPath MODIFY_GUILD_MEMBER = new HttpPath(PATCH, "/guilds/{guild.id}/members/{user.id}");
         public final static HttpPath REMOVE_GUILD_MEMBER = new HttpPath(DELETE, "/guilds/{guild.id}/members/{user.id}");
         public final static HttpPath MODIFY_CURRENT_USER_NICK = new HttpPath(PATCH, "/guilds/{guild.id}/members/@me/nick");
-        public final static HttpPath ADD_GUILD_MEMBER_ROLE = new HttpPath(PUT, "/guilds/{guild.id}/members/{user.id}/roles/{role.id}");
-        public final static HttpPath REMOVE_GUILD_MEMBER_ROLE = new HttpPath(DELETE, "/guilds/{guild.id}/members/{user.id}/roles/{role.id}");
+        public final static HttpPath ADD_GUILD_MEMBER_ROLE = new HttpPath(PUT, "/guilds/{guild.id}/members/{user.id}/roles/{role.id}"); // Unused
+        public final static HttpPath REMOVE_GUILD_MEMBER_ROLE = new HttpPath(DELETE, "/guilds/{guild.id}/members/{user.id}/roles/{role.id}"); // Unused
 
         /* Role Action */
         public final static HttpPath GET_GUILD_ROLES = new HttpPath(GET, "/guilds/{guild.id}/roles");
@@ -101,9 +110,8 @@ public final class HttpPath {
         public final static HttpPath SYNC_GUILD_INTEGRATION = new HttpPath(GET, "/guilds/{guild.id}/integrations/{integration.id}/sync");
 
         /* Other Action */
-        public final static HttpPath LIST_VOICE_REGIONS = new HttpPath(GET, "/voice/regions");
-        public final static HttpPath GET_GUILD_VOICE_REGIONS = new HttpPath(GET, "/guilds/{guild.id}/regions");
-        public final static HttpPath GET_GUILD_INVITES = new HttpPath(GET, "/guilds/{guild.id}/invites");
+        public final static HttpPath LIST_VOICE_REGIONS = new HttpPath(GET, "/voice/regions"); // Unused
+        public final static HttpPath GET_GUILD_VOICE_REGIONS = new HttpPath(GET, "/guilds/{guild.id}/regions"); // Unused
         public final static HttpPath GET_GUILD_EMBED = new HttpPath(GET, "/guilds/{guild.id}/embed");
         public final static HttpPath MODIFY_GUILD_EMBED = new HttpPath(PATCH, "/guilds/{guild.id}/embed");
 
@@ -125,8 +133,8 @@ public final class HttpPath {
         public final static HttpPath GET_CHANNEL_MESSAGE = new HttpPath(GET, "/channels/{channel.id}/messages/{message.id}");
         public final static HttpPath CREATE_MESSAGE = new HttpPath(POST, "/channels/{channel.id}/messages");
         public final static HttpPath EDIT_MESSAGE = new HttpPath(PATCH, "/channels/{channel.id}/messages/{message.id}");
-        public final static HttpPath EDIT_MESSAGE_CONTENT = new HttpPath(PATCH, "/channels/{channel.id}/messages/{message.id}?content={content}");
-        public final static HttpPath EDIT_MESSAGE_EMBED = new HttpPath(PATCH, "/channels/{channel.id}/messages/{message.id}?embed={embed}");
+        public final static HttpPath EDIT_MESSAGE_CONTENT = new HttpPath(PATCH, "/channels/{channel.id}/messages/{message.id}?content={content}"); // Unused
+        public final static HttpPath EDIT_MESSAGE_EMBED = new HttpPath(PATCH, "/channels/{channel.id}/messages/{message.id}?embed={embed}"); // Unused
         public final static HttpPath DELETE_MESSAGE = new HttpPath(DELETE, "/channels/{channel.id}/messages/{message.id}");
         public final static HttpPath BULK_DELETE_MESSAGE = new HttpPath(POST, "/channels/{channel.id}/messages/bulk-delete");
 
@@ -140,12 +148,6 @@ public final class HttpPath {
         /* Permission Action */
         public final static HttpPath EDIT_CHANNEL_PERMISSIONS = new HttpPath(PUT, "/channels/{channel.id}/permissions/{overwrite.id}");
         public final static HttpPath DELETE_CHANNEL_PERMISSION = new HttpPath(DELETE, "/channels/{channel.id}/permissions/{overwrite.id}");
-
-        /* Invite Action */
-        public final static HttpPath GET_CHANNEL_INVITES = new HttpPath(GET, "/channels/{channel.id}/invites");
-        public final static HttpPath CREATE_CHANNEL_INVITE = new HttpPath(POST, "/channels/{channel.id}/invites");
-        public final static HttpPath GET_INVITE = new HttpPath(GET, "/invites/{invite.code}");
-        public final static HttpPath DELETE_INVITE = new HttpPath(DELETE, "/invites/{invite.code}");
 
         /* Pin Action */
         public final static HttpPath GET_PINNED_MESSAGES = new HttpPath(GET, "/channels/{channel.id}/pins");
@@ -166,7 +168,8 @@ public final class HttpPath {
     public static class User {
 
         /* Current User Action */
-        public final static HttpPath GET_CURRENT_USER = new HttpPath(GET, "/users/@me");
+        // Client Only
+        public final static HttpPath GET_CURRENT_USER = new HttpPath(GET, "/users/@me"); // Unused
         public final static HttpPath MODIFY_CURRENT_USER = new HttpPath(PATCH, "/users/@me");
         public final static HttpPath GET_CURRENT_USER_GUILDS = new HttpPath(GET, "/users/@me/guilds");
         public final static HttpPath LEAVE_GUILD = new HttpPath(DELETE, "/users/@me/guilds/{guild.id}");
@@ -175,15 +178,18 @@ public final class HttpPath {
 
         /* User Action */
         public final static HttpPath GET_USER = new HttpPath(GET, "/users/{user.id}");
-        public final static HttpPath ACCEPT_INVITE = new HttpPath(POST, "/invites/{invite.code}");
 
     }
 
     public static class Invite {
 
+        public final static HttpPath GET_GUILD_INVITES = new HttpPath(GET, "/guilds/{guild.id}/invites");
+        public final static HttpPath GET_CHANNEL_INVITES = new HttpPath(GET, "/channels/{channel.id}/invites");
         public final static HttpPath GET_INVITE = new HttpPath(GET, "/invites/{invite.code}");
+
+        public final static HttpPath CREATE_CHANNEL_INVITE = new HttpPath(POST, "/channels/{channel.id}/invites");
         public final static HttpPath DELETE_INVITE = new HttpPath(DELETE, "/invites/{invite.code}");
-        public final static HttpPath ACCEPT_INVITE = new HttpPath(POST, "/invites/{invite.code}");
+        public final static HttpPath ACCEPT_INVITE = new HttpPath(POST, "/invites/{invite.code}"); // OAuth Only
 
     }
 
@@ -218,6 +224,7 @@ public final class HttpPath {
         public final static HttpPath EXECUTE_WEBHOOK = new HttpPath(POST, "/webhooks/{webhook.id}/{webhook.token}");
         public final static HttpPath DELETE_WEBHOOK = new HttpPath(DELETE, "/webhooks/{webhook.id}");
         public final static HttpPath DELETE_WEBHOOK_WITH_TOKEN = new HttpPath(DELETE, "/webhooks/{webhook.id}/{webhook.token}");
+
     }
 
     private final HttpMethod method;

@@ -6,6 +6,7 @@ import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -62,6 +63,19 @@ public interface IInviteManager {
      * @return The channel invites.
      */
     List<IInvite> getChannelInvites();
+
+    /**
+     * Get an invite by code.
+     * This method invokes {@link #getGuildInvites()} or {@link #getChannelInvites()} to search for a matched code.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Create Instant Invite} permission.
+     *
+     * @param code The invite code.
+     * @return The invite, or null if no invite is found.
+     */
+    @Nullable
+    IInvite getInvite(String code);
 
     /**
      * Create a new invite for the guild channel.

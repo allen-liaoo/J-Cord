@@ -1,15 +1,16 @@
 package org.alienideology.jcord.internal.object;
 
-import org.alienideology.jcord.bot.Application;
 import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.client.IRelationship;
+import org.alienideology.jcord.handle.client.MessageNotification;
 import org.alienideology.jcord.handle.emoji.Emojis;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.user.Game;
-import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.handle.user.Presence;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -17,10 +18,14 @@ import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
+import org.alienideology.jcord.internal.object.bot.BotApplication;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
+import org.alienideology.jcord.internal.object.client.ChannelSetting;
+import org.alienideology.jcord.internal.object.client.GuildSetting;
+import org.alienideology.jcord.internal.object.client.Relationship;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 import org.alienideology.jcord.internal.object.guild.Member;
@@ -682,14 +687,22 @@ public final class ObjectBuilder {
         return presence;
     }
 
-    public Application buildApplication(JSONObject json) {
+    //---------------------Bot---------------------
+
+    /**
+     * Built an bot application object with provided json.
+     *
+     * @param json The json application object.
+     * @return The application built.
+     */
+    public BotApplication buildBotApplication(JSONObject json) {
         String id = json.getString("id");
         String name = json.getString("name");
         String icon = json.getString("icon");
         String description = json.getString("description");
 
         String ownerId = json.getJSONObject("owner").getString("id");
-        IUser owner = identity.getUser(id);
+        User owner = (User) identity.getUser(id);
         if (owner == null) {
             owner = buildUser(json.getJSONObject("owner"));
         }
@@ -703,7 +716,51 @@ public final class ObjectBuilder {
         boolean isPublicBot = json.has("bot_public") && json.getBoolean("bot_public");
         boolean requireCodeGrant = json.has("bot_require_code_grant") && json.getBoolean("bot_require_code_grant");
 
-        return new Application(identity, id, name, icon, description, owner, rpcOrigins, isPublicBot, requireCodeGrant);
+        return new BotApplication(identity, id, name, icon, description, owner, rpcOrigins, isPublicBot, requireCodeGrant);
+    }
+
+    //---------------------Client---------------------
+
+    /**
+     * Built an relationship object with provided json.
+     *
+     * @param json The json relationship object.
+     * @return The relationship built.
+     */
+    public Relationship buildRelationship(JSONObject json) {
+        IRelationship.Type type = IRelationship.Type.getByKey(json.getInt("type"));
+        User user = (User) identity.getUser(json.getJSONObject("user").getString("id"));
+        if (user == null) {
+            user = buildUser(json.getJSONObject("user"));
+        }
+
+        Relationship relationship = new Relationship(identity, type, user);
+        identity.getClient().addRelationship(relationship);
+        return relationship;
+    }
+
+    public GuildSetting buildGuildSetting(JSONObject json) {
+        Guild guild = (Guild) identity.getGuild(json.getString("guild_id"));
+        MessageNotification notifSetting = MessageNotification.getByKey(json.getInt("message_notifications"));
+        boolean muted = json.has("muted") && json.getBoolean("muted");
+        boolean mobilePush = json.has("mobile_push") && json.getBoolean("mobile_push");
+        boolean suppressEveryone = json.has("suppress_everyone") && json.getBoolean("suppress_everyone");
+
+        GuildSetting setting = new GuildSetting(identity, guild, notifSetting, muted, mobilePush, suppressEveryone);
+
+        JSONArray channels = json.getJSONArray("channel_overrides");
+        for (int i = 0; i < channels.length(); i++) {
+            setting.addChannelSetting(buildTextChannelSetting(channels.getJSONObject(i)));
+        }
+        identity.getClient().addGuildSetting(setting);
+        return setting;
+    }
+
+    public ChannelSetting buildTextChannelSetting(JSONObject json) {
+        ITextChannel channel = identity.getTextChannel(json.getString("channel_id"));
+        MessageNotification notifSetting = MessageNotification.getByKey(json.getInt("message_notifications"));
+        boolean muted = json.has("muted") && json.getBoolean("muted");
+        return new ChannelSetting(identity, channel, notifSetting, muted);
     }
 
     /**

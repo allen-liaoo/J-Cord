@@ -9,11 +9,13 @@ import com.neovisionaries.ws.client.WebSocketFactory;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.JCord;
-import org.alienideology.jcord.bot.Bot;
 import org.alienideology.jcord.bot.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.EventManager;
+import org.alienideology.jcord.handle.IInvite;
+import org.alienideology.jcord.handle.bot.IBot;
 import org.alienideology.jcord.handle.channel.*;
+import org.alienideology.jcord.handle.client.IClient;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.ISelfManager;
@@ -21,16 +23,19 @@ import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
-import org.alienideology.jcord.internal.gateway.ErrorResponse;
-import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
-import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.exception.HttpErrorException;
+import org.alienideology.jcord.internal.exception.PermissionException;
+import org.alienideology.jcord.internal.gateway.*;
+import org.alienideology.jcord.internal.object.bot.Bot;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
+import org.alienideology.jcord.internal.object.client.Client;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.SelfManager;
 import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.util.log.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -54,7 +59,8 @@ public final class IdentityImpl implements Identity {
     private WebSocket socket;
     public Connection CONNECTION = Connection.OFFLINE;
 
-    public Bot bot;
+    private Bot bot;
+    private Client client;
 
     private EventManager manager;
 
@@ -109,8 +115,14 @@ public final class IdentityImpl implements Identity {
     }
 
     @Override
-    public Bot getAsBot() {
+    public IBot getAsBot() {
         return bot;
+    }
+
+    @Override
+    @Nullable
+    public IClient getAsClient() {
+        return client;
     }
 
     @Override
@@ -284,6 +296,7 @@ public final class IdentityImpl implements Identity {
     }
 
     @Override
+    @Nullable
     public IPrivateChannel getPrivateChannelByUserId(String userId) {
         for (IPrivateChannel dm : privateChannels) {
             if (dm.getRecipient().getId().equals(userId)) {
@@ -295,6 +308,26 @@ public final class IdentityImpl implements Identity {
 
     public List<IPrivateChannel> getPrivateChannels() {
         return Collections.unmodifiableList(privateChannels);
+    }
+
+    @Override
+    @Nullable
+    public IInvite getInvite(String code) {
+        try {
+            JSONObject invite = new Requester(this, HttpPath.Invite.GET_INVITE)
+                    .request(code)
+                    .getAsJSONObject();
+
+            return new ObjectBuilder(this).buildInvite(invite);
+        } catch (HttpErrorException ex) {
+            if (ex.isPermissionException()) {
+                throw new PermissionException(Permission.ADMINISTRATOR, Permission.CREATE_INSTANT_INVITE);
+            } else if (ex.getCode().equals(HttpCode.NOT_FOUND)) {
+                return null;
+            } else {
+                throw ex;
+            }
+        }
     }
 
     @Override
@@ -357,7 +390,9 @@ public final class IdentityImpl implements Identity {
             socket.addListener(new GatewayAdaptor(this, socket)).connect();
         } catch (IllegalArgumentException ex) {
             throw new URISyntaxException(uri, "Discord fail to provide a valid URI!");
-        } catch (WebSocketException | IOException ex2) {
+        } catch (IOException ex2) {
+            throw new ConnectException("Fail to create web socket!");
+        } catch (WebSocketException e) {
             throw new ConnectException("Fail to connect to the Discord server!");
         }
 
@@ -374,6 +409,16 @@ public final class IdentityImpl implements Identity {
         return this;
     }
 
+    // Wrapper to avoid casting
+    public Bot getBot() {
+        return bot;
+    }
+
+    // Wrapper to avoid casting
+    public Client getClient() {
+        return client;
+    }
+
     public IdentityImpl setEventManager(EventManager manager) {
         this.manager = manager.setIdentity(this);
         return this;
@@ -387,7 +432,11 @@ public final class IdentityImpl implements Identity {
         this.self = selfUser;
 
         // Initialize this after self user is built
-        this.bot = new Bot(this);
+        if (type == IdentityType.BOT) {
+            this.bot = new Bot(this);
+        } else {
+            this.client = new Client(this);
+        }
     }
 
     public void addUser (User user) {

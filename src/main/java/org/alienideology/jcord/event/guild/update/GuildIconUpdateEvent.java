@@ -1,7 +1,7 @@
 package org.alienideology.jcord.event.guild.update;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.guild.GuildUpdateEvent;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 
 /**
@@ -14,11 +14,11 @@ public class GuildIconUpdateEvent extends GuildUpdateEvent {
     }
 
     public String getNewIcon() {
-        return guild.getIcon();
+        return guild.getIconUrl();
     }
 
     public String getOldIcon() {
-        return oldGuild.getIcon();
+        return oldGuild.getIconUrl();
     }
 
 }

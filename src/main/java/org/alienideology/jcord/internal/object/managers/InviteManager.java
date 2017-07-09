@@ -12,6 +12,7 @@ import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.guild.Guild;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -26,14 +27,18 @@ public final class InviteManager implements IInviteManager {
     private Guild guild;
     private IGuildChannel channel;
 
+    boolean isGuild;
+
     public InviteManager(Guild guild) {
         this.guild = guild;
         this.channel = guild.getDefaultChannel();
+        this.isGuild = true;
     }
 
     public InviteManager(IGuildChannel channel) {
         this.guild = (Guild) channel.getGuild();
         this.channel = channel;
+        this.isGuild = false;
     }
 
     @Override
@@ -59,7 +64,7 @@ public final class InviteManager implements IInviteManager {
 
         List<IInvite> invites = new ArrayList<>();
         ObjectBuilder builder = new ObjectBuilder((IdentityImpl) getIdentity());
-        JSONArray guildInvites = new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.GET_GUILD_INVITES).request(guild.getId())
+        JSONArray guildInvites = new Requester((IdentityImpl) getIdentity(), HttpPath.Invite.GET_GUILD_INVITES).request(guild.getId())
                 .getAsJSONArray();
 
         for (int i = 0; i < guildInvites.length(); i++) {
@@ -78,7 +83,7 @@ public final class InviteManager implements IInviteManager {
 
         List<IInvite> invites = new ArrayList<>();
         ObjectBuilder builder = new ObjectBuilder((IdentityImpl) getIdentity());
-        JSONArray guildInvites = new Requester((IdentityImpl) getIdentity(), HttpPath.Channel.GET_CHANNEL_INVITES).request(channel.getId())
+        JSONArray guildInvites = new Requester((IdentityImpl) getIdentity(), HttpPath.Invite.GET_CHANNEL_INVITES).request(channel.getId())
                 .getAsJSONArray();
 
         for (int i = 0; i < guildInvites.length(); i++) {
@@ -87,6 +92,18 @@ public final class InviteManager implements IInviteManager {
         }
 
         return invites;
+    }
+
+    @Override
+    @Nullable
+    public IInvite getInvite(String code) {
+        List<IInvite> invites = isGuild ? getChannelInvites() : getChannelInvites();
+        for (IInvite invite : invites) {
+            if (invite.getCode().equals(code)) {
+                return invite;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -101,7 +118,7 @@ public final class InviteManager implements IInviteManager {
                 .put("temporary", isTemporary)
                 .put("unique", isUnique);
 
-        JSONObject invite = new Requester((IdentityImpl) getIdentity(), HttpPath.Channel.CREATE_CHANNEL_INVITE).request(channel.getId())
+        JSONObject invite = new Requester((IdentityImpl) getIdentity(), HttpPath.Invite.CREATE_CHANNEL_INVITE).request(channel.getId())
                 .updateRequestWithBody(request -> request.body(json)).getAsJSONObject();
         return new ObjectBuilder((IdentityImpl) getIdentity()).buildInvite(invite);
     }
@@ -117,7 +134,7 @@ public final class InviteManager implements IInviteManager {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_CHANNELS);
         }
 
-        new Requester((IdentityImpl) getIdentity(), HttpPath.Channel.DELETE_INVITE).request(code)
+        new Requester((IdentityImpl) getIdentity(), HttpPath.Invite.DELETE_INVITE).request(code)
                 .performRequest();
     }
 

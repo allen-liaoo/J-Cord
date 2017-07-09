@@ -1,31 +1,32 @@
-package org.alienideology.jcord.bot;
+package org.alienideology.jcord.internal.object.bot;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.bot.IBotApplication;
 import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.user.User;
 
 import java.util.List;
 
 /**
- * Application - Information about a bot's oauth application.
- *
  * @author AlienIdeology
  */
-public class Application {
+public class BotApplication implements IBotApplication {
 
-    private final Identity identity;
+    private final IdentityImpl identity;
 
     private final String id;
     private final String name;
     private final String icon;
     private final String description;
 
-    private final IUser owner;
+    private final User owner;
     private List<String> rpcOrigins;
 
     private final boolean isPublicBot;
     private final boolean requireCodeGrant;
 
-    public Application(Identity identity, String id, String name, String icon, String description, IUser owner, List<String> rpcOrigins, boolean isPublicBot, boolean requireCodeGrant) {
+    public BotApplication(IdentityImpl identity, String id, String name, String icon, String description, User owner, List<String> rpcOrigins, boolean isPublicBot, boolean requireCodeGrant) {
         this.identity = identity;
         this.id = id;
         this.name = name;
@@ -37,85 +38,47 @@ public class Application {
         this.requireCodeGrant = requireCodeGrant;
     }
 
-    /**
-     * Get the identity this application belongs to.
-     *
-     * @return The identity.
-     */
+    @Override
     public Identity getIdentity() {
         return identity;
     }
 
-    /**
-     * Get the ID of this application.
-     *
-     * @return The id.
-     */
+    @Override
     public String getId() {
         return id;
     }
 
-    /**
-     * Get the registered name of this application.
-     *
-     * @return The name.
-     */
+    @Override
     public String getName() {
         return name;
     }
 
-    /**
-     * Get the icon of this application.
-     *
-     * @return The icon.
-     */
-    public String getIcon() {
+    @Override
+    public String getIconHash() {
         return icon;
     }
 
-    /**
-     * Get the description of this application.
-     *
-     * @return The description.
-     */
+    @Override
     public String getDescription() {
         return description;
     }
 
-    /**
-     * Get the owner of this application.
-     *
-     * @return The owner.
-     */
+    @Override
     public IUser getOwner() {
         return owner;
     }
 
-    /**
-     * Get the rpc origin urls. Return an empty list of rpc is disabled.
-     *
-     * @return The rpc urls.
-     */
+    @Override
     public List<String> getRpcOrigins() {
         return rpcOrigins;
     }
 
-    /**
-     * Check if the bot can be invited (public) to other guilds.
-     *
-     * @return True of the bot is a public bot.
-     */
+    @Override
     public boolean isPublicBot() {
         return isPublicBot;
     }
 
-    /**
-     * Check if the bot requires code grant.
-     * If {@code requireCodeGrant} is true,
-     * then the bot will only join upon completion of the full oauth2 code grant flow.
-     *
-     * @return True of the bot requires code grant.
-     */
+    @Override
     public boolean requireCodeGrant() {
         return requireCodeGrant;
     }
@@ -123,9 +86,9 @@ public class Application {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Application)) return false;
+        if (!(o instanceof BotApplication)) return false;
 
-        Application that = (Application) o;
+        BotApplication that = (BotApplication) o;
 
         if (!id.equals(that.id)) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
@@ -142,7 +105,7 @@ public class Application {
 
     @Override
     public String toString() {
-        return "Application{" +
+        return "BotApplication{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", owner=" + owner +

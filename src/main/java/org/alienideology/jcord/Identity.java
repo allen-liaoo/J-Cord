@@ -1,10 +1,12 @@
 package org.alienideology.jcord;
 
-import org.alienideology.jcord.bot.Bot;
 import org.alienideology.jcord.bot.command.CommandFramework;
 import org.alienideology.jcord.event.DispatcherAdaptor;
 import org.alienideology.jcord.event.EventManager;
+import org.alienideology.jcord.handle.IInvite;
+import org.alienideology.jcord.handle.bot.IBot;
 import org.alienideology.jcord.handle.channel.*;
+import org.alienideology.jcord.handle.client.IClient;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.ISelfManager;
@@ -99,13 +101,22 @@ public interface Identity {
     String getToken();
 
     /**
-     * Get this identity as a {@link Bot}.
-     * If the identity is a {@link IdentityType#CLIENT}, then this will returns null.
+     * Get this identity as a {@link IBot}.
+     * If the identity type is {@link IdentityType#CLIENT}, then this will returns null.
      *
      * @return The bot.
      */
     @Nullable
-    Bot getAsBot();
+    IBot getAsBot();
+
+    /**
+     * Get this identity as a {@link IClient}.
+     * If the identity type is {@link IdentityType#BOT}, then this will returns null.
+     *
+     * @return The client.
+     */
+    @Nullable
+    IClient getAsClient();
 
     /**
      * Get the self user of this identity.
@@ -295,6 +306,18 @@ public interface Identity {
      * @return A list of channels.
      */
     List<IPrivateChannel> getPrivateChannels();
+
+    /**
+     * Get an invite by code.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Create Instant Invite} permission in the channel.
+     *
+     * @param code The invite code.
+     * @return The invite, or null if no invite is found.
+     */
+    @Nullable
+    IInvite getInvite(String code);
 
     enum Connection {
         CONNECTING,

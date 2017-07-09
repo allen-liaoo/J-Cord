@@ -31,7 +31,7 @@ public class UserUpdateEventHandler extends EventHandler {
         if (!Objects.equals(oldUser.getName(), newUser.getName())) {
             dispatchEvent(new UserNameUpdateEvent(identity, sequence, newUser, oldUser));
         }
-        if (!Objects.equals(oldUser.getAvatar(), newUser.getAvatar())) {
+        if (!Objects.equals(oldUser.getAvatarUrl(), newUser.getAvatarUrl())) {
             dispatchEvent(new UserAvatarUpdateEvent(identity, sequence, newUser, oldUser));
         }
     }

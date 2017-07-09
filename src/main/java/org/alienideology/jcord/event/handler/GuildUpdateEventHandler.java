@@ -1,7 +1,7 @@
 package org.alienideology.jcord.event.handler;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.guild.update.*;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.json.JSONObject;
 
@@ -33,7 +33,7 @@ public class GuildUpdateEventHandler extends EventHandler {
         if (!Objects.equals(oldGuild.getRegion(), newGuild.getRegion())) {
             dispatchEvent(new GuildRegionUpdateEvent(identity, sequence, newGuild, oldGuild));
         }
-        if (!Objects.equals(oldGuild.getIcon(), newGuild.getIcon())) {
+        if (!Objects.equals(oldGuild.getIconUrl(), newGuild.getIconUrl())) {
             dispatchEvent(new GuildIconUpdateEvent(identity, sequence, newGuild, oldGuild));
         }
         if (!Objects.equals(oldGuild.getSplash(), newGuild.getSplash())) {

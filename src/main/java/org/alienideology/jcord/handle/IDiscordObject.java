@@ -11,7 +11,7 @@ import org.alienideology.jcord.Identity;
 public interface IDiscordObject {
 
     /**
-     * Get the identity this object is under.
+     * Get the identity this object belongs to.
      *
      * @return The identity.
      */

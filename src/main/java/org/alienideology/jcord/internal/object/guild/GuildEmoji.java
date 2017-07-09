@@ -55,7 +55,7 @@ public final class GuildEmoji extends DiscordObject implements IGuildEmoji {
     }
 
     @Override
-    public String getImage() {
+    public String getImageUrl() {
         return image;
     }
 

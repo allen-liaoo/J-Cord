@@ -26,6 +26,13 @@ Bot - The core of a Discord Bot
    - Emoji - An unicode emoji in Discord.
    - EmojiCategory - Categories of emojis in the Discord client UI.
 
+### Client
+Client - Represents a Discord client.
+ - IRelationship - A connection between two Discord user accounts.
+ - IGuildSetting - A guild setting specifically for clients.
+ - ITextChannelSetting - A channel notification setting for clients.
+ - MessageNotification - The message notification level on the client side.
+
 ## Discord Objects
 IDiscordObject - Entities such as Guild, User, or Channel.
  - ISnowFake  - Objects that has ID.

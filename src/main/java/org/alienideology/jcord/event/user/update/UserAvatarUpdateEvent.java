@@ -14,11 +14,11 @@ public class UserAvatarUpdateEvent extends UserUpdateEvent {
     }
 
     public String getNewAvatar() {
-        return user.getAvatar();
+        return user.getAvatarUrl();
     }
 
     public String getOldAvatar() {
-        return oldUser.getAvatar();
+        return oldUser.getAvatarUrl();
     }
 
 }

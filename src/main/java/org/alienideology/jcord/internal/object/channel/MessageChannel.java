@@ -248,7 +248,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
             }
         }
 
-        JSONObject msg = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(this.id, id).getAsJSONObject();
+        JSONObject msg = new Requester(identity, HttpPath.Channel.DELETE_MESSAGE).request(this.id, id).getAsJSONObject();
 
         return new ObjectBuilder(identity).buildMessage(msg);
     }

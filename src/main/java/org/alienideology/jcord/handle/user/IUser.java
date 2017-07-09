@@ -4,6 +4,7 @@ import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
+import org.alienideology.jcord.internal.gateway.HttpPath;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -92,11 +93,21 @@ public interface IUser extends IDiscordObject, ISnowFlake, IMention {
     String getDiscriminator();
 
     /**
+     * Get the avatar hash.
+     *
+     * @return The string hash avatar.
+     */
+    String getAvatarHash();
+
+    /**
      * Get the avatar url of this user.
      *
      * @return The url.
      */
-    String getAvatar();
+    default String getAvatarUrl() {
+        return getAvatarHash() == null ? String.format(HttpPath.EndPoint.DEFAULT_AVATAR, String.valueOf(Integer.parseInt(getDiscriminator()) % 5)) :
+                String.format(HttpPath.EndPoint.AVATAR, getId(), getAvatarHash(), (getAvatarHash().startsWith("a_") ? "gif" : "png"));
+    }
 
     /**
      * Get the email of this user. Requires email OAuth2 scope.

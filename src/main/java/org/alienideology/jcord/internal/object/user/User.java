@@ -40,7 +40,6 @@ public class User extends DiscordObject implements IUser {
         this.name = name;
         this.discriminator = discriminator;
         this.avatar = avatar;
-        setAvatar();
         this.email = email;
         this.isBot = isBot;
         this.isWebHook = isWebHook;
@@ -85,7 +84,7 @@ public class User extends DiscordObject implements IUser {
     }
 
     @Override
-    public String getAvatar() {
+    public String getAvatarHash() {
         return avatar;
     }
 
@@ -144,12 +143,6 @@ public class User extends DiscordObject implements IUser {
                 ", name='" + name + '\'' +
                 ", discriminator='" + discriminator + '\'' +
                 '}';
-    }
-
-    private void setAvatar() {
-        this.avatar = avatar == null ?
-                String.format(HttpPath.EndPoint.DEFAULT_AVATAR, String.valueOf(Integer.parseInt(discriminator) % 5)) :
-                String.format(HttpPath.EndPoint.AVATAR, id, avatar, (avatar.startsWith("a_") ? "gif" : "png"));
     }
 
     public void setPresence(Presence presence) {
