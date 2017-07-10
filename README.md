@@ -175,7 +175,7 @@ new EventManager().registerCommandFrameworks(
         .setAPIName("Discord Bla Bla Bla Bots Bla Bla Bla List") // Isn't the name typically like that?
         .setPostUrl("same_api_endpoint") // An API EndPoint URL
         .setJsonShardIDKey("shard_id") // The json field for shard ID (0 based)
-        .setJsonShardKey("shad_count") // The json field for shard count
+        .setJsonShardKey("shard_count") // The json field for shard count
         .setJsonServerKey("server_count") // The server count
         .addPostField("some_json_key", "some_value") // Add whatever is required
         .post(); // Or you can use .post(Consumer<MultipartBody>) to add custom fields or headers, too
