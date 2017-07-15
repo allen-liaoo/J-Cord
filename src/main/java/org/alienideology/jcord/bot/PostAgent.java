@@ -30,7 +30,7 @@ public class PostAgent {
             .setAPIName("Discord Bots")
             .setPostUrl("https://bots.discord.pw/api/bots/:bot:/stats")
             .setJsonShardIDKey("shard_id")
-            .setJsonShardIDKey("shard_count")
+            .setJsonShardKey("shard_count")
             .setJsonServerKey("server_count");
 
     /**
@@ -40,7 +40,7 @@ public class PostAgent {
             .setAPIName("Discord Bot List")
             .setPostUrl("https://discordbots.org/api/bots/:bot:/stats")
             .setJsonShardIDKey("shard_id")
-            .setJsonShardIDKey("shard_count")
+            .setJsonShardKey("shard_count")
             .setJsonServerKey("server_count");
 
     /**
