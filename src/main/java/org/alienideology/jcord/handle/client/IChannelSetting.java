@@ -1,6 +1,5 @@
 package org.alienideology.jcord.handle.client;
 
-import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 
@@ -9,7 +8,7 @@ import org.alienideology.jcord.handle.guild.IGuild;
  *
  * @author AlienIdeology
  */
-public interface IChannelSetting extends IDiscordObject {
+public interface IChannelSetting extends IClientObject {
 
     /**
      * Get the guild of this channel setting belongs to.

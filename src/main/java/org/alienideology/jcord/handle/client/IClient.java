@@ -1,6 +1,7 @@
 package org.alienideology.jcord.handle.client;
 
 import org.alienideology.jcord.handle.IDiscordObject;
+import org.alienideology.jcord.handle.user.IUser;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -12,6 +13,21 @@ import java.util.stream.Collectors;
  * @author AlienIdeology
  */
 public interface IClient extends IDiscordObject {
+
+    /**
+     * Get the profile (or self user) of this client.
+     * Note that this will be a different instance from a self {@link IUser}.
+     *
+     * @return The profile.
+     */
+    IProfile getProfile();
+
+    /**
+     * Get the Discord client settings for this client.
+     *
+     * @return The settings.
+     */
+    IClientSetting getSetting();
 
     /**
      * Get a relationship by an user id.

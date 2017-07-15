@@ -27,7 +27,10 @@ Bot - The core of a Discord Bot
    - EmojiCategory - Categories of emojis in the Discord client UI.
 
 ### Client
-Client - Represents a Discord client.
+IClient - Represents a Discord client.
+IClientObject - Generic Client Objects.
+ - IProfile - The client user, with Discord Nitro and more information.
+ - IClientSetting - he app settings of a Discord client.
  - IRelationship - A connection between two Discord user accounts.
  - IGuildSetting - A guild setting specifically for clients.
  - ITextChannelSetting - A channel notification setting for clients.

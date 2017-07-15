@@ -8,6 +8,11 @@ import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.ObjectBuilder;
+import org.alienideology.jcord.internal.object.client.Client;
+import org.alienideology.jcord.internal.object.client.ClientSetting;
+import org.alienideology.jcord.internal.object.client.Profile;
+import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.util.log.LogLevel;
 import org.alienideology.jcord.util.log.Logger;
 import org.json.JSONArray;
@@ -56,17 +61,29 @@ public class GatewayEventHandler extends EventHandler {
                 }
                 LOG.log(LogLevel.DEBUG, "[READY] Private Channels: " + pms.length());
 
-                /* Initialize Self User */
-                identity.setSelf(builder.buildUser(json.getJSONObject("user")));
+                /* Create Self User */
+                final User self = builder.buildUser(json.getJSONObject("user"));
+                identity.setSelf(self);
                 LOG.log(LogLevel.DEBUG, "[READY] Self");
 
                 if (identity.getType() == IdentityType.CLIENT) {
+
+                    Client client = identity.getClient();
+                    ObjectBuilder cb = new ObjectBuilder(client);
+
+                    /* Create Client Setting */
+                    ClientSetting setting = cb.buildClientSetting(json.getJSONObject("user_settings"));
+                    client.setSetting(setting);
+
+                    /* Create Profile */
+                    Profile profile = cb.buildProfile(json.getJSONObject("user"), self);
+                    client.setProfile(profile);
 
                     /* Create Relationships */
                     JSONArray relations = json.getJSONArray("relationships");
                     for (int i = 0; i < relations.length(); i++) {
                         JSONObject rs = relations.getJSONObject(i);
-                        builder.buildRelationship(rs); // Added to client automatically
+                        cb.buildRelationship(rs); // Added to client automatically
                     }
                     LOG.log(LogLevel.DEBUG, "[READY] Client - Relationships");
 
@@ -74,7 +91,7 @@ public class GatewayEventHandler extends EventHandler {
                     JSONArray settings = json.getJSONArray("user_guild_settings");
                     for (int i = 0; i < settings.length(); i++) {
                         JSONObject gs = settings.getJSONObject(i);
-                        builder.buildGuildSetting(gs); // Added to client automatically
+                        cb.buildGuildSetting(gs); // Added to client automatically
                     }
                     LOG.log(LogLevel.DEBUG, "[READY] Client - Guild & TextChannel Settings");
                 }

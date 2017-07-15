@@ -4,10 +4,11 @@ import org.alienideology.jcord.handle.user.IUser;
 
 /**
  * IProfile - The client user, with Discord Nitro and more information.
+ * Note that this will be a different instance from a self {@link IUser}.
  *
  * @author AlienIdeology
  */
-public interface IProfile extends IUser {
+public interface IProfile extends IClientObject, IUser {
 
     /**
      * Get if the user is on mobile or not.

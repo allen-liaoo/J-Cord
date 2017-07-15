@@ -181,12 +181,11 @@ new EventManager().registerCommandFrameworks(
         .post(); // Or you can use .post(Consumer<MultipartBody>) to add custom fields or headers, too
     ```
  - Post Automatically <br />
-    After setting up the post agent, you can add it to the `Bot`:
+    Every post agent will automatically post status on `GuildCreateEvent`, `GuildUnavailableEvent`, and `GuildDeleteEvent`. <br />
+    You can cancel the auto post by calling:
     ```java
-    // Build Identity
-    identity.getAsBot().addPostAgent(agent);
+    agent.setAutoPost(false); // To enable this again, invoke agent.setAutoPost(true);
     ```
-    The bot status will automatically be posted on `GuildCreateEvent`, `GuildUnavailableEvent`, and `GuildDeleteEvent`.
 
 ### OAuth
 - Using the `OAuthBuilder`

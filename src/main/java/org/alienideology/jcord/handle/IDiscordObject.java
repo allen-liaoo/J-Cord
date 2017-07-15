@@ -3,7 +3,7 @@ package org.alienideology.jcord.handle;
 import org.alienideology.jcord.Identity;
 
 /**
- * Generic Discord Objects
+ * IDiscordObject - Generic Discord Objects
  * Such as Guild, User, Channel
  *
  * @author AlienIdeology

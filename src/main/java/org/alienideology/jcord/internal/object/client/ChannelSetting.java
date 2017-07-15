@@ -3,20 +3,18 @@ package org.alienideology.jcord.internal.object.client;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.client.IChannelSetting;
 import org.alienideology.jcord.handle.client.MessageNotification;
-import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 
 /**
  * @author AlienIdeology
  */
-public class ChannelSetting extends DiscordObject implements IChannelSetting {
+public class ChannelSetting extends ClientObject implements IChannelSetting {
 
     private ITextChannel channel;
     private MessageNotification notificationSetting;
     private boolean isMuted;
 
-    public ChannelSetting(IdentityImpl identity, ITextChannel channel, MessageNotification notificationSetting, boolean isMuted) {
-        super(identity);
+    public ChannelSetting(Client client, ITextChannel channel, MessageNotification notificationSetting, boolean isMuted) {
+        super(client);
         this.channel = channel;
         this.notificationSetting = notificationSetting;
         this.isMuted = isMuted;
@@ -35,6 +33,35 @@ public class ChannelSetting extends DiscordObject implements IChannelSetting {
     @Override
     public boolean isMuted() {
         return isMuted;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChannelSetting)) return false;
+        if (!super.equals(o)) return false;
+
+        ChannelSetting that = (ChannelSetting) o;
+
+        if (isMuted != that.isMuted) return false;
+        if (!channel.equals(that.channel)) return false;
+        return notificationSetting == that.notificationSetting;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + channel.hashCode();
+        result = 31 * result + (isMuted ? 1 : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ChannelSetting{" +
+                "channel=" + channel +
+                ", notificationSetting=" + notificationSetting +
+                '}';
     }
 
 }

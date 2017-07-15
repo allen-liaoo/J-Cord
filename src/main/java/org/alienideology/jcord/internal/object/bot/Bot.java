@@ -2,7 +2,6 @@ package org.alienideology.jcord.internal.object.bot;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.bot.BotInviteBuilder;
-import org.alienideology.jcord.bot.PostAgent;
 import org.alienideology.jcord.handle.bot.IBot;
 import org.alienideology.jcord.handle.bot.IBotApplication;
 import org.alienideology.jcord.internal.gateway.HttpPath;
@@ -12,21 +11,15 @@ import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * @author AlienIdeology
  */
 public class Bot extends DiscordObject implements IBot {
 
-    private final List<PostAgent> postAgent;
     private final BotInviteBuilder inviteBuilder;
 
     public Bot(IdentityImpl identity) {
         super(identity);
-        this.postAgent = new ArrayList<>();
         this.inviteBuilder = new BotInviteBuilder(identity.getSelf().getId());
     }
 
@@ -43,15 +36,6 @@ public class Bot extends DiscordObject implements IBot {
 
     public String getBotId() {
         return identity.getSelf().getId();
-    }
-
-    public List<PostAgent> getPostAgents() {
-        return postAgent;
-    }
-
-    public Bot addPostAgent(PostAgent... agent) {
-        postAgent.addAll(Arrays.asList(agent));
-        return this;
     }
 
     public BotInviteBuilder getInviteBuilder() {

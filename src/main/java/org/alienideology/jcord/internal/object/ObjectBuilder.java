@@ -6,6 +6,7 @@ import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.client.IRelationship;
 import org.alienideology.jcord.handle.client.MessageNotification;
 import org.alienideology.jcord.handle.emoji.Emojis;
+import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IReaction;
@@ -23,9 +24,7 @@ import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
-import org.alienideology.jcord.internal.object.client.ChannelSetting;
-import org.alienideology.jcord.internal.object.client.GuildSetting;
-import org.alienideology.jcord.internal.object.client.Relationship;
+import org.alienideology.jcord.internal.object.client.*;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 import org.alienideology.jcord.internal.object.guild.Member;
@@ -43,6 +42,7 @@ import java.awt.*;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A builder for building DiscordObjects
@@ -53,13 +53,16 @@ public final class ObjectBuilder {
 
     private IdentityImpl identity;
 
-    /**
-     * Default Constructor
-     *
-     * @param identity The identity this built DiscordObject belongs to.
-     */
+    // Client Only
+    private Client client;
+
     public ObjectBuilder(IdentityImpl identity) {
         this.identity = identity;
+    }
+
+    public ObjectBuilder(Client client) {
+        this((IdentityImpl) client.getIdentity());
+        this.client = client;
     }
 
     /**
@@ -721,6 +724,46 @@ public final class ObjectBuilder {
 
     //---------------------Client---------------------
 
+    public ClientSetting buildClientSetting(JSONObject json) {
+        OnlineStatus status = OnlineStatus.getByKey(json.getString("status"));
+        Locale locale = new Locale(json.getString("locale"));
+
+        List<IGuild> guildsPositions = new ArrayList<>();
+        JSONArray gps = json.getJSONArray("guild_positions");
+        for (int i = 0; i < gps.length(); i++) {
+            guildsPositions.add(identity.getGuild(gps.getString(i)));
+        }
+
+        List<IGuild> restrictedGuilds = new ArrayList<>();
+        JSONArray rgs = json.getJSONArray("restricted_guilds");
+        for (int i = 0; i < rgs.length(); i++) {
+            guildsPositions.add(identity.getGuild(rgs.getString(i)));
+        }
+
+        ClientSetting setting = new ClientSetting(client, status, locale, guildsPositions, restrictedGuilds);
+
+        setting.setShowCurrentGame(json.has("show_current_game") && json.getBoolean("show_current_game"));
+        setting.setDeveloperMode(json.has("developer_mode") && json.getBoolean("developer_mode"));
+        setting.setMessageDisplayCompact(json.has("message_display_compact") && json.getBoolean("message_display_compact"));
+
+        setting.setEnableTTS(json.has("enable_tts_command") && json.getBoolean("enable_tts_command"));
+        setting.setConvertEmoticons(json.has("convert_emoticons") && json.getBoolean("convert_emoticons"));
+        setting.setRenderReaction(json.has("render_reactions") && json.getBoolean("render_reactions"));
+        setting.setRenderEmbeds(json.has("render_embeds") && json.getBoolean("render_embeds"));
+        setting.setInlineEmbedMedia(json.has("inline_embed_media") && json.getBoolean("inline_embed_media"));
+        setting.setInlineAttachmentMedia(json.has("inline_attachment_media") && json.getBoolean("inline_attachment_media"));
+
+        setting.setDetectPlatformAccounts(json.has("detect_platform_accounts") && json.getBoolean("detect_platform_accounts"));
+
+        return setting;
+    }
+
+    public Profile buildProfile(JSONObject json, User user) {
+        return new Profile(client, user,
+                json.has("mobile") && json.getBoolean("mobile"),
+                json.has("premium") && json.getBoolean("premium"));
+    }
+
     /**
      * Built an relationship object with provided json.
      *
@@ -734,8 +777,8 @@ public final class ObjectBuilder {
             user = buildUser(json.getJSONObject("user"));
         }
 
-        Relationship relationship = new Relationship(identity, type, user);
-        identity.getClient().addRelationship(relationship);
+        Relationship relationship = new Relationship(client, type, user);
+        client.addRelationship(relationship);
         return relationship;
     }
 
@@ -746,13 +789,13 @@ public final class ObjectBuilder {
         boolean mobilePush = json.has("mobile_push") && json.getBoolean("mobile_push");
         boolean suppressEveryone = json.has("suppress_everyone") && json.getBoolean("suppress_everyone");
 
-        GuildSetting setting = new GuildSetting(identity, guild, notifSetting, muted, mobilePush, suppressEveryone);
+        GuildSetting setting = new GuildSetting(client, guild, notifSetting, muted, mobilePush, suppressEveryone);
 
         JSONArray channels = json.getJSONArray("channel_overrides");
         for (int i = 0; i < channels.length(); i++) {
             setting.addChannelSetting(buildTextChannelSetting(channels.getJSONObject(i)));
         }
-        identity.getClient().addGuildSetting(setting);
+        client.addGuildSetting(setting);
         return setting;
     }
 
@@ -760,7 +803,7 @@ public final class ObjectBuilder {
         ITextChannel channel = identity.getTextChannel(json.getString("channel_id"));
         MessageNotification notifSetting = MessageNotification.getByKey(json.getInt("message_notifications"));
         boolean muted = json.has("muted") && json.getBoolean("muted");
-        return new ChannelSetting(identity, channel, notifSetting, muted);
+        return new ChannelSetting(client, channel, notifSetting, muted);
     }
 
     /**

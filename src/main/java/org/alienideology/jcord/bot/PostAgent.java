@@ -4,8 +4,12 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.body.MultipartBody;
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.util.log.Logger;
+import org.alienideology.jcord.event.DispatcherAdaptor;
+import org.alienideology.jcord.event.guild.GuildCreateEvent;
+import org.alienideology.jcord.event.guild.GuildDeleteEvent;
+import org.alienideology.jcord.event.guild.GuildUnavailableEvent;
 import org.alienideology.jcord.util.log.LogLevel;
+import org.alienideology.jcord.util.log.Logger;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
@@ -48,7 +52,9 @@ public class PostAgent {
             .setJsonServerKey("servers");
 
     private Identity identity;
-    private String id;
+    private DispatcherAdaptor adaptor;
+
+    private boolean autoPost;
 
     /* API */
     private String name;
@@ -62,10 +68,28 @@ public class PostAgent {
     private HashMap<String, Object> fields = new HashMap<>();
 
     public PostAgent() {
+        this(null);
     }
 
     public PostAgent(Identity identity) {
         setIdentity(identity);
+        adaptor = new DispatcherAdaptor() {
+            @Override
+            public void onGuildCreate(GuildCreateEvent event) {
+                post();
+            }
+
+            @Override
+            public void onGuildDelete(GuildDeleteEvent event) {
+                post();
+            }
+
+            @Override
+            public void onGuildUnavailable(GuildUnavailableEvent event) {
+                post();
+            }
+        };
+        setAutoPost(true);
     }
 
     /**
@@ -77,7 +101,27 @@ public class PostAgent {
      */
     public PostAgent setIdentity(Identity identity) {
         this.identity = identity;
-        this.id = identity.getSelf().getId();
+        return this;
+    }
+
+    /**
+     * Set if the post agent should automatically post status on events such as
+     * <ul>
+     *     <li>GuildCreateEvent</li>
+     *     <li>GuildUnavailableEvent</li>
+     *     <li>GuildDeleteEvent</li>
+     * </ul>
+     *
+     * @param autoPost The boolean value.
+     * @return PostAgent for chaining.
+     */
+    public PostAgent setAutoPost(boolean autoPost) {
+        this.autoPost = autoPost;
+        if (autoPost) {
+            identity.getEventManager().registerDispatcherAdaptors(adaptor);
+        } else {
+            identity.getEventManager().deregisterDispatcherAdaptors(adaptor);
+        }
         return this;
     }
 
@@ -178,7 +222,7 @@ public class PostAgent {
      */
     public PostAgent post(Consumer<MultipartBody> post) {
         try {
-            url = url.replaceAll(":bot:", id);
+            url = url.replaceAll(":bot:", identity.getSelf().getId());
             MultipartBody body = Unirest.post(url)
                     .header("Authorization", token)
                     .header("Content-Type", "application/json")

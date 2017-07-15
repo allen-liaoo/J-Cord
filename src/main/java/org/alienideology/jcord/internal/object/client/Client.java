@@ -16,11 +16,24 @@ import java.util.stream.Collectors;
  */
 public class Client extends DiscordObject implements IClient {
 
+    private Profile profile;
+    private ClientSetting setting;
+
     private List<IRelationship> relationships = new ArrayList<>();
     private List<IGuildSetting> guildSettings = new ArrayList<>();
 
     public Client(IdentityImpl identity) {
         super(identity);
+    }
+
+    @Override
+    public Profile getProfile() {
+        return profile;
+    }
+
+    @Override
+    public ClientSetting getSetting() {
+        return setting;
     }
 
     @Override
@@ -60,6 +73,16 @@ public class Client extends DiscordObject implements IClient {
     }
 
     //---------------------Internal---------------------
+
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    public void setSetting(ClientSetting setting) {
+        this.setting = setting;
+    }
+
     public Client addRelationship(Relationship relationship) {
         relationships.add(relationship);
         return this;
@@ -70,4 +93,30 @@ public class Client extends DiscordObject implements IClient {
         return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Client)) return false;
+        if (!super.equals(o)) return false;
+
+        Client client = (Client) o;
+
+        if (!relationships.equals(client.relationships)) return false;
+        return guildSettings.equals(client.guildSettings);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + relationships.hashCode();
+        result = 31 * result + guildSettings.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "identity=" + identity +
+                '}';
+    }
 }

@@ -1,6 +1,5 @@
 package org.alienideology.jcord.handle.client;
 
-import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.user.IUser;
 
 /**
@@ -8,7 +7,7 @@ import org.alienideology.jcord.handle.user.IUser;
  *
  * @author AlienIdeology
  */
-public interface IRelationship extends IDiscordObject {
+public interface IRelationship extends IClientObject {
 
     /**
      * Get the relationship type.

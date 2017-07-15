@@ -1,6 +1,5 @@
 package org.alienideology.jcord.handle.client;
 
-import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
  *
  * @author AlienIdeology
  */
-public interface IGuildSetting extends IDiscordObject {
+public interface IGuildSetting extends IClientObject {
 
     /**
      * Get the guild of this guild setting.

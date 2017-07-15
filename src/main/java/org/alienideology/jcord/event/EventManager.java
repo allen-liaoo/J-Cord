@@ -2,16 +2,13 @@ package org.alienideology.jcord.event;
 
 import net.jodah.typetools.TypeResolver;
 import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.IdentityType;
-import org.alienideology.jcord.bot.PostAgent;
 import org.alienideology.jcord.bot.command.CommandFramework;
-import org.alienideology.jcord.event.guild.GuildCreateEvent;
-import org.alienideology.jcord.event.guild.GuildDeleteEvent;
-import org.alienideology.jcord.event.guild.GuildUnavailableEvent;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -357,13 +354,6 @@ public class EventManager {
                 }
             }
             eventClass = (Class<? extends Event>) eventClass.getSuperclass();
-        }
-
-        /* Post Status */
-        if (identity != null && identity.getType() == IdentityType.BOT) {
-            if (event instanceof GuildCreateEvent || event instanceof GuildUnavailableEvent || event instanceof GuildDeleteEvent) {
-                identity.getAsBot().getPostAgents().forEach(PostAgent::post);
-            }
         }
 
     }

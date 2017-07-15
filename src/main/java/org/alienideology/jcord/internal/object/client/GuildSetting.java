@@ -4,8 +4,6 @@ import org.alienideology.jcord.handle.client.IChannelSetting;
 import org.alienideology.jcord.handle.client.IGuildSetting;
 import org.alienideology.jcord.handle.client.MessageNotification;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +11,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public class GuildSetting extends DiscordObject implements IGuildSetting {
+public class GuildSetting extends ClientObject implements IGuildSetting {
 
     private IGuild guild;
     private List<IChannelSetting> channelSettings = new ArrayList<>();
@@ -23,8 +21,8 @@ public class GuildSetting extends DiscordObject implements IGuildSetting {
     private boolean isMobilePushEnabled;
     private boolean isEveryoneMentionSuppressed;
 
-    public GuildSetting(IdentityImpl identity, IGuild guild, MessageNotification notificationSetting, boolean isMuted, boolean isMobilePushEnabled, boolean isEveryoneMentionSuppressed) {
-        super(identity);
+    public GuildSetting(Client client, IGuild guild, MessageNotification notificationSetting, boolean isMuted, boolean isMobilePushEnabled, boolean isEveryoneMentionSuppressed) {
+        super(client);
         this.guild = guild;
         this.notificationSetting = notificationSetting;
         this.isMuted = isMuted;
@@ -77,4 +75,29 @@ public class GuildSetting extends DiscordObject implements IGuildSetting {
         channelSettings.add(channelSetting);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GuildSetting)) return false;
+        if (!super.equals(o)) return false;
+
+        GuildSetting setting = (GuildSetting) o;
+
+        return guild != null ? guild.equals(setting.guild) : setting.guild == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (guild != null ? guild.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "GuildSetting{" +
+                "guild=" + guild +
+                ", notificationSetting=" + notificationSetting +
+                '}';
+    }
 }
