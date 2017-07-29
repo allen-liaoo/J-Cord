@@ -16,7 +16,7 @@ public final class PrivateChannel extends MessageChannel implements IPrivateChan
     private final User recipient;
 
     public PrivateChannel(IdentityImpl identity, String id, User recipient, Message lastMessage) {
-        super(identity, id, Type.PRIVATE, lastMessage);
+        super(identity, id, Type.DM, lastMessage);
         this.recipient = recipient;
     }
 

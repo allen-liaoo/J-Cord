@@ -220,7 +220,7 @@ public interface IChannelManager {
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
      */
     default void deleteWebhook(IWebhook webhook) {
-        if (getGuildChannel().isType(IChannel.Type.VOICE)) {
+        if (getGuildChannel().isType(IChannel.Type.GUILD_VOICE)) {
             throw new IllegalArgumentException("Cannot delete a webhook from a voice channel!");
         }
         if (!webhook.getChannel().equals(getGuildChannel())) {

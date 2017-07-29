@@ -148,7 +148,7 @@ public class CommandFramework {
         /* Check Permissions */
         if (command.permissions().length != 0) { // Specified permissions
             Collection<Permission> permissions = Arrays.asList(command.permissions());
-            if (event.fromType(IChannel.Type.TEXT)) { // From Text Channels
+            if (event.fromType(IChannel.Type.GUILD_TEXT)) { // From Text Channels
                 if (!event.getTextChannel().hasAllPermission(event.getMember(), permissions)) {
                     return;
                 }

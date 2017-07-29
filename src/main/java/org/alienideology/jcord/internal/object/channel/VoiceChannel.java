@@ -38,7 +38,7 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonab
     private List<PermOverwrite> permOverwrites = new ArrayList<>();
 
     public VoiceChannel(IdentityImpl identity, String guild_id, String id, String name, int position, int bitrate, int user_limit) {
-        super(identity, id, IChannel.Type.VOICE);
+        super(identity, id, IChannel.Type.GUILD_VOICE);
         this.guild = guild_id == null ? null : (Guild) identity.getGuild(guild_id);
         this.name = name;
         this.position = position;

@@ -295,7 +295,15 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
     IMessageChannel getChannel();
 
     /**
-     * Get the channel type this message was from
+     * Get the type of this message.
+     *
+     * @return The message type.
+     */
+    IMessage.Type getType();
+
+    /**
+     * Get the channel type this message was from.
+     *
      * @return the channel type
      */
     default IChannel.Type getFromType() {
@@ -452,6 +460,42 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
         @Override
         public String getId() {
             return id;
+        }
+
+    }
+
+    /**
+     * Types of messages, including types of system messages.
+     */
+    enum Type {
+
+        DEFAULT (0),
+        RECIPIENT_ADD (1),
+        RECIPIENT_REMOVE (2),
+        CALL (3),
+        CHANNEL_NAME_CHANGE (4),
+        CHANNEL_ICON_CHANGE (5),
+        CHANNEL_PINNED_MESSAGE (6),
+        GUILD_MEMBER_JOIN (7),
+        UNKNOWN (-1);
+
+        public int key;
+
+        Type (int key) {
+            this.key = key;
+        }
+
+        public static Type getByKey (int key) {
+            for (Type type : values()) {
+                if (type.key == key) {
+                    return type;
+                }
+            }
+            return UNKNOWN;
+        }
+
+        public boolean isSystemMessage() {
+            return this != DEFAULT && this != UNKNOWN;
         }
 
     }

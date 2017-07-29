@@ -201,7 +201,7 @@ public final class ChannelManager implements IChannelManager {
 
     @Override
     public void createWebhook(String defaultName, Icon defaultAvatar) {
-        if (getGuildChannel().isType(IChannel.Type.VOICE)) {
+        if (getGuildChannel().isType(IChannel.Type.GUILD_VOICE)) {
             throw new IllegalArgumentException("Cannot delete a webhook from a voice channel!");
         }
         if (!channel.hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS)) {

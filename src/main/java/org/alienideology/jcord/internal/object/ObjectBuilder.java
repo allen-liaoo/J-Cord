@@ -1,6 +1,7 @@
 package org.alienideology.jcord.internal.object;
 
 import org.alienideology.jcord.event.ExceptionEvent;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.client.IRelationship;
@@ -184,7 +185,7 @@ public final class ObjectBuilder {
         String id = json.getString("id");
         String name = json.getString("name");
         int position = json.getInt("position");
-        String type = json.getString("type");
+        IChannel.Type type = IChannel.Type.getByKey(json.getInt("type"));
 
         /* Build PermOverwrite Objects */
         List<PermOverwrite> overwrites = new ArrayList<>();
@@ -198,7 +199,7 @@ public final class ObjectBuilder {
             overwrites.add(new PermOverwrite(identity, guild_id, typeId, allow, deny));
         }
 
-        if (type.equals("text")) {
+        if (type.equals(IChannel.Type.GUILD_TEXT)) {
             String topic = json.isNull("topic") ? null : json.getString("topic");
             String last_msg = !json.has("last_message_id") || json.isNull("last_message_id") ? null : json.getString("last_message_id");
             Message lastMessage = null;
@@ -247,7 +248,11 @@ public final class ObjectBuilder {
         handleBuildError(json);
 
         String id = json.getString("id");
-        User recipient = buildUser(json.getJSONObject("recipient"));
+        JSONArray recipients = json.getJSONArray("recipients");
+        if (recipients.length() > 1) {
+            throw new RuntimeException("Cannot build a Group as a Private Channel!");
+        }
+        User recipient = buildUser(recipients.getJSONObject(0));
         String last_msg = !json.has("last_message_id") || json.isNull("last_message_id") ? null : json.getString("last_message_id");
         Message lastMessage = null;
         if (last_msg != null) {
@@ -405,6 +410,7 @@ public final class ObjectBuilder {
                 buildUser(json.getJSONObject("author"));
 
         String content = json.getString("content");
+        int type = json.getInt("type");
         String timeStamp = json.getString("timestamp");
 
         /* Mentioned User */
@@ -440,7 +446,7 @@ public final class ObjectBuilder {
         boolean mentionedEveryone = json.getBoolean("mention_everyone");
         boolean isPinned = json.has("pinned") && json.getBoolean("pinned");
 
-        Message message =  new Message(identity, id, author, content, timeStamp, mentions, mentionsRole, attachments, isTTS, mentionedEveryone, isPinned);
+        Message message =  new Message(identity, id, author, content, type, timeStamp, mentions, mentionsRole, attachments, isTTS, mentionedEveryone, isPinned);
 
         /* Channel */
         message.setChannel((MessageChannel) identity.getMessageChannel(channel_id));  // Set channel may be null for MessageChannel's LastMessage

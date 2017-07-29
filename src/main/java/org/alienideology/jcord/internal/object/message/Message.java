@@ -37,6 +37,7 @@ public class Message extends DiscordObject implements IMessage, Jsonable {
 
     private MessageProcessor messageProcessor;
     private String content;
+    private Type type;
     private final OffsetDateTime createdTime;
 
     private List<IEmbed> embeds;
@@ -49,12 +50,13 @@ public class Message extends DiscordObject implements IMessage, Jsonable {
     private boolean mentionedEveryone;
     private boolean isPinned;
 
-    public Message (IdentityImpl identity, String id, User author, String content, String createdTime,
+    public Message (IdentityImpl identity, String id, User author, String content, int type, String createdTime,
                     List<User> mentions, List<Role> mentionedRoles, List<Attachment> attachments, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
         super(identity);
         this.id = id;
         this.author = author;
         this.content = content;
+        this.type = Type.getByKey(type);
         this.createdTime = createdTime == null ? null : OffsetDateTime.parse(createdTime);
         this.embeds = new ArrayList<>();
         this.mentions = mentions;
@@ -108,6 +110,11 @@ public class Message extends DiscordObject implements IMessage, Jsonable {
     @Override
     public IMessageChannel getChannel() {
         return channel;
+    }
+
+    @Override
+    public Type getType() {
+        return type;
     }
 
     @Override

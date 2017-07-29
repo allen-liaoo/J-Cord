@@ -2,7 +2,6 @@ package org.alienideology.jcord.handle.channel;
 
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
-import org.alienideology.jcord.internal.object.channel.Channel;
 
 /**
  * Channel - A communication pipeline
@@ -42,19 +41,35 @@ public interface IChannel extends IDiscordObject, ISnowFlake {
      */
     enum Type {
 
-        TEXT,
-        VOICE,
-        PRIVATE,
-        GROUP,
-        UNKNOWN;
+        GUILD_TEXT (0),
+        DM (1),
+        GUILD_VOICE (2),
+        GROUP_DM (3),
+        GUILD_CATEGORY (4),
+        UNKNOWN (-1);
 
-        public static Type getByKey (String key) {
+        public int key;
+
+        Type (int key) {
+            this.key = key;
+        }
+
+        public static Type getByKey (int key) {
             for (Type type : values()) {
-                if (type.name().toLowerCase().equals(key)) {
+                if (type.key == key) {
                     return type;
                 }
             }
             return UNKNOWN;
         }
+
+        public boolean isPrivate() {
+            return this == DM || this == GROUP_DM;
+        }
+
+        public boolean isGuildChannel() {
+            return this == GUILD_TEXT || this == GUILD_VOICE || this == GUILD_CATEGORY;
+        }
+
     }
 }

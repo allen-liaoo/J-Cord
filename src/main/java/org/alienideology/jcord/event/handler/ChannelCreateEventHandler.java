@@ -21,18 +21,18 @@ public class ChannelCreateEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        boolean isPrivate = json.has("is_private") && json.getBoolean("is_private");
+        IChannel.Type type = IChannel.Type.getByKey(json.getInt("type"));
 
         Channel channel;
 
-        if (isPrivate) {
+        if (type.isPrivate()) {
             channel = builder.buildPrivateChannel(json);
             dispatchEvent(new PrivateChannelCreateEvent(identity, sequence, channel));
         } else {
             channel = (Channel) builder.buildGuildChannel(json);
             Guild guild = (Guild) ((IGuildChannel) channel).getGuild();
             guild.addGuildChannel((IGuildChannel) channel);
-            if (channel.isType(IChannel.Type.TEXT)) {
+            if (channel.isType(IChannel.Type.GUILD_TEXT)) {
                 dispatchEvent(new TextChannelCreateEvent(identity, sequence, channel, guild));
             } else {
                 dispatchEvent(new VoiceChannelCreateEvent(identity, sequence, channel, guild));

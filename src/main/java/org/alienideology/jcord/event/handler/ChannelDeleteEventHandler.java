@@ -26,12 +26,12 @@ public class ChannelDeleteEventHandler extends EventHandler {
         Channel channel = (Channel) identity.getChannel(json.getString("id"));
         OffsetDateTime timeStamp = OffsetDateTime.now();
 
-        if (channel.isType(IChannel.Type.PRIVATE)) {
+        if (channel.isType(IChannel.Type.DM)) {
             identity.removePrivateChannel(channel.getId());
             dispatchEvent(new PrivateChannelDeleteEvent(identity, sequence, channel, timeStamp));
         } else {
             Guild guild = (Guild) ((IGuildChannel) channel).getGuild();
-            if (channel.isType(IChannel.Type.TEXT)) {
+            if (channel.isType(IChannel.Type.GUILD_TEXT)) {
                 guild.removeTextChannel(channel.getId());
                 dispatchEvent(new TextChannelDeleteEvent(identity, sequence, channel, timeStamp, guild));
             } else {

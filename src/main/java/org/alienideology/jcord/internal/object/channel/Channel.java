@@ -24,7 +24,7 @@ public class Channel extends DiscordObject implements IChannel {
         super(identity);
         this.id = id;
         this.type = type;
-        this.isPrivate = (type == Type.PRIVATE);
+        this.isPrivate = (type == Type.DM);
     }
 
     @Override

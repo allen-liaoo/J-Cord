@@ -10,9 +10,11 @@ public enum OnlineStatus {
     ONLINE ("online"),
     IDLE ("idle"),
     DO_NOT_DISTURB ("dnd"),
-    OFFLINE ("offline"),
     INVISIBLE ("invisible"),
+    OFFLINE ("offline"),
 
+    // The key will not be provided by Discord gateway.
+    // This will counts as ONLINE.
     STREAMING ("streaming"),
 
     UNKNOWN ("unknown");

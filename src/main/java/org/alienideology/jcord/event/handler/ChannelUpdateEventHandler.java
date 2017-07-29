@@ -41,7 +41,7 @@ public class ChannelUpdateEventHandler extends EventHandler {
 
         List<PermOverwrite> overwrites = getChangedPermOverwrites(oldPOW, newPOW);
 
-        if (oldChannel.isType(IChannel.Type.TEXT)) {
+        if (oldChannel.isType(IChannel.Type.GUILD_TEXT)) {
             // Update the channel instance
             guild.removeTextChannel(oldChannel.getId());
             guild.addGuildChannel(newChannel);

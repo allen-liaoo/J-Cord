@@ -38,7 +38,7 @@ public final class JCord {
     /**
      * The discord gateway version
      */
-    public final static int DISCORD_GATEWAY_VERSION = 5;
+    public final static int DISCORD_GATEWAY_VERSION = 6;
 
     static {
         Unirest.setDefaultHeader("user-agent", USER_AGENT);
