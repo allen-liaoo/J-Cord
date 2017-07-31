@@ -33,7 +33,7 @@ public final class PrivateChannel extends MessageChannel implements IPrivateChan
     @Override
     public String toString() {
         return "PrivateChannel{" +
-                "id='" + id + '\'' +
+                "key='" + id + '\'' +
                 ", type=" + type +
                 ", recipient=" + recipient +
                 '}';

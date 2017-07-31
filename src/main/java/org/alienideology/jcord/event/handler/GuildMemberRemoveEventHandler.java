@@ -18,7 +18,7 @@ public class GuildMemberRemoveEventHandler extends EventHandler {
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
         Guild guild = (Guild) identity.getGuild(json.getString("guild_id"));
-        Member member = guild.removeMember(json.getJSONObject("user").getString("id"));
+        Member member = guild.removeMember(json.getJSONObject("user").getString("key"));
 
         dispatchEvent(new GuildMemberLeaveEvent(identity, guild, sequence, member));
     }

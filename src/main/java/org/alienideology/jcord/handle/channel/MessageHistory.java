@@ -62,7 +62,7 @@ public final class MessageHistory extends DiscordObject implements IDiscordObjec
      * @exception PermissionException
      *          If the identity does not have {@code Read Message History} permission.
      *
-     * @param id The string id of the message.
+     * @param id The string key of the message.
      * @return The message, or null if no message is found.
      */
     public IMessage getMessage(String id) {

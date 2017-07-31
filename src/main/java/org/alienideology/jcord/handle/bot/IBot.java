@@ -20,7 +20,7 @@ public interface IBot extends IDiscordObject {
     /**
      * Get the bot's ID.
      *
-     * @return The id.
+     * @return The key.
      */
     String getBotId();
 

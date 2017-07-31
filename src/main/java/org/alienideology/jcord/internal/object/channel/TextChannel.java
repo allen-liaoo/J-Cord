@@ -217,7 +217,7 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
     @Override
     public String toString() {
         return "TextChannel{" +
-                "id='" + id + '\'' +
+                "key='" + id + '\'' +
                 ", type=" + type +
                 ", guild=" + guild +
                 ", name='" + name + '\'' +

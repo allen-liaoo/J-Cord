@@ -36,7 +36,7 @@ public class MessageReactionEventHandler extends EventHandler {
         Message message = (Message) channel.getMessage(json.getString("message_id"));
 
         JSONObject emojiJson = json.getJSONObject("emoji");
-        boolean isGuildEmoji = emojiJson.has("id") && !emojiJson.isNull("id");
+        boolean isGuildEmoji = emojiJson.has("key") && !emojiJson.isNull("key");
 
         if (isAdd) {
             Reaction reaction = builder.buildReaction(
@@ -54,7 +54,7 @@ public class MessageReactionEventHandler extends EventHandler {
                     reaction = (Reaction) message.getReactions()
                             .stream()
                             .filter(IReaction::isGuildEmoji)
-                            .filter(r -> r.getGuildEmoji().getId().equals(emojiJson.getString("id"))).findFirst().get();
+                            .filter(r -> r.getGuildEmoji().getId().equals(emojiJson.getString("key"))).findFirst().get();
                 } else {
                     reaction = (Reaction) message.getReactions()
                             .stream()

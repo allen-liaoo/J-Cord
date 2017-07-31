@@ -1,66 +1,59 @@
-package org.alienideology.jcord.handle.user;
+package org.alienideology.jcord.internal.object.user;
 
-import org.jetbrains.annotations.Nullable;
+import org.alienideology.jcord.handle.user.IGame;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.Jsonable;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
 
 /**
- * Game - A playing or streaming status of a user.
  * @author AlienIdeology
  */
-public final class Game extends DiscordObject {
+public final class Game extends DiscordObject implements IGame, Jsonable {
 
     private String name;
-    private GameType type;
+    private IGame.Type type;
     private String url;
 
     public Game(IdentityImpl identity, String name) {
         super(identity);
         this.name = name;
-        this.type = GameType.PLAYING;
+        this.type = IGame.Type.PLAYING;
         this.url = null;
     }
 
     public Game(IdentityImpl identity, String name, String url) {
         super(identity);
         this.name = name;
-        this.type = url != null ? GameType.STREAMING : GameType.PLAYING;
+        this.type = url != null ? IGame.Type.STREAMING : IGame.Type.PLAYING;
         this.url = url;
     }
 
-    /**
-     * Get the name of the game.
-     *
-     * @return The string name.
-     */
+    @Override
+    public JSONObject toJson() {
+        return new JSONObject()
+                    .put("name", name)
+                    .put("type", type.key)
+                    .put("url", url);
+    }
+
+    @Override
     public String getName() {
         return name;
     }
 
-    /**
-     * Get the game type.
-     *
-     * @return Playing or streaming.
-     */
-    public GameType getType() {
+    @Override
+    public IGame.Type getType() {
         return type;
     }
 
-    /**
-     * Check if the game is a stream.
-     *
-     * @return True of the game status is streaming.
-     */
+    @Override
     public boolean isStreaming() {
-        return type.equals(GameType.STREAMING);
+        return type.equals(IGame.Type.STREAMING);
     }
 
-    /**
-     * Get the url of the stream.
-     * The url may be null for not streaming game.
-     *
-     * @return The url.
-     */
+    @Override
     @Nullable
     public String getUrl() {
         return url;
@@ -86,17 +79,4 @@ public final class Game extends DiscordObject {
                 '}';
     }
 
-    /**
-     * The game type.
-     */
-    public enum GameType {
-        PLAYING (0),
-        STREAMING (1);
-
-        public final int id;
-
-        GameType(int id) {
-            this.id = id;
-        }
-    }
 }

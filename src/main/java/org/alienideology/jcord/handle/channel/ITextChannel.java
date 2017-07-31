@@ -47,10 +47,10 @@ public interface ITextChannel extends IGuildChannel, IMessageChannel, IMention, 
     String getTopic();
 
     /**
-     * Get a webhook by id.
+     * Get a webhook by key.
      * If the identity does not have {@code Manager Webhooks} permission, then this will always returns null.
      *
-     * @param id The webhook id.
+     * @param id The webhook key.
      * @return The webhook found.
      */
     @Nullable

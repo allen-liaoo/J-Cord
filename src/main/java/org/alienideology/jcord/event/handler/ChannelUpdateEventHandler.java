@@ -29,7 +29,7 @@ public class ChannelUpdateEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        IGuildChannel oldChannel = identity.getGuildChannel(json.getString("id"));
+        IGuildChannel oldChannel = identity.getGuildChannel(json.getString("key"));
         Guild guild = (Guild) oldChannel.getGuild();
         IGuildChannel newChannel = builder.buildGuildChannel(json);
 

@@ -225,7 +225,7 @@ public final class GuildManager implements IGuildManager {
 
             for (int i = 0; i < members.length(); i++) {
                 JSONObject user = members.getJSONObject(i);
-                bannedMembers.add(guild.getMember(user.getString("id")));
+                bannedMembers.add(guild.getMember(user.getString("key")));
             }
             return bannedMembers;
         } catch (HttpErrorException ex) {

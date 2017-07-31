@@ -2,6 +2,7 @@ package org.alienideology.jcord.handle.guild;
 
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.audit.IAuditLog;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
@@ -172,6 +173,27 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     IMember getOwner();
 
     /**
+     * Get the audit log for this guild, with an specified amount of logs to receive.
+     * This kind of works like a {@link org.alienideology.jcord.handle.channel.MessageHistory},
+     * with the method {@link org.alienideology.jcord.handle.channel.MessageHistory#getLatestMessages(int)}.
+     *
+     * @param amount The amount of logs to receive.
+     * @return The audit log.
+     */
+    IAuditLog getAuditLog(int amount);
+
+    /**
+     * Get the audit log for this guild, with an specified amount of logs to receive before a certain audit log.
+     * This kind of works like a {@link org.alienideology.jcord.handle.channel.MessageHistory},
+     * with the method {@link org.alienideology.jcord.handle.channel.MessageHistory#getMessagesBefore(String, int)}.
+     *
+     * @param entryId The log entry to receive logs before it.
+     * @param amount The amount of logs to receive.
+     * @return The audit log.
+     */
+    IAuditLog getAuditLogBefore(String entryId, int amount);
+
+    /**
      * Get a list of users belong to this guild.
      *
      * @return A list of users of this guild.
@@ -187,9 +209,9 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     IMember getSelfMember();
 
     /**
-    * Get a member by id.
+    * Get a member by key.
      *
-    * @param id The specified id
+    * @param id The specified key
     * @return a Member or null if no member was found.
     */
     @Nullable
@@ -203,10 +225,10 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     List<IMember> getMembers();
 
     /**
-     * Get a webhook by id.
+     * Get a webhook by key.
      * If the identity does not have {@code Manager Webhooks} permission, then this will always returns {@code null}.
      *
-     * @param id The webhook id.
+     * @param id The webhook key.
      * @return The webhook found, or null if no webhook has been found.
      */
     @Nullable
@@ -223,9 +245,9 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     List<IWebhook> getWebhooks();
 
     /**
-    * Get a role by id.
+    * Get a role by key.
      *
-    * @param id The specified id
+    * @param id The specified key
     * @return a Role or null if no role was found.
     */
     @Nullable
@@ -247,9 +269,9 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     List<IRole> getRoles();
 
     /**
-    * Get a guild emoji by id.
+    * Get a guild emoji by key.
      *
-    * @param id The specified id
+    * @param id The specified key
     * @return a GuildEmoji or null if no emoji was found.
     */
     @Nullable
@@ -279,9 +301,9 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     List<IGuildChannel> getAllGuildChannels();
 
     /**
-    * Get a text channel by id.
+    * Get a text channel by key.
      *
-    * @param id The specified id
+    * @param id The specified key
     * @return a TextChannel or null if no channel was found.
     */
     @Nullable
@@ -303,8 +325,8 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     List<ITextChannel> getTextChannels();
 
     /**
-    * Get a voice channel by id.
-    * @param id The specified id
+    * Get a voice channel by key.
+    * @param id The specified key
     * @return a VoiceChannel or null if no channel is found.
     */
     @Nullable

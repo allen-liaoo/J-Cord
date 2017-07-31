@@ -20,7 +20,7 @@ public class UserUpdateEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        User oldUser = (User) identity.getUser(json.getString("id"));
+        User oldUser = (User) identity.getUser(json.getString("key"));
         if (oldUser == null) {
             identity.LOG.log(LogLevel.FETAL, "[UNKNOWN USER] [PRESENCE_UPDATE_EVENT]");
             return;

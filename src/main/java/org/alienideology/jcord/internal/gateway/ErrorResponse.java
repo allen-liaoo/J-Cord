@@ -56,6 +56,7 @@ public enum ErrorResponse {
     PINNED_MESSAGE_IN_DIFFERENT_CHANNEL (50019, "A message can only be pinned to the channel it was sent in"),
     INVALID_ACTION_ON_SYSTEM_MESSAGE (50021, "Cannot execute action on a system message"),
     MESSAGE_PROVIDED_TOO_OLD_TO_BULK_DELETE (50034, "A message provided was too old to bulk delete"),
+    INVALID_FORM_BODY (50035, "Invalid Form Body"),
 
     REACTION_BLOCKED (90001, "Reaction Blocked"),
 

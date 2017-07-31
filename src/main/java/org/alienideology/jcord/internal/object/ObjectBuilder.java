@@ -1,6 +1,7 @@
 package org.alienideology.jcord.internal.object;
 
 import org.alienideology.jcord.event.ExceptionEvent;
+import org.alienideology.jcord.handle.audit.*;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
@@ -12,14 +13,15 @@ import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
-import org.alienideology.jcord.handle.user.Game;
 import org.alienideology.jcord.handle.user.OnlineStatus;
-import org.alienideology.jcord.handle.user.Presence;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
+import org.alienideology.jcord.internal.object.audit.AuditLog;
+import org.alienideology.jcord.internal.object.audit.LogChange;
+import org.alienideology.jcord.internal.object.audit.LogEntry;
 import org.alienideology.jcord.internal.object.bot.BotApplication;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
@@ -33,6 +35,8 @@ import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.internal.object.message.Embed;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.Reaction;
+import org.alienideology.jcord.internal.object.user.Game;
+import org.alienideology.jcord.internal.object.user.Presence;
 import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.internal.object.user.Webhook;
 import org.alienideology.jcord.util.log.LogLevel;
@@ -41,9 +45,8 @@ import org.json.JSONObject;
 
 import java.awt.*;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * A builder for building DiscordObjects
@@ -66,13 +69,6 @@ public final class ObjectBuilder {
         this.client = client;
     }
 
-    /**
-     * Build a guild object base on provided json.
-     *
-     * The guild will be added to the identity automatically.
-     * @param json The guild JSONObject
-     * @return The Guild object
-     */
     public Guild buildGuild (JSONObject json) {
         handleBuildError(json);
 
@@ -155,12 +151,6 @@ public final class ObjectBuilder {
         }
     }
 
-    /**
-     * Build a guild object by an id.
-     *
-     * @param id The id of the guild
-     * @return The guild object
-     */
     public Guild buildGuildById (String id) {
         JSONObject guild;
         try {
@@ -172,12 +162,6 @@ public final class ObjectBuilder {
         return buildGuild(guild);
     }
 
-    /**
-     * Build a guild channel object base on provided json.
-     *
-     * @param json The IGuildChannel JSONObject
-     * @return TextChannel or VoiceChannel, wrapped as a IGuildChannel
-     */
     public IGuildChannel buildGuildChannel (JSONObject json) {
         handleBuildError(json);
 
@@ -221,12 +205,6 @@ public final class ObjectBuilder {
         }
     }
 
-    /**
-     * Build a guild channel object by an id.
-     *
-     * @param id The id of the channel
-     * @return The IGuildChannel object
-     */
     public IGuildChannel buildGuildChannelById (String id) {
         JSONObject gChannel;
         try {
@@ -238,12 +216,6 @@ public final class ObjectBuilder {
         return buildGuildChannel(gChannel);
     }
 
-    /**
-     * Build a private channel object base on provided json.
-     *
-     * @param json The PrivateChannel JSONObject
-     * @return The PrivateChannel object
-     */
     public PrivateChannel buildPrivateChannel (JSONObject json) {
         handleBuildError(json);
 
@@ -267,12 +239,6 @@ public final class ObjectBuilder {
         return dm;
     }
 
-    /**
-     * Build a user object base on provided json.
-     *
-     * @param json The user JSONObject
-     * @return The User object
-     */
     public User buildUser (JSONObject json) {
         handleBuildError(json);
 
@@ -296,12 +262,6 @@ public final class ObjectBuilder {
         return user;
     }
 
-    /**
-     * Build a webhook base on provided json.
-     *
-     * @param json The json of this webhook user object.
-     * @return The Webhook object
-     */
     public Webhook buildWebhook(JSONObject json) {
         String id = json.getString("id");
         Webhook webhook = new Webhook(identity, id);
@@ -335,12 +295,6 @@ public final class ObjectBuilder {
         return webhook;
     }
 
-    /**
-     * Build a webhook by an id.
-     *
-     * @param id The id of the webhook.
-     * @return The webhook built.
-     */
     public Webhook buildWebhookById(String id) {
         JSONObject wh;
         try {
@@ -352,12 +306,6 @@ public final class ObjectBuilder {
         return buildWebhook(wh);
     }
 
-    /**
-     * Build a member object base on provided json.
-     *
-     * @param json The member JSONObject
-     * @return The Member object
-     */
     public Member buildMember (JSONObject json, Guild guild) {
         handleBuildError(json);
         String nick = !json.has("nick") || json.isNull("nick") ? null : json.getString("nick");
@@ -381,23 +329,11 @@ public final class ObjectBuilder {
         return new Member(identity, guild, user, nick, joined_at, memberRoles, isDeaf, isMute);
     }
 
-    /**
-     * Build a member object base on provided json.
-     *
-     * @param json The member JSONObject
-     * @return The Member object
-     */
     public Member buildMemberById (JSONObject json, String guild_id) {
         Guild guild = (Guild) identity.getGuild(guild_id);
         return buildMember(json, guild);
     }
 
-    /**
-     * Build a message object base on provided json.
-     *
-     * @param json The message JSONObject
-     * @return The Message object
-     */
     public Message buildMessage (JSONObject json) {
         handleBuildError(json);
 
@@ -554,26 +490,12 @@ public final class ObjectBuilder {
         return message;
     }
 
-    /**
-     * Build a message object by an id.
-     *
-     * @param channel_id The id of the channel
-     * @param message_id The id of the message
-     * @return The Message object
-     */
     public Message buildMessageById (String channel_id, String message_id) {
         JSONObject message;
         message = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(channel_id, message_id).getAsJSONObject();
         return buildMessage(message);
     }
 
-    /**
-     * Build a role object base on provided json.
-     *
-     * @param json The role JSONObject
-     * @param guild The guild this role is in
-     * @return The Message object
-     */
     public Role buildRole (JSONObject json, Guild guild) {
         handleBuildError(json);
 
@@ -588,13 +510,6 @@ public final class ObjectBuilder {
         return new Role(identity, guild, id, name, color, position, permissions, isSeparateListed, canMention);
     }
 
-    /**
-     * Build a GuildEmoji object base on provided json.
-     *
-     * @param json The emoji JSONObject
-     * @param guild The guild this emoji is in
-     * @return The GuildEmoji object
-     */
     public GuildEmoji buildEmoji(JSONObject json, Guild guild) {
         handleBuildError(json);
         String id = json.getString("id");
@@ -613,14 +528,8 @@ public final class ObjectBuilder {
         return emoji;
     }
 
-    /**
-     * Build a reaction by provided json.
-     *
-     * @param json The reaction json.
-     * @param message The message.
-     * @return The reaction built.
-     */
     public Reaction buildReaction(JSONObject json, Message message) {
+        handleBuildError(json);
         int reactedTimes = json.has("count") ? json.getInt("count") : -1;
         boolean selfReacted = json.has("me") && json.getBoolean("me");
 
@@ -630,7 +539,7 @@ public final class ObjectBuilder {
         /* Guild Emoji */
         if (emojiJson.has("id") && !emojiJson.isNull("id")) {
             IGuildEmoji emoji = message.getGuild().getGuildEmoji(emojiJson.getString("id"));
-            if (emoji == null) { // Global Guilc Emoji
+            if (emoji == null) { // Global Guild Emoji
                 reaction = new Reaction(identity, message, reactedTimes, selfReacted, new GuildEmoji(identity, emojiJson.getString("id"), emojiJson.getString("name")));
             } else { // Guild Emoji
                 reaction = new Reaction(identity, message, reactedTimes, selfReacted, emoji);
@@ -643,12 +552,6 @@ public final class ObjectBuilder {
         return reaction;
     }
 
-    /**
-     * Built an invite with provided json.
-     *
-     * @param json The json invite object. May not contains metadata.
-     * @return The IInvite built.
-     */
     public Invite buildInvite(JSONObject json) {
         String code = json.getString("code");
         Guild guild = (Guild) identity.getGuild(json.getJSONObject("guild").getString("id"));
@@ -669,13 +572,8 @@ public final class ObjectBuilder {
         return invite;
     }
 
-    /**
-     * Built an user presence with provided json.
-     *
-     * @param json The json presence object.
-     * @return The presence built.
-     */
     public Presence buildPresence(JSONObject json, User user) {
+        handleBuildError(json);
         //OnlineStatus
         OnlineStatus status = OnlineStatus.getByKey(json.getString("status"));
 
@@ -691,27 +589,77 @@ public final class ObjectBuilder {
             if (game.isStreaming()) status = OnlineStatus.STREAMING;
         }
 
-        Presence presence = new Presence(identity, user, game, status);
+        // Since
+        Long since = json.has("since") || !json.isNull("since") ? json.getLong("since") : null;
+
+        Presence presence = new Presence(identity, user, game, status, since);
         user.setPresence(presence);
         return presence;
     }
 
+    //---------------------Audit---------------------
+    public AuditLog buildAuditLog(IGuild guild, JSONObject json) {
+        System.out.println(json.toString(4));
+        handleBuildError(json);
+        JSONArray array = json.getJSONArray("audit_log_entries");
+        List<ILogEntry> entries = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            entries.add(buildLogEntry(array.getJSONObject(i)));
+        }
+        return new AuditLog(guild, entries);
+    }
+
+    public LogEntry buildLogEntry(JSONObject json) {
+        handleBuildError(json);
+        LogType type = LogType.getByKey(json.getInt("action_type"));
+        String id = json.getString("id");
+        String targetId = json.getString("target_id");
+        User user = (User) identity.getUser(json.getString("user_id"));
+        String reason = json.has("reason") ? json.getString("reason") : null;
+
+        LogEntry entry = new LogEntry(type, id, targetId, user, reason);
+
+        // Log Changes
+        Map<ChangeType, ILogChange> changes = new HashMap<>();
+        JSONArray array = json.getJSONArray("changes");
+        for (int i = 0; i < array.length(); i++) {
+            LogChange change = buildLogChange(array.getJSONObject(i));
+            changes.put(change.getType(), change);
+        }
+        entry.setChanges(changes);
+
+        // Log Options
+        Map<LogOption, String> options = new HashMap<>();
+        if (json.has("options")) {
+            JSONObject option = json.getJSONObject("options");
+            for (String key : option.keySet()) {
+                options.put(LogOption.getByKey(key), option.getString(key));
+            }
+        }
+        entry.setOptions(options);
+
+        return entry;
+    }
+
+    public LogChange buildLogChange(JSONObject json) {
+        handleBuildError(json);
+        ChangeType type = ChangeType.getByKey(json.getString("key"));
+        Object newVal = json.has("new_value") ? json.get("new_value") : null;
+        Object oldVal = json.has("old_value") ? json.get("old_value") : null;
+        return new LogChange(type, newVal, oldVal);
+    }
+
     //---------------------Bot---------------------
 
-    /**
-     * Built an bot application object with provided json.
-     *
-     * @param json The json application object.
-     * @return The application built.
-     */
     public BotApplication buildBotApplication(JSONObject json) {
+        System.out.append(json.toString(4));
         String id = json.getString("id");
         String name = json.getString("name");
-        String icon = json.getString("icon");
+        String icon = json.isNull("icon") ? null : json.getString("icon");
         String description = json.getString("description");
 
         String ownerId = json.getJSONObject("owner").getString("id");
-        User owner = (User) identity.getUser(id);
+        User owner = (User) identity.getUser(ownerId);
         if (owner == null) {
             owner = buildUser(json.getJSONObject("owner"));
         }

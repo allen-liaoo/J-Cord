@@ -223,7 +223,7 @@ public class Message extends DiscordObject implements IMessage, Jsonable {
     public String toString() {
         return "Message{" +
                 "channel=" + channel +
-                ", id='" + id + '\'' +
+                ", key='" + id + '\'' +
                 ", author=" + author +
                 ", content='" + content + '\'' +
                 '}';

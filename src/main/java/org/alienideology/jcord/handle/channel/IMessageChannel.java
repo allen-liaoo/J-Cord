@@ -45,12 +45,12 @@ public interface IMessageChannel extends IChannel {
     MessageHistory getHistory();
 
     /**
-     * Get a message by id
+     * Get a message by key
      *
      * @exception PermissionException
      *          If the identity does not have {@code Read Message History} permission.
      *
-     * @param id The id of the message
+     * @param id The key of the message
      * @return The message object
      */
     IMessage getMessage(String id);
@@ -282,7 +282,7 @@ public interface IMessageChannel extends IChannel {
      *          If the message is not found in this channel.
      *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
      *
-     * @param messageId The message id.
+     * @param messageId The message key.
      */
     void pinMessage(String messageId);
 
@@ -308,7 +308,7 @@ public interface IMessageChannel extends IChannel {
      *          If the message is not found in this channel.
      *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
      *
-     * @param messageId The message id.
+     * @param messageId The message key.
      */
     void unpinMessage(String messageId);
 

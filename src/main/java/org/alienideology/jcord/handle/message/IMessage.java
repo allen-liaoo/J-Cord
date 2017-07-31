@@ -479,7 +479,7 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
         GUILD_MEMBER_JOIN (7),
         UNKNOWN (-1);
 
-        public int key;
+        public final int key;
 
         Type (int key) {
             this.key = key;
@@ -517,8 +517,8 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
 
         CODE_BLOCK ("```");
 
-        public String markdown;
-        public String markdown_backward;
+        public final String markdown;
+        public final String markdown_backward;
 
         Markdown(String markdown) {
             this.markdown = markdown;

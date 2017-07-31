@@ -1,7 +1,8 @@
 package org.alienideology.jcord.event.user;
 
-import org.alienideology.jcord.handle.user.Presence;
+import org.alienideology.jcord.handle.user.IPresence;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.user.Presence;
 import org.alienideology.jcord.internal.object.user.User;
 
 /**
@@ -16,11 +17,11 @@ public class PresenceUpdateEvent extends UserEvent {
         this.oldPresence = oldPresence;
     }
 
-    public Presence getNewPresence() {
+    public IPresence getNewPresence() {
         return user.getPresence();
     }
 
-    public Presence getOldPresence() {
+    public IPresence getOldPresence() {
         return oldPresence;
     }
 

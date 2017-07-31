@@ -1,9 +1,9 @@
 package org.alienideology.jcord.event.user.update;
 
 import org.alienideology.jcord.event.user.PresenceUpdateEvent;
-import org.alienideology.jcord.handle.user.Game;
-import org.alienideology.jcord.handle.user.Presence;
+import org.alienideology.jcord.handle.user.IGame;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.user.Presence;
 import org.alienideology.jcord.internal.object.user.User;
 
 /**
@@ -15,11 +15,11 @@ public class GameUpdateEvent extends PresenceUpdateEvent {
         super(identity, sequence, user, oldPresence);
     }
 
-    public Game getNewGame() {
+    public IGame getNewGame() {
         return getNewPresence().getGame();
     }
 
-    public Game getOldStatus() {
+    public IGame getOldStatus() {
         return oldPresence.getGame();
     }
 

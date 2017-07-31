@@ -349,7 +349,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
             List<IUser> users = new ArrayList<>();
             for (int i = 0; i < reacters.length(); i++) {
-                users.add(identity.getUser(reacters.getJSONObject(i).getString("id")));
+                users.add(identity.getUser(reacters.getJSONObject(i).getString("key")));
             }
 
             return users;
@@ -473,7 +473,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
     @Override
     public String toString() {
         return "MessageChannel{" +
-                "id='" + id + '\'' +
+                "key='" + id + '\'' +
                 ", isPrivate=" + isPrivate +
                 ", latestMessage=" + latestMessage +
                 '}';

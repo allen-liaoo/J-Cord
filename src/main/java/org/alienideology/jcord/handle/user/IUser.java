@@ -122,7 +122,7 @@ public interface IUser extends IDiscordObject, ISnowFlake, IMention {
      *
      * @return The presence object.
      */
-    Presence getPresence();
+    IPresence getPresence();
 
     /**
      * @return True if this user is a bot.

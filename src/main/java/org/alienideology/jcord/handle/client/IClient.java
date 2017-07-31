@@ -30,9 +30,9 @@ public interface IClient extends IDiscordObject {
     IClientSetting getSetting();
 
     /**
-     * Get a relationship by an user id.
+     * Get a relationship by an user key.
      *
-     * @param userId The user id.
+     * @param userId The user key.
      * @return The relationship, or null if no relationship is found.
      */
     @Nullable

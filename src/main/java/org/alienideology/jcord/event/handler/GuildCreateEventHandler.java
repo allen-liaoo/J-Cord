@@ -19,7 +19,7 @@ public class GuildCreateEventHandler extends EventHandler {
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
 
-        Guild guild = (Guild) identity.getGuild(json.getString("id"));
+        Guild guild = (Guild) identity.getGuild(json.getString("key"));
 
         // Ignore initial guild create event
         if (guild != null) {
@@ -30,7 +30,7 @@ public class GuildCreateEventHandler extends EventHandler {
 
                 for (int i = 0; i < presences.length(); i++) {
                     JSONObject presence = presences.getJSONObject(i);
-                    builder.buildPresence(presence, (User) identity.getUser(presence.getJSONObject("user").getString("id")));  // Presences are set automatically
+                    builder.buildPresence(presence, (User) identity.getUser(presence.getJSONObject("user").getString("key")));  // Presences are set automatically
                 }
             }
 

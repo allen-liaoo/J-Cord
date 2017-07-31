@@ -4,6 +4,7 @@ import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.handle.user.IGame;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
 
@@ -55,30 +56,37 @@ public interface ISelfManager {
      * </ul>
      *
      * @param status The online status.
-     * @return ISelfManager for chaining.
      */
-    ISelfManager setStatus(OnlineStatus status);
+    default void setStatus(OnlineStatus status) {
+        setPresence(status, getIdentity().getSelf().getPresence().getGame());
+    }
 
     /**
-     * Set the playing status.
+     * Set the game status.
      * Use empty or null name to reset the playing game.
+     * @see IGame#from(String)
+     * @see IGame#from(String, String)
      *
-     * @param name The game's name.
-     * @return ISelfManager for chaining.
+     * @param game The game.
      */
-    ISelfManager setPlaying(String name);
+    default void setGame(IGame game) {
+        if (game.getUrl() != null && !game.getUrl().matches(IUser.PATTERN_TWITCH_URL.pattern())) {
+            throw new IllegalArgumentException("Streaming game type only support valid twitch urls!");
+        }
+
+        setPresence(getIdentity().getSelf().getPresence().getStatus(), game);
+    }
 
     /**
-     * Set the streaming status.
+     * Set the presence of this identity.
+     * This can set both the online status and game at the same time.
+     * @see #setStatus(OnlineStatus)
+     * @see #setGame(IGame)
      *
-     * @exception IllegalArgumentException
-     *          If the url is not a valid {@code Twitch} url.
-     *
-     * @param name The stream's name.
-     * @param url The stream's url.
-     * @return ISelfManager for chaining.
+     * @param status The new online status.
+     * @param game The new game.
      */
-    ISelfManager setStreaming(String name, String url);
+    void setPresence(OnlineStatus status, IGame game);
 
     /**
      * Leave a guild.

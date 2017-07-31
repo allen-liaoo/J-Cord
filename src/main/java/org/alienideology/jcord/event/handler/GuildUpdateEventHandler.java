@@ -18,7 +18,7 @@ public class GuildUpdateEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        String id = json.getString("id");
+        String id = json.getString("key");
         Guild oldGuild = (Guild) identity.getGuild(id);
         Guild newGuild = builder.buildGuildById(id); // This guild will not be added to identity, since IdentityImpl#addGuild rejects repeated guilds
 

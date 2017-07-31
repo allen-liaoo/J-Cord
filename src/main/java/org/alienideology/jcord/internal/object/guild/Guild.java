@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.guild;
 
+import org.alienideology.jcord.handle.audit.IAuditLog;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
@@ -10,8 +11,11 @@ import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.PermissionException;
+import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.alienideology.jcord.internal.object.managers.GuildManager;
@@ -19,6 +23,7 @@ import org.alienideology.jcord.internal.object.managers.InviteManager;
 import org.alienideology.jcord.internal.object.user.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +33,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
+// TODO: Explicit Content Filter
 public final class Guild extends DiscordObject implements IGuild {
 
     private final String id;
@@ -183,6 +189,31 @@ public final class Guild extends DiscordObject implements IGuild {
     @Override
     public Member getOwner() {
         return owner;
+    }
+
+    @Override
+    public IAuditLog getAuditLog(int amount) {
+        return getAuditLog(null, amount);
+    }
+
+    @Override
+    public IAuditLog getAuditLogBefore(String entryId, int amount) {
+        return getAuditLog(entryId, amount);
+    }
+
+    private IAuditLog getAuditLog(String entryId, int amount) {
+        JSONObject audit;
+        if (entryId == null) {
+            audit = new Requester(identity, HttpPath.Audit.GET_GUILD_AUDIT_LOG)
+                    .request(id, String.valueOf(amount))
+                    .getAsJSONObject();
+        } else {
+            audit = new Requester(identity, HttpPath.Audit.GET_GUILD_AUDIT_LOG_BEFORE)
+                .request(id, entryId, String.valueOf(amount))
+                .getAsJSONObject();
+        }
+
+        return new ObjectBuilder(identity).buildAuditLog(this, audit);
     }
 
     @Override
@@ -358,7 +389,7 @@ public final class Guild extends DiscordObject implements IGuild {
     @Override
     public String toString() {
         return "Guild{" +
-                "id='" + id + '\'' +
+                "key='" + id + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

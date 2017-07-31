@@ -2,8 +2,8 @@ package org.alienideology.jcord.event.user.update;
 
 import org.alienideology.jcord.event.user.PresenceUpdateEvent;
 import org.alienideology.jcord.handle.user.OnlineStatus;
-import org.alienideology.jcord.handle.user.Presence;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.user.Presence;
 import org.alienideology.jcord.internal.object.user.User;
 
 /**

@@ -4,12 +4,13 @@ import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.ISelfManager;
-import org.alienideology.jcord.handle.user.Game;
+import org.alienideology.jcord.handle.user.IGame;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.user.Game;
 import org.json.JSONObject;
 
 /**
@@ -53,45 +54,16 @@ public final class SelfManager implements ISelfManager {
     }
 
     @Override
-    public ISelfManager setStatus(OnlineStatus status) {
-        setPresence(status, identity.getSelf().getPresence().getGame());
-        return this;
-    }
-
-    @Override
-    public ISelfManager setPlaying(String name) {
-        setPresence(identity.getSelf().getPresence().getStatus(), new Game(identity, name));
-        return this;
-    }
-
-    @Override
-    public ISelfManager setStreaming(String name, String url) {
-        if (url != null && !url.matches(IUser.PATTERN_TWITCH_URL.pattern())) {
-            throw new IllegalArgumentException("Streaming game type only support valid twitch urls!");
-        }
-
-        setPresence(identity.getSelf().getPresence().getStatus(), new Game(identity, name, url));
-        return this;
-    }
-
-    private void setPresence(OnlineStatus status, Game game) {
+    public void setPresence(OnlineStatus status, IGame game) {
         JSONObject content = new JSONObject()
                 .put("status", status.getAppropriateKey())
                 .put("afk", status.isIdle())
-                .put("since", System.currentTimeMillis());
+                .put("since", status.isIdle() ? System.currentTimeMillis() : JSONObject.NULL);
 
-        if (game != null && game.isStreaming()) {
-            content.put("game",
-                new JSONObject()
-                    .put("name", game.getName())
-                    .put("type", game.getType().id)
-                    .put("url", game.getUrl())
-            );
+        if (game == null) {
+            content.put("game", JSONObject.NULL);
         } else {
-            content.put("game", game == null ? JSONObject.NULL :
-                new JSONObject()
-                    .put("name", game.getName())
-            );
+            content.put("game", ((Game) game).toJson());
         }
 
         identity.getSocket().sendText(new JSONObject()

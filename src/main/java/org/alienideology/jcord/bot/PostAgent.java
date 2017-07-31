@@ -161,12 +161,12 @@ public class PostAgent {
     }
 
     /**
-     * Most api has a {@code shard id} field in their api docs.
-     * Shard id is the 0 based ID of this identity.
+     * Most api has a {@code shard key} field in their api docs.
+     * Shard key is the 0 based ID of this identity.
      * You do not need to configure this if the identity is not sharded.
      * The default key will be {@code "shard_id"}.
      *
-     * @param shard_id_key The new shard id json key.
+     * @param shard_id_key The new shard key json key.
      * @return PostAgent for chaining.
      */
     public PostAgent setJsonShardIDKey(String shard_id_key) {

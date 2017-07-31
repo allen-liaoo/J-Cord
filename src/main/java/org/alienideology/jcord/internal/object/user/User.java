@@ -1,9 +1,9 @@
 package org.alienideology.jcord.internal.object.user;
 
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
+import org.alienideology.jcord.handle.user.IPresence;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
-import org.alienideology.jcord.handle.user.Presence;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
@@ -45,7 +45,7 @@ public class User extends DiscordObject implements IUser {
         this.isWebHook = isWebHook;
         this.isVerified = isVerified;
         this.MFAEnabled = MFAEnabled;
-        this.presence = new Presence(identity, this, null, OnlineStatus.OFFLINE);
+        this.presence = new Presence(identity, this, null, OnlineStatus.OFFLINE, null);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class User extends DiscordObject implements IUser {
     }
 
     @Override
-    public Presence getPresence() {
+    public IPresence getPresence() {
         return presence;
     }
 
@@ -139,7 +139,7 @@ public class User extends DiscordObject implements IUser {
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
+                "key='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", discriminator='" + discriminator + '\'' +
                 '}';

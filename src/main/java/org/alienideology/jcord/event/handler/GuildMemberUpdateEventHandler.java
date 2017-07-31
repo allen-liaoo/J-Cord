@@ -29,7 +29,7 @@ public class GuildMemberUpdateEventHandler extends EventHandler {
     public void dispatchEvent(JSONObject json, int sequence) {
         try {
             Guild guild = (Guild) identity.getGuild(json.getString("guild_id"));
-            Member member = (Member) guild.getMember(json.getJSONObject("user").getString("id"));
+            Member member = (Member) guild.getMember(json.getJSONObject("user").getString("key"));
 
             if (member == null) {
                 identity.LOG.log(LogLevel.FETAL, "[UNKNOWN MEMBER] [MEMBER_UPDATE_EVENT]");

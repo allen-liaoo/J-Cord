@@ -25,7 +25,7 @@ public class GuildBanEventHandler extends EventHandler {
         Guild guild = (Guild) identity.getGuild(json.getString("guild_id"));
 
         if (isBanned) {
-            Member member = (Member) guild.getMember(json.getString("id"));
+            Member member = (Member) guild.getMember(json.getString("key"));
             guild.removeMember(member.getId());
             dispatchEvent(new GuildMemberBanEvent(identity, guild, sequence, member));
         } else {

@@ -179,7 +179,7 @@ public interface IChannelManager {
 
     /**
      * Deletes a permission overwrite by ID.
-     * The ID can be a member id, role id or the {@link PermOverwrite} id.
+     * The ID can be a member key, role key or the {@link PermOverwrite} key.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Manager Roles} permission.
@@ -189,7 +189,7 @@ public interface IChannelManager {
      *          If the member or role does not belong to this guild.
      *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_OVERWRITE
      *
-     * @param id The id.
+     * @param id The key.
      */
     void deletePermOverwrite(String id);
 

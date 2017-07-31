@@ -5,9 +5,11 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.event.gateway.DisconnectEvent;
 import org.alienideology.jcord.event.handler.*;
+import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.util.log.LogLevel;
@@ -164,6 +166,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             case RESUME: {
                 sendIdentification();
                 sendHeartBeat();
+                break;
             }
             default: {
                 LOG.log(LogLevel.FETAL, "[UNKNOWN] OP Code/Message : " +message);
@@ -186,7 +189,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             LOG.log(LogLevel.FETAL, "[UNKNOWN] Event: " + key + json.toString(4));
         } else {
             LOG.log(LogLevel.DEBUG, "[RECEIVED] " + key);
-            LOG.log(LogLevel.TRACE, "Event Json: " + json.toString(4));
+            LOG.log(LogLevel.TRACE, "Event Json: \n" + json.toString(4));
 
             switch (key) {
                 case "READY": {
@@ -259,17 +262,22 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         JSONObject identify = new JSONObject()
             .put("op", OPCode.IDENTIFY.key)
             .put("d", new JSONObject()
-                .put("token", identity.getToken())
-                .put("properties", new JSONObject()
-                    .put("$os", System.getProperty("os.name"))
-                    .put("$browser", "J-Cord")
-                    .put("$device", "J-Cord")
-                    .put("$referrer", "")
-                    .put("$referring_domain", "")
-                )
+                    .put("token", identity.getToken())
+                    .put("properties", new JSONObject()
+                            .put("$os", System.getProperty("os.name"))
+                            .put("$browser", JCord.NAME)
+                            .put("$device", JCord.NAME)
+                    )
                     .put("compress", true)
                     .put("large_threshold", 250)
                     //.put("shard", new int[]{})
+                    // TODO: Set presence on startup. This is just a place holder for default presence.
+                    .put("presence", new JSONObject()
+                            .put("game", new JSONObject()
+                                    .put("name", ""))
+                            .put("status", OnlineStatus.ONLINE)
+                            .put("afk", false)
+                    )
             );
 
         webSocket.sendText(identify.toString());

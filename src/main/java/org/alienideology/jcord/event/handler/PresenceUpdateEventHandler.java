@@ -2,8 +2,8 @@ package org.alienideology.jcord.event.handler;
 
 import org.alienideology.jcord.event.user.update.GameUpdateEvent;
 import org.alienideology.jcord.event.user.update.OnlineStatusUpdateEvent;
-import org.alienideology.jcord.handle.user.Presence;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.user.Presence;
 import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONObject;
@@ -21,14 +21,14 @@ public class PresenceUpdateEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        User user = (User) identity.getUser(json.getJSONObject("user").getString("id"));
+        User user = (User) identity.getUser(json.getJSONObject("user").getString("key"));
         if (user == null) {
             identity.LOG.log(LogLevel.FETAL, "[UNKNOWN USER] [PRESENCE_UPDATE_EVENT]");
             return;
         }
-        Presence oldPresence = user.getPresence();
+        Presence oldPresence = (Presence) user.getPresence();
         builder.buildPresence(json, user); // Presence are automatically set to the user
-        Presence newPresence = user.getPresence();
+        Presence newPresence = (Presence) user.getPresence();
 
         if (!Objects.equals(newPresence.getStatus(), oldPresence.getStatus())) {
             dispatchEvent(new OnlineStatusUpdateEvent(identity, sequence, user, oldPresence));

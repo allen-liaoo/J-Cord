@@ -1,10 +1,10 @@
 package org.alienideology.jcord.event.handler;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.message.dm.PrivateMessageUpdateEvent;
 import org.alienideology.jcord.event.message.guild.GuildMessageUpdateEvent;
-import org.alienideology.jcord.internal.object.message.Message;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
+import org.alienideology.jcord.internal.object.message.Message;
 import org.json.JSONObject;
 
 /**
@@ -18,7 +18,7 @@ public class MessageUpdateEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        Message edited = builder.buildMessageById(json.getString("channel_id"), json.getString("id"));
+        Message edited = builder.buildMessageById(json.getString("channel_id"), json.getString("key"));
         MessageChannel channel = (MessageChannel) edited.getChannel();
 
         if (!edited.isFromSelf()) { // Not from self
