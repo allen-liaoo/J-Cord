@@ -2,6 +2,7 @@ package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.Icon;
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.builders.Buildable;
 import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.channel.ITextChannel;
@@ -66,8 +67,9 @@ public interface IWebhookManager {
      *          If the name is not valid. See {@link IWebhook#isValidWebhookName(String)}
      *
      * @param name The name.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void modifyDefaultName(String name);
+    AuditAction<Void> modifyDefaultName(String name);
 
     /**
      * Modify the default avatar of this webhook.
@@ -76,8 +78,9 @@ public interface IWebhookManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity itself does not have {@code Manager Webhooks} permission.
      * @param icon The avatar.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void modifyDefaultAvatar(Icon icon);
+    AuditAction<Void> modifyDefaultAvatar(Icon icon);
 
     /**
      * Execute the webhook by sending a message to the channel.
@@ -85,16 +88,18 @@ public interface IWebhookManager {
      * {@link org.alienideology.jcord.handle.permission.Permission#ALL_TEXT_PERMS} in the channel.
      *
      * @param webhookMB The webhook message builder, used to send messages.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void execute(WebhookMessageBuilder webhookMB);
+    AuditAction<Void> execute(WebhookMessageBuilder webhookMB);
 
     /**
      * Delete this webhook.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity itself does not have {@code Manager Webhooks} permission.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void delete();
+    AuditAction<Void> delete();
 
     /**
      * A simple message builder for webhooks.

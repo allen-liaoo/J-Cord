@@ -2,6 +2,7 @@ package org.alienideology.jcord.handle.message;
 
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.builders.EmbedBuilder;
 import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.channel.IChannel;
@@ -130,9 +131,9 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
      * Delete this message
      *
      * @see IMessageChannel#deleteMessage(String)
-     * @return The message deleted.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    default IMessage delete() {
+    default AuditAction<IMessage> delete() {
         return getChannel().deleteMessage(getId());
     }
 

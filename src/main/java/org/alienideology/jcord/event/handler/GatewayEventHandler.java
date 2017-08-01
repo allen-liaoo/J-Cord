@@ -44,7 +44,6 @@ public class GatewayEventHandler extends EventHandler {
                 // We use this to get the guilds' ID, then post http request to get guild information
                 JSONArray guilds = json.getJSONArray("guilds");
                 for (int i = 0; i < guilds.length(); i++) {
-                    System.out.println(true);
                     JSONObject guild = guilds.getJSONObject(i);
                     if (guild.has("unavailable") && guild.getBoolean("unavailable")) {
                         guild = new Requester(identity, HttpPath.Guild.GET_GUILD).request(guild.getString("id")).getAsJSONObject();

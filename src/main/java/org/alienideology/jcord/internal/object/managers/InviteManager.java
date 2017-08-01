@@ -2,6 +2,7 @@ package org.alienideology.jcord.internal.object.managers;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.IInvite;
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.IInviteManager;
@@ -107,7 +108,7 @@ public final class InviteManager implements IInviteManager {
     }
 
     @Override
-    public IInvite createInvite(int maxUses, long maxAge, boolean isTemporary, boolean isUnique) {
+    public AuditAction<IInvite> createInvite(int maxUses, long maxAge, boolean isTemporary, boolean isUnique) {
         if (!guild.getSelfMember().hasPermissions(true, Permission.CREATE_INSTANT_INVITE)) {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.CREATE_INSTANT_INVITE);
         }
@@ -118,24 +119,28 @@ public final class InviteManager implements IInviteManager {
                 .put("temporary", isTemporary)
                 .put("unique", isUnique);
 
-        JSONObject invite = new Requester((IdentityImpl) getIdentity(), HttpPath.Invite.CREATE_CHANNEL_INVITE).request(channel.getId())
-                .updateRequestWithBody(request -> request.body(json)).getAsJSONObject();
-        return new ObjectBuilder((IdentityImpl) getIdentity()).buildInvite(invite);
+        return new AuditAction<IInvite>((IdentityImpl) getIdentity(), HttpPath.Invite.CREATE_CHANNEL_INVITE, channel.getId()) {
+            @Override
+            protected IInvite request(Requester requester) {
+                JSONObject invite = requester.updateRequestWithBody(request -> request.body(json)).getAsJSONObject();
+                return new ObjectBuilder((IdentityImpl) getIdentity()).buildInvite(invite);
+            }
+        };
     }
 
     @Override
-    public void deleteInvite(IInvite invite) {
-        deleteInvite(invite.getCode());
-    }
-
-    @Override
-    public void deleteInvite(String code) {
+    public AuditAction<Void> deleteInvite(String code) {
         if (!guild.getSelfMember().hasPermissions(true, Permission.MANAGE_CHANNELS)) {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_CHANNELS);
         }
 
-        new Requester((IdentityImpl) getIdentity(), HttpPath.Invite.DELETE_INVITE).request(code)
-                .performRequest();
+        return new AuditAction<Void>((IdentityImpl) getIdentity(), HttpPath.Invite.DELETE_INVITE, code) {
+            @Override
+            protected Void request(Requester requester) {
+                requester.performRequest();
+                return null;
+            }
+        };
     }
 
 }

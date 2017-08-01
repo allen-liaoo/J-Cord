@@ -1,5 +1,6 @@
 package org.alienideology.jcord.handle.channel;
 
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.builders.EmbedBuilder;
 import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.emoji.Emoji;
@@ -228,9 +229,9 @@ public interface IMessageChannel extends IChannel {
      * @exception IllegalArgumentException
      *          If this channel is a PrivateChannel and the message is from another user.
      *
-     * @return The message deleted.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-     IMessage deleteMessage(String messageId);
+     AuditAction<IMessage> deleteMessage(String messageId);
 
     /**
      * Delete a message.
@@ -241,9 +242,9 @@ public interface IMessageChannel extends IChannel {
      *          If this channel is a PrivateChannel and the message is from another user.
      *
      * @param message The the message.
-     * @return The message deleted.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    IMessage deleteMessage(IMessage message);
+    AuditAction<IMessage> deleteMessage(IMessage message);
 
     /**
      * Build delete a collection of messages.

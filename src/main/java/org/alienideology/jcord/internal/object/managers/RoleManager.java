@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.managers;
 
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IRoleManager;
@@ -45,73 +46,78 @@ public final class RoleManager implements IRoleManager {
     }
 
     @Override
-    public void modifyName(String name) {
-        if (name == null || name.isEmpty()) return;
-        modifyRole(new JSONObject().put("name", name));
+    public AuditAction<Void> modifyName(String name) {
+        if (name == null || name.isEmpty()) return new AuditAction.EmptyAuditAction<>();
+        return modifyRole(new JSONObject().put("name", name));
     }
 
     @Override
-    public void modifyPermissions(Permission... permissions) {
-        modifyPermission(Arrays.asList(permissions));
+    public AuditAction<Void> modifyPermissions(Permission... permissions) {
+        return modifyPermission(Arrays.asList(permissions));
     }
 
     @Override
-    public void modifyPermissions(Collection<Permission> permissions) {
-        modifyPermission(permissions);
+    public AuditAction<Void> modifyPermissions(Collection<Permission> permissions) {
+        return modifyPermission(permissions);
     }
 
     @Override
-    public void addPermissions(Permission... permissions) {
-        addPermissions(Arrays.asList(permissions));
+    public AuditAction<Void> addPermissions(Permission... permissions) {
+        return addPermissions(Arrays.asList(permissions));
     }
 
     @Override
-    public void addPermissions(Collection<Permission> permissions) {
+    public AuditAction<Void> addPermissions(Collection<Permission> permissions) {
         List<Permission> allPerms = new ArrayList<>(role.getPermissions());
         allPerms.addAll(permissions);
-        modifyPermission(allPerms);
+        return modifyPermission(allPerms);
     }
 
     @Override
-    public void removePermissions(Permission... permissions) {
-        removePermissions(Arrays.asList(permissions));
+    public AuditAction<Void> removePermissions(Permission... permissions) {
+        return removePermissions(Arrays.asList(permissions));
     }
 
     @Override
-    public void removePermissions(Collection<Permission> permissions) {
+    public AuditAction<Void> removePermissions(Collection<Permission> permissions) {
         List<Permission> allPerms = new ArrayList<>(role.getPermissions());
         allPerms.removeAll(permissions);
-        modifyPermission(allPerms);
+        return modifyPermission(allPerms);
     }
 
-    private void modifyPermission(Collection<Permission> permissions) {
-        modifyRole(new JSONObject().put("permissions", Permission.getLongByPermissions(permissions)));
-    }
-
-    @Override
-    public void modifyColor(Color color) {
-        modifyRole(new JSONObject().put("color", color.getRGB() & 0xFFFFFF));
+    private AuditAction<Void> modifyPermission(Collection<Permission> permissions) {
+        return modifyRole(new JSONObject().put("permissions", Permission.getLongByPermissions(permissions)));
     }
 
     @Override
-    public void modifyIsSeparateListed(boolean isSeparateListed) {
-        modifyRole(new JSONObject().put("hoist", isSeparateListed));
+    public AuditAction<Void> modifyColor(Color color) {
+        return modifyRole(new JSONObject().put("color", color.getRGB() & 0xFFFFFF));
     }
 
     @Override
-    public void modifyCanMention(boolean canMention) {
-        modifyRole(new JSONObject().put("mentionable", canMention));
+    public AuditAction<Void> modifyIsSeparateListed(boolean isSeparateListed) {
+        return modifyRole(new JSONObject().put("hoist", isSeparateListed));
     }
 
-    private void modifyRole(JSONObject json) {
+    @Override
+    public AuditAction<Void> modifyCanMention(boolean canMention) {
+        return modifyRole(new JSONObject().put("mentionable", canMention));
+    }
+
+    private AuditAction<Void> modifyRole(JSONObject json) {
         // Checks hierarchy
         if (!guild.getSelfMember().canModify(role)) {
             throw new HigherHierarchyException(HierarchyType.ROLE);
         }
 
         try {
-            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.MODIFY_GUILD_ROLE).request(guild.getId(), role.getId())
-                    .updateRequestWithBody(request -> request.body(json)).performRequest();
+            return new AuditAction<Void>((IdentityImpl) getIdentity(), HttpPath.Guild.MODIFY_GUILD_ROLE, guild.getId(), role.getId()) {
+                @Override
+                protected Void request(Requester requester) {
+                    requester.updateRequestWithBody(request -> request.body(json)).performRequest();
+                    return null;
+                }
+            };
         } catch (HttpErrorException ex) {
             if (ex.isPermissionException()) {
                 if (!guild.getSelfMember().hasPermissions(true, Permission.MANAGE_ROLES)) { // Modify roles without Manage Roles permission.
@@ -119,14 +125,13 @@ public final class RoleManager implements IRoleManager {
                 } else if (json.has("permissions")) { // Modify permissions that identity itself does not have
                     throw new PermissionException("Cannot manage a role's permission because identity itself does not have that permission!");
                 }
-            } else {
-                throw ex;
             }
+            throw ex;
         }
     }
 
     @Override
-    public void changePosition(int position) {
+    public AuditAction<Void> changePosition(int position) {
         if (role.isEveryone()) {
             throw new IllegalArgumentException("Cannot modify the position of a everyone role!");
         }
@@ -168,8 +173,13 @@ public final class RoleManager implements IRoleManager {
         }
 
         try {
-            new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.MODIFY_GUILD_ROLE_POSITIONS).request(guild.getId())
-                    .updateRequestWithBody(request -> request.body(array)).performRequest();
+            return new AuditAction<Void>((IdentityImpl) getIdentity(), HttpPath.Guild.MODIFY_GUILD_ROLE_POSITIONS, guild.getId()) {
+                @Override
+                protected Void request(Requester requester) {
+                    requester.updateRequestWithBody(request -> request.body(array)).performRequest();
+                    return null;
+                }
+            };
         } catch (HttpErrorException ex) {
             if (ex.isPermissionException()) {
                 throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_ROLES);

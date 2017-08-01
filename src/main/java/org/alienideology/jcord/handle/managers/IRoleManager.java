@@ -1,6 +1,7 @@
 package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.permission.Permission;
@@ -47,8 +48,9 @@ public interface IRoleManager {
      *          If the role is at a higher hierarchy position than the identity.
      *
      * @param name The new name.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void modifyName(String name);
+    AuditAction<Void> modifyName(String name);
 
     /**
      * Modify this role's permissions.
@@ -59,8 +61,9 @@ public interface IRoleManager {
      *          If the role is at a higher hierarchy position than the identity.
      *
      * @param permissions A new varargs of permissions.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void modifyPermissions(Permission... permissions);
+    AuditAction<Void> modifyPermissions(Permission... permissions);
 
     /**
      * Modify this role's permissions.
@@ -71,8 +74,9 @@ public interface IRoleManager {
      *          If the role is at a higher hierarchy position than the identity.
      *
      * @param permissions A new collection of permissions.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void modifyPermissions(Collection<Permission> permissions);
+    AuditAction<Void> modifyPermissions(Collection<Permission> permissions);
 
     /**
      * Add permissions to this role.
@@ -83,8 +87,9 @@ public interface IRoleManager {
      *          If the role is at a higher hierarchy position than the identity.
      *
      * @param permissions The varargs of permissions to add.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void addPermissions(Permission... permissions);
+    AuditAction<Void> addPermissions(Permission... permissions);
 
     /**
      * Add permissions to this role.
@@ -95,8 +100,9 @@ public interface IRoleManager {
      *          If the role is at a higher hierarchy position than the identity.
      *
      * @param permissions The collection of permissions to add.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void addPermissions(Collection<Permission> permissions);
+    AuditAction<Void> addPermissions(Collection<Permission> permissions);
 
     /**
      * Remove permissions from a role.
@@ -107,8 +113,9 @@ public interface IRoleManager {
      *          If the role is at a higher hierarchy position than the identity.
      *
      * @param permissions The varargs of permissions to remove.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void removePermissions(Permission... permissions);
+    AuditAction<Void> removePermissions(Permission... permissions);
 
     /**
      * Remove permissions from a role.
@@ -119,8 +126,9 @@ public interface IRoleManager {
      *          If the role is at a higher hierarchy position than the identity.
      *
      * @param permissions The collection of permissions to remove.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void removePermissions(Collection<Permission> permissions);
+    AuditAction<Void> removePermissions(Collection<Permission> permissions);
 
     /**
      * Modify the role color.
@@ -131,8 +139,9 @@ public interface IRoleManager {
      *          If the role is at a higher hierarchy position than the identity.
      *
      * @param color The new color.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void modifyColor(Color color);
+    AuditAction<Void> modifyColor(Color color);
 
     /**
      * Set if this role will be separate listed from online members.
@@ -143,8 +152,9 @@ public interface IRoleManager {
      *          If the role is at a higher hierarchy position than the identity.
      *
      * @param isSeparateListed If set to true, then the role will be separated listed.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void modifyIsSeparateListed(boolean isSeparateListed);
+    AuditAction<Void> modifyIsSeparateListed(boolean isSeparateListed);
 
     /**
      * Set if this role can be mentioned by anyone in the guild.
@@ -155,8 +165,9 @@ public interface IRoleManager {
      *          If the role is at a higher hierarchy position than the identity.
      *
      * @param canMention If set to true, then the role can be mentioned.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void modifyCanMention(boolean canMention);
+    AuditAction<Void> modifyCanMention(boolean canMention);
 
     /**
      * Change the position of a role.
@@ -181,7 +192,8 @@ public interface IRoleManager {
      *          </ul>
      *
      * @param position The new position.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void changePosition(int position);
+    AuditAction<Void> changePosition(int position);
 
 }

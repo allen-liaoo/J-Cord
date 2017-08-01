@@ -2,6 +2,7 @@ package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.IInvite;
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
@@ -90,7 +91,7 @@ public interface IInviteManager {
      * @param isUnique True for creating unique one time use invites.
      * @return The invite created.
      */
-    IInvite createInvite(int maxUses, long maxAge, boolean isTemporary, boolean isUnique);
+    AuditAction<IInvite> createInvite(int maxUses, long maxAge, boolean isTemporary, boolean isUnique);
 
     /**
      * Deletes an existing invite.
@@ -99,8 +100,11 @@ public interface IInviteManager {
      *          If the identity does not have {@code Manager Channels} permission.
      *
      * @param invite The invite.
+     * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    void deleteInvite(IInvite invite);
+    default AuditAction<Void> deleteInvite(IInvite invite) {
+        return deleteInvite(invite.getCode());
+    }
 
     /**
      * Deletes an existing invite by code.
@@ -109,7 +113,8 @@ public interface IInviteManager {
      *          If the identity does not have {@code Manager Channels} permission.
      *
      * @param code The invite code.
+     * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    void deleteInvite(String code);
+    AuditAction<Void> deleteInvite(String code);
 
 }

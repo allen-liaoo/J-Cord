@@ -1,6 +1,7 @@
 package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
@@ -57,8 +58,9 @@ public interface IMemberManager {
      *          If the nickname is not valid. See {@link IMember#isValidNickname(String)}
      *
      * @param nickname The new nickname.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void modifyNickname(String nickname);
+    AuditAction<Void> modifyNickname(String nickname);
 
     /**
      * Modify roles of this member. Pass two collections of roles to specify roles to add or remove.
@@ -73,8 +75,9 @@ public interface IMemberManager {
      *
      * @param add The roles to add.
      * @param remove The roles to remove.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void modifyRoles(Collection<IRole> add, Collection<IRole> remove);
+    AuditAction<Void> modifyRoles(Collection<IRole> add, Collection<IRole> remove);
 
     /**
      * Modify roles of this member by passing all the roles this member wll have.
@@ -88,8 +91,9 @@ public interface IMemberManager {
      *          If the member is the server owner or have higher role than the identity.
      *
      * @param modified The modified roles.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void modifyRoles(Collection<IRole> modified);
+    AuditAction<Void> modifyRoles(Collection<IRole> modified);
 
     /**
      * Add roles to this member.
@@ -103,8 +107,9 @@ public interface IMemberManager {
      * @exception IllegalArgumentException If the member already had that role.
      *
      * @param roles The role to be added.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void addRoles(IRole... roles);
+    AuditAction<Void> addRoles(IRole... roles);
 
     /**
      * Add roles to this member.
@@ -118,8 +123,9 @@ public interface IMemberManager {
      * @exception IllegalArgumentException If the member already had that role.
      *
      * @param roles The roles to be added.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void addRoles(Collection<IRole> roles);
+    AuditAction<Void> addRoles(Collection<IRole> roles);
 
     /**
      * Remove roles from this member.
@@ -132,8 +138,9 @@ public interface IMemberManager {
      *          If the member is the server owner or have higher role than the identity.
      *
      * @param roles The roles to be removed.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void removeRoles(IRole... roles);
+    AuditAction<Void> removeRoles(IRole... roles);
 
     /**
      * Remove roles from this member.
@@ -149,8 +156,9 @@ public interface IMemberManager {
      *          If the member is the server owner or have higher role than the identity.
      *
      * @param roles The roles to be removed.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void removeRoles(Collection<IRole> roles);
+    AuditAction<Void> removeRoles(Collection<IRole> roles);
 
     /**
      * Move this member to a voice channel.
@@ -165,8 +173,9 @@ public interface IMemberManager {
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_CHANNEL
      *
      * @param channel The new channel.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void moveToVoiceChannel(IVoiceChannel channel);
+    AuditAction<Void> moveToVoiceChannel(IVoiceChannel channel);
 
     /**
      * Move this member to a voice channel bt ID.
@@ -181,8 +190,9 @@ public interface IMemberManager {
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_CHANNEL
      *
      * @param channelId The new channel's ID.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void moveToVoiceChannel(String channelId);
+    AuditAction<Void> moveToVoiceChannel(String channelId);
 
     /**
      * Mute or unmute this member.
@@ -196,8 +206,9 @@ public interface IMemberManager {
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param mute True to mute, false to unmute.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void mute(boolean mute);
+    AuditAction<Void> mute(boolean mute);
 
     /**
      * Deafen or undeafen this member.
@@ -210,7 +221,8 @@ public interface IMemberManager {
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param deafen True to deafen the member, false to undeafen.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void deafen(boolean deafen);
+    AuditAction<Void> deafen(boolean deafen);
 
 }

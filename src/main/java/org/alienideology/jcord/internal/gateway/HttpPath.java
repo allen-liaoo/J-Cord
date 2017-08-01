@@ -200,7 +200,7 @@ public final class HttpPath {
         public final static HttpPath GET_GUILD_AUDIT_LOG_BEFORE = new HttpPath(GET, "/guilds/{guild.id}/audit-logs" +
                 "?before={snowflake.audit_entry}" +
                 "&limit={int}");
-        public final static HttpPath GET_GUILD_AUDIT_LOG_FULL = new HttpPath(GET, "/guilds/{guild.id}/audit-log" +
+        public final static HttpPath GET_GUILD_AUDIT_LOG_FULL = new HttpPath(GET, "/guilds/{guild.id}/audit-log" + // Unused
                 "?user_id={snowflake.user}" +
                 "&action_type={int}" +
                 "&before={snowflake.audit_entry}" +
@@ -227,18 +227,18 @@ public final class HttpPath {
     public static class Webhook {
 
         /* Webhook Getters */
-        public final static HttpPath GET_GUILD_WEBHOOKS = new HttpPath(GET, "/guilds/{channel.key}/webhooks");
+        public final static HttpPath GET_GUILD_WEBHOOKS = new HttpPath(GET, "/guilds/{channel.key}/webhooks"); // Unused
         public final static HttpPath GET_CHANNEL_WEBHOOKS = new HttpPath(GET, "/channels/{channel.key}/webhooks");
         public final static HttpPath GET_WEBHOOK = new HttpPath(GET, "/webhooks/{webhook.key}");
-        public final static HttpPath GET_WEBHOOK_WITH_TOKEN = new HttpPath(GET, "/webhooks/{webhook.key}/{webhook.token}");
+        public final static HttpPath GET_WEBHOOK_WITH_TOKEN = new HttpPath(GET, "/webhooks/{webhook.key}/{webhook.token}"); // Unused
 
         /* Webhook Actions */
         public final static HttpPath CREATE_WEBHOOK = new HttpPath(POST, "/channels/{channel.key}/webhooks");
         public final static HttpPath MODIFY_WEBHOOK = new HttpPath(PATCH, "/webhooks/{webhook.key}");
-        public final static HttpPath MODIFY_WEBHOOK_WITH_TOKEN = new HttpPath(PATCH, "/webhooks/{webhook.key}/{webhook.token}");
+        public final static HttpPath MODIFY_WEBHOOK_WITH_TOKEN = new HttpPath(PATCH, "/webhooks/{webhook.key}/{webhook.token}"); // Unused
         public final static HttpPath EXECUTE_WEBHOOK = new HttpPath(POST, "/webhooks/{webhook.key}/{webhook.token}");
         public final static HttpPath DELETE_WEBHOOK = new HttpPath(DELETE, "/webhooks/{webhook.key}");
-        public final static HttpPath DELETE_WEBHOOK_WITH_TOKEN = new HttpPath(DELETE, "/webhooks/{webhook.key}/{webhook.token}");
+        public final static HttpPath DELETE_WEBHOOK_WITH_TOKEN = new HttpPath(DELETE, "/webhooks/{webhook.key}/{webhook.token}"); // Unused
 
     }
 

@@ -1,6 +1,7 @@
 package org.alienideology.jcord.internal.object.managers;
 
 import org.alienideology.jcord.handle.Icon;
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.managers.IWebhookManager;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IWebhook;
@@ -28,44 +29,56 @@ public class WebhookManager implements IWebhookManager {
     }
 
     @Override
-    public void modifyDefaultName(String name) {
-        if (name == null || name.isEmpty()) return;
+    public AuditAction<Void> modifyDefaultName(String name) {
+        if (name == null || name.isEmpty()) return new AuditAction.EmptyAuditAction<>();
         if (!IWebhook.isValidWebhookName(name)) {
             throw new IllegalArgumentException("The name is not valid!");
         }
-        modify(new JSONObject().put("name", name));
+        return modify(new JSONObject().put("name", name));
     }
 
     @Override
-    public void modifyDefaultAvatar(Icon icon) {
-        modify(new JSONObject().put("avatar", icon.getData()));
+    public AuditAction<Void> modifyDefaultAvatar(Icon icon) {
+        return modify(new JSONObject().put("avatar", icon.getData()));
     }
 
-    private void modify(JSONObject json) {
+    private AuditAction<Void> modify(JSONObject json) {
         if (!getChannel().hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS)) {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS);
         }
 
-        new Requester((IdentityImpl) getIdentity(), HttpPath.Webhook.MODIFY_WEBHOOK)
-                .request(webhook.getId())
-                .updateRequestWithBody(request -> request.body(json))
-                .performRequest();
+        return new AuditAction<Void>((IdentityImpl) getIdentity(), HttpPath.Webhook.MODIFY_WEBHOOK, webhook.getId()) {
+            @Override
+            protected Void request(Requester requester) {
+                requester.updateRequestWithBody(request -> request.body(json)).performRequest();
+                return null;
+            }
+        };
     }
 
     @Override
-    public void execute(WebhookMessageBuilder webhookMB) {
-        new Requester((IdentityImpl) getIdentity(), HttpPath.Webhook.EXECUTE_WEBHOOK)
-                .request(webhook.getId(), webhook.getToken())
-                .updateRequestWithBody(http -> http.body(webhookMB.getJson())).performRequest();
+    public AuditAction<Void> execute(WebhookMessageBuilder webhookMB) {
+        return new AuditAction<Void>((IdentityImpl) getIdentity(), HttpPath.Webhook.EXECUTE_WEBHOOK, webhook.getId(), webhook.getToken()) {
+            @Override
+            protected Void request(Requester requester) {
+                requester.updateRequestWithBody(http -> http.body(webhookMB.getJson())).performRequest();
+                return null;
+            }
+        };
     }
 
     @Override
-    public void delete() {
+    public AuditAction<Void> delete() {
         if (!getChannel().hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS)) {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS);
         }
 
-        new Requester((IdentityImpl) getIdentity(), HttpPath.Webhook.DELETE_WEBHOOK).request(webhook.getId())
-                .performRequest();
+        return new AuditAction<Void>((IdentityImpl) getIdentity(), HttpPath.Webhook.DELETE_WEBHOOK, webhook.getId()) {
+            @Override
+            protected Void request(Requester requester) {
+                requester.performRequest();
+                return null;
+            }
+        };
     }
 }

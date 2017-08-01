@@ -3,6 +3,7 @@ package org.alienideology.jcord.handle.guild;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.managers.IMemberManager;
 import org.alienideology.jcord.handle.permission.PermCheckable;
 import org.alienideology.jcord.handle.permission.Permission;
@@ -67,7 +68,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      *
      * @return True if the member is kicked successfully.
      */
-    default boolean kick() {
+    default AuditAction<Boolean> kick() {
         return getGuild().getGuildManager().kickMember(this);
     }
 
@@ -82,9 +83,10 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
-     * @return True if the member is banned successfully.
+     * @return An boolean AuditAction, used to attach reason (or not).
+     * The boolean value will be true if the member is banned successfully.
      */
-    default boolean ban() {
+    default AuditAction<Boolean> ban() {
         return getGuild().getGuildManager().banMember(this);
     }
 
@@ -102,9 +104,10 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param days The number of days to delete the member's message. Only valid between 0 and 7.
-     * @return True if the member is banned successfully.
+     * @return An boolean AuditAction, used to attach reason (or not).
+     * The boolean value will be true if the member is banned successfully.
      */
-    default boolean ban(int days) {
+    default AuditAction<Boolean> ban(int days) {
         return getGuild().getGuildManager().banMember(this, days);
     }
 
@@ -201,7 +204,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * @return True if the other member is modifiable.
      */
     default boolean canModify(IMember member) {
-        return this.compareTo(member) > 0;
+        return this.compareTo(member) < 0;
     }
 
     /**
@@ -214,7 +217,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * @return True if the role is modifiable.
      */
     default boolean canModify(IRole role) {
-        return this.hasPermissions(true, Permission.MANAGE_ROLES) && this.getHighestRole().compareTo(role) > 0;
+        return this.hasPermissions(true, Permission.MANAGE_ROLES) && this.getHighestRole().compareTo(role) < 0;
     }
 
     /**

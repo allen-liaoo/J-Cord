@@ -2,6 +2,7 @@ package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.Icon;
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.builders.ChannelBuilder;
 import org.alienideology.jcord.handle.builders.RoleBuilder;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
@@ -53,7 +54,7 @@ public interface IGuildManager {
 
     /**
      * Modify the guild's name.
-     * Null or empty {@code name} will be ignored.
+     * Null or empty {@code name} will be result in a {@link org.alienideology.jcord.handle.audit.AuditAction.EmptyAuditAction} being returned.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
@@ -61,23 +62,25 @@ public interface IGuildManager {
      *          If the name is not valid. See {@link IGuild#isValidName(String)}.
      *
      * @param name The string name.
+     * @return A void {@link AuditAction}, used to attach reason (or not) to the modify action.
      */
-    void modifyName(String name);
+    AuditAction<Void> modifyName(String name);
 
     /**
      * Modify the guild's owner. The identity must be the guild owner originally in order to modify the owner.
-     * This is human only, since bots can not be a guild owner.
+     * This is for client only, since bots can not be a guild owner.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
      *
      * @param newOwner The new owner.
+     * @return A void {@link AuditAction}, used to attach reason (or not) to the modify action.
      */
-    void modifyOwner(IMember newOwner);
+    AuditAction<Void> modifyOwner(IMember newOwner);
 
     /**
      * Modify the guild's region.
-     * {@link Region#UNKNOWN} will be ignored.
+     * {@link Region#UNKNOWN} will be result in a {@link org.alienideology.jcord.handle.audit.AuditAction.EmptyAuditAction} being returned.
      *
      * @exception HttpErrorException
      *          if the region is vip, but the guild is not. See {@link Region#isVIP}
@@ -85,63 +88,69 @@ public interface IGuildManager {
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
      *
      * @param region The region enumeration.
+     * @return A void {@link AuditAction}, used to attach reason (or not) to the modify action.
      */
-    void modifyRegion(Region region);
+    AuditAction<Void> modifyRegion(Region region);
 
     /**
      * Modify the guild's verification level.
-     * {@link org.alienideology.jcord.handle.guild.IGuild.Verification#UNKNOWN} will be ignored.
+     * {@link org.alienideology.jcord.handle.guild.IGuild.Verification#UNKNOWN} will be result in a {@link org.alienideology.jcord.handle.audit.AuditAction.EmptyAuditAction} being returned.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
      *
      * @param verification The verification enumeration.
+     * @return A void {@link AuditAction}, used to attach reason (or not) to the modify action.
      */
-    void modifyVerification(IGuild.Verification verification);
+    AuditAction<Void> modifyVerification(IGuild.Verification verification);
 
     /**
      * Modify the guild's notification level.
-     * {@link org.alienideology.jcord.handle.guild.IGuild.Notification#UNKNOWN} will be ignored.
+     * {@link org.alienideology.jcord.handle.guild.IGuild.Notification#UNKNOWN} will be result in a {@link org.alienideology.jcord.handle.audit.AuditAction.EmptyAuditAction} being returned.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
      *
      * @param notification The notification enumeration.
+     * @return A void {@link AuditAction}, used to attach reason (or not) to the modify action.
      */
-    void modifyNotification(IGuild.Notification notification);
+    AuditAction<Void> modifyNotification(IGuild.Notification notification);
 
     /**
      * Modify the guild's afk timeout.
-     * {@link org.alienideology.jcord.handle.guild.IGuild.AFKTimeout#UNKNOWN} will be ignored.
+     * {@link org.alienideology.jcord.handle.guild.IGuild.AFKTimeout#UNKNOWN} will be result in a {@link org.alienideology.jcord.handle.audit.AuditAction.EmptyAuditAction} being returned.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
      *
      * @param afkTimeout The afk timeout.
+     * @return A void {@link AuditAction}, used to attach reason (or not) to the modify action.
      */
-    void modifyAFKTimeout(IGuild.AFKTimeout afkTimeout);
+    AuditAction<Void> modifyAFKTimeout(IGuild.AFKTimeout afkTimeout);
 
     /**
      * Modify the guild's afk channel.
-     * Null channel will be ignored.
+     * Null channel will be result in a {@link org.alienideology.jcord.handle.audit.AuditAction.EmptyAuditAction} being returned.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
      *
      * @param afkChannel The afk channel.
+     * @return A void {@link AuditAction}, used to attach reason (or not) to the modify action.
      */
-    void modifyAFKChannel(IVoiceChannel afkChannel);
+    AuditAction<Void> modifyAFKChannel(IVoiceChannel afkChannel);
 
     /**
      * Modify the guild's afk channel by ID.
-     * Null or empty ID will be ignored.
+     * Null or empty ID will be result in a {@link org.alienideology.jcord.handle.audit.AuditAction.EmptyAuditAction} being returned.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
      *
      * @param afkChannelId The afk channel ID.
+     * @return A void {@link AuditAction}, used to attach reason (or not) to the modify action.
      */
-    void modifyAFKChannel(String afkChannelId);
+    AuditAction<Void> modifyAFKChannel(String afkChannelId);
 
     /**
      * Modify the guild's icon.
@@ -150,8 +159,9 @@ public interface IGuildManager {
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
      *
      * @param icon The image file.
+     * @return A void {@link AuditAction}, used to attach reason (or not) to the modify action.
      */
-    void modifyIcon(Icon icon);
+    AuditAction<Void> modifyIcon(Icon icon);
 
     /**
      * Modify the guild's splash icon. This is VIP guild only.
@@ -160,8 +170,9 @@ public interface IGuildManager {
      *          If the identity does not have either {@code Manager Server} or {@code Administrator} permission.
      *
      * @param icon The image.
+     * @return A void {@link AuditAction}, used to attach reason (or not) to the modify action.
      */
-    void modifySplash(Icon icon);
+    AuditAction<Void> modifySplash(Icon icon);
 
     /*
         ---------------------
@@ -180,9 +191,10 @@ public interface IGuildManager {
      *          Please use {leave()} to leave a guild.
      *
      * @param member The member.
-     * @return True if the member is kicked successfully.
+     * @return A boolean {@link AuditAction}, used to attach reason (or not).
+     * The boolean value will be true if the member is kicked successfully.
      */
-    boolean kickMember(IMember member);
+    AuditAction<Boolean> kickMember(IMember member);
 
     /**
      * Kick a member by ID.
@@ -197,9 +209,10 @@ public interface IGuildManager {
      *          Please use {leave()} to leave a guild.
      *
      * @param memberId The member's ID.
-     * @return True if the member is kicked successfully.
+     * @return A boolean {@link AuditAction}, used to attach reason (or not).
+     * The boolean value will be true if the member is kicked successfully.
      */
-    boolean kickMember(String memberId);
+    AuditAction<Boolean> kickMember(String memberId);
 
     /**
      * Get the value of members than can be pruned.
@@ -226,17 +239,6 @@ public interface IGuildManager {
     int getPrunableCount(int days);
 
     /**
-     * Prune members that are not active for a certain days.
-     * @see #pruneMembers(int) For more information on pruning members.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have either {@code Kick Members} {@code Administrator} permissions.
-     *
-     * The default days of this event is 7.
-     */
-    void pruneMembers();
-
-    /**
      * Prune members that are not active for the given days.
      * Prune:
      * <p>Pruning will kick members than has not been seen in an amount of days and are not assigned to any roles.
@@ -247,8 +249,9 @@ public interface IGuildManager {
      * @exception IllegalArgumentException If the days provided are smaller than 1 or greater than 30.
      *
      * @param days The amount of days.
+     * @return A void {@link AuditAction}. Used to attach audit log reason to the pruning action.
      */
-    void pruneMembers(int days);
+    AuditAction<Void> pruneMembers(int days);
 
     /**
      * Get a list of members that are banned from this guild.
@@ -272,9 +275,10 @@ public interface IGuildManager {
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param member The member.
-     * @return True if the member is banned successfully.
+     * @return A boolean {@link AuditAction}, used to attach reason (or not).
+     * The boolean value will be true if the member is banned successfully.
      */
-    boolean banMember(IMember member);
+    AuditAction<Boolean> banMember(IMember member);
 
     /**
      * Ban a member.
@@ -289,9 +293,10 @@ public interface IGuildManager {
      *
      * @param member The member.
      * @param days The number of days to delete the member's message. Only valid between 0 and 7.
-     * @return True if the member is banned successfully.
+     * @return A boolean {@link AuditAction}, used to attach reason (or not).
+     * The boolean value will be true if the member is banned successfully.
      */
-    boolean banMember(IMember member, int days);
+    AuditAction<Boolean> banMember(IMember member, int days);
 
     /**
      * Ban a member by ID.
@@ -305,9 +310,10 @@ public interface IGuildManager {
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
      *
      * @param memberId The member's ID.
-     * @return True if the member is banned successfully.
+     * @return A boolean {@link AuditAction}, used to attach reason (or not).
+     * The boolean value will be true if the member is banned successfully.
      */
-    boolean banMember(String memberId);
+    AuditAction<Boolean> banMember(String memberId);
 
     /**
      * Ban a member by ID.
@@ -322,9 +328,10 @@ public interface IGuildManager {
      *
      * @param memberId The member's ID.
      * @param days The number of days to delete the member's message. Only valid between 0 and 7.
-     * @return True if the member is banned successfully.
+     * @return A boolean {@link AuditAction}, used to attach reason (or not).
+     * The boolean value will be true if the member is banned successfully.
      */
-    boolean banMember(String memberId, int days);
+    AuditAction<Boolean> banMember(String memberId, int days);
 
     /**
      * Unban a user.
@@ -335,9 +342,10 @@ public interface IGuildManager {
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
      *
      * @param user The user.
-     * @return True if the member is unbanned successfully.
+     * @return A boolean {@link AuditAction}, used to attach reason (or not).
+     * The boolean value will be true if the member is unbanned successfully.
      */
-    boolean unbanUser(IUser user);
+    AuditAction<Boolean> unbanUser(IUser user);
 
     /**
      * Unban a member by ID.
@@ -348,9 +356,10 @@ public interface IGuildManager {
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
      *
      * @param memberId The user's ID.
-     * @return True if the user is unbanned successfully.
+     * @return A boolean {@link AuditAction}, used to attach reason (or not).
+     * The boolean value will be true if the member is unbanned successfully.
      */
-    boolean unbanUser(String memberId);
+    AuditAction<Boolean> unbanUser(String memberId);
 
     /**
      * Create a text channel in this guild.
@@ -358,23 +367,12 @@ public interface IGuildManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Manage Channels} permission.
      *
-     * @param channel The channel built by {@link org.alienideology.jcord.handle.builders.ChannelBuilder}.
+     * @param channel The channel built by {@link org.alienideology.jcord.handle.builders.ChannelBuilder},
+     *                or another channel instance to clone from.
      * @see ChannelBuilder#buildTextChannel()
-     * @return The text channel created.
-     * This returning channel is not the same instance as the parameter.
+     * @return A {@link ITextChannel} {@link AuditAction}. The generic text channel will be the channel created.
      */
-    ITextChannel createTextChannel(ITextChannel channel);
-
-    /**
-     * Copy and create a new text channel with the same properties.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have {@code Manage Channels} permission.
-     *
-     * @param channel The channel to clone.
-     * @return The channel cloned and created.
-     */
-    ITextChannel cloneTextChannel(ITextChannel channel);
+    AuditAction<ITextChannel> createTextChannel(ITextChannel channel);
 
     /**
      * Create a voice channel in this guild.
@@ -382,22 +380,12 @@ public interface IGuildManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Manage Channels} permission.
      *
-     * @param channel The channel built by {@link org.alienideology.jcord.handle.builders.ChannelBuilder}.
+     * @param channel The channel built by {@link org.alienideology.jcord.handle.builders.ChannelBuilder},
+     *                or another channel instance to clone from.
      * @see ChannelBuilder#buildVoiceChannel()
-     * @return The voice channel created.
+     * @return A {@link IVoiceChannel} {@link AuditAction}. The generic text channel will be the channel created.
      */
-    IVoiceChannel createVoiceChannel(IVoiceChannel channel);
-
-    /**
-     * Copy and create a new voice channel with the same properties.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have {@code Manage Channels} permission.
-     *
-     * @param channel The channel to clone.
-     * @return The channel cloned and created.
-     */
-    IVoiceChannel cloneVoiceChannel(IVoiceChannel channel);
+    AuditAction<IVoiceChannel> createVoiceChannel(IVoiceChannel channel);
 
     /**
      * Deletes a guild channel.
@@ -409,8 +397,9 @@ public interface IGuildManager {
      *          @see IGuild#getDefaultChannel() For more information.
      *
      * @param channel The channel.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void deleteGuildChannel(IGuildChannel channel);
+    AuditAction<Void> deleteGuildChannel(IGuildChannel channel);
 
     /**
      * Create a role in this guild.
@@ -418,21 +407,10 @@ public interface IGuildManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Manage Roles} permission.
      *
-     * @param role The role built by {@link RoleBuilder}
-     * @return The role created.
+     * @param role The role built by {@link RoleBuilder}, or another role instance to clone from.
+     * @return A {@link IRole} {@link AuditAction}. The generic role will be the role created.
      */
-    IRole createRole(IRole role);
-
-    /**
-     * Copy and create a role in this guild.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have {@code Manage Roles} permission.
-     *
-     * @param role The role to clone.
-     * @return The role cloned and created.
-     */
-    IRole cloneRole(IRole role);
+    AuditAction<IRole> createRole(IRole role);
 
     /**
      * Delete a existed role in this guild.
@@ -444,8 +422,9 @@ public interface IGuildManager {
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
      *
      * @param role The role to be deleted.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    void deleteRole(IRole role);
+    AuditAction<Void> deleteRole(IRole role);
 
     /**
      * Create a new webhook for a text channel in this guild.
@@ -462,12 +441,13 @@ public interface IGuildManager {
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the channel does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_CHANNEL
+     * @return An {@link IWebhook} {@link AuditAction}, used to attach reason for creating this webhook.
      */
-    default void createWebhook(ITextChannel channel, String defaultName, Icon defaultAvatar) {
+    default AuditAction<IWebhook> createWebhook(ITextChannel channel, String defaultName, Icon defaultAvatar) {
         if (!channel.getGuild().equals(getGuild())) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_CHANNEL);
         }
-        channel.getChannelManager().createWebhook(defaultName, defaultAvatar);
+        return channel.getChannelManager().createWebhook(defaultName, defaultAvatar);
     }
 
     /**
@@ -478,12 +458,13 @@ public interface IGuildManager {
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the webhook does not belong to this guild.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    default void deleteWebhook(IWebhook webhook) {
+    default AuditAction<Void> deleteWebhook(IWebhook webhook) {
         if (!webhook.getGuild().equals(getGuild())) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_USER);
         }
-        webhook.getWebhookManager().delete();
+        return webhook.getWebhookManager().delete();
     }
 
 }

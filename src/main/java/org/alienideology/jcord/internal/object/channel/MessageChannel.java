@@ -1,6 +1,7 @@
 package org.alienideology.jcord.internal.object.channel;
 
 import org.alienideology.jcord.IdentityType;
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.builders.MessageBuilder;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
@@ -217,16 +218,16 @@ public class MessageChannel extends Channel implements IMessageChannel {
     }
 
     @Override
-    public IMessage deleteMessage(String messageId) {
+    public AuditAction<IMessage> deleteMessage(String messageId) {
         return delete(messageId);
     }
 
     @Override
-    public IMessage deleteMessage(IMessage message) {
+    public AuditAction<IMessage> deleteMessage(IMessage message) {
         return delete(message.getId());
     }
 
-    private Message delete(String id) {
+    private AuditAction<IMessage> delete(String id) {
         User author = new ObjectBuilder(identity).buildMessageById(this.id, id).getAuthor();
         if (!author.isSelf()) {  // Delete a message from others
             if (isPrivate) {
@@ -236,9 +237,13 @@ public class MessageChannel extends Channel implements IMessageChannel {
             }
         }
 
-        JSONObject msg = new Requester(identity, HttpPath.Channel.DELETE_MESSAGE).request(this.id, id).getAsJSONObject();
-
-        return new ObjectBuilder(identity).buildMessage(msg);
+        return new AuditAction<IMessage>(identity, HttpPath.Channel.DELETE_MESSAGE, this.id, id) {
+            @Override
+            protected IMessage request(Requester requester) {
+                JSONObject msg = requester.getAsJSONObject();
+                return new ObjectBuilder(identity).buildMessage(msg);
+            }
+        };
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.Icon;
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
@@ -58,8 +59,9 @@ public interface IChannelManager {
      *          If the name is not valid. See {@link IGuildChannel#isValidChannelName(String)}.
      *
      * @param name The new name.
+     * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    void modifyName(String name);
+    AuditAction<Void> modifyName(String name);
 
     /**
      * Modify the position of this channel.
@@ -78,8 +80,9 @@ public interface IChannelManager {
      *          If the identity do not have {@code Manage Channels} permission.
      *
      * @param position The new position.
+     * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    void modifyPosition(int position);
+    AuditAction<Void> modifyPosition(int position);
 
     /**
      * Moves the channel by an amount of positions.
@@ -87,8 +90,9 @@ public interface IChannelManager {
      * @see #modifyPosition(int)
      *
      * @param amount The offset, or amount of channels to move by.
+     * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    void moveChannelBy(int amount);
+    AuditAction<Void> moveChannelBy(int amount);
 
     /**
      * Modify the topic of a {@link ITextChannel}.
@@ -104,8 +108,9 @@ public interface IChannelManager {
      *          </ul>
      *
      * @param topic The new topic.
+     * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    void modifyTopic(String topic);
+    AuditAction<Void> modifyTopic(String topic);
 
     /**
      * Modify the bitrate of a {@link IVoiceChannel}.
@@ -125,8 +130,9 @@ public interface IChannelManager {
      *          </ul>
      *
      * @param bitrate The new bitrate.
+     * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    void modifyBitrate(int bitrate);
+    AuditAction<Void> modifyBitrate(int bitrate);
 
     /**
      * Modify the user limit of a {@link IVoiceChannel}.
@@ -140,8 +146,9 @@ public interface IChannelManager {
      *          If the user limit is not valid. See {@link IVoiceChannel#isValidUserLimit(int)}.
      *
      * @param limit The new limit.
+     * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    void modifyUserLimit(int limit);
+    AuditAction<Void> modifyUserLimit(int limit);
 
     /**
      * Edit or add {@link PermOverwrite} to a member in this channel.
@@ -157,8 +164,9 @@ public interface IChannelManager {
      * @param member The member to add permission overwrites.
      * @param allowed The allowed permissions.
      * @param denied The denied permissions.
+     * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    void editPermOverwrite(IMember member, Collection<Permission> allowed, Collection<Permission> denied);
+    AuditAction<Void> editPermOverwrite(IMember member, Collection<Permission> allowed, Collection<Permission> denied);
 
     /**
      * Edit or add {@link PermOverwrite} to a role in this channel.
@@ -174,8 +182,9 @@ public interface IChannelManager {
      * @param role The role to add permission overwrites.
      * @param allowed The allowed permissions.
      * @param denied The denied permissions.
+     * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    void editPermOverwrite(IRole role, Collection<Permission> allowed, Collection<Permission> denied);
+    AuditAction<Void> editPermOverwrite(IRole role, Collection<Permission> allowed, Collection<Permission> denied);
 
     /**
      * Deletes a permission overwrite by ID.
@@ -190,8 +199,9 @@ public interface IChannelManager {
      *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_OVERWRITE
      *
      * @param id The key.
+     * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    void deletePermOverwrite(String id);
+    AuditAction<Void> deletePermOverwrite(String id);
 
     /**
      * Create a new webhook for this channel.
@@ -205,8 +215,9 @@ public interface IChannelManager {
      *          If the identity does not have {@code Manager Webhooks} permission.
      * @exception IllegalArgumentException
      *          If the default name is not valid. See {@link IWebhook#isValidWebhookName(String)}.
+     * @return An {@link IWebhook} {@link AuditAction}, used to attach reason for creating this webhook.
      */
-    void createWebhook(String defaultName, Icon defaultAvatar);
+    AuditAction<IWebhook> createWebhook(String defaultName, Icon defaultAvatar);
 
     /**
      * Delete a webhook.
@@ -218,15 +229,16 @@ public interface IChannelManager {
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the webhook does not belong to this channel.
      * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    default void deleteWebhook(IWebhook webhook) {
+    default AuditAction<Void> deleteWebhook(IWebhook webhook) {
         if (getGuildChannel().isType(IChannel.Type.GUILD_VOICE)) {
             throw new IllegalArgumentException("Cannot delete a webhook from a voice channel!");
         }
         if (!webhook.getChannel().equals(getGuildChannel())) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_USER);
         }
-        webhook.getWebhookManager().delete();
+        return webhook.getWebhookManager().delete();
     }
 
     /**
@@ -237,9 +249,10 @@ public interface IChannelManager {
      * @exception IllegalArgumentException
      *          If the channel is a text channel, and the text channel is a default channel.
      *          @see IGuild#getDefaultChannel() For more information.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    default void deleteChannel() {
-        getGuild().getGuildManager().deleteGuildChannel(getGuildChannel());
+    default AuditAction<Void> deleteChannel() {
+        return getGuild().getGuildManager().deleteGuildChannel(getGuildChannel());
     }
 
 }

@@ -2,6 +2,7 @@ package org.alienideology.jcord.internal.object.managers;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.Icon;
+import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
@@ -21,6 +22,7 @@ import org.alienideology.jcord.internal.gateway.HttpCode;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.json.JSONObject;
@@ -58,25 +60,25 @@ public final class ChannelManager implements IChannelManager {
     }
 
     @Override
-    public void modifyName(String name) {
+    public AuditAction<Void> modifyName(String name) {
         if (!IGuildChannel.isValidChannelName(name)) {
             throw new IllegalArgumentException("Invalid channel name!");
         }
-        modifyChannel(new JSONObject().put("name", name));
+        return modifyChannel(new JSONObject().put("name", name));
     }
 
     @Override
-    public void modifyPosition(int position) {
-        modifyChannel(new JSONObject().put("position", position));
+    public AuditAction<Void> modifyPosition(int position) {
+        return modifyChannel(new JSONObject().put("position", position));
     }
 
     @Override
-    public void moveChannelBy(int amount) {
-        modifyPosition(channel.getPosition() + amount);
+    public AuditAction<Void> moveChannelBy(int amount) {
+        return modifyPosition(channel.getPosition() + amount);
     }
 
     @Override
-    public void modifyTopic(String topic) {
+    public AuditAction<Void> modifyTopic(String topic) {
         if (channel instanceof VoiceChannel) {
             throw new IllegalArgumentException("Cannot modify the topic of a voice channel!");
         }
@@ -84,37 +86,42 @@ public final class ChannelManager implements IChannelManager {
         if (!ITextChannel.isValidTopic(topic)) {
             throw new IllegalArgumentException("The TextChannel's topic may not be longer than"+ ITextChannel.TEXT_CHANNEL_TOPIC_LENGTH_MAX +" characters!");
         }
-        modifyChannel(new JSONObject().put("topic", topic));
+        return modifyChannel(new JSONObject().put("topic", topic));
     }
 
     @Override
-    public void modifyBitrate(int bitrate) {
+    public AuditAction<Void> modifyBitrate(int bitrate) {
         if (channel instanceof TextChannel) {
             throw new IllegalArgumentException("Cannot modify the bitrate of a text channel!");
         }
         checkBitrate(bitrate, getGuild());
 
-        modifyChannel(new JSONObject().put("bitrate", bitrate));
+        return modifyChannel(new JSONObject().put("bitrate", bitrate));
     }
 
     @Override
-    public void modifyUserLimit(int limit) {
+    public AuditAction<Void> modifyUserLimit(int limit) {
         if (channel instanceof TextChannel) {
             throw new IllegalArgumentException("Cannot modify the user limit of a text channel!");
         }
         if (!IVoiceChannel.isValidUserLimit(limit)) {
             throw new IllegalArgumentException("The user limit is not valid!");
         }
-        modifyChannel(new JSONObject().put("user_limit", limit));
+        return modifyChannel(new JSONObject().put("user_limit", limit));
     }
 
-    private void modifyChannel(JSONObject json) {
+    private AuditAction<Void> modifyChannel(JSONObject json) {
         if (!channel.hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_CHANNELS)) {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_CHANNELS);
         }
 
-        new Requester((IdentityImpl) getIdentity(), HttpPath.Channel.MODIFY_CHANNEL)
-                .request(channel.getId()).updateRequestWithBody(request -> request.body(json)).performRequest();
+        return new AuditAction<Void>((IdentityImpl) getIdentity(), HttpPath.Channel.MODIFY_CHANNEL, channel.getId()) {
+            @Override
+            protected Void request(Requester requester) {
+                requester.updateRequestWithBody(request -> request.body(json)).performRequest();
+                return null;
+            }
+        };
     }
 
     private void checkBitrate(int bitrate, IGuild guild) {
@@ -130,7 +137,7 @@ public final class ChannelManager implements IChannelManager {
     }
 
     @Override
-    public void editPermOverwrite(IMember member, Collection<Permission> allowed, Collection<Permission> denied) {
+    public AuditAction<Void> editPermOverwrite(IMember member, Collection<Permission> allowed, Collection<Permission> denied) {
         if (!member.getGuild().equals(getGuild())) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_MEMBER);
         }
@@ -141,7 +148,7 @@ public final class ChannelManager implements IChannelManager {
             throw new HigherHierarchyException(HigherHierarchyException.HierarchyType.ROLE);
         }
 
-        editPerms(member.getId(),
+        return editPerms(member.getId(),
                 new JSONObject()
                         .put("allow", Permission.getLongByPermissions(allowed))
                         .put("deny", Permission.getLongByPermissions(denied))
@@ -150,7 +157,7 @@ public final class ChannelManager implements IChannelManager {
     }
 
     @Override
-    public void editPermOverwrite(IRole role, Collection<Permission> allowed, Collection<Permission> denied) {
+    public AuditAction<Void> editPermOverwrite(IRole role, Collection<Permission> allowed, Collection<Permission> denied) {
         if (!role.getGuild().equals(getGuild())) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_ROLE);
         }
@@ -161,7 +168,7 @@ public final class ChannelManager implements IChannelManager {
             throw new HigherHierarchyException(HigherHierarchyException.HierarchyType.ROLE);
         }
 
-        editPerms(role.getId(),
+        return editPerms(role.getId(),
                 new JSONObject()
                         .put("allow", Permission.getLongByPermissions(allowed))
                         .put("deny", Permission.getLongByPermissions(denied))
@@ -169,23 +176,31 @@ public final class ChannelManager implements IChannelManager {
         );
     }
 
-    private void editPerms(String id, JSONObject json) {
-        new Requester((IdentityImpl) getIdentity(), HttpPath.Channel.EDIT_CHANNEL_PERMISSIONS)
-                .request(getGuildChannel().getId(), id)
-                .updateRequestWithBody(request -> request.body(json))
-                .performRequest();
+    private AuditAction<Void> editPerms(String id, JSONObject json) {
+        return new AuditAction<Void>((IdentityImpl) getIdentity(), HttpPath.Channel.EDIT_CHANNEL_PERMISSIONS, getGuildChannel().getId(), id) {
+            @Override
+            protected Void request(Requester requester) {
+                requester.updateRequestWithBody(request -> request.body(json))
+                        .performRequest();
+                return null;
+            }
+        };
     }
 
     @Override
-    public void deletePermOverwrite(String id) {
+    public AuditAction<Void> deletePermOverwrite(String id) {
         if (!channel.hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_ROLES)) {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_ROLES);
         }
 
         try {
-            new Requester((IdentityImpl) getIdentity(), HttpPath.Channel.DELETE_CHANNEL_PERMISSION)
-                    .request(getGuildChannel().getId(), id)
-                    .performRequest();
+            return new AuditAction<Void>((IdentityImpl) getIdentity(), HttpPath.Channel.DELETE_CHANNEL_PERMISSION, getGuildChannel().getId(), id) {
+                @Override
+                protected Void request(Requester requester) {
+                    requester.performRequest();
+                    return null;
+                }
+            };
         } catch (HttpErrorException ex) {
             if (ex.isPermissionException()) {
                 // Can be thrown by modifying higher hierarchy perm overwrite
@@ -200,7 +215,7 @@ public final class ChannelManager implements IChannelManager {
     }
 
     @Override
-    public void createWebhook(String defaultName, Icon defaultAvatar) {
+    public AuditAction<IWebhook> createWebhook(String defaultName, Icon defaultAvatar) {
         if (getGuildChannel().isType(IChannel.Type.GUILD_VOICE)) {
             throw new IllegalArgumentException("Cannot delete a webhook from a voice channel!");
         }
@@ -212,12 +227,16 @@ public final class ChannelManager implements IChannelManager {
             throw new IllegalArgumentException("The webhook to create does not have a valid name!");
         }
 
-        new Requester((IdentityImpl) getIdentity(), HttpPath.Webhook.CREATE_WEBHOOK)
-                .request(getGuildChannel().getId())
-                .updateRequestWithBody(request ->
-                        request.body(new JSONObject()
-                            .put("name", defaultName == null ? "" : defaultName)
-                            .put("avatar", defaultAvatar.getData())))
-                .performRequest();
+        return new AuditAction<IWebhook>((IdentityImpl) getIdentity(), HttpPath.Webhook.CREATE_WEBHOOK, getGuildChannel().getId()) {
+            @Override
+            protected IWebhook request(Requester requester) {
+                JSONObject wh = requester.updateRequestWithBody(request ->
+                                request.body(new JSONObject()
+                                        .put("name", defaultName == null ? "" : defaultName)
+                                        .put("avatar", defaultAvatar.getData())))
+                        .getAsJSONObject();
+                return new ObjectBuilder((IdentityImpl) getIdentity()).buildWebhook(wh);
+            }
+        };
     }
 }
