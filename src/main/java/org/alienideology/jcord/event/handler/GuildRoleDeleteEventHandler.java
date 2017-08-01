@@ -18,7 +18,7 @@ public class GuildRoleDeleteEventHandler extends EventHandler {
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
         Guild guild = (Guild) identity.getGuild(json.getString("guild_id"));
-        Role role = (Role) guild.getRole(json.getJSONObject("role").getString("key"));
+        Role role = (Role) guild.getRole(json.getJSONObject("role").getString("id"));
         guild.removeRole(role.getId());
 
         dispatchEvent(new GuildRoleDeleteEvent(identity, guild, sequence, role));

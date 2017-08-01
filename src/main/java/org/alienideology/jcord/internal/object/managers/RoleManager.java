@@ -162,7 +162,7 @@ public final class RoleManager implements IRoleManager {
         JSONArray array = new JSONArray();
         for (String id : roleMap.keySet()) {
             array.put(new JSONObject()
-                .put("key", id)
+                .put("id", id)
                 .put("position", roleMap.get(id))
             );
         }

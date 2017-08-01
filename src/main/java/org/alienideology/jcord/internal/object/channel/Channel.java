@@ -17,7 +17,7 @@ public class Channel extends DiscordObject implements IChannel {
 
     /**
      * Channel Constructor
-     * @param id The key of this channel
+     * @param id The id of this channel
      * @param type The type of channel
      */
     public Channel (IdentityImpl identity, String id, Type type) {

@@ -19,12 +19,12 @@ import java.util.Objects;
  */
 public class User extends DiscordObject implements IUser {
 
-    private final String id;
+    protected final String id;
 
     private Presence presence;
 
-    private String name;
-    private String discriminator;
+    protected String name;
+    protected String discriminator;
     private String avatar;
     private String email;
 

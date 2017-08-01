@@ -21,7 +21,6 @@ public class MessageCreateEventHandler extends EventHandler {
         Message message = builder.buildMessage(json);
         try {
             MessageChannel channel = (MessageChannel) message.getChannel();
-            channel.setLatestMessage(message);
             if (channel.isPrivate()) {
                 dispatchEvent(new PrivateMessageCreateEvent(identity, sequence, channel, message));
             } else {

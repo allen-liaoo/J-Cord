@@ -62,24 +62,11 @@ public final class MessageHistory extends DiscordObject implements IDiscordObjec
      * @exception PermissionException
      *          If the identity does not have {@code Read Message History} permission.
      *
-     * @param id The string key of the message.
+     * @param id The string id of the message.
      * @return The message, or null if no message is found.
      */
     public IMessage getMessage(String id) {
         return channel.getMessage(id);
-    }
-
-    /**
-     * Get the latest message of this channel.
-     * @see #getLatestMessages(int) This is equivilant to {@code #getLatestMessages(1)}.
-     *
-     * @exception PermissionException
-     *          If the identity does not have {@code Read Messages} permission.
-     *
-     * @return The latest message
-     */
-    public IMessage getLatestMessage() {
-        return channel.getLatestMessage();
     }
 
     /**

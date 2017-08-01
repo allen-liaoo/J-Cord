@@ -33,7 +33,7 @@ public class GuildRoleUpdateEventHandler extends EventHandler {
                 return;
             }
 
-            Role role = (Role) guild.getRole(roleJson.getString("key"));
+            Role role = (Role) guild.getRole(roleJson.getString("id"));
 
             String name = roleJson.getString("name");
             Color color = roleJson.has("color") ? new Color(roleJson.getInt("color")) : null;

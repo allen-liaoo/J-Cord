@@ -21,7 +21,7 @@ public class MessageDeleteEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        String msg_id = json.getString("key");
+        String msg_id = json.getString("id");
         String channel_id = json.getString("channel_id");
 
         MessageChannel channel = (MessageChannel) identity.getMessageChannel(channel_id);

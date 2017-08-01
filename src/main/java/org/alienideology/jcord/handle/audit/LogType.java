@@ -1,7 +1,7 @@
 package org.alienideology.jcord.handle.audit;
 
 /**
- * LogType - Types of audit logs.
+ * LogType - Types of log entries.
  *
  * @author AlienIdeology
  */

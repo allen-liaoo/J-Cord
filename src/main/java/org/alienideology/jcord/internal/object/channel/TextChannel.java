@@ -19,7 +19,6 @@ import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.ChannelManager;
 import org.alienideology.jcord.internal.object.managers.InviteManager;
-import org.alienideology.jcord.internal.object.message.Message;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,8 +43,8 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
 
     private List<PermOverwrite> permOverwrites = new ArrayList<>();
 
-    public TextChannel(IdentityImpl identity, String guild_id, String id, String name, int position, String topic, Message lastMessage) {
-        super(identity, id, IChannel.Type.GUILD_TEXT, lastMessage);
+    public TextChannel(IdentityImpl identity, String guild_id, String id, String name, int position, String topic) {
+        super(identity, id, IChannel.Type.GUILD_TEXT);
         this.guild = guild_id == null ? null : (Guild) identity.getGuild(guild_id);
         this.name = name;
         this.position = position;
@@ -70,7 +69,7 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
     }
 
     public TextChannel copy() {
-        return new TextChannel(identity, guild.getId(), id, name, position, topic, (Message) getLatestMessage());
+        return new TextChannel(identity, guild.getId(), id, name, position, topic);
     }
 
     @Override

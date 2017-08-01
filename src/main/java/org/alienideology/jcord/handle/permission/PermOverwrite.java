@@ -54,7 +54,7 @@ public class PermOverwrite extends DiscordObject implements ISnowFlake, Jsonable
     @Override
     public JSONObject toJson() {
         return new JSONObject()
-                .put("key", id)
+                .put("id", id)
                 .put("type", overwriteType.name().toLowerCase())
                 .put("allow", allow)
                 .put("deny", denied);

@@ -169,4 +169,12 @@ public class ClientSetting extends ClientObject implements IClientSetting {
         this.detectPlatformAccounts = detectPlatformAccounts;
     }
 
+    @Override
+    public String toString() {
+        return "ClientSetting{" +
+                "status=" + status +
+                ", locale=" + locale +
+                ", identity=" + identity +
+                '}';
+    }
 }

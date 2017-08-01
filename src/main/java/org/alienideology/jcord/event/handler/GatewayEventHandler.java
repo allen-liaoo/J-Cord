@@ -34,7 +34,6 @@ public class GatewayEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-
         /* Ready Event */
         if (json.has("session_id")) {
             String session_id = json.getString("session_id");
@@ -45,9 +44,12 @@ public class GatewayEventHandler extends EventHandler {
                 // We use this to get the guilds' ID, then post http request to get guild information
                 JSONArray guilds = json.getJSONArray("guilds");
                 for (int i = 0; i < guilds.length(); i++) {
+                    System.out.println(true);
                     JSONObject guild = guilds.getJSONObject(i);
-                    JSONObject get = new Requester(identity, HttpPath.Guild.GET_GUILD).request(guild.getString("id")).getAsJSONObject();
-                    builder.buildGuild(get); // Guild added to identity automatically
+                    if (guild.has("unavailable") && guild.getBoolean("unavailable")) {
+                        guild = new Requester(identity, HttpPath.Guild.GET_GUILD).request(guild.getString("id")).getAsJSONObject();
+                    }
+                    builder.buildGuild(guild); // Guild added to identity automatically
                 }
                 LOG.log(LogLevel.DEBUG, "[READY] Guilds: " + guilds.length());
 
@@ -57,7 +59,11 @@ public class GatewayEventHandler extends EventHandler {
                 for (int i = 0; i < pms.length(); i++) {
                     JSONObject pm = pms.getJSONObject(i);
 
-                    builder.buildPrivateChannel(pm);
+                    if (pm.getJSONArray("recipients").length() > 1) { // Group
+
+                    } else {
+                        builder.buildPrivateChannel(pm);
+                    }
                 }
                 LOG.log(LogLevel.DEBUG, "[READY] Private Channels: " + pms.length());
 
@@ -66,41 +72,47 @@ public class GatewayEventHandler extends EventHandler {
                 identity.setSelf(self);
                 LOG.log(LogLevel.DEBUG, "[READY] Self");
 
-                if (identity.getType() == IdentityType.CLIENT) {
+                if (identity.getType().equals(IdentityType.CLIENT)) {
 
-                    Client client = identity.getClient();
-                    ObjectBuilder cb = new ObjectBuilder(client);
+                    try {
 
-                    /* Create Client Setting */
-                    ClientSetting setting = cb.buildClientSetting(json.getJSONObject("user_settings"));
-                    client.setSetting(setting);
+                        Client client = identity.getClient();
+                        ObjectBuilder cb = new ObjectBuilder(client);
 
-                    /* Create Profile */
-                    Profile profile = cb.buildProfile(json.getJSONObject("user"), self);
-                    client.setProfile(profile);
+                        /* Create Client Setting */
+                        ClientSetting setting = cb.buildClientSetting(json.getJSONObject("user_settings"));
+                        client.setSetting(setting);
 
-                    /* Create Relationships */
-                    JSONArray relations = json.getJSONArray("relationships");
-                    for (int i = 0; i < relations.length(); i++) {
-                        JSONObject rs = relations.getJSONObject(i);
-                        cb.buildRelationship(rs); // Added to client automatically
+                        /* Create Profile */
+                        Profile profile = cb.buildProfile(json.getJSONObject("user"), self);
+                        client.setProfile(profile);
+
+                        /* Create Relationships */
+                        JSONArray relations = json.getJSONArray("relationships");
+                        for (int i = 0; i < relations.length(); i++) {
+                            JSONObject rs = relations.getJSONObject(i);
+                            cb.buildRelationship(rs); // Added to client automatically
+                        }
+                        LOG.log(LogLevel.DEBUG, "[READY] Client - Relationships");
+
+                        /* Create Guild and TextChannel Settings */
+                        JSONArray settings = json.getJSONArray("user_guild_settings");
+                        for (int i = 0; i < settings.length(); i++) {
+                            JSONObject gs = settings.getJSONObject(i);
+                            cb.buildGuildSetting(gs); // Added to client automatically
+                        }
+                        LOG.log(LogLevel.DEBUG, "[READY] Client - Guild & TextChannel Settings");
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    LOG.log(LogLevel.DEBUG, "[READY] Client - Relationships");
-
-                    /* Create Guild and TextChannel Settings */
-                    JSONArray settings = json.getJSONArray("user_guild_settings");
-                    for (int i = 0; i < settings.length(); i++) {
-                        JSONObject gs = settings.getJSONObject(i);
-                        cb.buildGuildSetting(gs); // Added to client automatically
-                    }
-                    LOG.log(LogLevel.DEBUG, "[READY] Client - Guild & TextChannel Settings");
                 }
 
                 dispatchEvent(new ReadyEvent(identity, gateway, sequence, session_id));
 
                 identity.CONNECTION = Identity.Connection.READY;
             } catch (Exception e) {
-                LOG.log(LogLevel.ERROR, e);
+                e.printStackTrace();
+//                LOG.log(LogLevel.ERROR, e);
             }
 
         /* Resume Event */

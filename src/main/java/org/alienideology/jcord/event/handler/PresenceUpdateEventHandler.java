@@ -21,7 +21,7 @@ public class PresenceUpdateEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        User user = (User) identity.getUser(json.getJSONObject("user").getString("key"));
+        User user = (User) identity.getUser(json.getJSONObject("user").getString("id"));
         if (user == null) {
             identity.LOG.log(LogLevel.FETAL, "[UNKNOWN USER] [PRESENCE_UPDATE_EVENT]");
             return;

@@ -1,6 +1,7 @@
 package org.alienideology.jcord.handle.audit;
 
 import org.alienideology.jcord.handle.IDiscordObject;
+import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.user.IUser;
 
@@ -50,6 +51,16 @@ public interface IAuditLog extends IDiscordObject {
      * @return A collection of log entries with the same target ID.
      */
     Collection<ILogEntry> getEntriesByTarget(String targetId);
+
+    /**
+     * Get entries by the same target ID.
+     *
+     * @param id The snowflake entity.
+     * @return A collection of log entries with the same target ID.
+     */
+    default Collection<ILogEntry> getEntriesByTarget(ISnowFlake id) {
+        return getEntriesByTarget(id.getId());
+    }
 
     /**
      * Get entries that are caused by the same user.

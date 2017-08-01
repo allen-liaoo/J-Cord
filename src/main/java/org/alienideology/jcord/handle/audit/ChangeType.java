@@ -6,7 +6,7 @@ import org.alienideology.jcord.handle.permission.PermOverwrite;
 import java.util.Objects;
 
 /**
- * ChangeType - Types of changes for a {@link ILogChange}. The generic field of any enum is the expected value type for both
+ * ChangeType - Types of {@link ILogChange}. The generic field of any enum is the expected value type for both
  * {@link ILogChange#getNewValue()} and {@link ILogChange#getOldValue()}.
  *
  * @author AlienIdeology

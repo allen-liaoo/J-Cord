@@ -43,6 +43,14 @@ IDiscordObject - Entities such as Guild, User, or Channel.
  - IInvite - A piece of url used to invite users to a guild.
  - Icon - An encoded(base64) image, can be an avatar or picture.
 
+### Audit Log
+AuditLog - An audit log that belongs to a guild. Used to get log entries.
+ - ILogEntry - An audit log entry, with information such as changes and options of an entry.
+ - LogType (Enumeration) - Types of log entries.
+ - LogOption (Enumeration) - Optional information that are only visible for certain {@link LogType}.
+ - ILogChange - A change to a certain value. An audit log entry can contain multiple changes.
+ - ChangeType (Enumeration) - Types of log changes.
+
 ### Guild
 IGuild - A collection of users and channels, often referred to in the UI as a server.
  - IMember - A user representation in a guild.
@@ -108,14 +116,6 @@ OAuth - Used to build applications that utilize authentication and data from the
  - OAuthBuilder - A builder for building instance of OAuth and OAuth authorization URL.
  - Scope - Provides access to certain resources of a user account.
 
-## Exception
- - HigherHierarchyException - When the identity tries to modify a member or role higher than it's hierarchy, this exception is fired.
- - PermissionException - When the identity request an action that it does not have permission to do so, a PermissionException is thrown.
- - RateLimitException - An exception for gateway rate limits.
- - ErrorResponseException - An exception for Json Error Responses.
- - HttpErrorException - An exception for Http Error Codes.
- - ScopeException - When the identity try to access a resource outside of its scopes.
-
 ## Utility
  - Cache - Cache objects into a customized list.
  - Seekable - Multi-threaded future.
@@ -125,7 +125,17 @@ OAuth - Used to build applications that utilize authentication and data from the
    - LogMode - The logger mode, used to filter logs for the JCordLogger.
    - LogLevel - The logger level, used to indicate the log types.
 
-## Gateway (Internal)
+## Internal
+
+### Exception
+ - HigherHierarchyException - When the identity tries to modify a member or role higher than it's hierarchy, this exception is fired.
+ - PermissionException - When the identity request an action that it does not have permission to do so, a PermissionException is thrown.
+ - RateLimitException - An exception for gateway rate limits.
+ - ErrorResponseException - An exception for Json Error Responses.
+ - HttpErrorException - An exception for Http Error Codes.
+ - ScopeException - When the identity try to access a resource outside of its scopes.
+
+### Gateway
 Gateway - The communication between J-Cord and Discord API.
  - GatewayAdaptor - Communication client for Discord GateWay.
  - Requester - A Http Requester for HttpPath.
@@ -134,3 +144,8 @@ Gateway - The communication between J-Cord and Discord API.
  - DisconnectionCode (Enumeration) - Disconnection Code sent when Discord gateway closed.
  - ErrorCode (Enumeration) - HTTP Response/Error Codes.
  - ErrorResponse (Enumeration) - Json Error Responses.
+
+### Object
+The package contains implementations of the Discord objects.
+ - Jsonable - Objects that can be serialized to json.
+ - ObjectBuilder - A builder for building Discord objects from json.

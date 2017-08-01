@@ -39,7 +39,7 @@ public final class ChannelBuilder implements Buildable<ChannelBuilder, IGuildCha
      * @return The text channel built.
      */
     public ITextChannel buildTextChannel() {
-        return new TextChannel(null, null, null, name, 0, null, null)
+        return new TextChannel(null, null, null, name, 0, null)
                 .setPermOverwrites(overwrites);
     }
 

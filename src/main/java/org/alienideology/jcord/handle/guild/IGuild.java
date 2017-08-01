@@ -379,7 +379,7 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
         LOW (1),
         MEDIUM (2),
         HIGH (3),
-        SUPER (4),
+        VERY_HIGH (4),
         UNKNOWN (-1);
 
         public final int key;
@@ -421,11 +421,35 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     }
 
     /**
+     * Guild Explicit Content Filter Level
+     */
+    enum ContentFilterLevel {
+        DISABLED (0),
+        MEMBERS_WITHOUT_ROLES (1),
+        ALL_MEMBERS (2),
+        UNKNOWN (-1);
+
+        public final int key;
+
+        ContentFilterLevel (int key) {
+            this.key = key;
+        }
+
+        public static ContentFilterLevel getByKey(int key) {
+            for (ContentFilterLevel cfl : values()) {
+                if (cfl.key == key) return cfl;
+            }
+            return UNKNOWN;
+        }
+
+    }
+
+    /**
      * Guild MFA Level
      */
     enum MFA {
         NONE (0),
-        TWO_FACTOR (1),
+        ELEVATED (1),
         UNKNOWN (-1);
 
         public final int key;

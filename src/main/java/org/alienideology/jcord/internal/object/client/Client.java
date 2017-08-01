@@ -116,7 +116,8 @@ public class Client extends DiscordObject implements IClient {
     @Override
     public String toString() {
         return "Client{" +
-                "identity=" + identity +
+                "profile=" + profile +
+                ", identity=" + identity +
                 '}';
     }
 }

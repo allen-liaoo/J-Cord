@@ -3,6 +3,7 @@ package org.alienideology.jcord.internal.object;
 import org.json.JSONObject;
 
 /**
+ * Jsonable - Objects that can be serialized to json.
  * @author AlienIdeology
  */
 @FunctionalInterface

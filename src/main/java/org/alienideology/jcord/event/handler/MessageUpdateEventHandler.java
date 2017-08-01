@@ -18,7 +18,7 @@ public class MessageUpdateEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        Message edited = builder.buildMessageById(json.getString("channel_id"), json.getString("key"));
+        Message edited = builder.buildMessageById(json.getString("channel_id"), json.getString("id"));
         MessageChannel channel = (MessageChannel) edited.getChannel();
 
         if (!edited.isFromSelf()) { // Not from self

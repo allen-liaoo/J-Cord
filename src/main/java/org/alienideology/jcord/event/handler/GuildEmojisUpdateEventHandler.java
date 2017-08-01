@@ -40,7 +40,7 @@ public class GuildEmojisUpdateEventHandler extends EventHandler {
         for (IGuildEmoji emoji : guild.getGuildEmojis()) {
             boolean isDeleted = true;
             for (int i = 0; i < emojis.length(); i++) { // Iterates through the JSONArray, and check if the emoji is deleted
-                if (emoji.getId().equals(emojis.getJSONObject(i).getString("key"))) { // Find a match, not deleted
+                if (emoji.getId().equals(emojis.getJSONObject(i).getString("id"))) { // Find a match, not deleted
                     isDeleted = false;
                     break;
                 }
@@ -55,7 +55,7 @@ public class GuildEmojisUpdateEventHandler extends EventHandler {
         for (int i = 0; i < emojis.length(); i++) {
             JSONObject emojiJson = emojis.getJSONObject(i);
 
-            GuildEmoji emoji = (GuildEmoji) guild.getGuildEmoji(emojiJson.getString("key"));
+            GuildEmoji emoji = (GuildEmoji) guild.getGuildEmoji(emojiJson.getString("id"));
             GuildEmoji newEmoji = builder.buildEmoji(emojiJson, guild); // Automatically add emoji to guild if appropriate
 
             if (emoji == null) { // New emoji, not cached yet

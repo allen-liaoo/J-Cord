@@ -31,13 +31,6 @@ public interface IMessageChannel extends IChannel {
     IGuild getGuild();
 
     /**
-     * Get the latest message of this channel.
-     *
-     * @return The latest message.
-     */
-    IMessage getLatestMessage();
-
-    /**
      * Get the message history of this channel.
      *
      * @return The message history.
@@ -50,7 +43,7 @@ public interface IMessageChannel extends IChannel {
      * @exception PermissionException
      *          If the identity does not have {@code Read Message History} permission.
      *
-     * @param id The key of the message
+     * @param id The id of the message
      * @return The message object
      */
     IMessage getMessage(String id);

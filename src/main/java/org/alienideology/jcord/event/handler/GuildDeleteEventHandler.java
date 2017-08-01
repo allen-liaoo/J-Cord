@@ -19,7 +19,7 @@ public class GuildDeleteEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        String id = json.getString("key");
+        String id = json.getString("id");
         boolean unavailable = json.has("unavailable") && json.getBoolean("unavailable");
 
         if (unavailable) {

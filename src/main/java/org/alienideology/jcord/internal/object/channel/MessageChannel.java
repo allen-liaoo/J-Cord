@@ -44,34 +44,27 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     private Guild guild;
     private MessageHistory history;
-    private Message latestMessage;
 
     /**
      * Constructor for PrivateChannel
      */
-    public MessageChannel(IdentityImpl identity, String id, Type type, Message latestMessage) {
-        this(identity, id, type, null, latestMessage);
+    public MessageChannel(IdentityImpl identity, String id, Type type) {
+        this(identity, id, type, null);
     }
 
     /**
      * Constructor for TextChannel
      */
-    public MessageChannel(IdentityImpl identity, String id, Type type, Guild guild, Message latestMessage) {
+    public MessageChannel(IdentityImpl identity, String id, Type type, Guild guild) {
         super(identity, id, type);
         this.guild = guild;
         this.history = new MessageHistory(this);
-        this.latestMessage = latestMessage;
     }
 
     @Override
     @Nullable
     public IGuild getGuild() {
         return guild;
-    }
-
-    @Override
-    public IMessage getLatestMessage() {
-        return latestMessage;
     }
 
     @Override
@@ -85,7 +78,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.READ_MESSAGE_HISTORY);
         }
 
-        if (latestMessage.getId().equals(id)) return latestMessage;
         if (getHistory().getCachedMessages().get(id) != null) return getHistory().getCachedMessages().get(id);
 
         JSONObject msg = new Requester(identity, HttpPath.Channel.GET_CHANNEL_MESSAGE).request(this.id, id).getAsJSONObject();
@@ -94,14 +86,12 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     @Override
     public IMessage sendMessage(String message) {
-        send(((Message) new MessageBuilder().setContent(message).build()).toJson());
-        return latestMessage;
+        return send(((Message) new MessageBuilder().setContent(message).build()).toJson());
     }
 
     @Override
     public IMessage sendMessageFormat(String format, Object... args) {
-        sendMessage(new MessageBuilder().appendContentFormat(format, args).build().toString());
-        return latestMessage;
+        return sendMessage(new MessageBuilder().appendContentFormat(format, args).build().toString());
     }
 
     @Override
@@ -127,7 +117,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
         JSONObject msg = new Requester(identity, HttpPath.Channel.CREATE_MESSAGE).request(id)
                 .updateRequestWithBody(http -> http.body(json)).getAsJSONObject();
         Message message = new ObjectBuilder(identity).buildMessage(msg);
-        setLatestMessage(message);
         return message;
     }
 
@@ -216,7 +205,6 @@ public class MessageChannel extends Channel implements IMessageChannel {
         JSONObject msg = new Requester(identity, HttpPath.Channel.EDIT_MESSAGE).request(this.id, id)
                 .updateRequestWithBody(http -> http.header("Content-Type", "application/json").body(json)).getAsJSONObject();
         Message edited = new ObjectBuilder(identity).buildMessage(msg);
-        if (id.equals(latestMessage.getId())) setLatestMessage(edited); // Set latest message
         return edited;
     }
 
@@ -349,7 +337,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
             List<IUser> users = new ArrayList<>();
             for (int i = 0; i < reacters.length(); i++) {
-                users.add(identity.getUser(reacters.getJSONObject(i).getString("key")));
+                users.add(identity.getUser(reacters.getJSONObject(i).getString("id")));
             }
 
             return users;
@@ -475,13 +463,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
         return "MessageChannel{" +
                 "key='" + id + '\'' +
                 ", isPrivate=" + isPrivate +
-                ", latestMessage=" + latestMessage +
                 '}';
-    }
-
-    public MessageChannel setLatestMessage(IMessage latestMessage) {
-        this.latestMessage = (Message) latestMessage;
-        return this;
     }
 
 }

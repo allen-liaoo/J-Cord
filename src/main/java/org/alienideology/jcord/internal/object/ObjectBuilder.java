@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object;
 
+import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.handle.audit.*;
 import org.alienideology.jcord.handle.channel.IChannel;
@@ -15,7 +16,6 @@ import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
-import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
@@ -49,7 +49,7 @@ import java.util.*;
 import java.util.List;
 
 /**
- * A builder for building DiscordObjects
+ * ObjectBuilder - A builder for building Discord objects from json.
  *
  * @author AlienIdeology
  */
@@ -115,34 +115,45 @@ public final class ObjectBuilder {
             }
 
             /* Build Channels */
+            // Channels array are only present at Client Ready Event or Guild Create Event.
             // LastMessage requires role field
-            try {
-                JSONArray guildChannels = new Requester(identity, HttpPath.Guild.GET_GUILD_CHANNELS).request(id).getAsJSONArray();
-
-                for (int i = 0; i < guildChannels.length(); i++) {
-
-                    JSONObject newChannel = guildChannels.getJSONObject(i);
-                    IGuildChannel channel = buildGuildChannel(newChannel);
-
-                    guild.addGuildChannel((IGuildChannel) channel);
+            JSONArray guildChannels = null;
+            if (identity.getType().equals(IdentityType.CLIENT)) {
+                guildChannels = json.getJSONArray("channels");
+            } else {
+                try {
+                    guildChannels = new Requester(identity, HttpPath.Guild.GET_GUILD_CHANNELS).request(id).getAsJSONArray();
+                } catch (RuntimeException e) {
+                    identity.LOG.log(LogLevel.FETAL, "Building guild channels. (Guild: " + guild.toString() + ")", e);
                 }
+            }
 
-            } catch (RuntimeException e) {
-                identity.LOG.log(LogLevel.FETAL, "Building guild channels. (Guild: "+guild.toString()+")", e);
+            for (int i = 0; i < guildChannels.length(); i++) {
+
+                JSONObject newChannel = guildChannels.getJSONObject(i);
+                IGuildChannel channel = buildGuildChannel(guild, newChannel); // Sometimes "guild_id" is not present
+
+                guild.addGuildChannel((IGuildChannel) channel);
             }
 
             /* Build Members */
+            // Members array are only present at Client Ready Event or Guild Create Event.
             // Build this after roles because members have roles field
-            try {
-                JSONArray members = new Requester(identity, HttpPath.Guild.LIST_GUILD_MEMBERS).request(id)
-                        .updateGetRequest(r -> r.queryString("limit", "1000")).getAsJSONArray();
-                for (int i = 0; i < members.length(); i++) {
-                    JSONObject member = members.getJSONObject(i);
-                    guild.addMember(buildMember(member, guild));
+            JSONArray members = null;
+            if (identity.getType().equals(IdentityType.CLIENT)) {
+                members = json.getJSONArray("members");
+            } else {
+                try {
+                    members = new Requester(identity, HttpPath.Guild.LIST_GUILD_MEMBERS).request(id)
+                            .updateGetRequest(r -> r.queryString("limit", "1000")).getAsJSONArray();
+                } catch (RuntimeException e) {
+                    identity.LOG.log(LogLevel.FETAL,"Building guild members. (Guild: "+guild.toString()+")", e);
                 }
+            }
 
-            } catch (RuntimeException e) {
-                identity.LOG.log(LogLevel.FETAL,"Building guild members. (Guild: "+guild.toString()+")", e);
+            for (int i = 0; i < members.length(); i++) {
+                JSONObject member = members.getJSONObject(i);
+                guild.addMember(buildMember(member, guild));
             }
 
             guild.setOwner(owner).setChannels(afk_channel, embed_channel);
@@ -162,10 +173,12 @@ public final class ObjectBuilder {
         return buildGuild(guild);
     }
 
-    public IGuildChannel buildGuildChannel (JSONObject json) {
+    // Build guild channel when the key "guild_id" is present.
+    // Otherwise use provided guild instance.
+    public IGuildChannel buildGuildChannel (IGuild guild, JSONObject json) {
         handleBuildError(json);
 
-        String guild_id = json.getString("guild_id");
+        String guild_id = json.has("guild_id") ? json.getString("guild_id") : guild.getId();
         String id = json.getString("id");
         String name = json.getString("name");
         int position = json.getInt("position");
@@ -185,24 +198,19 @@ public final class ObjectBuilder {
 
         if (type.equals(IChannel.Type.GUILD_TEXT)) {
             String topic = json.isNull("topic") ? null : json.getString("topic");
-            String last_msg = !json.has("last_message_id") || json.isNull("last_message_id") ? null : json.getString("last_message_id");
-            Message lastMessage = null;
-            if (last_msg != null) {
-                try {
-                    lastMessage = buildMessageById(id, last_msg);
-                } catch (HttpErrorException ignored) { }
-            }
-            TextChannel tc = new TextChannel(identity, guild_id, id, name, position, topic, lastMessage)
+            return new TextChannel(identity, guild_id, id, name, position, topic)
                     .setPermOverwrites(overwrites);
-            if (lastMessage != null) lastMessage.setChannel(tc);
-            return tc;
         } else {
             int bitrate = json.getInt("bitrate");
             int user_limit = json.getInt("user_limit");
-            VoiceChannel vc = new VoiceChannel(identity, guild_id, id, name, position, bitrate, user_limit)
+            return new VoiceChannel(identity, guild_id, id, name, position, bitrate, user_limit)
                     .setPermOverwrites(overwrites);
-            return vc;
         }
+    }
+
+    // Build guild, assuming "guild_id" is present
+    public IGuildChannel buildGuildChannel (JSONObject json) {
+        return buildGuildChannel(null, json);
     }
 
     public IGuildChannel buildGuildChannelById (String id) {
@@ -225,17 +233,9 @@ public final class ObjectBuilder {
             throw new RuntimeException("Cannot build a Group as a Private Channel!");
         }
         User recipient = buildUser(recipients.getJSONObject(0));
-        String last_msg = !json.has("last_message_id") || json.isNull("last_message_id") ? null : json.getString("last_message_id");
-        Message lastMessage = null;
-        if (last_msg != null) {
-            try {
-                lastMessage = buildMessageById(id, last_msg);
-            } catch (HttpErrorException ignored) { }
-        }
 
-        PrivateChannel dm = new PrivateChannel(identity, id, recipient, lastMessage);
+        PrivateChannel dm = new PrivateChannel(identity, id, recipient);
         identity.addPrivateChannel(dm);
-        if (lastMessage != null) lastMessage.setChannel(dm);
         return dm;
     }
 
@@ -726,7 +726,7 @@ public final class ObjectBuilder {
      */
     public Relationship buildRelationship(JSONObject json) {
         IRelationship.Type type = IRelationship.Type.getByKey(json.getInt("type"));
-        User user = (User) identity.getUser(json.getJSONObject("user").getString("id"));
+        User user = (User) identity.getUser(json.getString("id"));
         if (user == null) {
             user = buildUser(json.getJSONObject("user"));
         }

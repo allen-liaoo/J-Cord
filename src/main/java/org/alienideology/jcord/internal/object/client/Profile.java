@@ -38,4 +38,14 @@ public class Profile extends User implements IProfile {
         return isPremium;
     }
 
+    @Override
+    public String toString() {
+        return "Profile{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", discriminator='" + discriminator + '\'' +
+                ", onMobile=" + onMobile +
+                ", isPremium=" + isPremium +
+                '}';
+    }
 }

@@ -106,7 +106,7 @@ public class BotApplication implements IBotApplication {
     @Override
     public String toString() {
         return "BotApplication{" +
-                "key='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", owner=" + owner +
                 '}';

@@ -23,7 +23,7 @@ public class ChannelDeleteEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        Channel channel = (Channel) identity.getChannel(json.getString("key"));
+        Channel channel = (Channel) identity.getChannel(json.getString("id"));
         OffsetDateTime timeStamp = OffsetDateTime.now();
 
         if (channel.isType(IChannel.Type.DM)) {

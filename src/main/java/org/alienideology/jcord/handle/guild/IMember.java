@@ -159,7 +159,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
     /**
      * Get a role by ID.
      *
-     * @param id The key of a role.
+     * @param id The id of a role.
      * @return The role or null if no role is found.
      */
     @Nullable
