@@ -116,12 +116,18 @@ public final class IdentityImpl implements Identity {
 
     @Override
     public IBot getAsBot() {
+        if (type.equals(IdentityType.CLIENT)) {
+            throw new IllegalArgumentException("Cannot get the bot instance from a client identity!");
+        }
         return bot;
     }
 
     @Override
     @Nullable
     public IClient getAsClient() {
+        if (type.equals(IdentityType.BOT)) {
+            throw new IllegalArgumentException("Cannot get the client instance from a bot identity!");
+        }
         return client;
     }
 

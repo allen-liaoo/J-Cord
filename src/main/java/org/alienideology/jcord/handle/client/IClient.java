@@ -30,9 +30,9 @@ public interface IClient extends IDiscordObject {
     IClientSetting getSetting();
 
     /**
-     * Get a relationship by an user key.
+     * Get a relationship by an user id.
      *
-     * @param userId The user key.
+     * @param userId The user id.
      * @return The relationship, or null if no relationship is found.
      */
     @Nullable
@@ -51,6 +51,22 @@ public interface IClient extends IDiscordObject {
      * @return The relationships.
      */
     List<IRelationship> getRelationships();
+
+    /**
+     * Get a note by an user id.
+     *
+     * @param userId The user id.
+     * @return The note, or null if no note is found.
+     */
+    @Nullable
+    INote getNote(String userId);
+
+    /**
+     * Get a list of all notes.
+     *
+     * @return The notes.
+     */
+    List<INote> getNotes();
 
     /**
      * Get a guild setting by guild ID.
@@ -86,5 +102,22 @@ public interface IClient extends IDiscordObject {
      * @return The guild settings.
      */
     List<IGuildSetting> getGuildSettings();
+
+    /**
+     * Get an application by ID.
+     * This method performs an http request.
+     *
+     * @param id The application id.
+     * @return The application, or null if no application is found.
+     */
+    @Nullable
+    IApplication getApplication(String id);
+
+    /**
+     * Get a list of applications this client owns.
+     *
+     * @return The applications.
+     */
+    List<IApplication> getApplications();
 
 }

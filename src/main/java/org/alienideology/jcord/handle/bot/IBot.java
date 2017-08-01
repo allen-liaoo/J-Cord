@@ -4,7 +4,7 @@ import org.alienideology.jcord.bot.BotInviteBuilder;
 import org.alienideology.jcord.handle.IDiscordObject;
 
 /**
- * Bot - The core of a Discord Bot, integrated with bot utilities.
+ * IBot - The core of a Discord IBot, integrated with bot utilities.
  * 
  * @author AlienIdeology
  */

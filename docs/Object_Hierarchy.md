@@ -32,9 +32,11 @@ IClientObject - Generic Client Objects.
  - IProfile - The client user, with Discord Nitro and more information.
  - IClientSetting - he app settings of a Discord client.
  - IRelationship - A connection between two Discord user accounts.
+ - INote - A note that the client can attach to any users. The note is only visible to the client.
  - IGuildSetting - A guild setting specifically for clients.
  - ITextChannelSetting - A channel notification setting for clients.
- - MessageNotification - The message notification level on the client side.
+ - MessageNotification (Enumeration) - The message notification level on the client side.
+ - IApplication - An application that the client owns.
 
 ## Discord Objects
 IDiscordObject - Entities such as Guild, User, or Channel.

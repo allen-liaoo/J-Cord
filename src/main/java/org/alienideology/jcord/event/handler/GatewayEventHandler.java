@@ -92,7 +92,14 @@ public class GatewayEventHandler extends EventHandler {
                             JSONObject rs = relations.getJSONObject(i);
                             cb.buildRelationship(rs); // Added to client automatically
                         }
-                        LOG.log(LogLevel.DEBUG, "[READY] Client - Relationships");
+                        LOG.log(LogLevel.DEBUG, "[READY] Client - Relationships: " + relations.length());
+
+                        /* Create Notes */
+                        JSONObject notes = json.getJSONObject("notes");
+                        for (String key : notes.keySet()) {
+                            cb.buildNote(key, notes.getString(key)); // Added to client automatically
+                        }
+                        LOG.log(LogLevel.DEBUG, "[READY] Client - Notes: " + notes.length());
 
                         /* Create Guild and TextChannel Settings */
                         JSONArray settings = json.getJSONArray("user_guild_settings");
@@ -100,7 +107,7 @@ public class GatewayEventHandler extends EventHandler {
                             JSONObject gs = settings.getJSONObject(i);
                             cb.buildGuildSetting(gs); // Added to client automatically
                         }
-                        LOG.log(LogLevel.DEBUG, "[READY] Client - Guild & TextChannel Settings");
+                        LOG.log(LogLevel.DEBUG, "[READY] Client - Guild (& TextChannel) Settings: " + settings.length());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

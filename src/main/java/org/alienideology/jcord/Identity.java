@@ -102,21 +102,21 @@ public interface Identity {
 
     /**
      * Get this identity as a {@link IBot}.
-     * If the identity type is {@link IdentityType#CLIENT}, then this will returns null.
      *
+     * @exception IllegalArgumentException
+     *          If the identity type is {@link IdentityType#CLIENT}.
      * @return The bot.
      */
-    @Nullable
-    IBot getAsBot();
+    IBot getAsBot() throws IllegalArgumentException;
 
     /**
      * Get this identity as a {@link IClient}.
-     * If the identity type is {@link IdentityType#BOT}, then this will returns null.
      *
+     * @exception IllegalArgumentException
+     *          If the identity type is {@link IdentityType#BOT}.
      * @return The client.
      */
-    @Nullable
-    IClient getAsClient();
+    IClient getAsClient() throws IllegalArgumentException;
 
     /**
      * Get the self user of this identity.

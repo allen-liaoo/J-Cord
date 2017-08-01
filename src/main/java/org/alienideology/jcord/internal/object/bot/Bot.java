@@ -29,7 +29,7 @@ public class Bot extends DiscordObject implements IBot {
     }
 
     public IBotApplication getAsApplication() {
-        JSONObject json = new Requester(identity, HttpPath.OAuth.GET_CURRENT_APPLICATION_INFORMATION)
+        JSONObject json = new Requester(identity, HttpPath.Application.GET_BOT_APPLICATION)
                 .request()
                 .getAsJSONObject();
         return new ObjectBuilder(identity).buildBotApplication(json);

@@ -194,7 +194,6 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             switch (key) {
                 case "READY": {
                     session_id = event.getString("session_id");
-                    LOG.log(LogLevel.DEBUG, "[RECEIVED] Ready Event");
                     break;
                 }
                 case "RESUMED": {

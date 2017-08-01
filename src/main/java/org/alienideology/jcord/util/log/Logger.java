@@ -24,6 +24,9 @@ public class Logger implements Serializable {
     private String name;
     private LogMode mode;
 
+    private List<LogLevel> enabledLevels = new ArrayList<>();
+    private List<LogLevel> ignoreLevel = new ArrayList<>();
+
     private PrintStream printStream;
     private PrintStream errorStream;
 
@@ -112,12 +115,17 @@ public class Logger implements Serializable {
      */
     public void log(LogLevel level, Object message, Throwable throwable) {
         /* Ignore Levels */
-        if (mode == ON && !level.isOnMode())
+        if (enabledLevels.contains(level)) {
+            // Continue
+        } else if (mode == ON && !level.isOnMode()) {
             return;
-        if (mode == SOME && !level.isSomeMode())
+        } else if (mode == SOME && !level.isSomeMode()) {
             return;
-        if (mode == OFF)
+        } else if (mode == OFF) {
             return;
+        } else if (ignoreLevel.contains(level)) {
+            return;
+        }
 
         final StringBuffer sb = new StringBuffer();
 
@@ -226,6 +234,8 @@ public class Logger implements Serializable {
      * @return True if the level is enabled.
      */
     public boolean isLevelEnabled(LogLevel level) {
+        if (enabledLevels.contains(level)) return true;
+        else if (ignoreLevel.contains(level)) return false;
         switch (mode) {
             case ALL:
                 return true;
@@ -241,6 +251,54 @@ public class Logger implements Serializable {
                 return false;
         }
         return true;
+    }
+
+    /**
+     * Get all levels that are specified to enable logging.
+     * This does not contains levels that are enabled by the {@link LogMode}.
+     * All enabled levels must be specified by invoking {@link #setEnabledLevels(LogLevel...)}.
+     *
+     * @return Get enabled levels.
+     */
+    public List<LogLevel> getEnabledLevels() {
+        return enabledLevels;
+    }
+
+    /**
+     * Set specific log levels to enable logging, independent from the {@link #setMode(LogMode)}.
+     *
+     * @param enabledLevels The levels to enable logging.
+     * @return Logger for chaining.
+     */
+    public Logger setEnabledLevels(LogLevel... enabledLevels) {
+        this.enabledLevels.clear();
+        this.enabledLevels.addAll(Arrays.asList(enabledLevels));
+        return this;
+    }
+
+    /**
+     * Get all levels that are specified to disable logging.
+     * If the {@link LogLevel} is also enabled, then it will not be ignored.
+     *
+     * This does not contains levels that are ignored by the {@link LogMode}.
+     * All ignored levels must be specified by invoking {@link #setIgnoreLevel(LogLevel...)}.
+     *
+     * @return Get ignored levels.
+     */
+    public List<LogLevel> getIgnoreLevel() {
+        return ignoreLevel;
+    }
+
+    /**
+     * Set specific log levels to ignore logging, independent from the {@link #setMode(LogMode)}.
+     *
+     * @param ignoreLevel The levels to disable, or ignore logging.
+     * @return Logger for chaining.
+     */
+    public Logger setIgnoreLevel(LogLevel... ignoreLevel) {
+        this.ignoreLevel.clear();
+        this.ignoreLevel.addAll(Arrays.asList(ignoreLevel));
+        return this;
     }
 
     /**
@@ -454,6 +512,8 @@ public class Logger implements Serializable {
     public Logger clone(String name) {
         name = name == null ? this.name : name;
         return new Logger(mode, name)
+                .setEnabledLevels(enabledLevels.toArray(new LogLevel[enabledLevels.size()]))
+                .setIgnoreLevel(ignoreLevel.toArray(new LogLevel[ignoreLevel.size()]))
                 .setPrintStream(printStream)
                 .setShowDate(showDate)
                 .setDateFormatter(dateFormatter)

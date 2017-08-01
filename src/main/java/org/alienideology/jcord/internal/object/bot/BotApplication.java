@@ -26,7 +26,8 @@ public class BotApplication implements IBotApplication {
     private final boolean isPublicBot;
     private final boolean requireCodeGrant;
 
-    public BotApplication(IdentityImpl identity, String id, String name, String icon, String description, User owner, List<String> rpcOrigins, boolean isPublicBot, boolean requireCodeGrant) {
+    public BotApplication(IdentityImpl identity, String id, String name, String icon, String description, User owner,
+                          List<String> rpcOrigins, boolean isPublicBot, boolean requireCodeGrant) {
         this.identity = identity;
         this.id = id;
         this.name = name;

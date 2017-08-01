@@ -650,10 +650,9 @@ public final class ObjectBuilder {
         return new LogChange(type, newVal, oldVal);
     }
 
-    //---------------------Bot---------------------
+    //---------------------IBotUser---------------------
 
     public BotApplication buildBotApplication(JSONObject json) {
-        System.out.append(json.toString(4));
         String id = json.getString("id");
         String name = json.getString("name");
         String icon = json.isNull("icon") ? null : json.getString("icon");
@@ -719,12 +718,6 @@ public final class ObjectBuilder {
                 json.has("premium") && json.getBoolean("premium"));
     }
 
-    /**
-     * Built an relationship object with provided json.
-     *
-     * @param json The json relationship object.
-     * @return The relationship built.
-     */
     public Relationship buildRelationship(JSONObject json) {
         IRelationship.Type type = IRelationship.Type.getByKey(json.getInt("type"));
         User user = (User) identity.getUser(json.getString("id"));
@@ -735,6 +728,12 @@ public final class ObjectBuilder {
         Relationship relationship = new Relationship(client, type, user);
         client.addRelationship(relationship);
         return relationship;
+    }
+
+    public Note buildNote(String userId, String content) {
+        Note note = new Note(client, identity.getUser(userId), content);
+        client.addNote(note);
+        return note;
     }
 
     public GuildSetting buildGuildSetting(JSONObject json) {
@@ -759,6 +758,37 @@ public final class ObjectBuilder {
         MessageNotification notifSetting = MessageNotification.getByKey(json.getInt("message_notifications"));
         boolean muted = json.has("muted") && json.getBoolean("muted");
         return new ChannelSetting(client, channel, notifSetting, muted);
+    }
+
+    public Application buildApplication(JSONObject json) {
+        String id = json.getString("id");
+        String secret = json.getString("secret");
+        String name = json.getString("name");
+        String icon = json.isNull("icon") ? null : json.getString("icon");
+        String description = json.getString("description");
+
+        JSONArray uris = json.getJSONArray("redirect_uris");
+        List<String> redirectUris = new ArrayList<>();
+        for (int i = 0; i < uris.length(); i++) {
+            redirectUris.add(uris.getString(i));
+        }
+
+        if (json.has("bot")) {
+            boolean isPublicBot = json.has("bot_public") && json.getBoolean("bot_public");
+            boolean requireCodeGrant = json.has("bot_require_code_grant") && json.getBoolean("bot_require_code_grant");
+
+            JSONObject botJson = json.getJSONObject("bot");
+            String bId = botJson.getString("id");
+            String bToken = botJson.getString("token");
+            String bName = botJson.getString("username");
+            String bDiscriminator = botJson.getString("discriminator");
+            String bIcon = botJson.isNull("avatar") ? null : botJson.getString("avatar");
+            Application.BotUser bot = new Application.BotUser(bId, bToken, bName, bDiscriminator, bIcon);
+
+            return new Application(client, id, secret, name, icon, description, redirectUris, bot, isPublicBot, requireCodeGrant);
+        } else {
+            return new Application(client, id, secret, name, icon, description, redirectUris);
+        }
     }
 
     /**

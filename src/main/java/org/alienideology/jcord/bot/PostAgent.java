@@ -34,10 +34,10 @@ public class PostAgent {
             .setJsonServerKey("server_count");
 
     /**
-     * Default API Post Agent for <a href="https://discordbots.org/">Discord Bot List</a>.
+     * Default API Post Agent for <a href="https://discordbots.org/">Discord IBot List</a>.
      */
     public static PostAgent DISCORD_BOT_LIST = new PostAgent()
-            .setAPIName("Discord Bot List")
+            .setAPIName("Discord IBot List")
             .setPostUrl("https://discordbots.org/api/bots/:bot:/stats")
             .setJsonShardIDKey("shard_id")
             .setJsonShardKey("shard_count")
