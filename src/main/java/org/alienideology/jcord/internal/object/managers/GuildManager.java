@@ -139,6 +139,42 @@ public final class GuildManager implements IGuildManager {
     }
 
     @Override
+    public AuditAction<Void> enableGuildEmbed(boolean enableEmbed) {
+        return modifyEmbed(enableEmbed, guild.getEmbedChannel() == null ? null : guild.getEmbedChannel().getId());
+    }
+
+    @Override
+    public AuditAction<Void> modifyEmbedChannel(ITextChannel embedChannel) {
+        return modifyEmbedChannel(embedChannel.getId());
+    }
+
+    @Override
+    public AuditAction<Void> modifyEmbedChannel(String embedChannelId) {
+        return modifyEmbed(guild.isEmbedEnabled(), embedChannelId);
+    }
+
+    private AuditAction<Void> modifyEmbed(boolean enableEmbed, String channelId) {
+        try {
+            return new AuditAction<Void>((IdentityImpl) getIdentity(), HttpPath.Guild.MODIFY_GUILD_EMBED, guild.getId()) {
+                @Override
+                protected Void request(Requester requester) {
+                    requester.updateRequestWithBody(request ->
+                            request.body(new JSONObject()
+                                    .put("enabled", enableEmbed)
+                                    .put("channel_id", channelId)));
+                    return null;
+                }
+            };
+        } catch (HttpErrorException ex) {
+            if (ex.isPermissionException()) {
+                throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_SERVER);
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    @Override
     public AuditAction<Boolean> kickMember(IMember member) {
         return kickMember(member.getId());
     }

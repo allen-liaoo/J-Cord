@@ -11,7 +11,6 @@ import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.gateway.HttpPath;
-import org.alienideology.jcord.internal.object.guild.Guild;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -149,21 +148,28 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
      *
      * @return The verification level.
      */
-    Guild.Verification getVerificationLevel();
+    IGuild.Verification getVerificationLevel();
 
     /**
      * Get the notification level of this guild.
      *
      * @return The notification level.
      */
-    Guild.Notification getNotificationsLevel();
+    IGuild.Notification getNotificationsLevel();
+
+    /**
+     * Get the explicit content filter level of this guild.
+     *
+     * @return The content filter level.
+     */
+    IGuild.ContentFilterLevel getContentFilterLevel();
 
     /**
      * Get the MFA (Server Two-Factor Authentication) level of this guild.
      *
      * @return The MFA level.
      */
-    Guild.MFA getMFALevel();
+    IGuild.MFA getMFALevel();
 
     /**
      * Get the guild owner.

@@ -33,7 +33,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-// TODO: Explicit Content Filter
+// TODO: Guild Integration Object, GuildUnavailable
 public final class Guild extends DiscordObject implements IGuild {
 
     private final String id;
@@ -58,6 +58,7 @@ public final class Guild extends DiscordObject implements IGuild {
 
     private Verification verification_level;
     private Notification notifications_level;
+    private ContentFilterLevel ecf_level;
     private MFA mfa_level;
 
     private List<Role> roles;
@@ -74,7 +75,7 @@ public final class Guild extends DiscordObject implements IGuild {
      */
     public Guild (IdentityImpl identity, String id) {
         this(identity, id, null, null, null, null,
-                -1, false, -1, -1, -1);
+                -1, false, -1, -1, -1, -1);
     }
 
 
@@ -92,10 +93,10 @@ public final class Guild extends DiscordObject implements IGuild {
      * @param mfa_level Required MFA level
      */
     public Guild (IdentityImpl identity, String id, String name, String icon, String splash, String region,
-                  int afk_timeout, boolean embed_enabled, int verification_level, int notification_level, int mfa_level) {
+                  int afk_timeout, boolean embed_enabled, int verification_level, int notification_level, int ecf_level, int mfa_level) {
         super(identity);
         this.id = id;
-        isAvailable = true;
+        this.isAvailable = true;
         this.name = name;
         this.icon = icon;
         this.splash = splash;
@@ -104,6 +105,7 @@ public final class Guild extends DiscordObject implements IGuild {
         this.embed_enabled = embed_enabled;
         this.verification_level = Verification.getByKey(verification_level);
         this.notifications_level = Notification.getByKey(notification_level);
+        this.ecf_level = ContentFilterLevel.getByKey(ecf_level);
         this.mfa_level = MFA.getByKey(mfa_level);
         this.roles = new ArrayList<>();
         this.emojis = new ArrayList<>();
@@ -167,6 +169,11 @@ public final class Guild extends DiscordObject implements IGuild {
     @Override
     public Notification getNotificationsLevel() {
         return notifications_level;
+    }
+
+    @Override
+    public ContentFilterLevel getContentFilterLevel() {
+        return ecf_level;
     }
 
     @Override

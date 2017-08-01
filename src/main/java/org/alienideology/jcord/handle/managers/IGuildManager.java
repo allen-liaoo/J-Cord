@@ -174,6 +174,30 @@ public interface IGuildManager {
      */
     AuditAction<Void> modifySplash(Icon icon);
 
+    /**
+     * Enable or disable the guild embed.
+     *
+     * @param enableEmbed The boolean value, to either enable or disable guild embed.
+     * @return A void {@link AuditAction}, used to attach reason (or not) to the modify action.
+     */
+    AuditAction<Void> enableGuildEmbed(boolean enableEmbed);
+
+    /**
+     * Modify the embed channel of this guild.
+     *
+     * @param embedChannel The channel to embed.
+     * @return A void {@link AuditAction}, used to attach reason (or not) to the modify action.
+     */
+    AuditAction<Void> modifyEmbedChannel(ITextChannel embedChannel);
+
+    /**
+     * Modify the embed channel of this guild by ID.
+     *
+     * @param embedChannelId The channel's ID to embed.
+     * @return A void {@link AuditAction}, used to attach reason (or not) to the modify action.
+     */
+    AuditAction<Void> modifyEmbedChannel(String embedChannelId);
+
     /*
         ---------------------
             Member Action

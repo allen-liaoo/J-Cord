@@ -91,9 +91,10 @@ public final class ObjectBuilder {
             String embed_channel = json.has("embed_channel_id") && !json.isNull("embed_channel_id") ? json.getString("embed_channel_id") : null;
             int verification_level = json.getInt("verification_level");
             int notifications_level = json.getInt("default_message_notifications");
+            int ecf_level = json.getInt("explicit_content_filter");
             int mfa_level = json.getInt("mfa_level");
 
-            Guild guild = new Guild(identity, id, name, icon, splash, region, afk_timeout, embed_enabled, verification_level, notifications_level, mfa_level);
+            Guild guild = new Guild(identity, id, name, icon, splash, region, afk_timeout, embed_enabled, verification_level, notifications_level, ecf_level, mfa_level);
 
             // Add guilds first because channels, roles, and members have a guild field
             identity.addGuild(guild);

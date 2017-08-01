@@ -17,6 +17,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
+// TODO: Connection Object
 public class User extends DiscordObject implements IUser {
 
     protected final String id;

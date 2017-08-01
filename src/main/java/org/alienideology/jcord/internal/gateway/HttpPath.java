@@ -82,7 +82,7 @@ public final class HttpPath {
         public final static HttpPath REMOVE_GUILD_MEMBER_ROLE = new HttpPath(DELETE, "/guilds/{guild.key}/members/{user.key}/roles/{role.key}"); // Unused
 
         /* Role Action */
-        public final static HttpPath GET_GUILD_ROLES = new HttpPath(GET, "/guilds/{guild.key}/roles");
+        public final static HttpPath GET_GUILD_ROLES = new HttpPath(GET, "/guilds/{guild.key}/roles"); // Unused
         public final static HttpPath CREATE_GUILD_ROLE = new HttpPath(POST, "/guilds/{guild.key}/roles");
         public final static HttpPath MODIFY_GUILD_ROLE_POSITIONS = new HttpPath(PATCH, "/guilds/{guild.key}/roles");
         public final static HttpPath MODIFY_GUILD_ROLE = new HttpPath(PATCH, "/guilds/{guild.key}/roles/{role.key}");
@@ -112,8 +112,8 @@ public final class HttpPath {
 
         /* Other Action */
         public final static HttpPath LIST_VOICE_REGIONS = new HttpPath(GET, "/voice/regions"); // Unused
-        public final static HttpPath GET_GUILD_VOICE_REGIONS = new HttpPath(GET, "/guilds/{guild.key}/regions"); // Unused
-        public final static HttpPath GET_GUILD_EMBED = new HttpPath(GET, "/guilds/{guild.key}/embed");
+        public final static HttpPath GET_GUILD_VOICE_REGIONS = new HttpPath(GET, "/guilds/{guild.key}/regions"); // Unused (Cached)
+        public final static HttpPath GET_GUILD_EMBED = new HttpPath(GET, "/guilds/{guild.key}/embed"); // Unused (Cached)
         public final static HttpPath MODIFY_GUILD_EMBED = new HttpPath(PATCH, "/guilds/{guild.key}/embed");
 
     }

@@ -50,6 +50,7 @@ AuditLog - An audit log that belongs to a guild. Used to get log entries.
  - LogOption (Enumeration) - Optional information that are only visible for certain {@link LogType}.
  - ILogChange - A change to a certain value. An audit log entry can contain multiple changes.
  - ChangeType (Enumeration) - Types of log changes.
+ - AuditAction - An action that can be performed with an audit log reason.
 
 ### Guild
 IGuild - A collection of users and channels, often referred to in the UI as a server.
@@ -66,7 +67,7 @@ IChannel - A communication pipeline.
    - MessageHistory - The history of a MessageChannel, used to get lists of messages.
 
  - IVoiceChannel - A GuildChannel for audio connections. (GuildChannel)
- - IGuildChannel (Interface) - A Channel that exist in a guild.
+ - IGuildChannel - A Channel that exist in a guild.
 
 ### Message
 IMessage - A text with embeds or attachments that can be sent by anyone.
