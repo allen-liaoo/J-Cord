@@ -1,13 +1,15 @@
-package org.alienideology.jcord.internal.object.client;
+package org.alienideology.jcord.internal.object.client.setting;
 
 import org.alienideology.jcord.handle.channel.ITextChannel;
-import org.alienideology.jcord.handle.client.IChannelSetting;
-import org.alienideology.jcord.handle.client.MessageNotification;
+import org.alienideology.jcord.handle.client.setting.IChannelSetting;
+import org.alienideology.jcord.handle.client.setting.MessageNotification;
+import org.alienideology.jcord.internal.object.client.Client;
+import org.alienideology.jcord.internal.object.client.ClientObject;
 
 /**
  * @author AlienIdeology
  */
-public class ChannelSetting extends ClientObject implements IChannelSetting {
+public final class ChannelSetting extends ClientObject implements IChannelSetting {
 
     private ITextChannel channel;
     private MessageNotification notificationSetting;

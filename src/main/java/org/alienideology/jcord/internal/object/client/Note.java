@@ -6,7 +6,7 @@ import org.alienideology.jcord.handle.user.IUser;
 /**
  * @author AlienIdeology
  */
-public class Note extends ClientObject implements INote {
+public final class Note extends ClientObject implements INote {
 
     private IUser user;
     private String content;

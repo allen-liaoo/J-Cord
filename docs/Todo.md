@@ -10,12 +10,12 @@
   - [x] Member
   - [x] Role
  - [x] User
- - [ ] Channel (Half-Done, Missing Group)
+ - [x] Channel
   - [x] GuildChannel
       - [x] TextChannel
       - [x] VoiceChannel
   - [x] PrivateChannel
-  - [ ] Group
+  - [x] Group
   - [x] IChannelManager (For both text and voice)
  - [x] Message
  - [x] Permission

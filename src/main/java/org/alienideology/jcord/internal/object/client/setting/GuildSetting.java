@@ -1,9 +1,11 @@
-package org.alienideology.jcord.internal.object.client;
+package org.alienideology.jcord.internal.object.client.setting;
 
-import org.alienideology.jcord.handle.client.IChannelSetting;
-import org.alienideology.jcord.handle.client.IGuildSetting;
-import org.alienideology.jcord.handle.client.MessageNotification;
+import org.alienideology.jcord.handle.client.setting.IChannelSetting;
+import org.alienideology.jcord.handle.client.setting.IGuildSetting;
+import org.alienideology.jcord.handle.client.setting.MessageNotification;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.internal.object.client.Client;
+import org.alienideology.jcord.internal.object.client.ClientObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public class GuildSetting extends ClientObject implements IGuildSetting {
+public final class GuildSetting extends ClientObject implements IGuildSetting {
 
     private IGuild guild;
     private List<IChannelSetting> channelSettings = new ArrayList<>();

@@ -1,6 +1,7 @@
-package org.alienideology.jcord.handle.client;
+package org.alienideology.jcord.handle.client.setting;
 
 import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.client.IClientObject;
 import org.alienideology.jcord.handle.guild.IGuild;
 
 /**

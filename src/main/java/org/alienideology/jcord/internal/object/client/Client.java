@@ -1,6 +1,13 @@
 package org.alienideology.jcord.internal.object.client;
 
-import org.alienideology.jcord.handle.client.*;
+import org.alienideology.jcord.handle.client.IClient;
+import org.alienideology.jcord.handle.client.IGroup;
+import org.alienideology.jcord.handle.client.INote;
+import org.alienideology.jcord.handle.client.IRelationship;
+import org.alienideology.jcord.handle.client.app.IApplication;
+import org.alienideology.jcord.handle.client.app.IAuthApplication;
+import org.alienideology.jcord.handle.client.setting.IGuildSetting;
+import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.gateway.HttpCode;
 import org.alienideology.jcord.internal.gateway.HttpPath;
@@ -8,6 +15,8 @@ import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
+import org.alienideology.jcord.internal.object.client.setting.ClientSetting;
+import org.alienideology.jcord.internal.object.client.setting.GuildSetting;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,11 +28,12 @@ import java.util.stream.Collectors;
 /**
  * @author AlienIdeology
  */
-public class Client extends DiscordObject implements IClient {
+public final class Client extends DiscordObject implements IClient {
 
     private Profile profile;
     private ClientSetting setting;
 
+    private List<IGroup> groups = new ArrayList<>();
     private List<IRelationship> relationships = new ArrayList<>();
     private List<INote> notes = new ArrayList<>();
     private List<IGuildSetting> guildSettings = new ArrayList<>();
@@ -43,14 +53,45 @@ public class Client extends DiscordObject implements IClient {
     }
 
     @Override
-    @Nullable
-    public IRelationship getRelationship(String userId) {
-        for (IRelationship relationship : relationships) {
-            if (relationship.getUser().getId().equals(userId)) {
-                return relationship;
+    public IGroup getGroup(String id) {
+        return groups.stream()
+                .filter(g -> g.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    @Override
+    public IGroup getGroupByName(String name) {
+        return groups.stream()
+                .filter(g -> g.getName() != null)
+                .filter(g -> g.getName().equals(name)).findFirst().orElse(null);
+    }
+
+    @Override
+    public List<IGroup> getGroupsByOwner(String ownerId) {
+        return groups.stream().filter(g -> g.getOwner().getId().equals(ownerId)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<IGroup> getGroupsByUser(String userId) {
+        List<IGroup> groups = new ArrayList<>();
+        for (IGroup group : this.groups) {
+            for (IUser user : group.getRecipients()) {
+                if (user.getId().equals(userId))
+                    groups.add(group);
             }
         }
-        return null;
+        return groups;
+    }
+
+    @Override
+    public List<IGroup> getGroups() {
+        return groups;
+    }
+
+    @Override
+    @Nullable
+    public IRelationship getRelationship(String userId) {
+        return relationships.stream()
+            .filter(r -> r.getUser().getId().equals(userId)).findFirst().orElse(null);
     }
 
     @Override
@@ -118,6 +159,33 @@ public class Client extends DiscordObject implements IClient {
         return applications;
     }
 
+    @Override
+    public IAuthApplication getAuthApplication(String id) {
+        try {
+            JSONObject json = new Requester((IdentityImpl) getIdentity(), HttpPath.Application.GET_AUTHORIZED_APPLICATION)
+                    .request(id).getAsJSONObject();
+            return new ObjectBuilder(this).buildAuthApplication(json);
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.NOT_FOUND)) {
+                return null;
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public List<IAuthApplication> getAuthApplications() {
+        JSONArray apps = new Requester((IdentityImpl) getIdentity(), HttpPath.Application.GET_AUTHORIZED_APPLICATIONS)
+                .request().getAsJSONArray();
+        List<IAuthApplication> applications = new ArrayList<>();
+        ObjectBuilder builder = new ObjectBuilder(this);
+        for (int i = 0; i < apps.length(); i++) {
+            applications.add(builder.buildAuthApplication(apps.getJSONObject(i)));
+        }
+        return applications;
+    }
+
     //---------------------Internal---------------------
 
 
@@ -127,6 +195,11 @@ public class Client extends DiscordObject implements IClient {
 
     public void setSetting(ClientSetting setting) {
         this.setting = setting;
+    }
+
+    public Client addGroup(Group group) {
+        groups.add(group);
+        return this;
     }
 
     public Client addRelationship(Relationship relationship) {
@@ -142,26 +215,6 @@ public class Client extends DiscordObject implements IClient {
     public Client addGuildSetting(GuildSetting setting) {
         guildSettings.add(setting);
         return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Client)) return false;
-        if (!super.equals(o)) return false;
-
-        Client client = (Client) o;
-
-        if (!relationships.equals(client.relationships)) return false;
-        return guildSettings.equals(client.guildSettings);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + relationships.hashCode();
-        result = 31 * result + guildSettings.hashCode();
-        return result;
     }
 
     @Override

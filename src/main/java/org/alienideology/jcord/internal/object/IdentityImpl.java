@@ -344,15 +344,13 @@ public final class IdentityImpl implements Identity {
         IdentityImpl identity = (IdentityImpl) o;
 
         if (type != identity.type) return false;
-        if (!token.equals(identity.token)) return false;
-        return self.equals(identity.self);
+        return token != null ? token.equals(identity.token) : identity.token == null;
     }
 
     @Override
     public int hashCode() {
-        int result = type.hashCode();
-        result = 31 * result + token.hashCode();
-        result = 31 * result + self.hashCode();
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (token != null ? token.hashCode() : 0);
         return result;
     }
 

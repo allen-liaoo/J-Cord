@@ -1,5 +1,6 @@
-package org.alienideology.jcord.handle.client;
+package org.alienideology.jcord.handle.client.setting;
 
+import org.alienideology.jcord.handle.client.IClientObject;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.jetbrains.annotations.Nullable;
 

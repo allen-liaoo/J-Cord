@@ -30,6 +30,13 @@ public enum Scope {
         this.key = key;
     }
 
+    public static Scope getByKey(String key) {
+        for (Scope scope : values()) {
+            if (scope.key.equals(key)) return scope;
+        }
+        return UNKNOWN;
+    }
+
     public static boolean hasScope(Scope scope, Collection<Scope> scopes) {
         return scope != UNKNOWN && scopes.contains(scope);
     }

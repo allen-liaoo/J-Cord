@@ -8,14 +8,14 @@ import org.alienideology.jcord.internal.gateway.HttpPath;
 import java.util.List;
 
 /**
- * BotApplication - Information about a bot's oauth application.
+ * BotApplication - Information about a bot's oauth app.
  * 
  * @author AlienIdeology
  */
 public interface IBotApplication extends IDiscordObject, ISnowFlake {
 
     /**
-     * Get the registered name of this application.
+     * Get the registered name of this app.
      *
      * @return The name.
      */
@@ -29,7 +29,7 @@ public interface IBotApplication extends IDiscordObject, ISnowFlake {
     String getIconHash();
 
     /**
-     * Get the icon url of this application.
+     * Get the icon url of this app.
      *
      * @return The icon url.
      */
@@ -38,14 +38,14 @@ public interface IBotApplication extends IDiscordObject, ISnowFlake {
     }
 
     /**
-     * Get the description of this application.
+     * Get the description of this app.
      *
      * @return The description.
      */
     String getDescription();
 
     /**
-     * Get the owner of this application.
+     * Get the owner of this app.
      *
      * @return The owner.
      */

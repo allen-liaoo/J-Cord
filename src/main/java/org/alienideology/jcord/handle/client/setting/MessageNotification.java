@@ -1,4 +1,4 @@
-package org.alienideology.jcord.handle.client;
+package org.alienideology.jcord.handle.client.setting;
 
 /**
  * MessageNotification - The message notification level on the client side.

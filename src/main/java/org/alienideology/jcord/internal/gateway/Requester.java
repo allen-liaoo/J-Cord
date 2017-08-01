@@ -8,18 +8,15 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
-import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.util.log.Logger;
 import org.alienideology.jcord.util.log.LogLevel;
-import org.apache.commons.io.IOUtils;
+import org.alienideology.jcord.util.log.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.IllegalFormatException;
 import java.util.function.Consumer;
 
@@ -240,7 +237,7 @@ public final class Requester {
 
     private void processRequest(HttpRequest request) {
         request.header("Authorization", token);
-        if (useJson) request.header("Content-Type", "application/json");
+        if (useJson) request.header("Content-Type", "app/json");
     }
 
     private void handleErrorResponse(JSONObject response) {

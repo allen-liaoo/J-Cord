@@ -1,8 +1,10 @@
-package org.alienideology.jcord.internal.object.client;
+package org.alienideology.jcord.internal.object.client.setting;
 
-import org.alienideology.jcord.handle.client.IClientSetting;
+import org.alienideology.jcord.handle.client.setting.IClientSetting;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.user.OnlineStatus;
+import org.alienideology.jcord.internal.object.client.Client;
+import org.alienideology.jcord.internal.object.client.ClientObject;
 
 import java.util.List;
 import java.util.Locale;
@@ -10,7 +12,7 @@ import java.util.Locale;
 /**
  * @author AlienIdeology
  */
-public class ClientSetting extends ClientObject implements IClientSetting {
+public final class ClientSetting extends ClientObject implements IClientSetting {
 
     private OnlineStatus status;
     private Locale locale;

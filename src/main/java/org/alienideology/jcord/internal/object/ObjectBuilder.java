@@ -7,13 +7,15 @@ import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.client.IRelationship;
-import org.alienideology.jcord.handle.client.MessageNotification;
+import org.alienideology.jcord.handle.client.setting.MessageNotification;
 import org.alienideology.jcord.handle.emoji.Emojis;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IReaction;
+import org.alienideology.jcord.handle.oauth.Scope;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
+import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
@@ -28,6 +30,11 @@ import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
 import org.alienideology.jcord.internal.object.client.*;
+import org.alienideology.jcord.internal.object.client.app.Application;
+import org.alienideology.jcord.internal.object.client.app.AuthApplication;
+import org.alienideology.jcord.internal.object.client.setting.ChannelSetting;
+import org.alienideology.jcord.internal.object.client.setting.ClientSetting;
+import org.alienideology.jcord.internal.object.client.setting.GuildSetting;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 import org.alienideology.jcord.internal.object.guild.Member;
@@ -678,6 +685,52 @@ public final class ObjectBuilder {
 
     //---------------------Client---------------------
 
+    public Profile buildProfile(JSONObject json, User user) {
+        return new Profile(client, user,
+                json.has("mobile") && json.getBoolean("mobile"),
+                json.has("premium") && json.getBoolean("premium"));
+    }
+
+    public Group buildGroup(JSONObject json) {
+        handleBuildError(json);
+
+        String id = json.getString("id");
+        String name = json.isNull("name") ? null : json.getString("name");
+        String icon = json.isNull("icon") ? null : json.getString("icon");
+        String owner_id = json.getString("owner_id");
+
+        JSONArray rs = json.getJSONArray("recipients");
+        List<IUser> recipients = new ArrayList<>();
+        for (int i = 0; i < rs.length(); i++) {
+            JSONObject userJson = rs.getJSONObject(i);
+            IUser user = identity.getUser(userJson.getString("id"));
+            if (user == null) user = buildUser(userJson);
+            recipients.add(user);
+        }
+
+        Group group = new Group(client, id, name, icon, owner_id, recipients);
+        client.addGroup(group);
+        return group;
+    }
+
+    public Relationship buildRelationship(JSONObject json) {
+        IRelationship.Type type = IRelationship.Type.getByKey(json.getInt("type"));
+        User user = (User) identity.getUser(json.getString("id"));
+        if (user == null) {
+            user = buildUser(json.getJSONObject("user"));
+        }
+
+        Relationship relationship = new Relationship(client, type, user);
+        client.addRelationship(relationship);
+        return relationship;
+    }
+
+    public Note buildNote(String userId, String content) {
+        Note note = new Note(client, identity.getUser(userId), content);
+        client.addNote(note);
+        return note;
+    }
+
     public ClientSetting buildClientSetting(JSONObject json) {
         OnlineStatus status = OnlineStatus.getByKey(json.getString("status"));
         Locale locale = new Locale(json.getString("locale"));
@@ -710,30 +763,6 @@ public final class ObjectBuilder {
         setting.setDetectPlatformAccounts(json.has("detect_platform_accounts") && json.getBoolean("detect_platform_accounts"));
 
         return setting;
-    }
-
-    public Profile buildProfile(JSONObject json, User user) {
-        return new Profile(client, user,
-                json.has("mobile") && json.getBoolean("mobile"),
-                json.has("premium") && json.getBoolean("premium"));
-    }
-
-    public Relationship buildRelationship(JSONObject json) {
-        IRelationship.Type type = IRelationship.Type.getByKey(json.getInt("type"));
-        User user = (User) identity.getUser(json.getString("id"));
-        if (user == null) {
-            user = buildUser(json.getJSONObject("user"));
-        }
-
-        Relationship relationship = new Relationship(client, type, user);
-        client.addRelationship(relationship);
-        return relationship;
-    }
-
-    public Note buildNote(String userId, String content) {
-        Note note = new Note(client, identity.getUser(userId), content);
-        client.addNote(note);
-        return note;
     }
 
     public GuildSetting buildGuildSetting(JSONObject json) {
@@ -789,6 +818,26 @@ public final class ObjectBuilder {
         } else {
             return new Application(client, id, secret, name, icon, description, redirectUris);
         }
+    }
+
+    public AuthApplication buildAuthApplication(JSONObject json) {
+        String authId = json.getString("id");
+        JSONObject app = json.getJSONObject("application");
+        String id = app.getString("id");
+        String name = app.getString("name");
+        String icon = app.isNull("icon") ? null : app.getString("icon");
+        String description = app.getString("description");
+
+        boolean isPublicBot = app.has("bot_public") && app.getBoolean("bot_public");
+        boolean requireCodeGrant = app.has("bot_require_code_grant") && app.getBoolean("bot_require_code_grant");
+
+        JSONArray s = json.getJSONArray("scopes");
+        List<Scope> scopes = new ArrayList<>();
+        for (int i = 0; i < s.length(); i++) {
+            scopes.add(Scope.getByKey(s.getString(i)));
+        }
+
+        return new AuthApplication(client, id, authId, name, icon, description, scopes, isPublicBot, requireCodeGrant);
     }
 
     /**

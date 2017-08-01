@@ -42,7 +42,12 @@ public final class HttpPath {
         /**
          * GuildEmoji Icon - Parameter: ID
          */
-        public final static String EMOJI_ICON = DISCORD_CDN_URL+"EMOJIS/%s.png";
+        public final static String EMOJI_ICON = DISCORD_CDN_URL+"emojis/%s.png";
+
+        /**
+         * Group DM Icon - Parameters: ID, Icon Hash
+         */
+        public final static String GROUP_ICON = DISCORD_CDN_URL+"channel-icons/%s/%s.jpg";
 
         /**
          * Discord Emojis Json
@@ -66,14 +71,14 @@ public final class HttpPath {
         // Client Only
         public static final HttpPath GET_APPLICATIONS = new HttpPath(GET,    "/oauth2/applications");
         public static final HttpPath CREATE_APPLICATION = new HttpPath(POST,   "/oauth2/applications");
-        public static final HttpPath GET_APPLICATION = new HttpPath(GET,    "/oauth2/applications/{application.id}");
-        public static final HttpPath MODIFY_APPLICATION = new HttpPath(PUT,    "/oauth2/applications/{application.id}");
-        public static final HttpPath DELETE_APPLICATION = new HttpPath(DELETE, "/oauth2/applications/{application.id}");
+        public static final HttpPath GET_APPLICATION = new HttpPath(GET,    "/oauth2/applications/{app.id}");
+        public static final HttpPath MODIFY_APPLICATION = new HttpPath(PUT,    "/oauth2/applications/{app.id}");
+        public static final HttpPath DELETE_APPLICATION = new HttpPath(DELETE, "/oauth2/applications/{app.id}");
 
-        public static final HttpPath CREATE_BOT = new HttpPath(POST,   "/oauth2/applications/{application.id}/bot");
+        public static final HttpPath CREATE_BOT = new HttpPath(POST,   "/oauth2/applications/{app.id}/bot");
 
-        public static final HttpPath RESET_APPLICATION_SECRET = new HttpPath(POST,   "/oauth2/applications/{application.id}/reset");
-        public static final HttpPath RESET_BOT_TOKEN = new HttpPath(POST,   "/oauth2/applications/{application.id}/bot/reset");
+        public static final HttpPath RESET_APPLICATION_SECRET = new HttpPath(POST,   "/oauth2/applications/{app.id}/reset");
+        public static final HttpPath RESET_BOT_TOKEN = new HttpPath(POST,   "/oauth2/applications/{app.id}/bot/reset");
 
         public static final HttpPath GET_AUTHORIZED_APPLICATIONS = new HttpPath(GET,    "/oauth2/tokens");
         public static final HttpPath GET_AUTHORIZED_APPLICATION = new HttpPath(GET,    "/oauth2/tokens/{auth.id}");

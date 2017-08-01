@@ -1,6 +1,11 @@
 package org.alienideology.jcord.handle.client;
 
 import org.alienideology.jcord.handle.IDiscordObject;
+import org.alienideology.jcord.handle.client.app.IApplication;
+import org.alienideology.jcord.handle.client.app.IAuthApplication;
+import org.alienideology.jcord.handle.client.setting.IClientSetting;
+import org.alienideology.jcord.handle.client.setting.IGuildSetting;
+import org.alienideology.jcord.handle.client.setting.MessageNotification;
 import org.alienideology.jcord.handle.user.IUser;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,11 +28,50 @@ public interface IClient extends IDiscordObject {
     IProfile getProfile();
 
     /**
-     * Get the Discord client settings for this client.
+     * Get a group by the group id.
      *
-     * @return The settings.
+     * @param id The group id.
+     * @return The group, or null if no group is found.
      */
-    IClientSetting getSetting();
+    @Nullable
+    IGroup getGroup(String id);
+
+    /**
+     * Get a group by name.
+     * The group returned will be the first group matching the given name.
+     *
+     * @param name The group name.
+     * @return The group, or null if:
+     * <ul>
+     *     <li>No group is found by the given name.</li>
+     *     <li>The parameter is null.</li>
+     * </ul>
+     */
+    @Nullable
+    IGroup getGroupByName(String name);
+
+    /**
+     * Get a list of groups with the same owner.
+     *
+     * @param ownerId The owner Id.
+     * @return A list of groups.
+     */
+    List<IGroup> getGroupsByOwner(String ownerId);
+
+    /**
+     * Get a list of groups that contains a given user.
+     *
+     * @param userId The user's Id.
+     * @return A list of groups.
+     */
+    List<IGroup> getGroupsByUser(String userId);
+
+    /**
+     * Get a list of all groups that this clients participates in.
+     *
+     * @return A list of groups.
+     */
+    List<IGroup> getGroups();
 
     /**
      * Get a relationship by an user id.
@@ -69,6 +113,13 @@ public interface IClient extends IDiscordObject {
     List<INote> getNotes();
 
     /**
+     * Get the Discord client settings for this client.
+     *
+     * @return The settings.
+     */
+    IClientSetting getSetting();
+
+    /**
      * Get a guild setting by guild ID.
      *
      * @param guildId the guild ID.
@@ -104,7 +155,7 @@ public interface IClient extends IDiscordObject {
     List<IGuildSetting> getGuildSettings();
 
     /**
-     * Get an application by ID.
+     * Get an application by Id.
      * This method performs an http request.
      *
      * @param id The application id.
@@ -119,5 +170,23 @@ public interface IClient extends IDiscordObject {
      * @return The applications.
      */
     List<IApplication> getApplications();
+
+    /**
+     * Get an authorized application by Id.
+     * Note that this id should be {@link IAuthApplication#getAuthorizeId()}, not the application Id.
+     * This method performs an http request.
+     *
+     * @param id The application id.
+     * @return The authorized application, or null if no application is found.
+     */
+    @Nullable
+    IAuthApplication getAuthApplication(String id);
+
+    /**
+     * Get a list of applications this client authorized.
+     *
+     * @return The authorized applications.
+     */
+    List<IAuthApplication> getAuthApplications();
 
 }

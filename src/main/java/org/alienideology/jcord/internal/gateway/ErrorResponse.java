@@ -8,7 +8,7 @@ public enum ErrorResponse {
 
     /* Unknown DiscordObject */
     UNKNOWN_ACCOUNT (10001, "Unknown account"),
-    UNKNOWN_APPLICATION (10002, "Unknown application"),
+    UNKNOWN_APPLICATION (10002, "Unknown app"),
     UNKNOWN_CHANNEL (10003, "Unknown channel"),
     UNKNOWN_GUILD (10004, "Unknown guild"),
     UNKNOWN_INTEGRATION (10005, "Unknown integration"),
@@ -45,7 +45,7 @@ public enum ErrorResponse {
     CANNOT_SEND_MESSAGES_TO_THIS_USER (50007, "Cannot send messages to this user"),
     SEND_MESSAGES_IN_VOICE_CHANNEL (50008, "Cannot send messages in a voice channel"),
     CHANNEL_VERIFICATION_TOO_HIGH (50009, "Channel verification level is too high"),
-    OAUTH2_DOES_NOT_HAVE_A_BOT (50010, "OAuth2 application does not have a bot"),
+    OAUTH2_DOES_NOT_HAVE_A_BOT (50010, "OAuth2 app does not have a bot"),
     OAUTH2_LIMIT_REACHED (50011, "OAuth2 application limit reached"),
     INVALID_OAUTH_STATE (50012, "Invalid OAuth state"),
     MISSING_PERMISSIONS (50013, "Missing permissions"),

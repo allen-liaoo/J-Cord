@@ -8,7 +8,7 @@ import org.alienideology.jcord.internal.object.user.User;
 /**
  * @author AlienIdeology
  */
-public class Profile extends User implements IProfile {
+public final class Profile extends User implements IProfile {
 
     private Client client;
 

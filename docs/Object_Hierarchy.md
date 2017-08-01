@@ -30,13 +30,17 @@ Bot - The core of a Discord Bot
 IClient - Represents a Discord client.
 IClientObject - Generic Client Objects.
  - IProfile - The client user, with Discord Nitro and more information.
- - IClientSetting - he app settings of a Discord client.
+ - IGroup - A private channel with more than one user.
  - IRelationship - A connection between two Discord user accounts.
  - INote - A note that the client can attach to any users. The note is only visible to the client.
- - IGuildSetting - A guild setting specifically for clients.
- - ITextChannelSetting - A channel notification setting for clients.
- - MessageNotification (Enumeration) - The message notification level on the client side.
- - IApplication - An application that the client owns.
+ - Setting
+   - IClientSetting - he app settings of a Discord client.
+   - IGuildSetting - A guild setting specifically for clients.
+   - ITextChannelSetting - A channel notification setting for clients.
+   - MessageNotification (Enumeration) - The message notification level on the client side.
+ - Application
+   - IApplication - An application that the client owns.
+   - IAuthApplication - An app that the client authorized to perform action with certain scopes.
 
 ## Discord Objects
 IDiscordObject - Entities such as Guild, User, or Channel.

@@ -225,7 +225,7 @@ public class PostAgent {
             url = url.replaceAll(":bot:", identity.getSelf().getId());
             MultipartBody body = Unirest.post(url)
                     .header("Authorization", token)
-                    .header("Content-Type", "application/json")
+                    .header("Content-Type", "app/json")
                     .field(server_key, identity.getGuilds().size());
 
             /* Sharding */

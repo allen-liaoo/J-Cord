@@ -1,6 +1,8 @@
-package org.alienideology.jcord.internal.object.client;
+package org.alienideology.jcord.internal.object.client.app;
 
-import org.alienideology.jcord.handle.client.IApplication;
+import org.alienideology.jcord.handle.client.app.IApplication;
+import org.alienideology.jcord.internal.object.client.Client;
+import org.alienideology.jcord.internal.object.client.ClientObject;
 
 import java.util.List;
 

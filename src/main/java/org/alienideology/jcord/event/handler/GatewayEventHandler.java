@@ -10,8 +10,8 @@ import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.client.Client;
-import org.alienideology.jcord.internal.object.client.ClientSetting;
 import org.alienideology.jcord.internal.object.client.Profile;
+import org.alienideology.jcord.internal.object.client.setting.ClientSetting;
 import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.util.log.LogLevel;
 import org.alienideology.jcord.util.log.Logger;
@@ -54,17 +54,17 @@ public class GatewayEventHandler extends EventHandler {
 
                 /* Create PrivateChannels */
                 // This will not work FOR BOTS since Discord does not send private channels on ready event
+                int pmCounts = 0;
                 JSONArray pms = json.getJSONArray("private_channels");
                 for (int i = 0; i < pms.length(); i++) {
                     JSONObject pm = pms.getJSONObject(i);
 
-                    if (pm.getJSONArray("recipients").length() > 1) { // Group
-
-                    } else {
+                    if (pm.getJSONArray("recipients").length() == 1) {
+                        pmCounts++;
                         builder.buildPrivateChannel(pm);
                     }
                 }
-                LOG.log(LogLevel.DEBUG, "[READY] Private Channels: " + pms.length());
+                LOG.log(LogLevel.DEBUG, "[READY] Private Channels: " + pmCounts);
 
                 /* Create Self User */
                 final User self = builder.buildUser(json.getJSONObject("user"));
@@ -85,6 +85,16 @@ public class GatewayEventHandler extends EventHandler {
                         /* Create Profile */
                         Profile profile = cb.buildProfile(json.getJSONObject("user"), self);
                         client.setProfile(profile);
+
+                        /* Create Group */
+                        for (int i = 0; i < pms.length(); i++) {
+                            JSONObject dm = pms.getJSONObject(i);
+
+                            if (dm.getJSONArray("recipients").length() > 1) {
+                                cb.buildGroup(dm); // Added to client automatically
+                            }
+                        }
+                        LOG.log(LogLevel.DEBUG, "[READY] Groups: " + (pms.length() - pmCounts));
 
                         /* Create Relationships */
                         JSONArray relations = json.getJSONArray("relationships");

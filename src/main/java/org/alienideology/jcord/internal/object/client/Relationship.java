@@ -7,7 +7,7 @@ import org.alienideology.jcord.internal.object.user.User;
 /**
  * @author AlienIdeology
  */
-public class Relationship extends ClientObject implements IRelationship {
+public final class Relationship extends ClientObject implements IRelationship {
 
     private Type type;
     private User user;
