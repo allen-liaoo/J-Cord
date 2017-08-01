@@ -1,6 +1,5 @@
 package org.alienideology.jcord.internal.object;
 
-import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.handle.audit.*;
 import org.alienideology.jcord.handle.channel.IChannel;
@@ -11,10 +10,12 @@ import org.alienideology.jcord.handle.client.setting.MessageNotification;
 import org.alienideology.jcord.handle.emoji.Emojis;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
+import org.alienideology.jcord.handle.guild.IIntegration;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.oauth.Scope;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
+import org.alienideology.jcord.handle.user.IConnection;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -35,17 +36,11 @@ import org.alienideology.jcord.internal.object.client.app.AuthApplication;
 import org.alienideology.jcord.internal.object.client.setting.ChannelSetting;
 import org.alienideology.jcord.internal.object.client.setting.ClientSetting;
 import org.alienideology.jcord.internal.object.client.setting.GuildSetting;
-import org.alienideology.jcord.internal.object.guild.Guild;
-import org.alienideology.jcord.internal.object.guild.GuildEmoji;
-import org.alienideology.jcord.internal.object.guild.Member;
-import org.alienideology.jcord.internal.object.guild.Role;
+import org.alienideology.jcord.internal.object.guild.*;
 import org.alienideology.jcord.internal.object.message.Embed;
 import org.alienideology.jcord.internal.object.message.Message;
 import org.alienideology.jcord.internal.object.message.Reaction;
-import org.alienideology.jcord.internal.object.user.Game;
-import org.alienideology.jcord.internal.object.user.Presence;
-import org.alienideology.jcord.internal.object.user.User;
-import org.alienideology.jcord.internal.object.user.Webhook;
+import org.alienideology.jcord.internal.object.user.*;
 import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -126,7 +121,7 @@ public final class ObjectBuilder {
             // Channels array are only present at Client Ready Event or Guild Create Event.
             // LastMessage requires role field
             JSONArray guildChannels = null;
-            if (identity.getType().equals(IdentityType.CLIENT)) {
+            if (json.has("channels")) {
                 guildChannels = json.getJSONArray("channels");
             } else {
                 try {
@@ -148,7 +143,7 @@ public final class ObjectBuilder {
             // Members array are only present at Client Ready Event or Guild Create Event.
             // Build this after roles because members have roles field
             JSONArray members = null;
-            if (identity.getType().equals(IdentityType.CLIENT)) {
+            if (json.has("members")) {
                 members = json.getJSONArray("members");
             } else {
                 try {
@@ -582,10 +577,10 @@ public final class ObjectBuilder {
 
     public Presence buildPresence(JSONObject json, User user) {
         handleBuildError(json);
-        //OnlineStatus
+        /* OnlineStatus */
         OnlineStatus status = OnlineStatus.getByKey(json.getString("status"));
 
-        // Game
+        /* Game */
         Game game = null;
 
         if (json.has("game") && !json.isNull("game")) {
@@ -605,9 +600,53 @@ public final class ObjectBuilder {
         return presence;
     }
 
+    public Integration buildIntegration(JSONObject json) {
+        handleBuildError(json);
+
+        String id = json.getString("id");
+        String name = json.getString("name");
+        IConnection.Type type = IConnection.Type.getByKey(json.getString("type"));
+        String lastSynced = json.getString("synced_at");
+        boolean enabled = json.has("enabled") && json.getBoolean("enabled");
+        boolean syncing = json.has("syncing") && json.getBoolean("syncing");
+
+        Integration integration = new Integration(identity, id, name, type, lastSynced, enabled, syncing);
+
+        /* User */
+        IUser user = identity.getUser(json.getString("user"));
+        integration.setUser(user);
+
+        /* Account */
+        JSONObject acc = json.getJSONObject("account");
+        integration.setAccount(new IIntegration.Account(acc.getString("id"), acc.getString("name")));
+
+        /* Role */
+        IRole role = identity.getRole(json.getString("role_id"));
+        integration.setRole(role);
+
+        return integration;
+    }
+
+    public Connection buildConnection(JSONObject json, IUser user) {
+        String id = json.getString("id");
+        String name = json.getString("name");
+        IConnection.Type type = IConnection.Type.getByKey(json.getString("type"));
+
+        boolean displayOnProfile = json.getInt("visibility") == 1;
+        boolean friend_sync = json.has("friend_sync") && json.getBoolean("friend_sync");
+        boolean verified = json.has("verified") && json.getBoolean("verified");
+        boolean revoked = json.has("revoked") && json.getBoolean("revoked");
+
+        JSONArray ints = json.getJSONArray("integrations");
+        List<IIntegration> integrations = new ArrayList<>();
+        for (int i = 0; i < ints.length(); i++) {
+            integrations.add(buildIntegration(ints.getJSONObject(i)));
+        }
+        return new Connection(client, id, user, name, type, displayOnProfile, friend_sync, verified, revoked, integrations);
+    }
+
     //---------------------Audit---------------------
     public AuditLog buildAuditLog(IGuild guild, JSONObject json) {
-        System.out.println(json.toString(4));
         handleBuildError(json);
         JSONArray array = json.getJSONArray("audit_log_entries");
         List<ILogEntry> entries = new ArrayList<>();

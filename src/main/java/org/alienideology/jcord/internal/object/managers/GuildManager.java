@@ -123,7 +123,7 @@ public final class GuildManager implements IGuildManager {
             return new AuditAction<Void>((IdentityImpl) getIdentity(), HttpPath.Guild.MODIFY_GUILD, guild.getId()) {
                 @Override
                 protected Void request(Requester requester) {
-                    requester.updateRequestWithBody(request -> request.header("Content-Type", "app/json")
+                    requester.updateRequestWithBody(request -> request.header("Content-Type", "application/json")
                             .body(json))
                             .performRequest();
                     return null;

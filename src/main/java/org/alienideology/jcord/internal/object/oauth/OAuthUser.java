@@ -66,7 +66,7 @@ public class OAuthUser implements IOAuthUser {
         if (shouldRefresh()) {
             JSONObject response = new Requester(refreshToken, HttpPath.OAuth.REVOCATION)
                     .request(oAuth.getClientId(), oAuth.getClientSecret(), refreshToken)
-                    .updateRequestWithBody(request -> request.header("Content-Type", "app/x-www-form-urlencoded"))
+                    .updateRequestWithBody(request -> request.header("Content-Type", "application/x-www-form-urlencoded"))
                     .getAsJSONObject();
 
             if (!response.has("error")) {

@@ -345,6 +345,13 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
      */
     List<IVoiceChannel> getVoiceChannels();
 
+    /**
+     * Ger a list of all integrations belong to this guild.
+     *
+     * @return A list of integrations.
+     */
+    List<IIntegration> getIntegrations();
+
     /*
         --------------------------
             Guild Enumerations

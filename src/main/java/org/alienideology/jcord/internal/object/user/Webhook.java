@@ -12,7 +12,7 @@ import org.alienideology.jcord.internal.object.managers.WebhookManager;
 /**
  * @author AlienIdeology
  */
-public class Webhook extends DiscordObject implements IWebhook {
+public final class Webhook extends DiscordObject implements IWebhook {
 
     private final String id;
     private final WebhookManager manager;

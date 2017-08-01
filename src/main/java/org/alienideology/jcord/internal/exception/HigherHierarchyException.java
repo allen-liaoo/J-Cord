@@ -28,7 +28,7 @@ public class HigherHierarchyException extends RuntimeException {
         MEMBER ("Cannot modify a member that has higher or same hierarchy than the identity!"),
         ROLE ("Cannot modify a role that has higher or same hierarchy than the identity!"),
         OWNER ("Cannot modify the server owner!"),
-        UNKNOWN ("");
+        UNKNOWN ("unknown");
 
         public String meaning;
 

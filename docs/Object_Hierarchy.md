@@ -32,6 +32,7 @@ IClientObject - Generic Client Objects.
  - IProfile - The client user, with Discord Nitro and more information.
  - IGroup - A private channel with more than one user.
  - IRelationship - A connection between two Discord user accounts.
+ - IConnection - A connection to a third party account.
  - INote - A note that the client can attach to any users. The note is only visible to the client.
  - Setting
    - IClientSetting - he app settings of a Discord client.
@@ -63,6 +64,7 @@ IGuild - A collection of users and channels, often referred to in the UI as a se
  - IMember - A user representation in a guild.
  - IRole - A label that can be put on a set of guild members.
  - IGuildEmoji - A custom emoji that can be used within a guild.
+ - IIntegration - A guild integration that enables user to integrate tools from third party accounts.
  - Region (Enumeration) - Used for guild voice channel connection.
 
 ### Channel

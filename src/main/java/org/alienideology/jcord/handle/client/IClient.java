@@ -6,6 +6,7 @@ import org.alienideology.jcord.handle.client.app.IAuthApplication;
 import org.alienideology.jcord.handle.client.setting.IClientSetting;
 import org.alienideology.jcord.handle.client.setting.IGuildSetting;
 import org.alienideology.jcord.handle.client.setting.MessageNotification;
+import org.alienideology.jcord.handle.user.IConnection;
 import org.alienideology.jcord.handle.user.IUser;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,6 +96,13 @@ public interface IClient extends IDiscordObject {
      * @return The relationships.
      */
     List<IRelationship> getRelationships();
+
+    /**
+     * Get a list of all account connections.
+     *
+     * @return The connections.
+     */
+    List<IConnection> getConnections();
 
     /**
      * Get a note by an user id.

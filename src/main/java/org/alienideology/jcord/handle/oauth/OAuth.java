@@ -76,7 +76,7 @@ public class OAuth {
     public OAuth authorize(String authorizeCode) {
         JSONObject response = new Requester(authorizeCode, HttpPath.OAuth.TOKEN)
                 .request(clientId, clientSecret, authorizeCode, DataUtils.encodeToUrl(redirectUrl))
-                .updateRequestWithBody(request -> request.header("Content-Type", "app/x-www-form-urlencoded"))
+                .updateRequestWithBody(request -> request.header("Content-Type", "application/x-www-form-urlencoded"))
                 .getAsJSONObject();
 
         if (!response.has("error") || !response.has("code")) {

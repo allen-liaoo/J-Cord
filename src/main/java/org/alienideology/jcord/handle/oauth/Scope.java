@@ -22,7 +22,7 @@ public enum Scope {
     RPC_API ("rpc.api"),
     RPC_NOTIFICATIONS_READ ("rpc.notifications.read"),
     WEBHOOK_INCOMING ("webhook.incoming"),
-    UNKNOWN (null);
+    UNKNOWN ("unknown");
 
     public String key;
 

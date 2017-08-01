@@ -23,6 +23,7 @@ import org.alienideology.jcord.internal.object.managers.InviteManager;
 import org.alienideology.jcord.internal.object.user.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -376,6 +377,19 @@ public final class Guild extends DiscordObject implements IGuild {
     @Override
     public List<IVoiceChannel> getVoiceChannels() {
         return Collections.unmodifiableList(voiceChannels);
+    }
+
+    @Override
+    public List<IIntegration> getIntegrations() {
+        List<IIntegration> integrations = new ArrayList<>();
+        JSONArray ints = new Requester(identity, HttpPath.Guild.GET_GUILD_INTEGRATIONS)
+                .request(id).getAsJSONArray();
+        ObjectBuilder builder = new ObjectBuilder(identity);
+        for (int i = 0; i < ints.length(); i++) {
+            integrations.add(builder.buildIntegration(ints.getJSONObject(i)));
+        }
+
+        return integrations;
     }
 
     @Override

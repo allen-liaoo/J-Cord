@@ -14,7 +14,7 @@ public enum EmojiCategory {
     OBJECTS("objects"),
     SYMBOLS("symbols"),
     FLAGS("flags"),
-    UNKNOWN("unknown");
+    UNKNOWN("");
 
     public final String name;
 

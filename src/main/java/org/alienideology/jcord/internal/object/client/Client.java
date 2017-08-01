@@ -7,6 +7,7 @@ import org.alienideology.jcord.handle.client.IRelationship;
 import org.alienideology.jcord.handle.client.app.IApplication;
 import org.alienideology.jcord.handle.client.app.IAuthApplication;
 import org.alienideology.jcord.handle.client.setting.IGuildSetting;
+import org.alienideology.jcord.handle.user.IConnection;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.gateway.HttpCode;
@@ -102,6 +103,17 @@ public final class Client extends DiscordObject implements IClient {
     @Override
     public List<IRelationship> getRelationships() {
         return relationships;
+    }
+
+    @Override
+    public List<IConnection> getConnections() {
+        JSONArray cts = new Requester(identity, HttpPath.Client.GET_USER_CONNECTIONS).request().getAsJSONArray();
+        List<IConnection> connections = new ArrayList<>();
+        ObjectBuilder builder = new ObjectBuilder(this);
+        for (int i = 0; i < cts.length(); i++) {
+            connections.add(builder.buildConnection(cts.getJSONObject(i), profile));
+        }
+        return connections;
     }
 
     @Override

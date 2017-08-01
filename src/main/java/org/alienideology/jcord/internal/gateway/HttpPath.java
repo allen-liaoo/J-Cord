@@ -65,7 +65,7 @@ public final class HttpPath {
     
     public static class Application {
 
-        // IBotUser Only
+        // Bot Only
         public final static HttpPath GET_BOT_APPLICATION = new HttpPath(GET, "/oauth2/applications/@me");
 
         // Client Only
@@ -83,6 +83,35 @@ public final class HttpPath {
         public static final HttpPath GET_AUTHORIZED_APPLICATIONS = new HttpPath(GET,    "/oauth2/tokens");
         public static final HttpPath GET_AUTHORIZED_APPLICATION = new HttpPath(GET,    "/oauth2/tokens/{auth.id}");
         public static final HttpPath DELETE_AUTHORIZED_APPLICATION = new HttpPath(DELETE, "/oauth2/tokens/{auth.id}");
+    }
+
+    // Client Only
+    public static class Client {
+
+        public final static HttpPath GET_USER = new HttpPath(GET, "/users/@me"); // Unused
+        public static final HttpPath GET_USER_SETTINGS = new HttpPath(GET, "/users/@me/settings");
+        public static final HttpPath GET_USER_CONNECTIONS = new HttpPath(GET, "/users/@me/connections");
+        public final static HttpPath GET_USER_GUILDS = new HttpPath(GET, "/users/@me/guilds");
+        public static final HttpPath GET_FRIEND_SUGGESTIONS = new HttpPath(GET, "/friend-suggestions");
+        public static final HttpPath GET_RECENT_MENTIONS = new HttpPath(GET, "/users/@me/mentions");
+        public static final HttpPath GET_PROFILE = new HttpPath(GET, "/users/{user_id}/profile");
+
+        /* Relationship */
+        public static final HttpPath GET_RELATIONSHIPS = new HttpPath(GET, "/users/@me/relationships");
+        public static final HttpPath GET_RELATIONSHIP = new HttpPath(GET, "/users/@me/relationships/{user_id}");
+        public static final HttpPath ADD_RELATIONSHIP = new HttpPath(PUT, "/users/@me/relationships/{user_id}");
+        public static final HttpPath DELETE_RELATIONSHIP = new HttpPath(DELETE, "/users/@me/relationships/{user_id}");
+        
+        /* Note */
+        public static final HttpPath GET_NOTE = new HttpPath(GET, "/users/@me/notes/{user_id}");
+        public static final HttpPath SET_NOTE = new HttpPath(PUT, "/users/@me/notes/{user_id}");
+
+        /* Guild */
+        public static final HttpPath CREATE_GUILD = new HttpPath(POST, "/guilds");
+        public static final HttpPath MODIFY_GUILD_SETTINGS = new HttpPath(PATCH, "/users/@me/guilds/{guild_id}/settings");
+
+        public final static HttpPath CREATE_GROUP_DM = new HttpPath(POST, "/users/@me/channels");
+
     }
 
     public static class Guild {
@@ -158,13 +187,13 @@ public final class HttpPath {
         public final static HttpPath GET_CHANNEL_MESSAGES_AROUND = new HttpPath(GET, "/channels/{channel.id}/messages?limit={int}&around={message.id}");
         public final static HttpPath GET_CHANNEL_MESSAGES_BEFORE = new HttpPath(GET, "/channels/{channel.id}/messages?limit={int}&before={message.id}");
         public final static HttpPath GET_CHANNEL_MESSAGES_AFTER = new HttpPath(GET, "/channels/{channel.id}/messages?limit={int}&after={message.id}");
-        public final static HttpPath GET_CHANNEL_MESSAGE = new HttpPath(GET, "/channels/{channel.id}/messages/{snowflake.message}");
+        public final static HttpPath GET_CHANNEL_MESSAGE = new HttpPath(GET, "/channels/{channel.id}/messages/{message.id}"); // Bot Only
         public final static HttpPath CREATE_MESSAGE = new HttpPath(POST, "/channels/{channel.id}/messages");
         public final static HttpPath EDIT_MESSAGE = new HttpPath(PATCH, "/channels/{channel.id}/messages/{message.id}");
         public final static HttpPath EDIT_MESSAGE_CONTENT = new HttpPath(PATCH, "/channels/{channel.id}/messages/{message.id}?content={string}"); // Unused
         public final static HttpPath EDIT_MESSAGE_EMBED = new HttpPath(PATCH, "/channels/{channel.id}/messages/{message.id}?embed={object}"); // Unused
         public final static HttpPath DELETE_MESSAGE = new HttpPath(DELETE, "/channels/{channel.id}/messages/{message.id}");
-        public final static HttpPath BULK_DELETE_MESSAGE = new HttpPath(POST, "/channels/{channel.id}/messages/bulk-delete");
+        public final static HttpPath BULK_DELETE_MESSAGE = new HttpPath(POST, "/channels/{channel.id}/messages/bulk-delete"); // Bot Only
 
         /* Reaction Action */
         public final static HttpPath CREATE_REACTION = new HttpPath(PUT, "/channels/{channel.id}/messages/{message.id}/reactions/{emoji}/@me");
@@ -182,30 +211,25 @@ public final class HttpPath {
         public final static HttpPath ADD_PINNED_MESSAGE = new HttpPath(PUT, "/channels/{channel.id}/pins/{message.id}");
         public final static HttpPath DELETE_PINNED_MESSAGE = new HttpPath(DELETE, "/channels/{channel.id}/pins/{message.id}");
 
-    }
+        /* Recipients */
+        // Client Only
+        public static final HttpPath GET_RECIPIENTS = new HttpPath(GET, "channels/{channel_id}/recipients");
+        public static final HttpPath GET_RECIPIENT = new HttpPath(GET, "channels/{channel_id}/recipients/{user_id}");
+        public static final HttpPath ADD_RECIPIENT = new HttpPath(PUT, "channels/{channel_id}/recipients/{user_id}");
+        public static final HttpPath REMOVE_RECIPIENT = new HttpPath(DELETE, "channels/{channel_id}/recipients/{user_id}");
 
-    public static class Group {
-
-        /* Recipient Action */
-        public final static HttpPath CREATE_GROUP_DM = new HttpPath(POST, "/users/@me/channels");
-        public final static HttpPath ADD_RECIPIENT = new HttpPath(PUT, "/channels/{channel.id}/recipients/{user.id}");
-        public final static HttpPath DELETE_RECIPIENT = new HttpPath(DELETE, "/channels/{channel.id}/recipients/{user.id}");
-
+        /* Call */
+        // Client only
+        public static final HttpPath START_CALL = new HttpPath(POST, "channels/{channel_id}/call/ring");
+        public static final HttpPath STOP_CALL = new HttpPath(POST, "channels/{channel_id}/call/stop_ringing"); // Deny/End Call
     }
 
     public static class User {
 
-        /* Current User Action */
-        // Client Only
-        public final static HttpPath GET_CURRENT_USER = new HttpPath(GET, "/users/@me"); // Unused
+        public final static HttpPath GET_USER = new HttpPath(GET, "/users/{user.id}");
         public final static HttpPath MODIFY_CURRENT_USER = new HttpPath(PATCH, "/users/@me");
-        public final static HttpPath GET_CURRENT_USER_GUILDS = new HttpPath(GET, "/users/@me/guilds");
         public final static HttpPath LEAVE_GUILD = new HttpPath(DELETE, "/users/@me/guilds/{guild.id}");
         public final static HttpPath CREATE_DM = new HttpPath(POST, "/users/@me/channels");
-        public final static HttpPath GET_CURRENT_USER_CONNECTIONS = new HttpPath(GET, "/users/@me/connections");
-
-        /* User Action */
-        public final static HttpPath GET_USER = new HttpPath(GET, "/users/{user.id}");
 
     }
 

@@ -237,7 +237,7 @@ public final class Requester {
 
     private void processRequest(HttpRequest request) {
         request.header("Authorization", token);
-        if (useJson) request.header("Content-Type", "app/json");
+        if (useJson) request.header("Content-Type", "application/json");
     }
 
     private void handleErrorResponse(JSONObject response) {
