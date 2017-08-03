@@ -36,7 +36,7 @@ public interface IVoiceState extends IDiscordObject {
      *
      * @return True if the voice state user is self muted.
      */
-    boolean isSelfMute();
+    boolean isSelfMuted();
 
     /**
      * Check if the voice state user is self deafened.

@@ -10,7 +10,7 @@ import java.util.List;
  * @author AlienIdeology
  */
 // TODO: Flags and RpcApplicationState
-public class Application extends ClientObject implements IApplication {
+public final class Application extends ClientObject implements IApplication {
 
     private final String id;
     private final String secret;

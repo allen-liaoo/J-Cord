@@ -51,5 +51,8 @@ public class GuildUpdateEventHandler extends EventHandler {
         if (!Objects.equals(oldGuild.getMFALevel(), newGuild.getMFALevel())) {
             dispatchEvent(new GuildMFAUpdateEvent(identity, sequence, newGuild, oldGuild));
         }
+        if (!Objects.equals(oldGuild.getContentFilterLevel(), newGuild.getContentFilterLevel())) {
+            dispatchEvent(new GuildContentFilterUpdateEvent(identity, sequence, newGuild, oldGuild));
+        }
     }
 }

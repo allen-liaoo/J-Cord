@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public class Group extends MessageChannel implements IGroup {
+public final class Group extends MessageChannel implements IGroup {
 
     private Client client;
 

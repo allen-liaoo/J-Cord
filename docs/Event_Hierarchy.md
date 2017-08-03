@@ -13,7 +13,7 @@ Event - Whenever a change happens to an entity, an event get fired.
      - GuildNotificationUpdateEvent
      - GuildMFAUpdateEvent
      - GuildAFKTimeoutUpdateEvent
-     - GuildIntegrationsUpdateEventHandler
+     - GuildIntegrationsUpdateEvent
    - GuildDeleteEvent
    - GuildUnavailableEvent
    - GuildMemberEvent
@@ -24,6 +24,17 @@ Event - Whenever a change happens to an entity, an event get fired.
      - GuildMemberNicknameUpdateEvent
      - GuildMemberAddRoleEvent
      - GuildMemberRemoveRoleEvent
+   - GuildMemberVoiceEvent
+     - GuildMemberJoinEvent
+     - GuildMemberLeaveEvent
+     - GuildMemberMoveEvent
+     - GuildMemberMuteEvent
+     - GuildMemberSelfMuteEvent
+     - GuildMemberMuteByServerEvent
+     - GuildMemberDeafenEvent
+     - GuildMemberSelfDeafenEvent
+     - GuildMemberDeafenByServerEvent
+     - GuildMemberSuppressEvent
    - GuildRoleEvent
      - GuildRoleCreateEvent
      - GuildRoleUpdateEvent
@@ -95,6 +106,10 @@ Event - Whenever a change happens to an entity, an event get fired.
        - CallRegionUpdateEvent
        - CallWaitingUsersUpdateEvent
      - CallUserEvent
+       - CallUserJoinEvent
+       - CallUserLeaveEvent
+       - CallUserSelfMuteEvent
+       - CallUserSelfDeafenEvent
        - CallUserStartWaitingEvent
      - CallDeleteEvent
    - NoteEvent

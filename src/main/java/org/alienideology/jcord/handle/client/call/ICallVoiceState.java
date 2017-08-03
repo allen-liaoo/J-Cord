@@ -11,6 +11,20 @@ import org.alienideology.jcord.handle.client.IClientObject;
 public interface ICallVoiceState extends IClientObject, IVoiceState {
 
     /**
+     * Get the call of this voice state.
+     *
+     * @return The call.
+     */
+    ICall getCall();
+
+    /**
+     * Get the call user this voice state belongs to.
+     *
+     * @return The call user.
+     */
+    ICallUser getCallUser();
+
+    /**
      * Check if the user is in a call or not.
      * The user can not be waiting and in call at the same time.
      *

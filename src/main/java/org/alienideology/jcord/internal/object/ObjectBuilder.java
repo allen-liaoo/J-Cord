@@ -313,8 +313,8 @@ public final class ObjectBuilder {
         handleBuildError(json);
         String nick = !json.has("nick") || json.isNull("nick") ? null : json.getString("nick");
         String joined_at = json.getString("joined_at");
-        boolean isDeaf = json.getBoolean("deaf");
-        boolean isMute = json.getBoolean("mute");
+        boolean muted = json.getBoolean("mute");
+        boolean deafened = json.getBoolean("deaf");
         User user = buildUser(json.getJSONObject("user"));
 
         List<IRole> memberRoles = new ArrayList<>();
@@ -329,7 +329,7 @@ public final class ObjectBuilder {
             memberRoles.add(guild.getEveryoneRole());
         }
 
-        return new Member(identity, guild, user, nick, joined_at, memberRoles, isDeaf, isMute);
+        return new Member(identity, guild, user, nick, joined_at, memberRoles, muted, deafened);
     }
 
     public Member buildMemberById (JSONObject json, String guild_id) {
@@ -655,7 +655,7 @@ public final class ObjectBuilder {
         VoiceState state = new VoiceState(identity, user);
         state.setChannel(channel);
         state.setSessionId(session_id);
-        state.setSelfMute(selfMute);
+        state.setSelfMuted(selfMute);
         state.setSelfDeafened(selfDeaf);
         return state;
     }

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public class AuthApplication extends ClientObject implements IAuthApplication {
+public final class AuthApplication extends ClientObject implements IAuthApplication {
 
     private final String id;
     private final String authId;

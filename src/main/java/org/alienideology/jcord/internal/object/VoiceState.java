@@ -13,8 +13,8 @@ public class VoiceState extends DiscordObject implements IVoiceState {
     private IAudioChannel channel;
     private String sessionId;
 
-    private boolean selfMute = false;
-    private boolean selfDeafened = false;
+    protected boolean selfMuted = false;
+    protected boolean selfDeafened = false;
 
     public VoiceState(IdentityImpl identity, IUser user) {
         super(identity);
@@ -37,8 +37,8 @@ public class VoiceState extends DiscordObject implements IVoiceState {
     }
 
     @Override
-    public boolean isSelfMute() {
-        return selfMute;
+    public boolean isSelfMuted() {
+        return selfMuted;
     }
 
     @Override
@@ -56,8 +56,8 @@ public class VoiceState extends DiscordObject implements IVoiceState {
         this.sessionId = sessionId;
     }
 
-    public void setSelfMute(boolean selfMute) {
-        this.selfMute = selfMute;
+    public void setSelfMuted(boolean selfMuted) {
+        this.selfMuted = selfMuted;
     }
 
     public void setSelfDeafened(boolean selfDeafened) {
@@ -91,7 +91,7 @@ public class VoiceState extends DiscordObject implements IVoiceState {
         return "VoiceState{" +
                 "user=" + user +
                 ", channel=" + channel +
-                ", selfMute=" + selfMute +
+                ", selfMuted=" + selfMuted +
                 ", selfDeafened=" + selfDeafened +
                 '}';
     }

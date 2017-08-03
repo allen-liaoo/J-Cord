@@ -13,8 +13,8 @@ public class CallUserSelfMuteEvent extends CallUserEvent {
         super(client, sequence, call, callUser);
     }
 
-    public boolean isUndeafen() {
-        return !getVoiceState().isSelfMute();
+    public boolean isSelfMuted() {
+        return getVoiceState().isSelfMuted();
     }
 
 }

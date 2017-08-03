@@ -140,7 +140,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * @return A not-null string of this member's name.
      */
     @NotNull
-    default String getNameNotNull() {
+    default String getAlternativeName() {
         return getNickname() == null ? getUser().getName() : getNickname();
     }
 
@@ -150,6 +150,13 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * @return The datetime.
      */
     OffsetDateTime getJoinedDate();
+
+    /**
+     * Get the voice state of this member.
+     *
+     * @return The voice state.
+     */
+    IGuildVoiceState getVoiceState();
 
     /**
      * Get the highest role this member has.
@@ -184,16 +191,6 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
     default boolean isOwner() {
         return this.equals(getGuild().getOwner());
     }
-
-    /**
-     * @return True if this member is deafened (Does not have permission to listen in a voice channel)
-     */
-    boolean isDeafened();
-
-    /**
-     * @return True if this member is muted (Does not have permission to speak in a voice channel)
-     */
-    boolean isMuted();
 
     /**
      * Check if this member can modify attributes of another member.

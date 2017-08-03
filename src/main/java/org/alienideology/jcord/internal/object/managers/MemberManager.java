@@ -148,7 +148,6 @@ public final class MemberManager implements IMemberManager {
 
     @Override
     public AuditAction<Void> moveToVoiceChannel(String channelId) {
-        // TODO: Check if the member is in a voice channel
         IVoiceChannel channel = guild.getVoiceChannel(channelId);
         if (channel == null) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_CHANNEL);

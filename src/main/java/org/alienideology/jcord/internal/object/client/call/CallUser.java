@@ -10,7 +10,7 @@ import org.alienideology.jcord.internal.object.client.ClientObject;
 /**
  * @author AlienIdeology
  */
-public class CallUser extends ClientObject implements ICallUser {
+public final class CallUser extends ClientObject implements ICallUser {
 
     private Call call;
     private CallVoiceState voiceState;
@@ -31,7 +31,7 @@ public class CallUser extends ClientObject implements ICallUser {
     }
 
     public void setVoiceState(VoiceState voiceState) {
-        this.voiceState = new CallVoiceState(getClient(), voiceState);
+        this.voiceState = new CallVoiceState(getClient(), this, voiceState);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.alienideology.jcord.internal.object.guild;
 
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IGuildVoiceState;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IMemberManager;
@@ -8,6 +9,7 @@ import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.VoiceState;
 import org.alienideology.jcord.internal.object.managers.MemberManager;
 import org.alienideology.jcord.internal.object.user.User;
 import org.jetbrains.annotations.Nullable;
@@ -27,23 +29,23 @@ public final class Member extends DiscordObject implements IMember {
     private final User user;
     private String nickname;
     private OffsetDateTime joinedDate;
+    private GuildVoiceState voiceState;
 
     private List<IRole> roles;
     private List<Permission> permissions;
-    private boolean isDeafened;
-    private boolean isMuted;
 
-    public Member(IdentityImpl identity, Guild guild, User user, String nickname, String joinedDate, List<IRole> roles, boolean isDeafened, boolean isMuted) {
+    public Member(IdentityImpl identity, Guild guild, User user, String nickname, String joinedDate, List<IRole> roles, boolean muted, boolean deafened) {
         super(identity);
         this.guild = guild;
         this.user = user;
         this.nickname = nickname;
         this.joinedDate = OffsetDateTime.parse(joinedDate);
+        this.voiceState = new GuildVoiceState(identity, this, new VoiceState(identity, user));
+        this.voiceState.setMuted(muted);
+        this.voiceState.setDeafened(deafened);
         this.roles = roles;
         this.roles.sort((o1, o2) -> -1 * o1.compareTo(o2));
         this.permissions = initPermissions();
-        this.isDeafened = isDeafened;
-        this.isMuted = isMuted;
         this.memberManager = new MemberManager(this);
     }
 
@@ -105,6 +107,11 @@ public final class Member extends DiscordObject implements IMember {
     }
 
     @Override
+    public IGuildVoiceState getVoiceState() {
+        return voiceState;
+    }
+
+    @Override
     public IRole getHighestRole() {
         return roles.isEmpty() ? null : roles.get(0);
     }
@@ -127,16 +134,6 @@ public final class Member extends DiscordObject implements IMember {
     @Override
     public List<Permission> getPermissions() {
         return Collections.unmodifiableList(permissions);
-    }
-
-    @Override
-    public boolean isDeafened() {
-        return isDeafened;
-    }
-
-    @Override
-    public boolean isMuted() {
-        return isMuted;
     }
 
     @Override
@@ -168,6 +165,10 @@ public final class Member extends DiscordObject implements IMember {
     public Member setNickname(String nickname) {
         this.nickname = nickname;
         return this;
+    }
+
+    public void setVoiceState(GuildVoiceState voiceState) {
+        this.voiceState = voiceState;
     }
 
     public Member setRoles(List<IRole> roles) {

@@ -30,8 +30,7 @@ import org.alienideology.jcord.event.client.call.CallEvent;
 import org.alienideology.jcord.event.client.call.CallUpdateEvent;
 import org.alienideology.jcord.event.client.call.update.CallRegionUpdateEvent;
 import org.alienideology.jcord.event.client.call.update.CallWaitingUsersUpdateEvent;
-import org.alienideology.jcord.event.client.call.user.CallUserEvent;
-import org.alienideology.jcord.event.client.call.user.CallUserStartWaitingEvent;
+import org.alienideology.jcord.event.client.call.user.*;
 import org.alienideology.jcord.event.client.note.NoteAddEvent;
 import org.alienideology.jcord.event.client.note.NoteEvent;
 import org.alienideology.jcord.event.client.note.NoteRemoveEvent;
@@ -49,6 +48,7 @@ import org.alienideology.jcord.event.guild.role.GuildRoleEvent;
 import org.alienideology.jcord.event.guild.role.GuildRoleUpdateEvent;
 import org.alienideology.jcord.event.guild.role.update.*;
 import org.alienideology.jcord.event.guild.update.*;
+import org.alienideology.jcord.event.guild.voice.*;
 import org.alienideology.jcord.event.message.*;
 import org.alienideology.jcord.event.message.dm.IPrivateMessageEvent;
 import org.alienideology.jcord.event.message.dm.PrivateMessageCreateEvent;
@@ -170,6 +170,29 @@ public class DispatcherAdaptor {
             }
         } else if (event instanceof GuildUnbanEvent) {
             onGuildUnban((GuildUnbanEvent) event);
+        } else if (event instanceof GuildMemberVoiceEvent) {
+            onGuildMemberVoiceEvent((GuildMemberVoiceEvent) event);
+            if (event instanceof GuildMemberJoinVoiceEvent) {
+                onGuildMemberJoinVoice((GuildMemberJoinVoiceEvent) event);
+            } else if (event instanceof GuildMemberLeaveVoiceEvent) {
+                onGuildMemberLeaveVoice((GuildMemberLeaveVoiceEvent) event);
+            } else if (event instanceof GuildMemberMoveVoiceEvent) {
+                onGuildMemberMoveVoice((GuildMemberMoveVoiceEvent) event);
+            } else if (event instanceof GuildMemberMuteEvent) {
+                onGuildMemberMute((GuildMemberMuteEvent) event);
+            } else if (event instanceof GuildMemberSelfMuteEvent) {
+                onGuildMemberSelfMute((GuildMemberSelfMuteEvent) event);
+            } else if (event instanceof GuildMemberMuteByServerEvent) {
+                onGuildMemberMuteByServer((GuildMemberMuteByServerEvent) event);
+            } else if (event instanceof GuildMemberDeafenEvent) {
+                onGuildMemberDeafen((GuildMemberDeafenEvent) event);
+            } else if (event instanceof GuildMemberSelfDeafenEvent) {
+                onGuildMemberSelfDeafen((GuildMemberSelfDeafenEvent) event);
+            } else if (event instanceof GuildMemberDeafenByServerEvent) {
+                onGuildMemberDeafenByServer((GuildMemberDeafenByServerEvent) event);
+            } else if (event instanceof GuildMemberSuppressEvent) {
+                onGuildMemberSuppress((GuildMemberSuppressEvent) event);
+            }
         } else if (event instanceof GuildRoleEvent) {
             onGuildRoleEvent((GuildRoleEvent) event);
             if (event instanceof GuildRoleCreateEvent) {
@@ -208,6 +231,7 @@ public class DispatcherAdaptor {
             }
         }
     }
+
     /*
         General Guild Events
      */
@@ -255,6 +279,31 @@ public class DispatcherAdaptor {
     public void onGuildMemberAddRole (GuildMemberAddRoleEvent event) {}
 
     public void onGuildMemberRemoveRole (GuildMemberRemoveRoleEvent event) {}
+
+    /*
+        General Guild Member Voice Events
+     */
+    public void onGuildMemberVoiceEvent (GuildMemberVoiceEvent event) {}
+
+    public void onGuildMemberJoinVoice (GuildMemberJoinVoiceEvent event) {}
+
+    public void onGuildMemberLeaveVoice (GuildMemberLeaveVoiceEvent event) {}
+
+    public void onGuildMemberMoveVoice (GuildMemberMoveVoiceEvent event) {}
+
+    public void onGuildMemberMute (GuildMemberMuteEvent event) {}
+
+    public void onGuildMemberSelfMute (GuildMemberSelfMuteEvent event) {}
+
+    public void onGuildMemberMuteByServer (GuildMemberMuteByServerEvent event) {}
+
+    public void onGuildMemberDeafen (GuildMemberDeafenEvent event) {}
+
+    public void onGuildMemberSelfDeafen (GuildMemberSelfDeafenEvent event) {}
+
+    public void onGuildMemberDeafenByServer (GuildMemberDeafenByServerEvent event) {}
+
+    public void onGuildMemberSuppress (GuildMemberSuppressEvent event) {}
 
     /*
         General Guild Role Events
@@ -534,7 +583,15 @@ public class DispatcherAdaptor {
                 }
             } else if (event instanceof CallUserEvent) {
                 onCallUserEvent((CallUserEvent) event);
-                if (event instanceof CallUserStartWaitingEvent) {
+                if (event instanceof CallUserJoinEvent) {
+                    onCallUserJoin((CallUserJoinEvent) event);
+                } else if (event instanceof CallUserLeaveEvent) {
+                    onCallUserLeave((CallUserLeaveEvent) event);
+                } else if (event instanceof CallUserSelfMuteEvent) {
+                    onCallUserSelfMute((CallUserSelfMuteEvent) event);
+                } else if (event instanceof CallUserSelfDeafenEvent) {
+                    onCallUserSelfDeafen((CallUserSelfDeafenEvent) event);
+                } else if (event instanceof CallUserStartWaitingEvent) {
                     onCallUserStartWaiting((CallUserStartWaitingEvent) event);
                 }
             } else if (event instanceof CallDeleteEvent) {
@@ -565,6 +622,14 @@ public class DispatcherAdaptor {
     public void onCallWaitingUsersUpdate (CallWaitingUsersUpdateEvent event) {}
 
     public void onCallUserEvent (CallUserEvent event) {}
+
+    public void onCallUserJoin (CallUserJoinEvent event) {}
+
+    public void onCallUserLeave (CallUserLeaveEvent event) {}
+
+    public void onCallUserSelfMute (CallUserSelfMuteEvent event) {}
+
+    public void onCallUserSelfDeafen (CallUserSelfDeafenEvent event) {}
 
     public void onCallUserStartWaiting (CallUserStartWaitingEvent event) {}
 

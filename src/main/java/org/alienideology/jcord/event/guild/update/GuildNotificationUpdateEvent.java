@@ -1,7 +1,8 @@
 package org.alienideology.jcord.event.guild.update;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.guild.GuildUpdateEvent;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 
 /**
@@ -13,11 +14,11 @@ public class GuildNotificationUpdateEvent extends GuildUpdateEvent {
         super(identity, sequence, newGuild, oldGuild);
     }
 
-    public Guild.Notification getNewNotification() {
+    public IGuild.Notification getNewNotification() {
         return guild.getNotificationsLevel();
     }
 
-    public Guild.Notification getOldNotification() {
+    public IGuild.Notification getOldNotification() {
         return oldGuild.getNotificationsLevel();
     }
 

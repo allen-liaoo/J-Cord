@@ -1,5 +1,6 @@
 package org.alienideology.jcord.event.guild;
 
+import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 
@@ -19,11 +20,11 @@ public class GuildUpdateEvent extends GuildEvent {
      * @return The new, updated guild.
      */
     @Override
-    public Guild getGuild() {
+    public IGuild getGuild() {
         return super.getGuild();
     }
 
-    public Guild getOldGuild() {
+    public IGuild getOldGuild() {
         return oldGuild;
     }
 }

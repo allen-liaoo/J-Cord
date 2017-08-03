@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public class Call extends ClientObject implements ICall {
+public final class Call extends ClientObject implements ICall {
 
     private final String id;
 
