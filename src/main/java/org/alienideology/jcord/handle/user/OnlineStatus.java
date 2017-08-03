@@ -51,7 +51,7 @@ public enum OnlineStatus {
     @Override
     public String toString() {
         return "OnlineStatus{" +
-                "key='" + key + '\'' +
+                "id='" + key + '\'' +
                 '}';
     }
 }

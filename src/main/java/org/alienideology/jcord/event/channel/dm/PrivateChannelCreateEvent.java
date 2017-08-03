@@ -1,10 +1,10 @@
 package org.alienideology.jcord.event.channel.dm;
 
-import org.jetbrains.annotations.NotNull;
 import org.alienideology.jcord.event.channel.ChannelCreateEvent;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.Channel;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author AlienIdeology
@@ -13,11 +13,6 @@ public class PrivateChannelCreateEvent extends ChannelCreateEvent implements IPr
 
     public PrivateChannelCreateEvent(IdentityImpl identity, int sequence, Channel channel) {
         super(identity, sequence, channel);
-    }
-
-    @Override
-    public boolean isPrivateChannel() {
-        return true;
     }
 
     @Override

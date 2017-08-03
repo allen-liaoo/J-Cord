@@ -34,6 +34,10 @@ IClientObject - Generic Client Objects.
  - IRelationship - A connection between two Discord user accounts.
  - IConnection - A connection to a third party account.
  - INote - A note that the client can attach to any users. The note is only visible to the client.
+ - Call
+   - ICall - A voice communication between Discord client users.
+   - ICallUser - A temporary instance representing an user in a call.
+   - ICallVoiceState - A voice state for a call.
  - Setting
    - IClientSetting - he app settings of a Discord client.
    - IGuildSetting - A guild setting specifically for clients.
@@ -48,7 +52,9 @@ IDiscordObject - Entities such as Guild, User, or Channel.
  - ISnowFake  - Objects that has ID.
  - IMention - Objects that are mentionable.
  - IInvite - A piece of url used to invite users to a guild.
+ - IVoiceState - A general voice state of an user, for voice channel or call connection.
  - Icon - An encoded(base64) image, can be an avatar or picture.
+ - Region (Enumeration) - Regions for voice channel and call connection.
 
 ### Audit Log
 AuditLog - An audit log that belongs to a guild. Used to get log entries.
@@ -65,7 +71,6 @@ IGuild - A collection of users and channels, often referred to in the UI as a se
  - IRole - A label that can be put on a set of guild members.
  - IGuildEmoji - A custom emoji that can be used within a guild.
  - IIntegration - A guild integration that enables user to integrate tools from third party accounts.
- - Region (Enumeration) - Used for guild voice channel connection.
 
 ### Channel
 IChannel - A communication pipeline.
@@ -75,7 +80,9 @@ IChannel - A communication pipeline.
    - MessageHistory - The history of a MessageChannel, used to get lists of messages.
 
  - IVoiceChannel - A GuildChannel for audio connections. (GuildChannel)
- - IGuildChannel - A Channel that exist in a guild.
+ - IGuildChannel - A channel that exist in a guild.
+ - IAudioChannel -  A channel that contains audio connection. Such as IVoiceChannel or IPrivateChannel.
+ - ICallChannel - A channel that allows users to call other users.
 
 ### Message
 IMessage - A text with embeds or attachments that can be sent by anyone.
@@ -104,6 +111,7 @@ Permission (Enumeration) - A way to limit and grant certain abilities to members
  - IRoleManager - A manager that manages a role in the guild.
  - IWebhookManager - A manager for modifying, executing and deleting webhooks.
  - ISelfManager - A manager that manages self user.
+ - IClientManager - A manager used to manage the Discord client.
 
 ### Builders
  - ChannelBuilder - A GuildChannel builder for creating text and voice channels.

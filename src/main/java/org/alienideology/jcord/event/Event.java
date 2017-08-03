@@ -1,15 +1,15 @@
 package org.alienideology.jcord.event;
 
-import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 
 /**
- * Event - Whenever a change happens to an entity, an event get fired
+ * Event - Whenever a change happens to an entity, an event get fired.
+ *
  * @author AlienIdeology
  */
-public abstract class Event {
+public abstract class Event extends DiscordObject {
 
-    protected final IdentityImpl identity;
     private final int sequence;
 
     /**
@@ -17,12 +17,8 @@ public abstract class Event {
      * @param identity The identity where this event is fired.
      */
     public Event (IdentityImpl identity, int sequence) {
-        this.identity = identity;
+        super(identity);
         this.sequence = sequence;
-    }
-
-    public Identity getIdentity() {
-        return identity;
     }
 
     /**

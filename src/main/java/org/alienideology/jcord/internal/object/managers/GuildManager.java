@@ -1,6 +1,7 @@
 package org.alienideology.jcord.internal.object.managers;
 
 import org.alienideology.jcord.handle.Icon;
+import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
@@ -8,7 +9,6 @@ import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
-import org.alienideology.jcord.handle.guild.Region;
 import org.alienideology.jcord.handle.managers.IGuildManager;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
@@ -36,6 +36,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
+// TODO: Modify Guild Embed
 public final class GuildManager implements IGuildManager {
 
     private Guild guild;
@@ -227,7 +228,7 @@ public final class GuildManager implements IGuildManager {
         }
 
         try {
-            JSONObject pruneCount = new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.GET_GUILD_PRUNE_COUNT).request(guild.getId(), String.valueOf(days))
+            JSONObject pruneCount = new Requester(getIdentity(), HttpPath.Guild.GET_GUILD_PRUNE_COUNT).request(guild.getId(), String.valueOf(days))
                 .getAsJSONObject();
             return pruneCount.getInt("pruned");
         } catch (HttpErrorException ex) {
@@ -267,7 +268,7 @@ public final class GuildManager implements IGuildManager {
     @Override
     public List<IMember> getBans() {
         try {
-            JSONArray members = new Requester((IdentityImpl) getIdentity(), HttpPath.Guild.GET_GUILD_BANS).request(guild.getId())
+            JSONArray members = new Requester(getIdentity(), HttpPath.Guild.GET_GUILD_BANS).request(guild.getId())
                     .getAsJSONArray();
             List<IMember> bannedMembers = new ArrayList<>();
 

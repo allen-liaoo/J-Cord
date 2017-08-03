@@ -152,7 +152,7 @@ public final class Role extends DiscordObject implements IRole, Jsonable {
     @Override
     public String toString() {
         return "Role{" +
-                "key='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", guild=" + guild +
                 ", name='" + name + '\'' +
                 '}';

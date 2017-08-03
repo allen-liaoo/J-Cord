@@ -5,6 +5,7 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.IdentityType;
 import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.event.gateway.DisconnectEvent;
@@ -186,7 +187,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         EventHandler handler = eventHandler.get(key);
 
         if (handler == null) {
-            LOG.log(LogLevel.FETAL, "[UNKNOWN] Event: " + key + json.toString(4));
+            LOG.log(LogLevel.FETAL, "[UNKNOWN EVENT] " + key  + ":\n" + json.toString(4));
         } else {
             LOG.log(LogLevel.DEBUG, "[RECEIVED] " + key);
             LOG.log(LogLevel.TRACE, "Event Json: \n" + json.toString(4));
@@ -307,6 +308,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         eventHandler.put("GUILD_UPDATE", new GuildUpdateEventHandler(identity));
         eventHandler.put("GUILD_DELETE", new GuildDeleteEventHandler(identity));
         eventHandler.put("GUILD_EMOJIS_UPDATE", new GuildEmojisUpdateEventHandler(identity));
+        eventHandler.put("GUILD_INTEGRATIONS_UPDATE", new GuildIntegrationsUpdateEventHandler(identity));
 
         /* Member Event */
         eventHandler.put("GUILD_BAN_ADD", new GuildBanEventHandler(identity, true));
@@ -340,11 +342,22 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         eventHandler.put("PRESENCE_UPDATE", new PresenceUpdateEventHandler(identity));
         eventHandler.put("USER_UPDATE", new UserUpdateEventHandler(identity));
         eventHandler.put("WEBHOOKS_UPDATE", new WebhookUpdateEventHandler(identity));
+        eventHandler.put("VOICE_STATE_UPDATE", new VoiceStateUpdateEventHandler(identity));
+
+        /* Client Event */
+        if (identity.getType().equals(IdentityType.CLIENT)) {
+
+            eventHandler.put("CALL_CREATE", new CallCreateEventHandler(identity));
+            eventHandler.put("CALL_UPDATE", new CallUpdateEventHandler(identity));
+            eventHandler.put("CALL_DELETE", new CallDeleteEventHandler(identity));
+            eventHandler.put("USER_NOTE_UPDATE", new UserNoteUpdateEventHandler(identity));
+
+        }
 
         // TODO: Finish priority and client events
         // Priority: GUILD_MEMBERS_CHUNK
-        // Clients: CALL_CREATE, CALL_UPDATE, CALL_DELETE, CHANNEL_RECIPIENT_ADD, CHANNEL_RECIPIENT_REMOVE, RELATIONSHIP_ADD, RELATIONSHIP_REMOVE
-        // Not implementing any time soon: VOICE_SERVER_UPDATE, VOICE_STATE_UPDATE
+        // Clients: CHANNEL_RECIPIENT_ADD, CHANNEL_RECIPIENT_REMOVE, RELATIONSHIP_ADD, RELATIONSHIP_REMOVE
+        // Not implementing any time soon: VOICE_SERVER_UPDATE
         // Unknown: GUILD_SYNC, MESSAGE_ACK
     }
 

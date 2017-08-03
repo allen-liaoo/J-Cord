@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.IDiscordObject;
 
 /**
@@ -11,12 +12,12 @@ public class DiscordObject implements IDiscordObject {
 
     protected final IdentityImpl identity;
 
-    protected DiscordObject(IdentityImpl identity) {
-        this.identity = identity;
+    protected DiscordObject(Identity identity) {
+        this.identity = (IdentityImpl) identity;
     }
 
     @Override
-    public org.alienideology.jcord.Identity getIdentity() {
+    public IdentityImpl getIdentity() {
         return identity;
     }
 

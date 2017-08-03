@@ -91,7 +91,7 @@ public class GatewayEventHandler extends EventHandler {
                             JSONObject dm = pms.getJSONObject(i);
 
                             if (dm.getJSONArray("recipients").length() > 1) {
-                                cb.buildGroup(dm); // Added to client automatically
+                                cb.buildGroup(dm);// Added to client automatically
                             }
                         }
                         LOG.log(LogLevel.DEBUG, "[READY] Groups: " + (pms.length() - pmCounts));

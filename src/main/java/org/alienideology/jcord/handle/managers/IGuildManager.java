@@ -2,6 +2,7 @@ package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.Icon;
+import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.builders.ChannelBuilder;
 import org.alienideology.jcord.handle.builders.RoleBuilder;
@@ -11,7 +12,6 @@ import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
-import org.alienideology.jcord.handle.guild.Region;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;

@@ -15,7 +15,7 @@ import org.json.JSONObject;
 /**
  * @author AlienIdeology
  */
-public class WebhookManager implements IWebhookManager {
+public final class WebhookManager implements IWebhookManager {
 
     private Webhook webhook;
 

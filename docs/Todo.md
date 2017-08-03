@@ -1,4 +1,6 @@
 # Todo List
+1. GuildEmbedUtil - Parse Guild Embed Json, and get widget png.
+2. A separate log for event caching, inside EventManager.
 
 ### Description
  - [x] Done : Tested and working.

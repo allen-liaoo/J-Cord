@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.guild;
 
+import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.audit.IAuditLog;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;
@@ -34,7 +35,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-// TODO: Guild Integration Object, GuildUnavailable
+// TODO: GuildUnavailable
 public final class Guild extends DiscordObject implements IGuild {
 
     private final String id;
@@ -410,7 +411,7 @@ public final class Guild extends DiscordObject implements IGuild {
     @Override
     public String toString() {
         return "Guild{" +
-                "key='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

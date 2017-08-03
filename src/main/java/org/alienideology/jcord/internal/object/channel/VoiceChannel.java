@@ -187,7 +187,7 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonab
     @Override
     public String toString() {
         return "VoiceChannel{" +
-                "key='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", type=" + type +
                 ", guild=" + guild +
                 ", name='" + name + '\'' +

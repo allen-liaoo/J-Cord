@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * IGuildChannel - A Channel that exist in a guild
+ * IGuildChannel - A channel that exist in a guild
  * @author AlienIdeology
  */
 public interface IGuildChannel extends IChannel, OverwriteCheckable, ISnowFlake {

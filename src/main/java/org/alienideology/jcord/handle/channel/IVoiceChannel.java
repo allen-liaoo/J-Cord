@@ -6,7 +6,7 @@ import org.alienideology.jcord.handle.guild.IGuild;
  * VoiceChannel - An IGuildChannel for audio connections.
  * @author AlienIdeology
  */
-public interface IVoiceChannel extends IGuildChannel, Comparable<IVoiceChannel> {
+public interface IVoiceChannel extends IGuildChannel, IAudioChannel, Comparable<IVoiceChannel> {
 
     /**
      * The minimum bitrate of a voice channel.

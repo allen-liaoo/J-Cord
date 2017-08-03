@@ -1,9 +1,9 @@
-package org.alienideology.jcord.handle.guild;
+package org.alienideology.jcord.handle;
 
 import java.util.Locale;
 
 /**
- * Voice Region (Guild) - Used for guild voice channel connection.
+ * Voice Region - Regions for voice channel and call connection.
  * @author AlienIdeology
  */
 public enum Region {

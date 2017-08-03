@@ -1,10 +1,11 @@
-package org.alienideology.jcord.internal.object.client;
+package org.alienideology.jcord.internal.object.channel;
 
+import org.alienideology.jcord.handle.channel.IGroup;
 import org.alienideology.jcord.handle.client.IClient;
-import org.alienideology.jcord.handle.client.IGroup;
+import org.alienideology.jcord.handle.client.call.ICall;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.channel.MessageChannel;
+import org.alienideology.jcord.internal.object.client.Client;
+import org.alienideology.jcord.internal.object.client.call.Call;
 
 import java.util.List;
 
@@ -21,8 +22,10 @@ public class Group extends MessageChannel implements IGroup {
 
     private List<IUser> recipients;
 
+    private Call currentCall;
+
     public Group(Client client, String id, String name, String icon, String ownerId, List<IUser> recipients) {
-        super((IdentityImpl) client.getIdentity(), id, Type.GROUP_DM);
+        super(client.getIdentity(), id, Type.GROUP_DM);
         this.client = client;
         this.name = name;
         this.icon = icon;
@@ -54,6 +57,15 @@ public class Group extends MessageChannel implements IGroup {
     @Override
     public List<IUser> getRecipients() {
         return recipients;
+    }
+
+    @Override
+    public ICall getCurrentCall() {
+        return currentCall;
+    }
+
+    public void setCurrentCall(Call currentCall) {
+        this.currentCall = currentCall;
     }
 
     @Override

@@ -13,6 +13,7 @@ Event - Whenever a change happens to an entity, an event get fired.
      - GuildNotificationUpdateEvent
      - GuildMFAUpdateEvent
      - GuildAFKTimeoutUpdateEvent
+     - GuildIntegrationsUpdateEventHandler
    - GuildDeleteEvent
    - GuildUnavailableEvent
    - GuildMemberEvent
@@ -87,4 +88,17 @@ Event - Whenever a change happens to an entity, an event get fired.
      - GameUpdateEvent
    - WebhookUpdateEvent - This can be webhook create, update or delete.
    It is not possible to get the updated webhook from this event.
+ - ClientEvent
+   - CallEvent
+     - CallCreateEvent
+     - CallUpdateEvent
+       - CallRegionUpdateEvent
+       - CallWaitingUsersUpdateEvent
+     - CallUserEvent
+       - CallUserStartWaitingEvent
+     - CallDeleteEvent
+   - NoteEvent
+     - NoteAddEvent
+     - NoteUpdateEvent
+     - NoteRemoveEvent
  - ExceptionEvent

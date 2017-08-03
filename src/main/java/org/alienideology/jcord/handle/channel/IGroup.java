@@ -1,11 +1,13 @@
-package org.alienideology.jcord.handle.client;
+package org.alienideology.jcord.handle.channel;
 
-import org.alienideology.jcord.handle.channel.IMessageChannel;
+import org.alienideology.jcord.handle.client.IClientObject;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * IGroup - A private channel with more than one user.
@@ -13,7 +15,7 @@ import java.util.List;
  *
  * @author AlienIdeology
  */
-public interface IGroup extends IClientObject, IMessageChannel {
+public interface IGroup extends IClientObject, IMessageChannel, ICallChannel {
 
     /**
      * Get the name of this group.
@@ -23,6 +25,19 @@ public interface IGroup extends IClientObject, IMessageChannel {
      */
     @Nullable
     String getName();
+
+    /**
+     * Get the name of this group.
+     * If this group does not have a name, this will generates a default name,
+     * which is formed by joining each recipient's name with {@code , } in between each name.
+     * Note that the name will not contain the client's name.
+     *
+     * @return The group name.
+     */
+    @NotNull
+    default String getAlternativeName() {
+        return getName() == null ? getRecipients().stream().map(IUser::getName).collect(Collectors.joining(", ")) : getName();
+    }
 
     /**
      * Get the icon hash of this group.

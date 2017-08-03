@@ -12,13 +12,4 @@ public class ChannelCreateEvent extends ChannelEvent {
         super(identity, sequence, channel);
     }
 
-    /**
-     * Check if the channel created is a private channel or not.
-     *
-     * @return True if it is a private channel.
-     */
-    public boolean isPrivateChannel() {
-        return channel.isPrivate();
-    }
-
 }

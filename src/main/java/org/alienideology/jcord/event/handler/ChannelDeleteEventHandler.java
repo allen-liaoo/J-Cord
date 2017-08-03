@@ -1,6 +1,7 @@
 package org.alienideology.jcord.event.handler;
 
 import org.alienideology.jcord.event.channel.dm.PrivateChannelDeleteEvent;
+import org.alienideology.jcord.event.channel.group.GroupDeleteEvent;
 import org.alienideology.jcord.event.channel.guild.text.TextChannelDeleteEvent;
 import org.alienideology.jcord.event.channel.guild.voice.VoiceChannelDeleteEvent;
 import org.alienideology.jcord.handle.channel.IChannel;
@@ -26,7 +27,10 @@ public class ChannelDeleteEventHandler extends EventHandler {
         Channel channel = (Channel) identity.getChannel(json.getString("id"));
         OffsetDateTime timeStamp = OffsetDateTime.now();
 
-        if (channel.isType(IChannel.Type.DM)) {
+        if (channel.isType(IChannel.Type.GROUP_DM)) {
+            identity.getClient().removeGroup(channel.getId());
+            dispatchEvent(new GroupDeleteEvent(identity, sequence, channel, timeStamp));
+        } else if (channel.isType(IChannel.Type.DM)) {
             identity.removePrivateChannel(channel.getId());
             dispatchEvent(new PrivateChannelDeleteEvent(identity, sequence, channel, timeStamp));
         } else {

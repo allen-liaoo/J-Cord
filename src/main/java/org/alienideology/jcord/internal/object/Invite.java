@@ -10,7 +10,7 @@ import java.time.OffsetDateTime;
 /**
  * @author AlienIdeology
  */
-public class Invite implements IInvite {
+public final class Invite implements IInvite {
 
     private final String code;
 

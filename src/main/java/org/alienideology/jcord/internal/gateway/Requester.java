@@ -8,6 +8,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.object.IdentityImpl;
@@ -44,15 +45,15 @@ public final class Requester {
     /**
      * Constructor for JSON requests
      */
-    public Requester(IdentityImpl identity, HttpPath path) {
+    public Requester(Identity identity, HttpPath path) {
         this(identity, path, true);
     }
 
     /**
      * Constructor for JSON requests
      */
-    public Requester(IdentityImpl identity, HttpPath path, boolean useJson) {
-        this.LOG = identity.LOG;
+    public Requester(Identity identity, HttpPath path, boolean useJson) {
+        this.LOG = ((IdentityImpl) identity).LOG;
         this.token = identity.getToken();
         this.path = path;
         this.useJson = useJson;

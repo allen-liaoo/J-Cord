@@ -65,7 +65,7 @@ public final class InviteManager implements IInviteManager {
 
         List<IInvite> invites = new ArrayList<>();
         ObjectBuilder builder = new ObjectBuilder((IdentityImpl) getIdentity());
-        JSONArray guildInvites = new Requester((IdentityImpl) getIdentity(), HttpPath.Invite.GET_GUILD_INVITES).request(guild.getId())
+        JSONArray guildInvites = new Requester(getIdentity(), HttpPath.Invite.GET_GUILD_INVITES).request(guild.getId())
                 .getAsJSONArray();
 
         for (int i = 0; i < guildInvites.length(); i++) {
@@ -84,7 +84,7 @@ public final class InviteManager implements IInviteManager {
 
         List<IInvite> invites = new ArrayList<>();
         ObjectBuilder builder = new ObjectBuilder((IdentityImpl) getIdentity());
-        JSONArray guildInvites = new Requester((IdentityImpl) getIdentity(), HttpPath.Invite.GET_CHANNEL_INVITES).request(channel.getId())
+        JSONArray guildInvites = new Requester(getIdentity(), HttpPath.Invite.GET_CHANNEL_INVITES).request(channel.getId())
                 .getAsJSONArray();
 
         for (int i = 0; i < guildInvites.length(); i++) {

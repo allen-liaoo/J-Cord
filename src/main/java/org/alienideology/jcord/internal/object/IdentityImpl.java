@@ -50,12 +50,12 @@ import java.util.List;
  */
 public final class IdentityImpl implements Identity {
 
-    public Logger LOG;
+    public final Logger LOG;
 
-    private IdentityType type;
-    private String token;
+    private final IdentityType type;
+    private final String token;
 
-    private WebSocketFactory wsFactory;
+    private final WebSocketFactory wsFactory;
     private WebSocket socket;
     public Connection CONNECTION = Connection.OFFLINE;
 
@@ -70,8 +70,9 @@ public final class IdentityImpl implements Identity {
     private List<IGuild> guilds = new ArrayList<>();
     private List<IPrivateChannel> privateChannels = new ArrayList<>();
 
-    public IdentityImpl(IdentityType type, WebSocketFactory wsFactory, Logger logger) {
+    public IdentityImpl(IdentityType type, String token, WebSocketFactory wsFactory, Logger logger) {
         this.type = type;
+        this.token = type.equals(IdentityType.CLIENT) ? token : "Bot " + token;
         this.wsFactory = wsFactory;
         this.selfManager = new SelfManager(this);
         this.LOG = logger;
@@ -80,7 +81,7 @@ public final class IdentityImpl implements Identity {
     @Override
     public IdentityImpl revive() throws ErrorResponseException, URISyntaxException, ConnectException {
         logout();
-        login(token);
+        login();
         return this;
     }
 
@@ -239,6 +240,21 @@ public final class IdentityImpl implements Identity {
         return channels;
     }
 
+    @Override
+    public IAudioChannel getAudioChannel(String id) {
+        return getAllAudioChannels().stream().filter(ac -> ac.getId().equals(id)).findAny().orElse(null);
+    }
+
+    @Override
+    public List<IAudioChannel> getAllAudioChannels() {
+        List<IAudioChannel> channels = new ArrayList<>(getAllVoiceChannels());
+        if (type.equals(IdentityType.CLIENT)) {
+            channels.addAll(client.getGroups());
+        }
+        channels.addAll(getPrivateChannels());
+        return channels;
+    }
+
     @Nullable
     public IMessageChannel getMessageChannel(String id) {
         List<IMessageChannel> channels = getAllMessageChannels();
@@ -252,6 +268,9 @@ public final class IdentityImpl implements Identity {
     public List<IMessageChannel> getAllMessageChannels() {
         List<IMessageChannel> channels = new ArrayList<>(getAllTextChannels());
         channels.addAll(privateChannels);
+        if (type.equals(IdentityType.CLIENT)) {
+            channels.addAll(client.getGroups());
+        }
         return Collections.unmodifiableList(channels);
     }
 
@@ -360,12 +379,10 @@ public final class IdentityImpl implements Identity {
         ------------------------
      */
 
-    public IdentityImpl login (String token) throws ErrorResponseException, URISyntaxException, ConnectException {
+    public IdentityImpl login () throws ErrorResponseException, URISyntaxException, ConnectException {
         String uri;
 
-        if (type == IdentityType.BOT && !token.startsWith("Bot ")) {
-            this.token = "Bot " + token;
-
+        if (type.equals(IdentityType.BOT)) {
             try {
                 HttpRequest request = Unirest.get(HttpPath.Gateway.GET_GATEWAY_BOT.getPath())
                         .header("Authorization", this.token);
@@ -375,8 +392,6 @@ public final class IdentityImpl implements Identity {
                 throw new ErrorResponseException(ErrorResponse.INVALID_AUTHENTICATION_TOKEN);
             }
         } else {
-            this.token = token;
-
             try {
                 HttpRequest request = Unirest.get(HttpPath.Gateway.GET_GATEWAY.getPath())
                         .header("Authorization", this.token);

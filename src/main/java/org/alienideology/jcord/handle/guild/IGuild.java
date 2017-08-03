@@ -2,6 +2,7 @@ package org.alienideology.jcord.handle.guild;
 
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
+import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.audit.IAuditLog;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.channel.ITextChannel;

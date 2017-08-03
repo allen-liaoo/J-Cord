@@ -74,6 +74,7 @@ public final class GuildSetting extends ClientObject implements IGuildSetting {
 
     //---------------------Internal---------------------
     public void addChannelSetting(IChannelSetting channelSetting) {
+        if (channelSettings.contains(channelSetting)) return;
         channelSettings.add(channelSetting);
     }
 

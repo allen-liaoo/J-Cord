@@ -91,7 +91,7 @@ public final class HttpPath {
         public final static HttpPath GET_USER = new HttpPath(GET, "/users/@me"); // Unused
         public static final HttpPath GET_USER_SETTINGS = new HttpPath(GET, "/users/@me/settings");
         public static final HttpPath GET_USER_CONNECTIONS = new HttpPath(GET, "/users/@me/connections");
-        public final static HttpPath GET_USER_GUILDS = new HttpPath(GET, "/users/@me/guilds");
+        public static final HttpPath GET_USER_GUILDS = new HttpPath(GET, "/users/@me/guilds");
         public static final HttpPath GET_FRIEND_SUGGESTIONS = new HttpPath(GET, "/friend-suggestions");
         public static final HttpPath GET_RECENT_MENTIONS = new HttpPath(GET, "/users/@me/mentions");
         public static final HttpPath GET_PROFILE = new HttpPath(GET, "/users/{user_id}/profile");
@@ -110,7 +110,7 @@ public final class HttpPath {
         public static final HttpPath CREATE_GUILD = new HttpPath(POST, "/guilds");
         public static final HttpPath MODIFY_GUILD_SETTINGS = new HttpPath(PATCH, "/users/@me/guilds/{guild_id}/settings");
 
-        public final static HttpPath CREATE_GROUP_DM = new HttpPath(POST, "/users/@me/channels");
+        public static final HttpPath CREATE_GROUP_DM = new HttpPath(POST, "/users/@me/channels");
 
     }
 

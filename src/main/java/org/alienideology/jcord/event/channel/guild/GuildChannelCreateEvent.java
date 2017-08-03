@@ -1,12 +1,12 @@
 package org.alienideology.jcord.event.channel.guild;
 
-import org.jetbrains.annotations.NotNull;
 import org.alienideology.jcord.event.channel.ChannelCreateEvent;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.Channel;
 import org.alienideology.jcord.internal.object.guild.Guild;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author AlienIdeology
@@ -23,11 +23,6 @@ public class GuildChannelCreateEvent extends ChannelCreateEvent implements IGuil
     @Override
     public IGuild getGuild() {
         return guild;
-    }
-
-    @Override
-    public boolean isPrivateChannel() {
-        return false;
     }
 
     @Override

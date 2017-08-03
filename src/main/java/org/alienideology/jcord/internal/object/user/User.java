@@ -17,7 +17,6 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-// TODO: Connection Object
 public class User extends DiscordObject implements IUser {
 
     protected final String id;
@@ -140,7 +139,7 @@ public class User extends DiscordObject implements IUser {
     @Override
     public String toString() {
         return "User{" +
-                "key='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", discriminator='" + discriminator + '\'' +
                 '}';

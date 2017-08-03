@@ -23,6 +23,19 @@ import org.alienideology.jcord.event.channel.guild.voice.VoiceChannelCreateEvent
 import org.alienideology.jcord.event.channel.guild.voice.VoiceChannelDeleteEvent;
 import org.alienideology.jcord.event.channel.guild.voice.VoiceChannelUpdateEvent;
 import org.alienideology.jcord.event.channel.guild.voice.update.*;
+import org.alienideology.jcord.event.client.ClientEvent;
+import org.alienideology.jcord.event.client.call.CallCreateEvent;
+import org.alienideology.jcord.event.client.call.CallDeleteEvent;
+import org.alienideology.jcord.event.client.call.CallEvent;
+import org.alienideology.jcord.event.client.call.CallUpdateEvent;
+import org.alienideology.jcord.event.client.call.update.CallRegionUpdateEvent;
+import org.alienideology.jcord.event.client.call.update.CallWaitingUsersUpdateEvent;
+import org.alienideology.jcord.event.client.call.user.CallUserEvent;
+import org.alienideology.jcord.event.client.call.user.CallUserStartWaitingEvent;
+import org.alienideology.jcord.event.client.note.NoteAddEvent;
+import org.alienideology.jcord.event.client.note.NoteEvent;
+import org.alienideology.jcord.event.client.note.NoteRemoveEvent;
+import org.alienideology.jcord.event.client.note.NoteUpdateEvent;
 import org.alienideology.jcord.event.gateway.DisconnectEvent;
 import org.alienideology.jcord.event.gateway.GatewayEvent;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
@@ -81,6 +94,8 @@ public class DispatcherAdaptor {
             dispatchMessageEvent((MessageEvent) event);
         } else if (event instanceof UserEvent) {
             dispatchUserEvent((UserEvent) event);
+        } else if (event instanceof ClientEvent) {
+            dispatchClientEvent((ClientEvent) event);
         }
     }
 
@@ -500,6 +515,68 @@ public class DispatcherAdaptor {
     public void onOnlineStatusUpdate (OnlineStatusUpdateEvent event) {}
 
     public void onGameUpdate (GameUpdateEvent event) {}
+
+    /**
+     * Client Events
+     */
+    private void dispatchClientEvent(ClientEvent event) {
+        onClientEvent(event);
+        if (event instanceof CallEvent) {
+            onCallEvent((CallEvent) event);
+            if (event instanceof  CallCreateEvent) {
+                onCallCreate((CallCreateEvent) event);
+            } else if (event instanceof CallUpdateEvent) {
+                onCallUpdate((CallUpdateEvent) event);
+                if (event instanceof CallRegionUpdateEvent) {
+                    onCallRegionUpdate((CallRegionUpdateEvent) event);
+                } else if (event instanceof CallWaitingUsersUpdateEvent) {
+                    onCallWaitingUsersUpdate((CallWaitingUsersUpdateEvent) event);
+                }
+            } else if (event instanceof CallUserEvent) {
+                onCallUserEvent((CallUserEvent) event);
+                if (event instanceof CallUserStartWaitingEvent) {
+                    onCallUserStartWaiting((CallUserStartWaitingEvent) event);
+                }
+            } else if (event instanceof CallDeleteEvent) {
+                onCallDelete((CallDeleteEvent) event);
+            }
+        } else if (event instanceof NoteEvent) {
+            onNoteEvent((NoteEvent) event);
+            if (event instanceof NoteAddEvent) {
+                onNoteAdd((NoteAddEvent) event);
+            } else if (event instanceof NoteRemoveEvent) {
+                onNoteRemove((NoteRemoveEvent) event);
+            }
+        } else if (event instanceof NoteUpdateEvent){
+            onNoteUpdate((NoteUpdateEvent) event);
+        }
+    }
+
+    public void onClientEvent (ClientEvent event) {}
+
+    public void onCallEvent (CallEvent event) {}
+
+    public void onCallCreate (CallCreateEvent event) {}
+
+    public void onCallUpdate (CallUpdateEvent event) {}
+
+    public void onCallRegionUpdate (CallRegionUpdateEvent event) {}
+
+    public void onCallWaitingUsersUpdate (CallWaitingUsersUpdateEvent event) {}
+
+    public void onCallUserEvent (CallUserEvent event) {}
+
+    public void onCallUserStartWaiting (CallUserStartWaitingEvent event) {}
+
+    public void onCallDelete (CallDeleteEvent event) {}
+
+    public void onNoteEvent (NoteEvent event) {}
+
+    public void onNoteAdd (NoteAddEvent event) {}
+
+    public void onNoteUpdate (NoteUpdateEvent event) {}
+
+    public void onNoteRemove (NoteRemoveEvent event) {}
 
     /*
         -----------------------

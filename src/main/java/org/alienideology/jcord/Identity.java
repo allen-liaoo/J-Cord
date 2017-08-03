@@ -230,6 +230,21 @@ public interface Identity {
     List<IGuildChannel> getAllGuildChannels();
 
     /**
+     * Get an AudioChannel by ID.
+     *
+     * @param id The channel ID.
+     * @return The channel, or null if the ID does not match any audio channel.
+     */
+    IAudioChannel getAudioChannel(String id);
+
+    /**
+     * Get all AudioChannels, including all VoiceChannels and CallChannels.
+     *
+     * @return A list of all audio channels under this identity.
+     */
+    List<IAudioChannel> getAllAudioChannels();
+
+    /**
      * Get a MessageChannel by ID.
      *
      * @param id The channel ID.

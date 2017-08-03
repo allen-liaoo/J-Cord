@@ -24,7 +24,7 @@ public class Channel extends DiscordObject implements IChannel {
         super(identity);
         this.id = id;
         this.type = type;
-        this.isPrivate = (type == Type.DM);
+        this.isPrivate = type.isPrivate();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class Channel extends DiscordObject implements IChannel {
     @Override
     public String toString() {
         return "Channel{" +
-                "key='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", type=" + type +
                 '}';
     }

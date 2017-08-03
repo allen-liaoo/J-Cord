@@ -1,12 +1,13 @@
 package org.alienideology.jcord.internal.object.client;
 
+import org.alienideology.jcord.handle.channel.IGroup;
 import org.alienideology.jcord.handle.client.IClient;
-import org.alienideology.jcord.handle.client.IGroup;
 import org.alienideology.jcord.handle.client.INote;
 import org.alienideology.jcord.handle.client.IRelationship;
 import org.alienideology.jcord.handle.client.app.IApplication;
 import org.alienideology.jcord.handle.client.app.IAuthApplication;
 import org.alienideology.jcord.handle.client.setting.IGuildSetting;
+import org.alienideology.jcord.handle.managers.IClientManager;
 import org.alienideology.jcord.handle.user.IConnection;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
@@ -16,13 +17,17 @@ import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
+import org.alienideology.jcord.internal.object.channel.Group;
+import org.alienideology.jcord.internal.object.client.call.CallUser;
 import org.alienideology.jcord.internal.object.client.setting.ClientSetting;
 import org.alienideology.jcord.internal.object.client.setting.GuildSetting;
+import org.alienideology.jcord.internal.object.managers.ClientManager;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +36,7 @@ import java.util.stream.Collectors;
  */
 public final class Client extends DiscordObject implements IClient {
 
+    private final ClientManager manager;
     private Profile profile;
     private ClientSetting setting;
 
@@ -39,8 +45,16 @@ public final class Client extends DiscordObject implements IClient {
     private List<INote> notes = new ArrayList<>();
     private List<IGuildSetting> guildSettings = new ArrayList<>();
 
+    private HashMap<String, CallUser> callUsers = new HashMap<>(); // ID, CallUser
+
     public Client(IdentityImpl identity) {
         super(identity);
+        manager = new ClientManager(this);
+    }
+
+    @Override
+    public IClientManager getManager() {
+        return manager;
     }
 
     @Override
@@ -147,7 +161,7 @@ public final class Client extends DiscordObject implements IClient {
     @Override
     public IApplication getApplication(String id) {
         try {
-            JSONObject json = new Requester((IdentityImpl) getIdentity(), HttpPath.Application.GET_APPLICATION)
+            JSONObject json = new Requester(getIdentity(), HttpPath.Application.GET_APPLICATION)
                     .request(id).getAsJSONObject();
             return new ObjectBuilder(this).buildApplication(json);
         } catch (HttpErrorException ex) {
@@ -161,7 +175,7 @@ public final class Client extends DiscordObject implements IClient {
 
     @Override
     public List<IApplication> getApplications() {
-        JSONArray apps = new Requester((IdentityImpl) getIdentity(), HttpPath.Application.GET_APPLICATIONS)
+        JSONArray apps = new Requester(getIdentity(), HttpPath.Application.GET_APPLICATIONS)
                 .request().getAsJSONArray();
         List<IApplication> applications = new ArrayList<>();
         ObjectBuilder builder = new ObjectBuilder(this);
@@ -174,7 +188,7 @@ public final class Client extends DiscordObject implements IClient {
     @Override
     public IAuthApplication getAuthApplication(String id) {
         try {
-            JSONObject json = new Requester((IdentityImpl) getIdentity(), HttpPath.Application.GET_AUTHORIZED_APPLICATION)
+            JSONObject json = new Requester(getIdentity(), HttpPath.Application.GET_AUTHORIZED_APPLICATION)
                     .request(id).getAsJSONObject();
             return new ObjectBuilder(this).buildAuthApplication(json);
         } catch (HttpErrorException ex) {
@@ -188,7 +202,7 @@ public final class Client extends DiscordObject implements IClient {
 
     @Override
     public List<IAuthApplication> getAuthApplications() {
-        JSONArray apps = new Requester((IdentityImpl) getIdentity(), HttpPath.Application.GET_AUTHORIZED_APPLICATIONS)
+        JSONArray apps = new Requester(getIdentity(), HttpPath.Application.GET_AUTHORIZED_APPLICATIONS)
                 .request().getAsJSONArray();
         List<IAuthApplication> applications = new ArrayList<>();
         ObjectBuilder builder = new ObjectBuilder(this);
@@ -200,7 +214,6 @@ public final class Client extends DiscordObject implements IClient {
 
     //---------------------Internal---------------------
 
-
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
@@ -209,24 +222,49 @@ public final class Client extends DiscordObject implements IClient {
         this.setting = setting;
     }
 
-    public Client addGroup(Group group) {
+    public void addGroup(Group group) {
+        if (groups.contains(group)) return;
         groups.add(group);
-        return this;
     }
 
-    public Client addRelationship(Relationship relationship) {
+    public void addRelationship(Relationship relationship) {
+        if (relationships.contains(relationship)) return;
         relationships.add(relationship);
-        return this;
     }
 
-    public Client addNote(Note note) {
+    public void addNote(Note note) {
+        if (notes.contains(note)) return;
         notes.add(note);
-        return this;
     }
 
-    public Client addGuildSetting(GuildSetting setting) {
+    public void updateNote(Note note) {
+        for (INote note1 : notes) {
+            if (note1.getUser() != null && note1.getUser().equals(note.getUser())) {
+                note1 = note;
+                return;
+            }
+        }
+    }
+
+    public Group removeGroup(String groupId) {
+        Group group = (Group) getGroup(groupId);
+        this.groups.remove(group);
+        return group;
+    }
+
+    public Note removeNote(String userId) {
+        Note note = (Note) getNote(userId);
+        this.notes.remove(note);
+        return note;
+    }
+
+    public void addGuildSetting(GuildSetting setting) {
+        if (guildSettings.contains(setting)) return;
         guildSettings.add(setting);
-        return this;
+    }
+
+    public HashMap<String, CallUser> getCallUsers() {
+        return callUsers;
     }
 
     @Override

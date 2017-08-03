@@ -1,15 +1,19 @@
 package org.alienideology.jcord.handle.client;
 
 import org.alienideology.jcord.handle.IDiscordObject;
+import org.alienideology.jcord.handle.channel.ICallChannel;
+import org.alienideology.jcord.handle.channel.IGroup;
 import org.alienideology.jcord.handle.client.app.IApplication;
 import org.alienideology.jcord.handle.client.app.IAuthApplication;
 import org.alienideology.jcord.handle.client.setting.IClientSetting;
 import org.alienideology.jcord.handle.client.setting.IGuildSetting;
 import org.alienideology.jcord.handle.client.setting.MessageNotification;
+import org.alienideology.jcord.handle.managers.IClientManager;
 import org.alienideology.jcord.handle.user.IConnection;
 import org.alienideology.jcord.handle.user.IUser;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +23,13 @@ import java.util.stream.Collectors;
  * @author AlienIdeology
  */
 public interface IClient extends IDiscordObject {
+
+    /**
+     * Get the client manager that manages this client.
+     *
+     * @return The client manager.
+     */
+    IClientManager getManager();
 
     /**
      * Get the profile (or self user) of this client.
@@ -73,6 +84,27 @@ public interface IClient extends IDiscordObject {
      * @return A list of groups.
      */
     List<IGroup> getGroups();
+
+    /**
+     * Get a {@link ICallChannel} by Id.
+     *
+     * @param id The channel id.
+     * @return The call channel, or null if no channel is not found.
+     */
+    default ICallChannel getCallChannel(String id) {
+        return getCallChannels().stream().filter(c -> c.getId().equals(id)).findAny().orElse(null);
+    }
+
+    /**
+     * Get a list of all call channels.
+     *
+     * @return A list of call channels.
+     */
+    default List<ICallChannel> getCallChannels() {
+        List<ICallChannel> channels = new ArrayList<>(getGroups());
+        channels.addAll(getIdentity().getPrivateChannels());
+        return channels;
+    }
 
     /**
      * Get a relationship by an user id.

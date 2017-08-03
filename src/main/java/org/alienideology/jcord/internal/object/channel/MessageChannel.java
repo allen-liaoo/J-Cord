@@ -75,7 +75,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
 
     @Override
     public IMessage getMessage(String id) {
-        if (!isPrivate && !((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.READ_MESSAGE_HISTORY)) {
+        if (!isPrivate && !((ITextChannel) this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.READ_MESSAGE_HISTORY)) {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.READ_MESSAGE_HISTORY);
         }
 
@@ -111,7 +111,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
             throw new ErrorResponseException(ErrorResponse.CANNOT_SEND_MESSAGES_TO_THIS_USER);
         }
 
-        if (!isPrivate && !((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.SEND_MESSAGES)) {
+        if (!isPrivate && !((ITextChannel) this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.SEND_MESSAGES)) {
             throw new PermissionException(Permission.ADMINISTRATOR, Permission.SEND_MESSAGES);
         }
 
@@ -137,7 +137,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
     }
 
     private IMessage attach(File file, JSONObject message) throws IOException {
-        if (isPrivate) {
+        if (type.isPrivate()) {
             if (identity.getType() == IdentityType.BOT) { // Cannot send a private message from bot to bot
                 throw new ErrorResponseException(ErrorResponse.CANNOT_SEND_MESSAGES_TO_THIS_USER);
             }
@@ -231,7 +231,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
         User author = new ObjectBuilder(identity).buildMessageById(this.id, id).getAuthor();
         if (!author.isSelf()) {  // Delete a message from others
             if (isPrivate) {
-                throw new IllegalArgumentException("Cannot delete the recipient's message in a PrivateChannel!");
+                throw new IllegalArgumentException("Cannot delete the recipient's message in a PrivateChannel or Group!");
             } else if (!((ITextChannel)this).hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES)) {
                 throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_MESSAGES);
             }
@@ -466,7 +466,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
     @Override
     public String toString() {
         return "MessageChannel{" +
-                "key='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", isPrivate=" + isPrivate +
                 '}';
     }

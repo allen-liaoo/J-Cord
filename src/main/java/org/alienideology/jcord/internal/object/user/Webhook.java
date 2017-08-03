@@ -138,7 +138,7 @@ public final class Webhook extends DiscordObject implements IWebhook {
     @Override
     public String toString() {
         return "Webhook{" +
-                "key='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", channel=" + channel +
                 ", defaultName='" + defaultName + '\'' +
                 '}';

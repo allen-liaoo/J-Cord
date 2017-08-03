@@ -1,8 +1,8 @@
 package org.alienideology.jcord.internal.object.client;
 
+import org.alienideology.jcord.handle.client.IClient;
 import org.alienideology.jcord.handle.client.IClientObject;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 
 /**
  * @author AlienIdeology
@@ -11,9 +11,9 @@ public class ClientObject extends DiscordObject implements IClientObject {
 
     private Client client;
 
-    public ClientObject(Client client) {
-        super((IdentityImpl) client.getIdentity());
-        this.client = client;
+    public ClientObject(IClient client) {
+        super(client.getIdentity());
+        this.client = (Client) client;
     }
 
     @Override

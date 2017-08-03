@@ -80,8 +80,8 @@ public final class IdentityBuilder {
      *          </ul>
      */
     public Identity build (boolean async) throws ErrorResponseException, URISyntaxException, ConnectException {
-        IdentityImpl id = new IdentityImpl(type, new WebSocketFactory(), logger);
-        id.login(token).setEventManager(manager);
+        IdentityImpl id = new IdentityImpl(type, token, new WebSocketFactory(), logger);
+        id.login().setEventManager(manager);
         if (!async) {
             while (!(id).CONNECTION.isReady()) {
                 try {

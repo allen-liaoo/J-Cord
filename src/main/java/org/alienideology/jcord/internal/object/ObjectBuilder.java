@@ -1,10 +1,9 @@
 package org.alienideology.jcord.internal.object;
 
 import org.alienideology.jcord.event.ExceptionEvent;
+import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.audit.*;
-import org.alienideology.jcord.handle.channel.IChannel;
-import org.alienideology.jcord.handle.channel.IGuildChannel;
-import org.alienideology.jcord.handle.channel.ITextChannel;
+import org.alienideology.jcord.handle.channel.*;
 import org.alienideology.jcord.handle.client.IRelationship;
 import org.alienideology.jcord.handle.client.setting.MessageNotification;
 import org.alienideology.jcord.handle.emoji.Emojis;
@@ -26,13 +25,14 @@ import org.alienideology.jcord.internal.object.audit.AuditLog;
 import org.alienideology.jcord.internal.object.audit.LogChange;
 import org.alienideology.jcord.internal.object.audit.LogEntry;
 import org.alienideology.jcord.internal.object.bot.BotApplication;
-import org.alienideology.jcord.internal.object.channel.MessageChannel;
-import org.alienideology.jcord.internal.object.channel.PrivateChannel;
-import org.alienideology.jcord.internal.object.channel.TextChannel;
-import org.alienideology.jcord.internal.object.channel.VoiceChannel;
-import org.alienideology.jcord.internal.object.client.*;
+import org.alienideology.jcord.internal.object.channel.*;
+import org.alienideology.jcord.internal.object.client.Client;
+import org.alienideology.jcord.internal.object.client.Note;
+import org.alienideology.jcord.internal.object.client.Profile;
+import org.alienideology.jcord.internal.object.client.Relationship;
 import org.alienideology.jcord.internal.object.client.app.Application;
 import org.alienideology.jcord.internal.object.client.app.AuthApplication;
+import org.alienideology.jcord.internal.object.client.call.Call;
 import org.alienideology.jcord.internal.object.client.setting.ChannelSetting;
 import org.alienideology.jcord.internal.object.client.setting.ClientSetting;
 import org.alienideology.jcord.internal.object.client.setting.GuildSetting;
@@ -645,6 +645,21 @@ public final class ObjectBuilder {
         return new Connection(client, id, user, name, type, displayOnProfile, friend_sync, verified, revoked, integrations);
     }
 
+    //---------------------Audio---------------------
+    public VoiceState buildVoiceState(JSONObject json) {
+        IUser user = identity.getUser(json.getString("user_id"));
+        IAudioChannel channel = json.isNull("channel_id") ? null : identity.getAudioChannel(json.getString("channel_id"));
+        String session_id = json.getString("session_id");
+        boolean selfMute = json.getBoolean("self_mute");
+        boolean selfDeaf = json.getBoolean("self_deaf");
+        VoiceState state = new VoiceState(identity, user);
+        state.setChannel(channel);
+        state.setSessionId(session_id);
+        state.setSelfMute(selfMute);
+        state.setSelfDeafened(selfDeaf);
+        return state;
+    }
+
     //---------------------Audit---------------------
     public AuditLog buildAuditLog(IGuild guild, JSONObject json) {
         handleBuildError(json);
@@ -752,6 +767,13 @@ public final class ObjectBuilder {
         return group;
     }
 
+    public Call buildCall(JSONObject json) {
+        String id = json.getString("channel_id");
+        Region region = Region.getByKey(json.getString("region"));
+        ICallChannel channel = client.getCallChannel(id);
+        return new Call(client, id, region, channel);
+    }
+
     public Relationship buildRelationship(JSONObject json) {
         IRelationship.Type type = IRelationship.Type.getByKey(json.getInt("type"));
         User user = (User) identity.getUser(json.getString("id"));
@@ -806,6 +828,12 @@ public final class ObjectBuilder {
 
     public GuildSetting buildGuildSetting(JSONObject json) {
         Guild guild = (Guild) identity.getGuild(json.getString("guild_id"));
+
+        if (guild == null) {
+            identity.LOG.log(LogLevel.TRACE, "Encounter a guild setting with unknown guild!"); // This is intentional
+            return null;
+        }
+
         MessageNotification notifSetting = MessageNotification.getByKey(json.getInt("message_notifications"));
         boolean muted = json.has("muted") && json.getBoolean("muted");
         boolean mobilePush = json.has("mobile_push") && json.getBoolean("mobile_push");
@@ -815,14 +843,19 @@ public final class ObjectBuilder {
 
         JSONArray channels = json.getJSONArray("channel_overrides");
         for (int i = 0; i < channels.length(); i++) {
-            setting.addChannelSetting(buildTextChannelSetting(channels.getJSONObject(i)));
+            ChannelSetting cs = buildTextChannelSetting(guild, channels.getJSONObject(i));
+            if (cs.getChannel() == null) {
+                identity.LOG.log(LogLevel.TRACE, "Encounter a channel setting with unknown channel! Guild: " + guild);  // This is intentional
+                continue;
+            }
+            setting.addChannelSetting(cs);
         }
         client.addGuildSetting(setting);
         return setting;
     }
 
-    public ChannelSetting buildTextChannelSetting(JSONObject json) {
-        ITextChannel channel = identity.getTextChannel(json.getString("channel_id"));
+    public ChannelSetting buildTextChannelSetting(Guild guild, JSONObject json) {
+        ITextChannel channel = guild.getTextChannel(json.getString("channel_id"));
         MessageNotification notifSetting = MessageNotification.getByKey(json.getInt("message_notifications"));
         boolean muted = json.has("muted") && json.getBoolean("muted");
         return new ChannelSetting(client, channel, notifSetting, muted);
