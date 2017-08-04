@@ -1,8 +1,9 @@
 package org.alienideology.jcord.event.handler;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.Event;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
+import org.alienideology.jcord.util.log.Logger;
 import org.json.JSONObject;
 
 /**
@@ -10,6 +11,8 @@ import org.json.JSONObject;
  * @author AlienIdeology
  */
 public abstract class EventHandler {
+
+    protected final Logger logger;
 
     protected final IdentityImpl identity;
     protected final ObjectBuilder builder;
@@ -20,6 +23,7 @@ public abstract class EventHandler {
      */
     public EventHandler (IdentityImpl identity) {
         this.identity = identity;
+        this.logger = identity.getEventManager().getLogger();
         this.builder = new ObjectBuilder(this.identity);
     }
 

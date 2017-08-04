@@ -29,7 +29,7 @@ public class GuildEmojisUpdateEventHandler extends EventHandler {
         Guild guild = (Guild) identity.getGuild(json.getString("guild_id"));
 
         if (guild == null) {
-            identity.LOG.log(LogLevel.FETAL, "[UNKNOWN GUILD] [GUILD_EMOJIS_UPDATE_EVENT]");
+            logger.log(LogLevel.FETAL, "[UNKNOWN GUILD] [GUILD_EMOJIS_UPDATE_EVENT]");
             return;
         }
 

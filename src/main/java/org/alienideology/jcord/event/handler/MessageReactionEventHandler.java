@@ -28,7 +28,7 @@ public class MessageReactionEventHandler extends EventHandler {
         MessageChannel channel = (MessageChannel) identity.getMessageChannel(json.getString("channel_id"));
 
         if (channel == null) {
-            identity.LOG.log(LogLevel.FETAL, "[UNKNOWN MESSAGE] [MESSAGE_REACTION_ADD/REMOVE]");
+            logger.log(LogLevel.FETAL, "[UNKNOWN MESSAGE] [MESSAGE_REACTION_ADD/REMOVE]");
             return;
         }
 

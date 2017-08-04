@@ -16,8 +16,6 @@ public class ChannelPinsUpdateEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        System.out.println(json.toString(4));
-
         MessageChannel channel = (MessageChannel) identity.getMessageChannel(json.getString("channel_id"));
         String timeStamp = json.isNull("last_pin_timestamp") ? null : json.getString("last_pin_timestamp");
         dispatchEvent(new MessagePinUpdateEvent(identity, sequence, channel, null, timeStamp));

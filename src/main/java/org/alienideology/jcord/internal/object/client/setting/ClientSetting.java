@@ -12,6 +12,7 @@ import java.util.Locale;
 /**
  * @author AlienIdeology
  */
+// TODO: Theme, Locale, ContentFilterLevel Enumerations
 public final class ClientSetting extends ClientObject implements IClientSetting {
 
     private OnlineStatus status;

@@ -34,7 +34,7 @@ public class CallUpdateEventHandler extends EventHandler {
         Call oldCall = (Call) call.getChannel().getCurrentCall();
 
         if (oldCall == null) {
-            identity.LOG.log(LogLevel.FETAL, "[UNKNOWN CALL] [CALL_UPDATE_EVENT]");
+            logger.log(LogLevel.FETAL, "[UNKNOWN CALL] [CALL_UPDATE_EVENT]");
             return;
         }
 

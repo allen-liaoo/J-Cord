@@ -34,7 +34,7 @@ public class MessageDeleteEventHandler extends EventHandler {
             }
 
         } else {
-            identity.LOG.log(LogLevel.FETAL, "Unknown message channel for a MessageDeleteEvent!");
+            logger.log(LogLevel.FETAL, "[UNKNOWN CHANNEL][MESSAGE_DELETE_EVENT]");
         }
     }
 }

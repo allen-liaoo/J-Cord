@@ -29,7 +29,7 @@ public class GuildRoleUpdateEventHandler extends EventHandler {
             JSONObject roleJson = json.getJSONObject("role");
 
             if (guild == null) {
-                identity.LOG.log(LogLevel.FETAL, "[UNKNOWN GUILD] [GUILD_ROLE_UPDATE_EVENT]");
+                logger.log(LogLevel.FETAL, "[UNKNOWN GUILD] [GUILD_ROLE_UPDATE_EVENT]");
                 return;
             }
 

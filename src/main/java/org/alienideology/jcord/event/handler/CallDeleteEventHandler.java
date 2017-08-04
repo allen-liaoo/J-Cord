@@ -28,7 +28,7 @@ public class CallDeleteEventHandler extends EventHandler {
         Call call = (Call) channel.getCurrentCall();
 
         if (call == null) {
-            identity.LOG.log(LogLevel.FETAL, "[UNKNOWN CALL][CALL_DELETE_EVENT_HANDLER]");
+            logger.log(LogLevel.FETAL, "[UNKNOWN CALL][CALL_DELETE_EVENT_HANDLER]");
             return;
         }
 

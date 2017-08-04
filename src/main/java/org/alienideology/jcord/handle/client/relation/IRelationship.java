@@ -1,6 +1,8 @@
-package org.alienideology.jcord.handle.client;
+package org.alienideology.jcord.handle.client.relation;
 
+import org.alienideology.jcord.handle.client.IClientObject;
 import org.alienideology.jcord.handle.user.IUser;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * IRelationship - A connection between two Discord user accounts.
@@ -22,6 +24,12 @@ public interface IRelationship extends IClientObject {
      * @return The user.
      */
     IUser getUser();
+
+    @Nullable
+    IIncomingFriendRequest getIncomingFriendRequest();
+
+    @Nullable
+    IOutGoingFriendRequest getOutGoingFriendRequest();
 
     enum Type {
 

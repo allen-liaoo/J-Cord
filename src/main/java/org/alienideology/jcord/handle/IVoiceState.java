@@ -2,6 +2,7 @@ package org.alienideology.jcord.handle;
 
 import org.alienideology.jcord.handle.channel.IAudioChannel;
 import org.alienideology.jcord.handle.user.IUser;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * IVoiceState - A general voice state of an user, for voice channel or call connection.
@@ -22,6 +23,7 @@ public interface IVoiceState extends IDiscordObject {
      *
      * @return The audio channel.
      */
+    @Nullable
     IAudioChannel getChannel();
 
     /**

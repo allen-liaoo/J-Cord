@@ -1,10 +1,11 @@
 package org.alienideology.jcord.internal.object;
 
+import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.audit.*;
 import org.alienideology.jcord.handle.channel.*;
-import org.alienideology.jcord.handle.client.IRelationship;
+import org.alienideology.jcord.handle.client.relation.IRelationship;
 import org.alienideology.jcord.handle.client.setting.MessageNotification;
 import org.alienideology.jcord.handle.emoji.Emojis;
 import org.alienideology.jcord.handle.guild.IGuild;
@@ -29,10 +30,12 @@ import org.alienideology.jcord.internal.object.channel.*;
 import org.alienideology.jcord.internal.object.client.Client;
 import org.alienideology.jcord.internal.object.client.Note;
 import org.alienideology.jcord.internal.object.client.Profile;
-import org.alienideology.jcord.internal.object.client.Relationship;
 import org.alienideology.jcord.internal.object.client.app.Application;
 import org.alienideology.jcord.internal.object.client.app.AuthApplication;
 import org.alienideology.jcord.internal.object.client.call.Call;
+import org.alienideology.jcord.internal.object.client.relation.BlockedUser;
+import org.alienideology.jcord.internal.object.client.relation.Friend;
+import org.alienideology.jcord.internal.object.client.relation.Relationship;
 import org.alienideology.jcord.internal.object.client.setting.ChannelSetting;
 import org.alienideology.jcord.internal.object.client.setting.ClientSetting;
 import org.alienideology.jcord.internal.object.client.setting.GuildSetting;
@@ -139,10 +142,12 @@ public final class ObjectBuilder {
                 guild.addGuildChannel((IGuildChannel) channel);
             }
 
+            guild.setOwner(owner).setChannels(afk_channel, embed_channel);
+
             /* Build Members */
             // Members array are only present at Client Ready Event or Guild Create Event.
             // Build this after roles because members have roles field
-            JSONArray members = null;
+            JSONArray members;
             if (json.has("members")) {
                 members = json.getJSONArray("members");
             } else {
@@ -151,15 +156,21 @@ public final class ObjectBuilder {
                             .updateGetRequest(r -> r.queryString("limit", "1000")).getAsJSONArray();
                 } catch (RuntimeException e) {
                     identity.LOG.log(LogLevel.FETAL,"Building guild members. (Guild: "+guild.toString()+")", e);
+                    return guild;
                 }
+            }
+
+            // Request guild members after the guild and members are built
+            // But I don't think members' length will be larger than threshold
+            // Since discord only send online members for large guild
+            if (members.length() > JCord.GUILD_MEMBERS_LARGE_THRESHOLD) { // Need to request guild members
+                identity.getGateway().sendRequestMembers(json.getString("id"));
             }
 
             for (int i = 0; i < members.length(); i++) {
                 JSONObject member = members.getJSONObject(i);
                 guild.addMember(buildMember(member, guild));
             }
-
-            guild.setOwner(owner).setChannels(afk_channel, embed_channel);
 
             return guild;
         }
@@ -781,7 +792,23 @@ public final class ObjectBuilder {
             user = buildUser(json.getJSONObject("user"));
         }
 
-        Relationship relationship = new Relationship(client, type, user);
+        Relationship relationship;
+
+        switch (type) {
+            case FRIEND: {
+                relationship = new Friend(client, type, user);
+                break;
+            }
+            case BLOCK: {
+                relationship = new BlockedUser(client, type, user);
+                break;
+            }
+            default: {
+                relationship = new Relationship(client, type, user);
+                break;
+            }
+        }
+
         client.addRelationship(relationship);
         return relationship;
     }

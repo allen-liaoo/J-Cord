@@ -3,6 +3,7 @@ package org.alienideology.jcord.event;
 import net.jodah.typetools.TypeResolver;
 import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.bot.command.CommandFramework;
+import org.alienideology.jcord.util.log.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,6 +21,9 @@ import java.util.stream.Collectors;
  * @author AlienIdeology
  */
 public class EventManager {
+
+    private Logger logger;
+
     private Identity identity;
 
     private List<DispatcherAdaptor> dispatchers = new ArrayList<>();
@@ -137,6 +141,15 @@ public class EventManager {
         return (object instanceof DispatcherAdaptor && dispatchers.contains(object)) ||
                 subscribers.contains(object) ||
                 (object instanceof CommandFramework && frameworks.contains(object));
+    }
+
+    /**
+     * Get the logger of this event manager, This is the same logger used to log any event messages.
+     *
+     * @return The logger for events.
+     */
+    public Logger getLogger() {
+        return logger;
     }
 
     /**
@@ -371,9 +384,9 @@ public class EventManager {
         }
     }
 
-    public EventManager setIdentity(Identity identity) {
+    public void setIdentity(Identity identity) {
         this.identity = identity;
-        return this;
+        this.logger = identity.getLogger().clone(this);
     }
 
 }

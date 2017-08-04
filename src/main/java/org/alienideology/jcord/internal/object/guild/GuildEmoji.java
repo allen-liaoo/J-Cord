@@ -91,7 +91,7 @@ public final class GuildEmoji extends DiscordObject implements IGuildEmoji {
     public String toString() {
         return "GuildEmoji{" +
                 "guild=" + guild +
-                ", key='" + id + '\'' +
+                ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

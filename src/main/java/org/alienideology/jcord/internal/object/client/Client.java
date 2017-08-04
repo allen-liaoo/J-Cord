@@ -3,9 +3,9 @@ package org.alienideology.jcord.internal.object.client;
 import org.alienideology.jcord.handle.channel.IGroup;
 import org.alienideology.jcord.handle.client.IClient;
 import org.alienideology.jcord.handle.client.INote;
-import org.alienideology.jcord.handle.client.IRelationship;
 import org.alienideology.jcord.handle.client.app.IApplication;
 import org.alienideology.jcord.handle.client.app.IAuthApplication;
+import org.alienideology.jcord.handle.client.relation.IRelationship;
 import org.alienideology.jcord.handle.client.setting.IGuildSetting;
 import org.alienideology.jcord.handle.managers.IClientManager;
 import org.alienideology.jcord.handle.user.IConnection;
@@ -19,6 +19,7 @@ import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.Group;
 import org.alienideology.jcord.internal.object.client.call.CallUser;
+import org.alienideology.jcord.internal.object.client.relation.Relationship;
 import org.alienideology.jcord.internal.object.client.setting.ClientSetting;
 import org.alienideology.jcord.internal.object.client.setting.GuildSetting;
 import org.alienideology.jcord.internal.object.managers.ClientManager;
@@ -230,6 +231,15 @@ public final class Client extends DiscordObject implements IClient {
     public void addRelationship(Relationship relationship) {
         if (relationships.contains(relationship)) return;
         relationships.add(relationship);
+    }
+
+    public void updateRelationship(Relationship relationship) {
+        for (IRelationship relationship1 : relationships) {
+            if (relationship1.getUser().equals(relationship.getUser())) {
+                relationship1 = relationship;
+                return;
+            }
+        }
     }
 
     public void addNote(Note note) {

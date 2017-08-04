@@ -100,6 +100,7 @@ public final class HttpPath {
         public static final HttpPath GET_RELATIONSHIPS = new HttpPath(GET, "/users/@me/relationships");
         public static final HttpPath GET_RELATIONSHIP = new HttpPath(GET, "/users/@me/relationships/{user_id}");
         public static final HttpPath ADD_RELATIONSHIP = new HttpPath(PUT, "/users/@me/relationships/{user_id}");
+        public static final HttpPath SEND_FRIEND_REQUEST = new HttpPath(POST, "/users/@me/relationships");
         public static final HttpPath DELETE_RELATIONSHIP = new HttpPath(DELETE, "/users/@me/relationships/{user_id}");
         
         /* Note */
@@ -110,6 +111,7 @@ public final class HttpPath {
         public static final HttpPath CREATE_GUILD = new HttpPath(POST, "/guilds");
         public static final HttpPath MODIFY_GUILD_SETTINGS = new HttpPath(PATCH, "/users/@me/guilds/{guild_id}/settings");
 
+        /* Group */
         public static final HttpPath CREATE_GROUP_DM = new HttpPath(POST, "/users/@me/channels");
 
     }
@@ -155,9 +157,9 @@ public final class HttpPath {
 
         /* GuildEmoji Action */
         // Client Only
-        public final static HttpPath CREATE_EMOJI = new HttpPath(POST, "guilds/{guild_id}/EMOJIS");
-        public final static HttpPath MODIFY_EMOJI = new HttpPath(PATCH, "guilds/{guild_id}/EMOJIS/{emote_id}");
-        public final static HttpPath DELETE_EMOJI = new HttpPath(DELETE, "guilds/{guild_id}/EMOJIS/{emote_id}");
+        public final static HttpPath CREATE_EMOJI = new HttpPath(POST, "/guilds/{guild_id}/emojis");
+        public final static HttpPath MODIFY_EMOJI = new HttpPath(PATCH, "/guilds/{guild_id}/emojis/{emote_id}");
+        public final static HttpPath DELETE_EMOJI = new HttpPath(DELETE, "/guilds/{guild_id}/emojis/{emote_id}");
 
         /* Integration Action */
         public final static HttpPath GET_GUILD_INTEGRATIONS = new HttpPath(GET, "/guilds/{guild.id}/integrations");
@@ -213,15 +215,15 @@ public final class HttpPath {
 
         /* Recipients */
         // Client Only
-        public static final HttpPath GET_RECIPIENTS = new HttpPath(GET, "channels/{channel_id}/recipients");
-        public static final HttpPath GET_RECIPIENT = new HttpPath(GET, "channels/{channel_id}/recipients/{user_id}");
-        public static final HttpPath ADD_RECIPIENT = new HttpPath(PUT, "channels/{channel_id}/recipients/{user_id}");
-        public static final HttpPath REMOVE_RECIPIENT = new HttpPath(DELETE, "channels/{channel_id}/recipients/{user_id}");
+        public static final HttpPath GET_RECIPIENTS = new HttpPath(GET, "/channels/{channel_id}/recipients");
+        public static final HttpPath GET_RECIPIENT = new HttpPath(GET, "/channels/{channel_id}/recipients/{user_id}");
+        public static final HttpPath ADD_RECIPIENT = new HttpPath(PUT, "/channels/{channel_id}/recipients/{user_id}");
+        public static final HttpPath REMOVE_RECIPIENT = new HttpPath(DELETE, "/channels/{channel_id}/recipients/{user_id}");
 
         /* Call */
         // Client only
-        public static final HttpPath START_CALL = new HttpPath(POST, "channels/{channel_id}/call/ring");
-        public static final HttpPath STOP_CALL = new HttpPath(POST, "channels/{channel_id}/call/stop_ringing"); // Deny/End Call
+        public static final HttpPath START_CALL = new HttpPath(POST, "/channels/{channel_id}/call/ring");
+        public static final HttpPath STOP_CALL = new HttpPath(POST, "/channels/{channel_id}/call/stop_ringing"); // Deny/End Call
     }
 
     public static class User {

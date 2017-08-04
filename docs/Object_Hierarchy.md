@@ -31,9 +31,14 @@ IClient - Represents a Discord client.
 IClientObject - Generic Client Objects.
  - IProfile - The client user, with Discord Nitro and more information.
  - IGroup - A private channel with more than one user.
- - IRelationship - A connection between two Discord user accounts.
  - IConnection - A connection to a third party account.
  - INote - A note that the client can attach to any users. The note is only visible to the client.
+ - Relation
+   - IRelationship - A connection between two Discord user accounts.
+   - IFriend - An user which is added as a friend by the client.
+   - IBlockedUser - An user which is blocked by the client.
+   - IIncomingFriendRequest - A friend request from another other user.
+   - IOutGoingFriendRequest - A friend request from the client to another user.
  - Call
    - ICall - A voice communication between Discord client users.
    - ICallUser - A temporary instance representing an user in a call.
@@ -71,6 +76,7 @@ IGuild - A collection of users and channels, often referred to in the UI as a se
  - IRole - A label that can be put on a set of guild members.
  - IGuildEmoji - A custom emoji that can be used within a guild.
  - IIntegration - A guild integration that enables user to integrate tools from third party accounts.
+ - IGuildVoiceState - A voice state for a member in a guild.
 
 ### Channel
 IChannel - A communication pipeline.

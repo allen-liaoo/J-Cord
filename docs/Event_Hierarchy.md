@@ -100,6 +100,17 @@ Event - Whenever a change happens to an entity, an event get fired.
    - WebhookUpdateEvent - This can be webhook create, update or delete.
    It is not possible to get the updated webhook from this event.
  - ClientEvent
+   - RelationshipEvent
+     - RelationshipAddEvent
+       - FriendAddEvent
+       - BlockedUserAddEvent
+       - FriendRequestSentEvent
+       - FriendRequestReceivedEvent
+     - RelationshipRemoveEvent
+       - FriendRemoveEvent
+       - BlockedUserRemoveEvent
+       - FriendRequestCancelEvent
+       - FriendRequestIgnoreEvent
    - CallEvent
      - CallCreateEvent
      - CallUpdateEvent

@@ -35,6 +35,17 @@ import org.alienideology.jcord.event.client.note.NoteAddEvent;
 import org.alienideology.jcord.event.client.note.NoteEvent;
 import org.alienideology.jcord.event.client.note.NoteRemoveEvent;
 import org.alienideology.jcord.event.client.note.NoteUpdateEvent;
+import org.alienideology.jcord.event.client.relation.RelationshipAddEvent;
+import org.alienideology.jcord.event.client.relation.RelationshipEvent;
+import org.alienideology.jcord.event.client.relation.RelationshipRemoveEvent;
+import org.alienideology.jcord.event.client.relation.block.BlockedUserAddEvent;
+import org.alienideology.jcord.event.client.relation.block.BlockedUserRemoveEvent;
+import org.alienideology.jcord.event.client.relation.friend.FriendAddEvent;
+import org.alienideology.jcord.event.client.relation.friend.FriendRemoveEvent;
+import org.alienideology.jcord.event.client.relation.request.FriendRequestCancelEvent;
+import org.alienideology.jcord.event.client.relation.request.FriendRequestIgnoreEvent;
+import org.alienideology.jcord.event.client.relation.request.FriendRequestReceivedEvent;
+import org.alienideology.jcord.event.client.relation.request.FriendRequestSentEvent;
 import org.alienideology.jcord.event.gateway.DisconnectEvent;
 import org.alienideology.jcord.event.gateway.GatewayEvent;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
@@ -570,7 +581,32 @@ public class DispatcherAdaptor {
      */
     private void dispatchClientEvent(ClientEvent event) {
         onClientEvent(event);
-        if (event instanceof CallEvent) {
+        if (event instanceof RelationshipEvent) {
+            onRelationshipEvent((RelationshipEvent) event);
+            if (event instanceof  RelationshipAddEvent) {
+                onRelationshipAdd((RelationshipAddEvent) event);
+                if (event instanceof FriendAddEvent) {
+                    onFriendAdd((FriendAddEvent) event);
+                } else if (event instanceof BlockedUserAddEvent) {
+                    onBlockedUserAdd((BlockedUserAddEvent) event);
+                } else if (event instanceof FriendRequestSentEvent) {
+                    onFriendRequestSent((FriendRequestSentEvent) event);
+                }else if (event instanceof FriendRequestReceivedEvent) {
+                    onFriendRequestReceived((FriendRequestReceivedEvent) event);
+                }
+            } else if (event instanceof RelationshipRemoveEvent) {
+                onRelationshipRemove((RelationshipRemoveEvent) event);
+                if (event instanceof FriendRemoveEvent) {
+                    onFriendRemove((FriendRemoveEvent) event);
+                } else if (event instanceof BlockedUserRemoveEvent) {
+                    onBlockedUserRemove((BlockedUserRemoveEvent) event);
+                } else if (event instanceof FriendRequestCancelEvent) {
+                    onFriendRequestCancel((FriendRequestCancelEvent) event);
+                } else if (event instanceof FriendRequestIgnoreEvent) {
+                    onFriendRequestIgnore((FriendRequestIgnoreEvent) event);
+                }
+            }
+        } else if (event instanceof CallEvent) {
             onCallEvent((CallEvent) event);
             if (event instanceof  CallCreateEvent) {
                 onCallCreate((CallCreateEvent) event);
@@ -611,6 +647,34 @@ public class DispatcherAdaptor {
 
     public void onClientEvent (ClientEvent event) {}
 
+    /*
+        General Relationship Event
+     */
+    public void onRelationshipEvent (RelationshipEvent event) {}
+
+    public void onRelationshipAdd (RelationshipAddEvent event) {}
+
+    public void onFriendAdd (FriendAddEvent event) {}
+
+    public void onBlockedUserAdd (BlockedUserAddEvent event) {}
+
+    public void onFriendRequestSent (FriendRequestSentEvent event) {}
+
+    public void onFriendRequestReceived (FriendRequestReceivedEvent event) {}
+
+    public void onRelationshipRemove (RelationshipRemoveEvent event) {}
+
+    public void onFriendRemove (FriendRemoveEvent event) {}
+
+    public void onBlockedUserRemove (BlockedUserRemoveEvent event) {}
+
+    public void onFriendRequestCancel (FriendRequestCancelEvent event) {}
+
+    public void onFriendRequestIgnore (FriendRequestIgnoreEvent event) {}
+
+    /*
+        General Call Event
+     */
     public void onCallEvent (CallEvent event) {}
 
     public void onCallCreate (CallCreateEvent event) {}
@@ -635,6 +699,9 @@ public class DispatcherAdaptor {
 
     public void onCallDelete (CallDeleteEvent event) {}
 
+    /*
+        General Note Event
+     */
     public void onNoteEvent (NoteEvent event) {}
 
     public void onNoteAdd (NoteAddEvent event) {}

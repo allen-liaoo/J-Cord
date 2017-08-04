@@ -14,6 +14,7 @@ import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.gateway.ErrorResponse;
+import org.alienideology.jcord.util.log.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.ConnectException;
@@ -99,6 +100,14 @@ public interface Identity {
      * @return The string token.
      */
     String getToken();
+
+    /**
+     * Get the logger of this identity.
+     * This logger is used to log important system messages.
+     *
+     * @return The logger
+     */
+    Logger getLogger();
 
     /**
      * Get this identity as a {@link IBot}.

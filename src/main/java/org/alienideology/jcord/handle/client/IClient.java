@@ -5,6 +5,9 @@ import org.alienideology.jcord.handle.channel.ICallChannel;
 import org.alienideology.jcord.handle.channel.IGroup;
 import org.alienideology.jcord.handle.client.app.IApplication;
 import org.alienideology.jcord.handle.client.app.IAuthApplication;
+import org.alienideology.jcord.handle.client.relation.IBlockedUser;
+import org.alienideology.jcord.handle.client.relation.IFriend;
+import org.alienideology.jcord.handle.client.relation.IRelationship;
 import org.alienideology.jcord.handle.client.setting.IClientSetting;
 import org.alienideology.jcord.handle.client.setting.IGuildSetting;
 import org.alienideology.jcord.handle.client.setting.MessageNotification;
@@ -128,6 +131,52 @@ public interface IClient extends IDiscordObject {
      * @return The relationships.
      */
     List<IRelationship> getRelationships();
+
+    /**
+     * Get a friend by an user id.
+     *
+     * @param userId The user id.
+     * @return The friend, or null if no friend is found.
+     */
+    @Nullable
+    default IFriend getFriend(String userId) {
+        return getFriends().stream().filter(f -> f.getUser().getId().equals(userId)).findAny().orElse(null);
+    }
+
+    /**
+     * Get a list of all friends.
+     *
+     * @return The friends.
+     */
+    default List<IFriend> getFriends() {
+        return getRelationships().stream()
+                .filter(r -> r instanceof IFriend)
+                .map(f -> (IFriend) f)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get a blocked user by an user id.
+     *
+     * @param userId The user id.
+     * @return The blocked user, or null if no blocked user is found.
+     */
+    @Nullable
+    default IBlockedUser getBlockedUser(String userId) {
+        return getBlockedUsers().stream().filter(bu -> bu.getUser().getId().equals(userId)).findAny().orElse(null);
+    }
+
+    /**
+     * Get a list of all blocked users.
+     *
+     * @return The blocked users.
+     */
+    default List<IBlockedUser> getBlockedUsers() {
+        return getRelationships().stream()
+                .filter(r -> r instanceof IBlockedUser)
+                .map(bu -> (IBlockedUser) bu)
+                .collect(Collectors.toList());
+    }
 
     /**
      * Get a list of all account connections.

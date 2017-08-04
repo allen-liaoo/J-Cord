@@ -40,6 +40,15 @@ public final class JCord {
      */
     public final static int DISCORD_GATEWAY_VERSION = 6;
 
+    /**
+     * The large threshold to distinguish between a large guild and a small guild.
+     * Discord gateway will only send offline members if the guild is small.
+     *
+     * See <a href="https://discordapp.com/developers/docs/topics/gateway#gateway-identify-gateway-identify-structure>this documentation</a> (json key: "large_threshold")
+     * for more information.
+     */
+    public final static int GUILD_MEMBERS_LARGE_THRESHOLD = 250;
+
     static {
         Unirest.setDefaultHeader("user-agent", USER_AGENT);
     }

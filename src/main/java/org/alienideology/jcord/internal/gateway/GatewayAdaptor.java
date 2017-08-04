@@ -29,7 +29,7 @@ import java.util.zip.Inflater;
  */
 public final class GatewayAdaptor extends WebSocketAdapter {
 
-    public Logger LOG;
+    public final Logger LOG;
 
     private IdentityImpl identity;
     private WebSocket webSocket;
@@ -118,7 +118,6 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
     @Override
     public void onDisconnected(WebSocket websocket, WebSocketFrame serverCloseFrame, WebSocketFrame clientCloseFrame, boolean closedByServer) throws Exception {
-        LOG.log(LogLevel.INFO, "[CONNECTION] Disconnected");
         identity.CONNECTION = Identity.Connection.OFFLINE;
 
         final int closeCode;
@@ -132,6 +131,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         }
 
         identity.getEventManager().dispatchEvent(new DisconnectEvent(identity, this, 0, closedByServer, closeCode, closeReason));
+        LOG.log(LogLevel.INFO, "[CONNECTION] Disconnected [Code: " + closeCode + "][Reason: " + closeReason + "]");
     }
 
     /**
@@ -189,12 +189,10 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         if (handler == null) {
             LOG.log(LogLevel.FETAL, "[UNKNOWN EVENT] " + key  + ":\n" + json.toString(4));
         } else {
-            LOG.log(LogLevel.DEBUG, "[RECEIVED] " + key);
-            LOG.log(LogLevel.TRACE, "Event Json: \n" + json.toString(4));
-
             switch (key) {
                 case "READY": {
                     session_id = event.getString("session_id");
+                    LOG.log(LogLevel.DEBUG, "[RECEIVED] Ready Event");
                     break;
                 }
                 case "RESUMED": {
@@ -203,6 +201,8 @@ public final class GatewayAdaptor extends WebSocketAdapter {
                     break;
                 }
                 default: {
+                    LOG.log(LogLevel.DEBUG, "[RECEIVED] " + key);
+                    LOG.log(LogLevel.TRACE, "Event Json: \n" + json.toString(4));
                     break;
                 }
             }
@@ -214,7 +214,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             }
 
             // Only fire Non-Gateway events after the connection is ready.
-            if (!(handler instanceof GatewayEventHandler)) {
+            if (!(handler instanceof ReadyEventHandler) && !(handler instanceof ResumedEventHandler)) {
                 if (identity.CONNECTION.isReady()) {
                     handler.dispatchEvent(event, sequence);
                 }
@@ -260,48 +260,63 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
     private void sendIdentification() throws IllegalArgumentException {
         JSONObject identify = new JSONObject()
-            .put("op", OPCode.IDENTIFY.key)
-            .put("d", new JSONObject()
-                    .put("token", identity.getToken())
-                    .put("properties", new JSONObject()
-                            .put("$os", System.getProperty("os.name"))
-                            .put("$browser", JCord.NAME)
-                            .put("$device", JCord.NAME)
-                    )
-                    .put("compress", true)
-                    .put("large_threshold", 250)
-                    //.put("shard", new int[]{})
-                    // TODO: Set presence on startup. This is just a place holder for default presence.
-                    .put("presence", new JSONObject()
-                            .put("game", new JSONObject()
-                                    .put("name", ""))
-                            .put("status", OnlineStatus.ONLINE)
-                            .put("afk", false)
-                    )
-            );
+                .put("token", identity.getToken())
+                .put("properties", new JSONObject()
+                        .put("$os", System.getProperty("os.name"))
+                        .put("$browser", JCord.NAME)
+                        .put("$device", JCord.NAME)
+                )
+                .put("compress", true)
+                .put("large_threshold", JCord.GUILD_MEMBERS_LARGE_THRESHOLD)
+                //.put("shard", new int[]{})
+                // TODO: Set presence on startup. This is just a place holder for default presence.
+                .put("presence", new JSONObject()
+                        .put("game", new JSONObject()
+                                .put("name", ""))
+                        .put("status", OnlineStatus.ONLINE)
+                        .put("afk", false)
+                );
 
-        webSocket.sendText(identify.toString());
+        send(OPCode.IDENTIFY, identify);
         LOG.log(LogLevel.DEBUG, "[SENT] Identification");
     }
 
     private void sendResume() {
         identity.CONNECTION = Identity.Connection.RESUMING;
-        JSONObject resume = new JSONObject()
-            .put("op", OPCode.RESUME.key)
-            .put("d", new JSONObject()
+
+        send(OPCode.RESUME, new JSONObject()
                 .put("token", identity.getToken())
                 .put("session_id", session_id)
-                .put("seq", sequence)
-            );
-
-        webSocket.sendText(resume.toString());
+                .put("seq", sequence));
         LOG.log(LogLevel.DEBUG, "[SENT] Resume");
+    }
+
+    public void sendRequestMembers(String guildId) {
+        send(OPCode.REQUEST_GUILD_MEMBERS, new JSONObject()
+                .put("guild_id", guildId)
+                .put("query", "")
+                .put("limit", 0)
+        );
+        LOG.log(LogLevel.DEBUG, "[SENT] Request Guild Members for Guild: " + guildId);
+    }
+
+    public void send(OPCode code, JSONObject json) {
+        webSocket.sendText(new JSONObject()
+                .put("op", code.key)
+                .put("d", json)
+                .toString()
+        );
+    }
+
+    public WebSocket getSocket() {
+        return webSocket;
     }
 
     private void setEventHandler() {
         /* Gateway Event */
-        eventHandler.put("READY", new GatewayEventHandler(identity, this));
-        eventHandler.put("RESUMED", new GatewayEventHandler(identity, this));
+        eventHandler.put("READY", new ReadyEventHandler(identity, this));
+        eventHandler.put("RESUMED", new ResumedEventHandler(identity, this));
+        eventHandler.put("GUILD_MEMBERS_CHUNK", new GuildMembersChunkEventHandler(identity));
 
         /* Guild Event */
         eventHandler.put("GUILD_CREATE", new GuildCreateEventHandler(identity));
@@ -333,10 +348,10 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         eventHandler.put("MESSAGE_UPDATE", new MessageUpdateEventHandler(identity));
         eventHandler.put("MESSAGE_DELETE", new MessageDeleteEventHandler(identity));
         eventHandler.put("MESSAGE_DELETE_BULK", new MessageDeleteBulkEventHandler(identity));
-        eventHandler.put("CHANNEL_PINS_UPDATE", new ChannelPinsUpdateEventHandler(identity));
         eventHandler.put("MESSAGE_REACTION_ADD", new MessageReactionEventHandler(identity, true));
         eventHandler.put("MESSAGE_REACTION_REMOVE", new MessageReactionEventHandler(identity, false));
         eventHandler.put("MESSAGE_REACTION_REMOVE_ALL", new MessageReactionRemoveAllEventHandler(identity));
+        eventHandler.put("CHANNEL_PINS_UPDATE", new ChannelPinsUpdateEventHandler(identity));
 
         /* User Event */
         eventHandler.put("PRESENCE_UPDATE", new PresenceUpdateEventHandler(identity));
@@ -347,16 +362,20 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         /* Client Event */
         if (identity.getType().equals(IdentityType.CLIENT)) {
 
+            eventHandler.put("RELATIONSHIP_ADD", new RelationshipAddEventHandler(identity));
+            eventHandler.put("RELATIONSHIP_REMOVE", new RelationshipRemoveEventHandler(identity));
+
             eventHandler.put("CALL_CREATE", new CallCreateEventHandler(identity));
             eventHandler.put("CALL_UPDATE", new CallUpdateEventHandler(identity));
             eventHandler.put("CALL_DELETE", new CallDeleteEventHandler(identity));
+
             eventHandler.put("USER_NOTE_UPDATE", new UserNoteUpdateEventHandler(identity));
 
         }
 
         // TODO: Finish priority and client events
-        // Priority: GUILD_MEMBERS_CHUNK
-        // Clients: CHANNEL_RECIPIENT_ADD, CHANNEL_RECIPIENT_REMOVE, RELATIONSHIP_ADD, RELATIONSHIP_REMOVE
+        // Priority:
+        // Clients: CHANNEL_RECIPIENT_ADD, CHANNEL_RECIPIENT_REMOVE
         // Not implementing any time soon: VOICE_SERVER_UPDATE
         // Unknown: GUILD_SYNC, MESSAGE_ACK
     }

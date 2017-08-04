@@ -8,6 +8,7 @@ import org.alienideology.jcord.handle.user.IGame;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.gateway.OPCode;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.user.Game;
@@ -66,10 +67,7 @@ public final class SelfManager implements ISelfManager {
             content.put("game", ((Game) game).toJson());
         }
 
-        identity.getSocket().sendText(new JSONObject()
-                .put("op", 3)
-                .put("d", content)
-                .toString());
+        identity.getGateway().send(OPCode.STATUS_UPDATE, content);
     }
 
     @Override

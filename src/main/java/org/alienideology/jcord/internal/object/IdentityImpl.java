@@ -56,7 +56,7 @@ public final class IdentityImpl implements Identity {
     private final String token;
 
     private final WebSocketFactory wsFactory;
-    private WebSocket socket;
+    private GatewayAdaptor gateway;
     public Connection CONNECTION = Connection.OFFLINE;
 
     private Bot bot;
@@ -74,6 +74,7 @@ public final class IdentityImpl implements Identity {
         this.type = type;
         this.token = type.equals(IdentityType.CLIENT) ? token : "Bot " + token;
         this.wsFactory = wsFactory;
+        this.manager  = new EventManager();
         this.selfManager = new SelfManager(this);
         this.LOG = logger;
     }
@@ -113,6 +114,11 @@ public final class IdentityImpl implements Identity {
     @Override
     public String getToken () {
         return token;
+    }
+
+    @Override
+    public Logger getLogger() {
+        return LOG;
     }
 
     @Override
@@ -405,8 +411,8 @@ public final class IdentityImpl implements Identity {
 
         try {
             URI url = new URI(uri);
-            socket = wsFactory.createSocket(url);
-            socket.addListener(new GatewayAdaptor(this, socket)).connect();
+            WebSocket socket = wsFactory.createSocket(url);
+            socket.addListener((gateway = new GatewayAdaptor(this, socket))).connect();
         } catch (IllegalArgumentException ex) {
             throw new URISyntaxException(uri, "Discord fail to provide a valid URI!");
         } catch (IOException ex2) {
@@ -419,12 +425,18 @@ public final class IdentityImpl implements Identity {
     }
 
     public IdentityImpl logout() {
-        socket.disconnect();
+        gateway.getSocket().disconnect();
         CONNECTION = Connection.OFFLINE;
         users.clear();
         guilds.clear();
         privateChannels.clear();
-        socket.clearListeners();
+        gateway.getSocket().clearListeners();
+        return this;
+    }
+
+    public IdentityImpl setEventManager(EventManager manager) {
+        this.manager = manager;
+        this.manager.setIdentity(this);
         return this;
     }
 
@@ -438,13 +450,8 @@ public final class IdentityImpl implements Identity {
         return client;
     }
 
-    public IdentityImpl setEventManager(EventManager manager) {
-        this.manager = manager.setIdentity(this);
-        return this;
-    }
-
-    public WebSocket getSocket() {
-        return socket;
+    public GatewayAdaptor getGateway() {
+        return gateway;
     }
 
     public void setSelf (User selfUser) {
@@ -508,7 +515,7 @@ public final class IdentityImpl implements Identity {
     public String toString() {
         return "IdentityImpl{" +
                 "type=" + type +
-                ", socket=" + socket +
+                ", socket=" + gateway.getSocket() +
                 ", CONNECTION=" + CONNECTION +
                 ", self=" + self +
                 '}';

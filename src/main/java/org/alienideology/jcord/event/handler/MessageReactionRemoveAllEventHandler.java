@@ -22,7 +22,7 @@ public class MessageReactionRemoveAllEventHandler extends EventHandler {
     public void dispatchEvent(JSONObject json, int sequence) {
         MessageChannel channel = (MessageChannel) identity.getMessageChannel(json.getString("channel_id"));
         if (channel == null) {
-            identity.LOG.log(LogLevel.FETAL, "[UNKNOWN CHANNEL] [MESSAGE_REACTION_REMOVE_ALL]");
+            logger.log(LogLevel.FETAL, "[UNKNOWN CHANNEL] [MESSAGE_REACTION_REMOVE_ALL]");
             return;
         }
 

@@ -93,7 +93,8 @@ public final class Group extends MessageChannel implements IGroup {
     @Override
     public String toString() {
         return "Group{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", ownerId='" + ownerId + '\'' +
                 ", recipients=" + recipients +
                 '}';

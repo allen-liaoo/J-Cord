@@ -80,6 +80,7 @@ public interface IConnection extends IClientObject, ISnowFlake {
         STEAM ("steam"),
         REDDIT ("reddit"),
         TWITTER ("twitter"),
+        LEAGUE_OF_LEGENDS("leagueoflegends"),
         UNKNOWN ("unknown");
 
         public final String key;

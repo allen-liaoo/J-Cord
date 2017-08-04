@@ -50,7 +50,7 @@ public class CallCreateEventHandler extends EventHandler {
             IUser user = identity.getUser(id);
             if (user != null) {
                 if (client.getCallUsers().get(id) != null) {
-                    identity.LOG.log(LogLevel.FETAL, "Encounter a user that is already in call! ID: " + id);
+                    logger.log(LogLevel.FETAL, "Encounter a user that is already in call! ID: " + id);
                     continue;
                 }
 
@@ -66,7 +66,7 @@ public class CallCreateEventHandler extends EventHandler {
                 joinEvents.add(new CallUserJoinEvent(client, sequence, call, in));
 
             } else {
-                identity.LOG.log(LogLevel.FETAL, "[UNKNOWN VOICE STATE USER][CALL_CREATE_EVENT] ID: " + voiceStates.getString(i));
+                logger.log(LogLevel.FETAL, "[UNKNOWN VOICE STATE USER][CALL_CREATE_EVENT] ID: " + voiceStates.getString(i));
             }
         }
 
@@ -77,7 +77,7 @@ public class CallCreateEventHandler extends EventHandler {
             IUser user = identity.getUser(id);
             if (user != null) {
                 if (client.getCallUsers().get(id) != null) {
-                    identity.LOG.log(LogLevel.FETAL, "Encounter a user that is already in call! ID: " + id);
+                    logger.log(LogLevel.FETAL, "Encounter a user that is already in call! ID: " + id);
                     continue;
                 }
 
@@ -90,7 +90,7 @@ public class CallCreateEventHandler extends EventHandler {
                 call.addWaitingUsers(waiting);
                 client.getCallUsers().put(id, waiting);
             } else {
-                identity.LOG.log(LogLevel.FETAL, "[UNKNOWN USER][CALL_CREATE_EVENT] ID: " + ringings.getString(i));
+                logger.log(LogLevel.FETAL, "[UNKNOWN USER][CALL_CREATE_EVENT] ID: " + ringings.getString(i));
             }
         }
 
