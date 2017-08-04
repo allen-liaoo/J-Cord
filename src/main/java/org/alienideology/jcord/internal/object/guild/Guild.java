@@ -235,7 +235,6 @@ public final class Guild extends DiscordObject implements IGuild {
     }
 
     @Override
-    @NotNull
     public IMember getSelfMember() {
         for (Member member : members) {
             if (member.getUser().isSelf())
@@ -351,12 +350,16 @@ public final class Guild extends DiscordObject implements IGuild {
 
     @Override
     public ITextChannel getDefaultChannel() {
-        for (TextChannel tc : textChannels) {
-            if (tc.isDefaultChannel()) {
-                return tc;
-            }
-        }
-        return null;
+        return getDefaultChannel(getSelfMember());
+    }
+
+    @Override
+    public ITextChannel getDefaultChannel(IMember member) {
+        return textChannels.stream()
+                .filter(c -> c.hasPermission(member, Permission.ADMINISTRATOR, Permission.READ_MESSAGES))
+                .sorted(ITextChannel::compareTo)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

@@ -201,8 +201,6 @@ public final class GatewayAdaptor extends WebSocketAdapter {
                     break;
                 }
                 default: {
-                    LOG.log(LogLevel.DEBUG, "[RECEIVED] " + key);
-                    LOG.log(LogLevel.TRACE, "Event Json: \n" + json.toString(4));
                     break;
                 }
             }
@@ -216,6 +214,8 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             // Only fire Non-Gateway events after the connection is ready.
             if (!(handler instanceof ReadyEventHandler) && !(handler instanceof ResumedEventHandler)) {
                 if (identity.CONNECTION.isReady()) {
+                    LOG.log(LogLevel.DEBUG, "[RECEIVED] " + key);
+                    LOG.log(LogLevel.TRACE, "Event Json: \n" + json.toString(4));
                     handler.dispatchEvent(event, sequence);
                 }
             } else {

@@ -2,6 +2,7 @@ package org.alienideology.jcord.handle.channel;
 
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,10 +67,24 @@ public interface ITextChannel extends IGuildChannel, IMessageChannel, IMention, 
     List<IWebhook> getWebhooks();
 
     /**
-     * @return True if this channel is the default channel of its guild.
+     * Check if this channel is the default channel for the identity.
+     *
+     * @return True if this channel is the default channel for the identity.
      */
     default boolean isDefaultChannel() {
-        return getId().equals(getGuild().getId());
+        return getGuild().getDefaultChannel().equals(this);
+    }
+
+    /**
+     * Check if this channel is the default channel for the member.
+     * The default channel is the first channel with highest position
+     * that the member has permission to {@code Read Messages}.
+     *
+     * @param member The member.
+     * @return True if this channel is the default channel for the member.
+     */
+    default boolean isDefaultChannel(IMember member) {
+        return getGuild().getDefaultChannel(member).equals(this);
     }
 
     /**

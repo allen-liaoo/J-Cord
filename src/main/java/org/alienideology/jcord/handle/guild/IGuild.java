@@ -212,7 +212,6 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
      *
     * @return The member instance
     */
-    @NotNull
     IMember getSelfMember();
 
     /**
@@ -318,11 +317,22 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
 
     /**
      * Get the default text channel of this guild.
+     * The default channel is the first channel with highest position
+     * that the identity has permission to {@code Read Messages}.
      *
      * @return The text channel.
      */
-    @NotNull
     ITextChannel getDefaultChannel();
+
+    /**
+     * Get the default text channel for this member.
+     * The default channel is the first channel with highest position
+     * that the member has permission to {@code Read Messages}.
+     *
+     * @param member The member.
+     * @return The text channel.
+     */
+    ITextChannel getDefaultChannel(IMember member);
 
     /**
      * Get a list of text channels belong to this guild.
