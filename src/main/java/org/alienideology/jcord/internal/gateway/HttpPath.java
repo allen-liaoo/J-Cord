@@ -20,11 +20,6 @@ public final class HttpPath {
     public static class EndPoint {
 
         /**
-         * Application Icon - Parameters: Application ID, Icon Hash
-         */
-        public final static String APPLICATION_ICON = DISCORD_CDN_URL+"app-icons/%s/%s.png";
-
-        /**
          * Avatar - Parameters: ID, Avatar Hash
          */
         public final static String AVATAR = DISCORD_CDN_URL+"avatars/%s/%s.%s";
@@ -33,6 +28,11 @@ public final class HttpPath {
          * Default Avatar - Parameter: Avatar Hash
          */
         public final static String DEFAULT_AVATAR = DISCORD_CDN_URL+"embed/avatars/%s.png";
+
+        /**
+         * Application Icon - Parameters: Application ID, Icon Hash
+         */
+        public final static String APPLICATION_ICON = DISCORD_CDN_URL+"app-icons/%s/%s.png";
 
         /**
          * Guild Icon - Parameters: ID, Icon Hash
@@ -168,11 +168,16 @@ public final class HttpPath {
         public final static HttpPath DELETE_GUILD_INTEGRATION = new HttpPath(DELETE, "/guilds/{guild.id}/integrations/{integration.id}");
         public final static HttpPath SYNC_GUILD_INTEGRATION = new HttpPath(GET, "/guilds/{guild.id}/integrations/{integration.id}/sync");
 
-        /* Other Action */
-        public final static HttpPath LIST_VOICE_REGIONS = new HttpPath(GET, "/voice/regions"); // Unused
-        public final static HttpPath GET_GUILD_VOICE_REGIONS = new HttpPath(GET, "/guilds/{guild.id}/regions"); // Unused (Cached)
+        /* Guild Embed */
         public final static HttpPath GET_GUILD_EMBED = new HttpPath(GET, "/guilds/{guild.id}/embed"); // Unused (Cached)
         public final static HttpPath MODIFY_GUILD_EMBED = new HttpPath(PATCH, "/guilds/{guild.id}/embed");
+
+        /* Voice Region */
+        public final static HttpPath LIST_VOICE_REGIONS = new HttpPath(GET, "/voice/regions"); // Unused
+        public final static HttpPath GET_GUILD_VOICE_REGIONS = new HttpPath(GET, "/guilds/{guild.id}/regions"); // Unused (Cached)
+
+        // Client Only
+        public final static HttpPath SEARCH_MESSAGE = new HttpPath(GET, "/guilds/{guild_id}/messages/search");
 
     }
 
@@ -222,6 +227,7 @@ public final class HttpPath {
 
         /* Call */
         // Client only
+        // Endpoint not available
         public static final HttpPath START_CALL = new HttpPath(POST, "/channels/{channel_id}/call/ring");
         public static final HttpPath STOP_CALL = new HttpPath(POST, "/channels/{channel_id}/call/stop_ringing"); // Deny/End Call
     }

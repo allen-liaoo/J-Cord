@@ -12,12 +12,4 @@ public class GuildMemberJoinEvent extends GuildMemberEvent {
     public GuildMemberJoinEvent(IdentityImpl identity, Guild guild, int sequence, Member member) {
         super(identity, guild, sequence, member);
     }
-
-    /**
-     * @return The member joined.
-     */
-    @Override
-    public Member getMember() {
-        return super.getMember();
-    }
 }

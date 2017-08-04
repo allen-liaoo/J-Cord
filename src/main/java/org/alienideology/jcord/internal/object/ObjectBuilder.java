@@ -6,6 +6,8 @@ import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.audit.*;
 import org.alienideology.jcord.handle.channel.*;
 import org.alienideology.jcord.handle.client.relation.IRelationship;
+import org.alienideology.jcord.handle.client.setting.IClientSetting;
+import org.alienideology.jcord.handle.client.setting.IClientSetting.FriendSource;
 import org.alienideology.jcord.handle.client.setting.MessageNotification;
 import org.alienideology.jcord.handle.emoji.Emojis;
 import org.alienideology.jcord.handle.guild.IGuild;
@@ -16,6 +18,7 @@ import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.oauth.Scope;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.user.IConnection;
+import org.alienideology.jcord.handle.user.IGame;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -50,8 +53,10 @@ import org.json.JSONObject;
 
 import java.awt.*;
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ObjectBuilder - A builder for building Discord objects from json.
@@ -597,7 +602,7 @@ public final class ObjectBuilder {
         if (json.has("game") && !json.isNull("game")) {
             JSONObject gameJson = json.getJSONObject("game");
             String name = gameJson.isNull("name") ? null : gameJson.getString("name");
-            String url = gameJson.has("type") && gameJson.getInt("type") == 1 ?
+            String url = gameJson.has("type") && gameJson.getInt("type") == IGame.Type.STREAMING.key ?
                     gameJson.getString("url") : null;
             game = new Game(identity, name, url);
             if (game.isStreaming()) status = OnlineStatus.STREAMING;
@@ -609,6 +614,20 @@ public final class ObjectBuilder {
         Presence presence = new Presence(identity, user, game, status, since);
         user.setPresence(presence);
         return presence;
+    }
+
+    public VoiceState buildVoiceState(JSONObject json) {
+        IUser user = identity.getUser(json.getString("user_id"));
+        IAudioChannel channel = json.isNull("channel_id") ? null : identity.getAudioChannel(json.getString("channel_id"));
+        String session_id = json.getString("session_id");
+        boolean selfMute = json.getBoolean("self_mute");
+        boolean selfDeaf = json.getBoolean("self_deaf");
+        VoiceState state = new VoiceState(identity, user);
+        state.setChannel(channel);
+        state.setSessionId(session_id);
+        state.setSelfMuted(selfMute);
+        state.setSelfDeafened(selfDeaf);
+        return state;
     }
 
     public Integration buildIntegration(JSONObject json) {
@@ -654,21 +673,6 @@ public final class ObjectBuilder {
             integrations.add(buildIntegration(ints.getJSONObject(i)));
         }
         return new Connection(client, id, user, name, type, displayOnProfile, friend_sync, verified, revoked, integrations);
-    }
-
-    //---------------------Audio---------------------
-    public VoiceState buildVoiceState(JSONObject json) {
-        IUser user = identity.getUser(json.getString("user_id"));
-        IAudioChannel channel = json.isNull("channel_id") ? null : identity.getAudioChannel(json.getString("channel_id"));
-        String session_id = json.getString("session_id");
-        boolean selfMute = json.getBoolean("self_mute");
-        boolean selfDeaf = json.getBoolean("self_deaf");
-        VoiceState state = new VoiceState(identity, user);
-        state.setChannel(channel);
-        state.setSessionId(session_id);
-        state.setSelfMuted(selfMute);
-        state.setSelfDeafened(selfDeaf);
-        return state;
     }
 
     //---------------------Audit---------------------
@@ -814,32 +818,69 @@ public final class ObjectBuilder {
     }
 
     public Note buildNote(String userId, String content) {
-        Note note = new Note(client, identity.getUser(userId), content);
+        Note note = new Note(client, userId, content);
         client.addNote(note);
         return note;
     }
 
     public ClientSetting buildClientSetting(JSONObject json) {
-        OnlineStatus status = OnlineStatus.getByKey(json.getString("status"));
-        Locale locale = new Locale(json.getString("locale"));
+        ClientSetting setting = new ClientSetting(client);
 
+        OnlineStatus status = OnlineStatus.getByKey(json.getString("status"));
+        setting.setStatus(status);
+
+        int timeZone = json.getInt("timezone_offset"); // This is in minutes
+        setting.setTimeZone(timeZone);
+
+        IClientSetting.Theme theme = IClientSetting.Theme.getByKey(json.getString("theme"));
+        setting.setTheme(theme);
+        IClientSetting.Locale locale = IClientSetting.Locale.getByKey(json.getString("locale"));
+        setting.setLocale(locale);
+        IClientSetting.ContentFilterLevel contentFilterLevel = IClientSetting.ContentFilterLevel.getByKey(json.getInt("explicit_content_filter"));
+        setting.setContentFilterLevel(contentFilterLevel);
+        IClientSetting.PushNotificationAFKTimeout pushNotificationAFKTimeout =
+                IClientSetting.PushNotificationAFKTimeout.getByKey(json.getInt("afk_timeout"));
+        setting.setPushNotificationAFKTimeout(pushNotificationAFKTimeout);
+
+        /* Friend Sources */
+        FriendSource[] friendSources;
+        JSONObject friendSource = json.getJSONObject("friend_source_flags");
+        if (friendSource.has("all")) {
+            friendSources = new FriendSource[]{FriendSource.EVERYONE, FriendSource.FRIENDS_OF_FRIENDS, FriendSource.SERVER_MEMBERS};
+        } else {
+            friendSources = new FriendSource[2];
+            if (friendSource.has("mutual_friends") && friendSource.has("mutual_guilds")) {
+                friendSources = new FriendSource[]{FriendSource.FRIENDS_OF_FRIENDS, FriendSource.SERVER_MEMBERS};
+            } else if (friendSource.has("mutual_friends")) {
+                friendSources = new FriendSource[]{FriendSource.FRIENDS_OF_FRIENDS};
+            } else if (friendSource.has("mutual_guilds")) {
+                friendSources = new FriendSource[]{FriendSource.SERVER_MEMBERS};
+            }
+        }
+        setting.setFriendSources(friendSources);
+
+        /* Guild Positions */
         List<IGuild> guildsPositions = new ArrayList<>();
         JSONArray gps = json.getJSONArray("guild_positions");
         for (int i = 0; i < gps.length(); i++) {
             guildsPositions.add(identity.getGuild(gps.getString(i)));
         }
+        setting.setGuildsPositions(guildsPositions);
 
+        /* Restricted Guilds */
         List<IGuild> restrictedGuilds = new ArrayList<>();
         JSONArray rgs = json.getJSONArray("restricted_guilds");
         for (int i = 0; i < rgs.length(); i++) {
             guildsPositions.add(identity.getGuild(rgs.getString(i)));
         }
+        setting.setRestrictedGuilds(restrictedGuilds);
 
-        ClientSetting setting = new ClientSetting(client, status, locale, guildsPositions, restrictedGuilds);
-
+        /* Booleans */
         setting.setShowCurrentGame(json.has("show_current_game") && json.getBoolean("show_current_game"));
         setting.setDeveloperMode(json.has("developer_mode") && json.getBoolean("developer_mode"));
         setting.setMessageDisplayCompact(json.has("message_display_compact") && json.getBoolean("message_display_compact"));
+        setting.setGuildRestrictedByDefault(json.has("default_guilds_restricted") && json.getBoolean("default_guilds_restricted"));
+        setting.setDetectPlatformAccounts(json.has("detect_platform_accounts") && json.getBoolean("detect_platform_accounts"));
 
         setting.setEnableTTS(json.has("enable_tts_command") && json.getBoolean("enable_tts_command"));
         setting.setConvertEmoticons(json.has("convert_emoticons") && json.getBoolean("convert_emoticons"));
@@ -847,8 +888,6 @@ public final class ObjectBuilder {
         setting.setRenderEmbeds(json.has("render_embeds") && json.getBoolean("render_embeds"));
         setting.setInlineEmbedMedia(json.has("inline_embed_media") && json.getBoolean("inline_embed_media"));
         setting.setInlineAttachmentMedia(json.has("inline_attachment_media") && json.getBoolean("inline_attachment_media"));
-
-        setting.setDetectPlatformAccounts(json.has("detect_platform_accounts") && json.getBoolean("detect_platform_accounts"));
 
         return setting;
     }

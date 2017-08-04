@@ -63,6 +63,17 @@ public interface IGroup extends IClientObject, IMessageChannel, ICallChannel {
     IUser getOwner();
 
     /**
+     * Get a recipient by user id.
+     *
+     * @param userId The user id.
+     * @return The recipient, or null if no recipient is found.
+     */
+    @Nullable
+    default IUser getRecipient(String userId) {
+        return getRecipients().stream().filter(r -> r.getId().equals(userId)).findAny().orElse(null);
+    }
+
+    /**
      * Get a list of recipients of this group.
      *
      * @return A list of recipients.

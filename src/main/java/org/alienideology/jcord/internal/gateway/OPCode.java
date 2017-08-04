@@ -27,7 +27,7 @@ public enum OPCode {
         this.key = key;
     }
 
-    public static OPCode getCode (int key) {
+    public static OPCode getByKey(int key) {
         for (OPCode op : values()) {
             if (op.key == key) return op;
         }

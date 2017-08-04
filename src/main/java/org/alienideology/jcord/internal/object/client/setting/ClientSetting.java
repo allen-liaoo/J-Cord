@@ -6,24 +6,32 @@ import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.object.client.Client;
 import org.alienideology.jcord.internal.object.client.ClientObject;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author AlienIdeology
  */
-// TODO: Theme, Locale, ContentFilterLevel Enumerations
 public final class ClientSetting extends ClientObject implements IClientSetting {
 
     private OnlineStatus status;
-    private Locale locale;
+    private ZoneId timeZone;
+
+    private IClientSetting.Theme theme;
+    private IClientSetting.Locale locale;
+    private IClientSetting.ContentFilterLevel contentFilterLevel;
+    private IClientSetting.FriendSource[] friendSources;
+    private IClientSetting.PushNotificationAFKTimeout pushNotificationAFKTimeout;
 
     private List<IGuild> guildsPositions;
     private List<IGuild> restrictedGuilds;
 
     private boolean showCurrentGame;
     private boolean developerMode;
+    private boolean guildRestrictedByDefault;
     private boolean messageDisplayCompact;
+    private boolean detectPlatformAccounts;
 
     // Message
     private boolean enableTTS;
@@ -33,15 +41,8 @@ public final class ClientSetting extends ClientObject implements IClientSetting 
     private boolean inlineEmbedMedia;
     private boolean inlineAttachmentMedia;
 
-    private boolean detectPlatformAccounts;
-    private boolean defaultGuildsRestricted;
-
-    public ClientSetting(Client client, OnlineStatus status, Locale locale, List<IGuild> guildsPositions, List<IGuild> restrictedGuilds) {
+    public ClientSetting(Client client) {
         super(client);
-        this.status = status;
-        this.locale = locale;
-        this.guildsPositions = guildsPositions;
-        this.restrictedGuilds = restrictedGuilds;
     }
 
     @Override
@@ -50,8 +51,33 @@ public final class ClientSetting extends ClientObject implements IClientSetting 
     }
 
     @Override
-    public Locale getLocale() {
+    public Theme getTheme() {
+        return theme;
+    }
+
+    @Override
+    public ZoneId getTimeZone() {
+        return timeZone;
+    }
+
+    @Override
+    public IClientSetting.Locale getLocale() {
         return locale;
+    }
+
+    @Override
+    public ContentFilterLevel getContentFilterLevel() {
+        return contentFilterLevel;
+    }
+
+    @Override
+    public PushNotificationAFKTimeout getPushNotificationAFKTimeout() {
+        return pushNotificationAFKTimeout;
+    }
+
+    @Override
+    public FriendSource[] getFriendSources() {
+        return friendSources;
     }
 
     @Override
@@ -75,10 +101,19 @@ public final class ClientSetting extends ClientObject implements IClientSetting 
     }
 
     @Override
+    public boolean isGuildRestrictedByDefault() {
+        return guildRestrictedByDefault;
+    }
+
+    @Override
     public boolean isMessageDisplayCompact() {
         return messageDisplayCompact;
     }
 
+    @Override
+    public boolean isDetectPlatformAccounts() {
+        return detectPlatformAccounts;
+    }
     @Override
     public boolean isEnableTTS() {
         return enableTTS;
@@ -109,10 +144,6 @@ public final class ClientSetting extends ClientObject implements IClientSetting 
         return inlineAttachmentMedia;
     }
 
-    @Override
-    public boolean isDetectPlatformAccounts() {
-        return detectPlatformAccounts;
-    }
 
     //--------------------Setters------------------------
 
@@ -120,8 +151,28 @@ public final class ClientSetting extends ClientObject implements IClientSetting 
         this.status = status;
     }
 
+    public void setTimeZone(int minutes) {
+        timeZone = ZoneId.ofOffset("UTC", ZoneOffset.ofHours(minutes / 60));
+    }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+    }
+
     public void setLocale(Locale locale) {
         this.locale = locale;
+    }
+
+    public void setContentFilterLevel(ContentFilterLevel contentFilterLevel) {
+        this.contentFilterLevel = contentFilterLevel;
+    }
+
+    public void setPushNotificationAFKTimeout(PushNotificationAFKTimeout pushNotificationAFKTimeout) {
+        this.pushNotificationAFKTimeout = pushNotificationAFKTimeout;
+    }
+
+    public void setFriendSources(FriendSource[] friendSources) {
+        this.friendSources = friendSources;
     }
 
     public void setGuildsPositions(List<IGuild> guildsPositions) {
@@ -140,8 +191,16 @@ public final class ClientSetting extends ClientObject implements IClientSetting 
         this.developerMode = developerMode;
     }
 
+    public void setGuildRestrictedByDefault(boolean guildRestrictedByDefault) {
+        this.guildRestrictedByDefault = guildRestrictedByDefault;
+    }
+
     public void setMessageDisplayCompact(boolean messageDisplayCompact) {
         this.messageDisplayCompact = messageDisplayCompact;
+    }
+
+    public void setDetectPlatformAccounts(boolean detectPlatformAccounts) {
+        this.detectPlatformAccounts = detectPlatformAccounts;
     }
 
     public void setEnableTTS(boolean enableTTS) {
@@ -166,10 +225,6 @@ public final class ClientSetting extends ClientObject implements IClientSetting 
 
     public void setInlineAttachmentMedia(boolean inlineAttachmentMedia) {
         this.inlineAttachmentMedia = inlineAttachmentMedia;
-    }
-
-    public void setDetectPlatformAccounts(boolean detectPlatformAccounts) {
-        this.detectPlatformAccounts = detectPlatformAccounts;
     }
 
     @Override

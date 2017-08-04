@@ -83,7 +83,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         /* Payload */
         } else {
             int opCode = json.getInt("op");
-            handleOPCode(OPCode.getCode(opCode), text);
+            handleOPCode(OPCode.getByKey(opCode), text);
         }
     }
 
@@ -107,7 +107,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
 
     @Override
     public void onFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        OPCode code = OPCode.getCode(frame.getOpcode());
+        OPCode code = OPCode.getByKey(frame.getOpcode());
         handleOPCode(code, frame.getPayloadText());
     }
 
@@ -365,19 +365,31 @@ public final class GatewayAdaptor extends WebSocketAdapter {
             eventHandler.put("RELATIONSHIP_ADD", new RelationshipAddEventHandler(identity));
             eventHandler.put("RELATIONSHIP_REMOVE", new RelationshipRemoveEventHandler(identity));
 
+            eventHandler.put("CHANNEL_RECIPIENT_ADD", new ChannelRecipientAddEventHandler(identity));
+            eventHandler.put("CHANNEL_RECIPIENT_REMOVE", new ChannelRecipientRemoveEventHandler(identity));
+
             eventHandler.put("CALL_CREATE", new CallCreateEventHandler(identity));
             eventHandler.put("CALL_UPDATE", new CallUpdateEventHandler(identity));
             eventHandler.put("CALL_DELETE", new CallDeleteEventHandler(identity));
 
             eventHandler.put("USER_NOTE_UPDATE", new UserNoteUpdateEventHandler(identity));
 
+            // Added these to prevent "unknown event" message
+            eventHandler.put("MESSAGE_ACK", new EventHandler(identity) {
+                @Override
+                public void dispatchEvent(JSONObject json, int sequence) {}
+            });
+            eventHandler.put("CHANNEL_PINS_ACK", new EventHandler(identity) {
+                @Override
+                public void dispatchEvent(JSONObject json, int sequence) {}
+            });
+
         }
 
-        // TODO: Finish priority and client events
-        // Priority:
-        // Clients: CHANNEL_RECIPIENT_ADD, CHANNEL_RECIPIENT_REMOVE
+        // TODO: Finish client events
+        // Clients:
         // Not implementing any time soon: VOICE_SERVER_UPDATE
-        // Unknown: GUILD_SYNC, MESSAGE_ACK
+        // Unknown Usage: GUILD_SYNC, MESSAGE_ACK
     }
 
 }

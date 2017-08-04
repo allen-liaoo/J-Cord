@@ -25,29 +25,6 @@ public interface IClientManager extends IClientObject {
     void modifyNote(String userId, String note);
 
     /**
-     * Not supported yet.
-     *
-     * @param user
-     */
-    default void call(IUser user) {
-        startCall(user.getPrivateChannel());
-    }
-
-    /**
-     * Not supported yet.
-     *
-     * @param channel
-     */
-    void startCall(ICallChannel channel);
-
-    /**
-     * Not supported yet.
-     *
-     * @param channel
-     */
-    void endCall(ICallChannel channel);
-
-    /**
      * Send a friend request by username and discriminator.
      *
      * @param username The user's name.
@@ -134,5 +111,28 @@ public interface IClientManager extends IClientObject {
      * @param userId The user id.
      */
     void unblockUser(String userId);
+
+    /**
+     * Not supported yet.
+     *
+     * @param user
+     */
+    default void call(IUser user) {
+        startCall(user.getPrivateChannel());
+    }
+
+    /**
+     * Not supported yet.
+     *
+     * @param channel
+     */
+    void startCall(ICallChannel channel);
+
+    /**
+     * Not supported yet.
+     *
+     * @param channel
+     */
+    void endCall(ICallChannel channel);
 
 }

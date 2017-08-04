@@ -8,13 +8,21 @@ import org.alienideology.jcord.handle.user.IUser;
  */
 public final class Note extends ClientObject implements INote {
 
+    private final String id;
+
     private IUser user;
     private String content;
 
-    public Note(Client client, IUser user, String content) {
+    public Note(Client client, String userId, String content) {
         super(client);
-        this.user = user;
+        this.id = userId;
+        this.user = client.getIdentity().getUser(userId);
         this.content = content;
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -47,13 +55,12 @@ public final class Note extends ClientObject implements INote {
         return result;
     }
 
-
     @Override
     public String toString() {
         return "Note{" +
-                "user=" + user +
+                "id='" + id + '\'' +
+                ", user=" + user +
                 ", content='" + content + '\'' +
                 '}';
     }
-
 }

@@ -57,6 +57,7 @@ Event - Whenever a change happens to an entity, an event get fired.
        - TextChannelCreateEvent
        - VoiceChannelCreateEvent
      - PrivateChannelCreateEvent
+     - GroupCreateEvent
    - ChannelUpdateEvent
      - TextChannelUpdateEvent
        - TextChannelNameUpdateEvent
@@ -69,12 +70,20 @@ Event - Whenever a change happens to an entity, an event get fired.
        - VoiceChannelPermissionsUpdateEvent
        - VoiceChannelBitrateUpdateEvent
        - VoiceChannelUserLimitUpdateEvent
+     - GroupUpdateEvent
+       - GroupOwnerUpdateEvent
+       - GroupNameUpdateEvent
+       - GroupIconUpdateEvent
    - ChannelDeleteEvent
      - GuildChannelDeleteEvent
        - TextChannelDeleteEvent
        - VoiceChannelDeleteEvent
      - PrivateChannelDeleteEvent
+     - GroupDeleteEvent
    - TypingStartEvent
+   - GroupUserEvent
+     - GroupUserJoinEvent
+     - GroupUserLeaveEvent
     <br />
  - MessageEvent - Events that are related to a message.
    - MessageCreateEvent

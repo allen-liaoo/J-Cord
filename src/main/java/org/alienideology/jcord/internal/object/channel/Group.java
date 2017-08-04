@@ -51,7 +51,7 @@ public final class Group extends MessageChannel implements IGroup {
     @Override
     public IUser getOwner() {
         return recipients.stream()
-                .filter(r -> r.getId().equals(ownerId)).findFirst().orElse(null);
+                .filter(r -> r.getId().equals(ownerId)).findFirst().orElse(client.getProfile());
     }
 
     @Override
@@ -62,6 +62,18 @@ public final class Group extends MessageChannel implements IGroup {
     @Override
     public ICall getCurrentCall() {
         return currentCall;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
     }
 
     public void setCurrentCall(Call currentCall) {

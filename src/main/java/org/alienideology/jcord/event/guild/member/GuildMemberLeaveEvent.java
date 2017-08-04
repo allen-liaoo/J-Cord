@@ -13,11 +13,4 @@ public class GuildMemberLeaveEvent extends GuildMemberEvent {
         super(identity, guild, sequence, member);
     }
 
-    /**
-     * @return The member left.
-     */
-    @Override
-    public Member getMember() {
-        return super.getMember();
-    }
 }
