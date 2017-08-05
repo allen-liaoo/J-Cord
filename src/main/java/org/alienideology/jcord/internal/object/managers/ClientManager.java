@@ -4,6 +4,7 @@ import org.alienideology.jcord.handle.channel.ICallChannel;
 import org.alienideology.jcord.handle.channel.IGroup;
 import org.alienideology.jcord.handle.client.IClient;
 import org.alienideology.jcord.handle.client.app.IApplication;
+import org.alienideology.jcord.handle.client.app.IAuthApplication;
 import org.alienideology.jcord.handle.client.relation.IFriend;
 import org.alienideology.jcord.handle.client.relation.IRelationship;
 import org.alienideology.jcord.handle.guild.IGuild;
@@ -28,7 +29,6 @@ import java.util.stream.Collectors;
 /**
  * @author AlienIdeology
  */
-// TODO: Create application
 public final class ClientManager implements IClientManager {
 
     private Client client;
@@ -49,6 +49,21 @@ public final class ClientManager implements IClientManager {
                 .updateRequestWithBody(request -> request.body(((Guild) guild).toJson()))
                 .getAsJSONObject();
         return new ObjectBuilder(getIdentity()).buildGuild(json);
+    }
+
+    @Override
+    public void deleteGuild(IGuild guild) {
+        try {
+            new Requester(getIdentity(), HttpPath.Guild.DELETE_GUILD)
+                    .request(guild.getId())
+                    .performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.NOT_FOUND)) {
+                throw new ErrorResponseException(ErrorResponse.UNKNOWN_GUILD);
+            } else {
+                throw ex;
+            }
+        }
     }
 
     @Override
@@ -189,6 +204,36 @@ public final class ClientManager implements IClientManager {
                 .getAsJSONObject();
 
         return new ObjectBuilder(client).buildApplication(json);
+    }
+
+    @Override
+    public void deleteApplication(IApplication application) {
+        try {
+            new Requester(getIdentity(), HttpPath.Application.DELETE_APPLICATION)
+                    .request(application.getId())
+                    .performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.NOT_FOUND)) {
+                throw new ErrorResponseException(ErrorResponse.UNKNOWN_APPLICATION);
+            } else {
+                throw ex;
+            }
+        }
+    }
+
+    @Override
+    public void removeAuthApplication(IAuthApplication authApplication) {
+        try {
+            new Requester(getIdentity(), HttpPath.Application.DELETE_AUTHORIZED_APPLICATION)
+                    .request(authApplication.getAuthorizeId())
+                    .performRequest();
+        } catch (HttpErrorException ex) {
+            if (ex.getCode().equals(HttpCode.NOT_FOUND)) {
+                throw new ErrorResponseException(ErrorResponse.UNKNOWN_APPLICATION);
+            } else {
+                throw ex;
+            }
+        }
     }
 
 }

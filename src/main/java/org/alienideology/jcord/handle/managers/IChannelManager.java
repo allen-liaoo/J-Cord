@@ -252,7 +252,7 @@ public interface IChannelManager {
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
     default AuditAction<Void> deleteChannel() {
-        return getGuild().getGuildManager().deleteGuildChannel(getGuildChannel());
+        return getGuild().getManager().deleteGuildChannel(getGuildChannel());
     }
 
 }

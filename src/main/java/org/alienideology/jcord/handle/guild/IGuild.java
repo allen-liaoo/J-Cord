@@ -70,7 +70,7 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
      *
      * @return The guild manager.
      */
-    IGuildManager getGuildManager();
+    IGuildManager getManager();
 
     /**
      * Get the IInviteManager for this guild.

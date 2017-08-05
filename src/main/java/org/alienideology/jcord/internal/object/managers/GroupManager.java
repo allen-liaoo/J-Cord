@@ -11,7 +11,7 @@ import org.json.JSONObject;
 /**
  * @author AlienIdeology
  */
-public class GroupManager implements IGroupManager {
+public final class GroupManager implements IGroupManager {
 
     private Group group;
 

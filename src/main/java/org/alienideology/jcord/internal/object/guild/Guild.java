@@ -153,7 +153,7 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
     }
 
     @Override
-    public IGuildManager getGuildManager() {
+    public IGuildManager getManager() {
         return guildManager;
     }
 

@@ -21,6 +21,27 @@ import java.util.stream.Collectors;
 public interface IGroup extends IClientObject, IMessageChannel, ICallChannel {
 
     /**
+     * The maximum length of a group's name.
+     */
+    int NAME_LENGTH_MAX = 100;
+
+    /**
+     * Checks if an group's name is valid or not.
+     *
+     * Validations: <br />
+     * <ul>
+     *     <li>The name may be null or empty, used to reset group's name.</li>
+     *     <li>The length of the name must be shorter than {@link #NAME_LENGTH_MAX}.</li>
+     * </ul>
+     *
+     * @param name The name to be check with.
+     * @return True if the name is valid.
+     */
+    static boolean isValidName(String name) {
+        return name == null || name.isEmpty() || name.length() <= NAME_LENGTH_MAX;
+    }
+
+    /**
      * Leave this group.
      */
     default void leave() {

@@ -10,7 +10,7 @@ import org.alienideology.jcord.internal.object.client.app.Application;
  * @author AlienIdeology
  * @since 0.1.4
  */
-public class ApplicationBuilder implements Buildable<ApplicationBuilder, IApplication> {
+public final class ApplicationBuilder implements Buildable<ApplicationBuilder, IApplication> {
 
     private String name;
     private Icon icon;

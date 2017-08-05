@@ -2,6 +2,7 @@ package org.alienideology.jcord.handle.client.app;
 
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.client.IClientObject;
+import org.alienideology.jcord.handle.managers.IApplicationManager;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,6 +58,22 @@ public interface IApplication extends IClientObject, ISnowFlake {
     static boolean isValidDescription(String description) {
         return description == null || description.length() <= DESCRIPTION_LENGTH_MAX;
     }
+
+    /**
+     * Delete this application.
+     *
+     * @see org.alienideology.jcord.handle.managers.IClientManager#deleteApplication(IApplication)
+     */
+    default void delete() {
+        getClient().getManager().deleteApplication(this);
+    }
+
+    /**
+     * Get the manager that manages this application.
+     *
+     * @return The application manager.
+     */
+    IApplicationManager getManager();
 
     /**
      * Get the client secret of this application.

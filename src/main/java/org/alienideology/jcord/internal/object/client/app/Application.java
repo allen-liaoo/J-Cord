@@ -2,9 +2,11 @@ package org.alienideology.jcord.internal.object.client.app;
 
 import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.client.app.IApplication;
+import org.alienideology.jcord.handle.managers.IApplicationManager;
 import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.client.Client;
 import org.alienideology.jcord.internal.object.client.ClientObject;
+import org.alienideology.jcord.internal.object.managers.ApplicationManager;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -28,6 +30,8 @@ public final class Application extends ClientObject implements IApplication, Jso
     private final boolean isPublicBot;
     private final boolean requireCodeGrant;
 
+    private final ApplicationManager manager;
+
     public Application(Client client, String id, String secret, String name, String icon, String description, List<String> redirectUris) {
         this(client, id, secret, name, icon, description, redirectUris, null, false, false);
     }
@@ -44,6 +48,7 @@ public final class Application extends ClientObject implements IApplication, Jso
         this.bot = bot;
         this.isPublicBot = isPublicBot;
         this.requireCodeGrant = requireCodeGrant;
+        this.manager = new ApplicationManager(this);
     }
 
     @Override
@@ -59,6 +64,11 @@ public final class Application extends ClientObject implements IApplication, Jso
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public IApplicationManager getManager() {
+        return manager;
     }
 
     @Override

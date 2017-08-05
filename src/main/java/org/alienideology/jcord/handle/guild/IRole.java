@@ -34,7 +34,7 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, PermCheckab
      *
      */
     default void delete() {
-        getGuild().getGuildManager().deleteRole(this);
+        getGuild().getManager().deleteRole(this);
     }
 
     /**

@@ -14,7 +14,7 @@ import org.alienideology.jcord.internal.object.message.Message;
  *
  * @author AlienIdeology
  */
-public class MessageBuilder implements Buildable<MessageBuilder, IMessage> {
+public final class MessageBuilder implements Buildable<MessageBuilder, IMessage> {
 
     private StringBuilder content;
 

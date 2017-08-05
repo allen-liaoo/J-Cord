@@ -8,7 +8,7 @@ public enum ErrorResponse {
 
     /* Unknown DiscordObject */
     UNKNOWN_ACCOUNT (10001, "Unknown account"),
-    UNKNOWN_APPLICATION (10002, "Unknown app"),
+    UNKNOWN_APPLICATION (10002, "Unknown application"),
     UNKNOWN_CHANNEL (10003, "Unknown channel"),
     UNKNOWN_GUILD (10004, "Unknown guild"),
     UNKNOWN_INTEGRATION (10005, "Unknown integration"),

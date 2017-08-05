@@ -4,6 +4,7 @@ import org.alienideology.jcord.handle.channel.ICallChannel;
 import org.alienideology.jcord.handle.channel.IGroup;
 import org.alienideology.jcord.handle.client.IClientObject;
 import org.alienideology.jcord.handle.client.app.IApplication;
+import org.alienideology.jcord.handle.client.app.IAuthApplication;
 import org.alienideology.jcord.handle.client.relation.IFriend;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.user.IUser;
@@ -26,6 +27,17 @@ public interface IClientManager extends IClientObject {
     IGuild createGuild(IGuild guild);
 
     /**
+     * Delete a guild.
+     *
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the guild is not from this identity.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_GUILD
+     *
+     * @param guild The guild to delete.
+     */
+    void deleteGuild(IGuild guild);
+
+    /**
      * Create a group with specified friends.
      *
      * @param friends The friends to add to the group.
@@ -43,6 +55,10 @@ public interface IClientManager extends IClientObject {
 
     /**
      * Leave a group.
+     *
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the group is not from this identity.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_CHANNEL
      *
      * @param group The group to leave.
      */
@@ -173,11 +189,33 @@ public interface IClientManager extends IClientObject {
     void endCall(ICallChannel channel);
 
     /**
-     * Create an application.
+     * Create an {@link IAuthApplication}.
      *
      * @param application The application built by {@link org.alienideology.jcord.handle.builders.ApplicationBuilder}.
      * @return The application created.
      */
     IApplication createApplication(IApplication application);
+
+    /**
+     * Delete an {@link IApplication}.
+     *
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the application is not from this identity.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_APPLICATION
+     *
+     * @param application The application to delete.
+     */
+    void deleteApplication(IApplication application);
+
+    /**
+     * Remove an {@link IAuthApplication}, which unauthorized the application and revoke the OAuth2 token of that application.
+     *
+     * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
+     *          If the auth application is not from this identity.
+     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_APPLICATION
+     *
+     * @param authApplication The auth application.
+     */
+    void removeAuthApplication(IAuthApplication authApplication);
 
 }

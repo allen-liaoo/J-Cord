@@ -387,7 +387,7 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         }
 
         // TODO: Finish client events
-        // Clients:
+        // Clients: OAUTH2_TOKEN_REVOKE
         // Not implementing any time soon: VOICE_SERVER_UPDATE
         // Unknown Usage: GUILD_SYNC, MESSAGE_ACK
     }

@@ -119,6 +119,7 @@ Permission (Enumeration) - A way to limit and grant certain abilities to members
  - ISelfManager - A manager that manages self user.
  - IClientManager - A manager used to manage the Discord client.
  - IGroupManager - A manager that modify a group.
+ - IApplicationManager - A manager for managing IApplication.
 
 ### Builders
  - GuildBuilder - A builder for creating a guild. Used by IClientManager.

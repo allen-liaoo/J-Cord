@@ -69,7 +69,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * @return True if the member is kicked successfully.
      */
     default AuditAction<Boolean> kick() {
-        return getGuild().getGuildManager().kickMember(this);
+        return getGuild().getManager().kickMember(this);
     }
 
     /**
@@ -87,7 +87,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * The boolean value will be true if the member is banned successfully.
      */
     default AuditAction<Boolean> ban() {
-        return getGuild().getGuildManager().banMember(this);
+        return getGuild().getManager().banMember(this);
     }
 
     /**
@@ -108,7 +108,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * The boolean value will be true if the member is banned successfully.
      */
     default AuditAction<Boolean> ban(int days) {
-        return getGuild().getGuildManager().banMember(this, days);
+        return getGuild().getManager().banMember(this, days);
     }
 
     /**
