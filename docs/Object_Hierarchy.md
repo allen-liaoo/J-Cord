@@ -118,13 +118,16 @@ Permission (Enumeration) - A way to limit and grant certain abilities to members
  - IWebhookManager - A manager for modifying, executing and deleting webhooks.
  - ISelfManager - A manager that manages self user.
  - IClientManager - A manager used to manage the Discord client.
+ - IGroupManager - A manager that modify a group.
 
 ### Builders
+ - GuildBuilder - A builder for creating a guild. Used by IClientManager.
  - ChannelBuilder - A GuildChannel builder for creating text and voice channels.
  - RoleBuilder - A builder for creating a role in a guild.
  - MessageBuilder - Build a message.
  - EmbedMessageBuilder - Build a JSONObject of an embed, used to build
    embed messages and send in channels.
+ - ApplicationBuilder - A builder for creating an IApplication. Used by IClientManager.
 
 ## Event
 Event - Whenever a change happens to an entity, an event get fired.

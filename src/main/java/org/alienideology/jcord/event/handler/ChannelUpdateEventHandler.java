@@ -126,7 +126,6 @@ public class ChannelUpdateEventHandler extends EventHandler {
     }
 
     private void groupUpdate(JSONObject json, int sequence) {
-        System.out.println(json.toString(4));
         Group group = (Group) identity.getClient().getGroup(json.getString("id"));
         if (group == null) {
             logger.log(LogLevel.FETAL, "[UNKNOWN GROUP] [CHANNEL_UPDATE_EVENT_HANDLER] ID: " + json.getString("id"));

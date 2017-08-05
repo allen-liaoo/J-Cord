@@ -21,11 +21,11 @@ public interface IGuildChannel extends IChannel, OverwriteCheckable, ISnowFlake 
     /**
      * The minimum length of the channel's name.
      */
-    int CHANNEL_NAME_LENGTH_MIN = 2;
+    int NAME_LENGTH_MIN = 2;
     /**
      * The maximum length of the channel's name.
      */
-    int CHANNEL_NAME_LENGTH_MAX = 100;
+    int NAME_LENGTH_MAX = 100;
 
     /**
      * The pattern for a valid channel name.
@@ -46,7 +46,7 @@ public interface IGuildChannel extends IChannel, OverwriteCheckable, ISnowFlake 
      * Validations:
      * <ul>
      *     <li>The name may not be null or empty.</li>
-     *     <li>The length of the nickname must be between {@link #CHANNEL_NAME_LENGTH_MIN} and {@link #CHANNEL_NAME_LENGTH_MAX}.</li>
+     *     <li>The length of the nickname must be between {@link #NAME_LENGTH_MIN} and {@link #NAME_LENGTH_MAX}.</li>
      *     <li>The name must matches the pattern {@link #PATTERN_CHANNEL_NAME_LIMITS}.</li>
      * </ul>
      *
@@ -55,8 +55,8 @@ public interface IGuildChannel extends IChannel, OverwriteCheckable, ISnowFlake 
      */
     static boolean isValidChannelName(String name) {
         return name != null && !name.isEmpty() &&
-                name.length() >= CHANNEL_NAME_LENGTH_MIN &&
-                name.length() <= CHANNEL_NAME_LENGTH_MAX &&
+                name.length() >= NAME_LENGTH_MIN &&
+                name.length() <= NAME_LENGTH_MAX &&
                 PATTERN_CHANNEL_NAME_LIMITS.matcher(name).find();
     }
 

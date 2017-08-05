@@ -17,13 +17,14 @@ import java.util.Collection;
  */
 public final class RoleBuilder implements Buildable<RoleBuilder, IRole> {
 
-    private String name = null;
+    private String name;
     private long permissions;
-    private Color color = null;
-    private boolean isSeparateListed = false;
-    private boolean canMention = false;
+    private Color color;
+    private boolean isSeparateListed;
+    private boolean canMention;
 
     public RoleBuilder() {
+        clear();
     }
 
     /**

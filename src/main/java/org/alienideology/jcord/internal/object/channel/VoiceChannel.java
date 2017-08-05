@@ -52,7 +52,7 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonab
     public JSONObject toJson() {
         return new JSONObject()
                 .put("name", name == null ? "" : name)
-                .put("type", "voice")
+                .put("type", Type.GUILD_VOICE.key)
                 .put("bitrate", bitrate)
                 .put("user_limit", user_limit)
                 .put("permission_overwrites", permOverwrites);

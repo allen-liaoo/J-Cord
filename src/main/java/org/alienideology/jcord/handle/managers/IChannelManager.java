@@ -53,7 +53,7 @@ public interface IChannelManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          <ul>
      *              <li>If the identity do not have {@code Manage Channels} permission.</li>
-     *              <li>If the name is shorter than {@value IGuildChannel#CHANNEL_NAME_LENGTH_MIN} or longer than {@value IGuildChannel#CHANNEL_NAME_LENGTH_MAX}.</li>
+     *              <li>If the name is shorter than {@value IGuildChannel#NAME_LENGTH_MIN} or longer than {@value IGuildChannel#NAME_LENGTH_MAX}.</li>
      *          </ul>
      * @exception IllegalArgumentException
      *          If the name is not valid. See {@link IGuildChannel#isValidChannelName(String)}.
@@ -104,7 +104,7 @@ public interface IChannelManager {
      * @exception IllegalArgumentException
      *          <ul>
      *              <li>If the channel managers manages a {@link IVoiceChannel}.</li>
-     *              <li>If the topic is longer than {@value ITextChannel#TEXT_CHANNEL_TOPIC_LENGTH_MAX}.</li>
+     *              <li>If the topic is longer than {@value ITextChannel#TOPIC_LENGTH_MAX}.</li>
      *          </ul>
      *
      * @param topic The new topic.
@@ -116,7 +116,7 @@ public interface IChannelManager {
      * Modify the bitrate of a {@link IVoiceChannel}.
      * Note that this event will only work for voice channels.
      *
-     * If the guild is a normal guild, the bitrate cannot be higher than {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_MAX}.
+     * If the guild is a normal guild, the bitrate cannot be higher than {@value IVoiceChannel#BITRATE_MAX}.
      * If the guild is a VIP guild, then the bitrate limit is {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_VIP_MAX}.
      * @see IVoiceChannel#getBitrate() For more information on bitrate.
      * @see IGuild#getSplash() Normal guilds' splash will always be null.

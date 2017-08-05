@@ -94,7 +94,7 @@ public final class GuildManager implements IGuildManager {
     @Override
     public AuditAction<Void> modifyAFKTimeout(IGuild.AFKTimeout afkTimeout) {
         if (afkTimeout == IGuild.AFKTimeout.UNKNOWN) return new AuditAction.EmptyAuditAction<>();;
-        return requestModify(new JSONObject().put("afk_timeout", afkTimeout.timeout));
+        return requestModify(new JSONObject().put("afk_timeout", afkTimeout.key));
     }
 
     @Override

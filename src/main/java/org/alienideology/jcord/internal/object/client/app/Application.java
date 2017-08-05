@@ -1,8 +1,11 @@
 package org.alienideology.jcord.internal.object.client.app;
 
+import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.client.app.IApplication;
+import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.client.Client;
 import org.alienideology.jcord.internal.object.client.ClientObject;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -10,7 +13,7 @@ import java.util.List;
  * @author AlienIdeology
  */
 // TODO: Flags and RpcApplicationState
-public final class Application extends ClientObject implements IApplication {
+public final class Application extends ClientObject implements IApplication, Jsonable {
 
     private final String id;
     private final String secret;
@@ -41,6 +44,16 @@ public final class Application extends ClientObject implements IApplication {
         this.bot = bot;
         this.isPublicBot = isPublicBot;
         this.requireCodeGrant = requireCodeGrant;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        return new JSONObject()
+                .put("name", name)
+                // icon is either raw data from Icon.getData() casted to string
+                // or Icon.DEFAULT_ICON
+                .put("icon", icon == null ? Icon.DEFAULT_ICON.getData() : icon)
+                .put("description", description);
     }
 
     @Override

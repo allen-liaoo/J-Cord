@@ -84,7 +84,7 @@ public final class ChannelManager implements IChannelManager {
         }
         if (topic == null) topic = "";
         if (!ITextChannel.isValidTopic(topic)) {
-            throw new IllegalArgumentException("The TextChannel's topic may not be longer than"+ ITextChannel.TEXT_CHANNEL_TOPIC_LENGTH_MAX +" characters!");
+            throw new IllegalArgumentException("The TextChannel's topic may not be longer than"+ ITextChannel.TOPIC_LENGTH_MAX +" characters!");
         }
         return modifyChannel(new JSONObject().put("topic", topic));
     }
@@ -125,13 +125,13 @@ public final class ChannelManager implements IChannelManager {
     }
 
     private void checkBitrate(int bitrate, IGuild guild) {
-        if (bitrate < IVoiceChannel.VOICE_CHANNEL_BITRATE_MIN) {
-            throw new IllegalArgumentException("The bitrate can not be lower than "+ IVoiceChannel.VOICE_CHANNEL_BITRATE_MIN+"!");
-        } else if (bitrate > IVoiceChannel.VOICE_CHANNEL_BITRATE_MAX) {
+        if (bitrate < IVoiceChannel.BITRATE_MIN) {
+            throw new IllegalArgumentException("The bitrate can not be lower than "+ IVoiceChannel.BITRATE_MIN +"!");
+        } else if (bitrate > IVoiceChannel.BITRATE_MAX) {
             if (guild.getSplash() != null && bitrate > IVoiceChannel.VOICE_CHANNEL_BITRATE_VIP_MAX) { // Guild is VIP
                 throw new IllegalArgumentException("The bitrate of a vip guild can not be greater than "+ IVoiceChannel.VOICE_CHANNEL_BITRATE_VIP_MAX+"!");
             } else {
-                throw new IllegalArgumentException("The bitrate of a normal guild can not be greater than "+ IVoiceChannel.VOICE_CHANNEL_BITRATE_MAX+"!");
+                throw new IllegalArgumentException("The bitrate of a normal guild can not be greater than "+ IVoiceChannel.BITRATE_MAX +"!");
             }
         }
     }

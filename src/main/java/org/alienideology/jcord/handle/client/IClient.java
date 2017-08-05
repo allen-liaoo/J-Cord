@@ -11,7 +11,9 @@ import org.alienideology.jcord.handle.client.relation.IRelationship;
 import org.alienideology.jcord.handle.client.setting.IClientSetting;
 import org.alienideology.jcord.handle.client.setting.IGuildSetting;
 import org.alienideology.jcord.handle.client.setting.MessageNotification;
+import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.IClientManager;
+import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.user.IConnection;
 import org.alienideology.jcord.handle.user.IUser;
 import org.jetbrains.annotations.Nullable;
@@ -242,6 +244,22 @@ public interface IClient extends IDiscordObject {
      * @return The guild settings.
      */
     List<IGuildSetting> getGuildSettings();
+
+    /**
+     * Get a list of all messages from a specified guild
+     * that recently mentioned the client.
+     *
+     * @param guild The guild.
+     * @return A list of recent mentions.
+     */
+    List<IMessage> getRecentMentions(IGuild guild);
+
+    /**
+     * Get a list of all messages that recently mentioned the client.
+     *
+     * @return A list of recent mentions.
+     */
+    List<IMessage> getRecentMentions();
 
     /**
      * Get an application by Id.

@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.guild;
 
+import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.audit.IAuditLog;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
@@ -16,6 +17,7 @@ import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
@@ -36,7 +38,7 @@ import java.util.Objects;
  * @author AlienIdeology
  */
 // TODO: GuildUnavailable
-public final class Guild extends DiscordObject implements IGuild {
+public final class Guild extends DiscordObject implements IGuild, Jsonable {
 
     private final String id;
     private boolean isAvailable = false;
@@ -116,6 +118,33 @@ public final class Guild extends DiscordObject implements IGuild {
         this.voiceChannels = new ArrayList<>();
         this.guildManager = new GuildManager(this);
         this.inviteManager = new InviteManager(this);
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject()
+                .put("name", name)
+                .put("region", region)
+                // icon is either raw data from Icon.getData() casted to string
+                // or Icon.DEFAULT_ICON
+                .put("icon", icon == null ? Icon.DEFAULT_ICON.getData() : icon);
+        if (verification_level != Verification.UNKNOWN) json.put("verification_level", verification_level.key);
+        if (notifications_level != Notification.UNKNOWN) json.put("default_message_notifications", notifications_level.key);
+
+        JSONArray roles = new JSONArray();
+        for (IRole role : this.roles) {
+            roles.put(((Role) role).toJson().put("id", 0));
+        }
+
+        JSONArray channels = new JSONArray();
+        for (IGuildChannel channel : getAllGuildChannels()) {
+            channels.put((channel instanceof TextChannel) ? ((TextChannel) channel).toJson() : ((VoiceChannel) channel).toJson());
+        }
+
+        json.put("roles", roles)
+                .put("channels", channels);
+
+        return json;
     }
 
     @Override

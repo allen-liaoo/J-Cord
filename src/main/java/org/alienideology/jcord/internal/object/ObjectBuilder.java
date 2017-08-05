@@ -1,10 +1,12 @@
 package org.alienideology.jcord.internal.object;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.JCord;
 import org.alienideology.jcord.event.ExceptionEvent;
 import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.audit.*;
 import org.alienideology.jcord.handle.channel.*;
+import org.alienideology.jcord.handle.client.IClient;
 import org.alienideology.jcord.handle.client.relation.IRelationship;
 import org.alienideology.jcord.handle.client.setting.IClientSetting;
 import org.alienideology.jcord.handle.client.setting.IClientSetting.FriendSource;
@@ -70,13 +72,13 @@ public final class ObjectBuilder {
     // Client Only
     private Client client;
 
-    public ObjectBuilder(IdentityImpl identity) {
-        this.identity = identity;
+    public ObjectBuilder(Identity identity) {
+        this.identity = (IdentityImpl) identity;
     }
 
-    public ObjectBuilder(Client client) {
-        this((IdentityImpl) client.getIdentity());
-        this.client = client;
+    public ObjectBuilder(IClient client) {
+        this(client.getIdentity());
+        this.client = (Client) client;
     }
 
     public Guild buildGuild (JSONObject json) {

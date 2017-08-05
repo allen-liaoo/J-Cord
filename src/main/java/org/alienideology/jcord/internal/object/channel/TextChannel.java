@@ -57,7 +57,7 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
     public JSONObject toJson() {
         JSONObject json = new JSONObject()
                 .put("name", name == null? "" : name)
-                .put("type", "text");
+                .put("type", Type.GUILD_TEXT.key);
         if (permOverwrites != null && !permOverwrites.isEmpty()) {
             JSONArray perms = new JSONArray();
             for (PermOverwrite perm : permOverwrites) {

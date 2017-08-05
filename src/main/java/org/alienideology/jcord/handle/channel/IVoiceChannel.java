@@ -11,11 +11,11 @@ public interface IVoiceChannel extends IGuildChannel, IAudioChannel, Comparable<
     /**
      * The minimum bitrate of a voice channel.
      */
-    int VOICE_CHANNEL_BITRATE_MIN = 8000;
+    int BITRATE_MIN = 8000;
     /**
      * The maximum bitrate of a voice channel in a normal server.
      */
-    int VOICE_CHANNEL_BITRATE_MAX = 96000;
+    int BITRATE_MAX = 96000;
     /**
      * The maximum bitrate of a voice channel in a VIP server.
      */
@@ -38,8 +38,8 @@ public interface IVoiceChannel extends IGuildChannel, IAudioChannel, Comparable<
      * @return True if the bitrate is valid.
      */
     static boolean isValidBitrate(int bitrate) {
-        return bitrate >= VOICE_CHANNEL_BITRATE_MIN &&
-                bitrate <= VOICE_CHANNEL_BITRATE_MAX;
+        return bitrate >= BITRATE_MIN &&
+                bitrate <= BITRATE_MAX;
     }
 
     /**
@@ -47,8 +47,8 @@ public interface IVoiceChannel extends IGuildChannel, IAudioChannel, Comparable<
      *
      * Validations:
      * <ul>
-     *     <li>The bitrate must be is greater or equal to {@link #VOICE_CHANNEL_BITRATE_MIN}.</li>
-     *     <li>The bitrate is greater than {@link #VOICE_CHANNEL_BITRATE_MAX} for {@code non vip guilds},
+     *     <li>The bitrate must be is greater or equal to {@link #BITRATE_MIN}.</li>
+     *     <li>The bitrate is greater than {@link #BITRATE_MAX} for {@code non vip guilds},
      *     or {@link #VOICE_CHANNEL_BITRATE_VIP_MAX} for {@code vip guilds}.
      *     </li>
      * </ul>
@@ -58,9 +58,9 @@ public interface IVoiceChannel extends IGuildChannel, IAudioChannel, Comparable<
      * @return True if the bitrate is valid.
      */
     static boolean isValidBitrate(int bitrate, IGuild guild) {
-        if (bitrate < VOICE_CHANNEL_BITRATE_MIN) {
+        if (bitrate < BITRATE_MIN) {
             return false;
-        } else if (bitrate > VOICE_CHANNEL_BITRATE_MAX) {
+        } else if (bitrate > BITRATE_MAX) {
             return guild.getSplash() == null || guild.getSplash() != null && bitrate > IVoiceChannel.VOICE_CHANNEL_BITRATE_VIP_MAX;
         }
         return true;

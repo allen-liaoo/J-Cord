@@ -15,6 +15,50 @@ import java.util.List;
 public interface IApplication extends IClientObject, ISnowFlake {
 
     /**
+     * The minimum length of an application's name.
+     */
+    int NAME_LENGTH_MIN = 2;
+
+    /**
+     * The maximum length of an application's name.
+     */
+    int NAME_LENGTH_MAX = 32;
+
+    /**
+     * The maximum length of an application's description.
+     */
+    int DESCRIPTION_LENGTH_MAX = 400;
+
+    /**
+     * Checks if an application's name is valid or not.
+     *
+     * Validations: <br />
+     * <ul>
+     *     <li>The name may not be null or empty.</li>
+     *     <li>The length of the name must be between {@link #NAME_LENGTH_MIN} and {@link #NAME_LENGTH_MAX}.</li>
+     * </ul>
+     *
+     * @param name The name to be check with.
+     * @return True if the name is valid.
+     */
+    static boolean isValidName(String name) {
+        return name != null && !name.isEmpty() &&
+                name.length() >= NAME_LENGTH_MIN &&
+                name.length() <= NAME_LENGTH_MAX;
+    }
+
+    /**
+     * Check if a description is valid.
+     * The description length may not be longer than {@link #DESCRIPTION_LENGTH_MAX} in length.
+     *
+     * @param description The description to check with.
+     * @return True if the description is valid.
+     */
+    static boolean isValidDescription(String description) {
+        return description == null || description.length() <= DESCRIPTION_LENGTH_MAX;
+    }
+
+    /**
      * Get the client secret of this application.
      *
      * @return The client secret.

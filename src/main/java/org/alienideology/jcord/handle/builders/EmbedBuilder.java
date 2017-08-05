@@ -22,13 +22,14 @@ public final class EmbedBuilder implements Buildable<EmbedBuilder, Embed> {
     private OffsetDateTime timeStamp;
     private Color color;
 
-    private IEmbed.Author author = null;
+    private IEmbed.Author author;
     private List<IEmbed.Field> fields = new ArrayList<>();
-    private IEmbed.Thumbnail thumbnail = null;
-    private IEmbed.Image image = null;
-    private IEmbed.Footer footer = null;
+    private IEmbed.Thumbnail thumbnail;
+    private IEmbed.Image image;
+    private IEmbed.Footer footer;
 
     public EmbedBuilder() {
+        clear();
     }
 
     /**

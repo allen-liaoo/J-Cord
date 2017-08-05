@@ -1,8 +1,12 @@
 package org.alienideology.jcord.internal.object.managers;
 
 import org.alienideology.jcord.handle.channel.ICallChannel;
+import org.alienideology.jcord.handle.channel.IGroup;
 import org.alienideology.jcord.handle.client.IClient;
+import org.alienideology.jcord.handle.client.app.IApplication;
+import org.alienideology.jcord.handle.client.relation.IFriend;
 import org.alienideology.jcord.handle.client.relation.IRelationship;
+import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.IClientManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
@@ -11,12 +15,20 @@ import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.gateway.HttpCode;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.Requester;
+import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.client.Client;
+import org.alienideology.jcord.internal.object.client.app.Application;
+import org.alienideology.jcord.internal.object.guild.Guild;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * @author AlienIdeology
  */
+// TODO: Create application
 public final class ClientManager implements IClientManager {
 
     private Client client;
@@ -28,6 +40,42 @@ public final class ClientManager implements IClientManager {
     @Override
     public IClient getClient() {
         return client;
+    }
+
+    @Override
+    public IGuild createGuild(IGuild guild) {
+        JSONObject json = new Requester(getIdentity(), HttpPath.Guild.CREATE_GUILD)
+                .request()
+                .updateRequestWithBody(request -> request.body(((Guild) guild).toJson()))
+                .getAsJSONObject();
+        return new ObjectBuilder(getIdentity()).buildGuild(json);
+    }
+
+    @Override
+    public IGroup createGroup(Collection<IFriend> friends) {
+        return createGroup(friends.stream().map(f -> f.getUser().getId()).collect(Collectors.toList()).toArray(new String[friends.size()]));
+    }
+
+    // TODO: How to set name and icon??
+    @Override
+    public IGroup createGroup(String... friendsIds) {
+        JSONArray array = new JSONArray();
+        for (String id : friendsIds) {
+            array.put(id);
+        }
+
+        JSONObject json = new Requester(getIdentity(), HttpPath.User.CREATE_DM)
+                .request()
+                .updateRequestWithBody(request -> request.body(new JSONObject().put("recipients", array)))
+                .getAsJSONObject();
+        return new ObjectBuilder(getClient()).buildGroup(json);
+    }
+
+    @Override
+    public void leaveGroup(IGroup group) {
+        new Requester(getIdentity(), HttpPath.Channel.DELETE_CHANNEL)
+                .request(group.getId())
+                .performRequest();
     }
 
     @Override
@@ -130,6 +178,17 @@ public final class ClientManager implements IClientManager {
                 throw ex;
             }
         }
+    }
+
+    @Override
+    public IApplication createApplication(IApplication application) {
+
+        JSONObject json = new Requester(getIdentity(), HttpPath.Application.CREATE_APPLICATION)
+                .request()
+                .updateRequestWithBody(request -> request.body(((Application) application).toJson()))
+                .getAsJSONObject();
+
+        return new ObjectBuilder(client).buildApplication(json);
     }
 
 }

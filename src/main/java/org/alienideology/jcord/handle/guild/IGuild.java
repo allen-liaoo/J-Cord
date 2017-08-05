@@ -53,6 +53,13 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
     }
 
     /**
+     * Leave this guild.
+     */
+    default void leave() {
+        getIdentity().getSelfManager().leaveGuild(this);
+    }
+
+    /**
      * @return True if the guild is available (no temporary shortage happens to discord server)
      */
     boolean isAvailable();
@@ -380,15 +387,15 @@ public interface IGuild extends IDiscordObject, ISnowFlake {
         HOUR_1 (3600),
         UNKNOWN (-1);
 
-        public int timeout;
+        public int key;
 
-        AFKTimeout(int timeout) {
-            this.timeout = timeout;
+        AFKTimeout(int key) {
+            this.key = key;
         }
 
         public static AFKTimeout getByTimeout (int timeout) {
-            if (Arrays.stream(values()).anyMatch(afk -> afk.timeout == timeout)) {
-                return Arrays.stream(values()).filter(afk -> afk.timeout == timeout).findFirst().get();
+            if (Arrays.stream(values()).anyMatch(afk -> afk.key == timeout)) {
+                return Arrays.stream(values()).filter(afk -> afk.key == timeout).findFirst().get();
             } else {
                 return UNKNOWN;
             }

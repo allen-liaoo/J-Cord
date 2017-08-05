@@ -99,7 +99,7 @@ public final class ChannelBuilder implements Buildable<ChannelBuilder, IGuildCha
      *
      * @exception IllegalArgumentException
      *          <ul>
-     *              <li>If the bitrate is smaller than {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_MIN}.</li>
+     *              <li>If the bitrate is smaller than {@value IVoiceChannel#BITRATE_MIN}.</li>
      *              <li>The bitrate is greater than {@value IVoiceChannel#VOICE_CHANNEL_BITRATE_VIP_MAX}.
      *              Note that the builder does not knows if the guild this channel will be created in is VIP or not, so the limit here is for VIP.
      *              You must check if the guild is vip or not, otherwise there might be exception thrown when creating a channel via this builder.</li>
@@ -109,7 +109,7 @@ public final class ChannelBuilder implements Buildable<ChannelBuilder, IGuildCha
      * @return ChannelBuilder for chaining.
      */
     public ChannelBuilder setBitrate(int bitrate) {
-        if (bitrate < IVoiceChannel.VOICE_CHANNEL_BITRATE_MIN || bitrate > IVoiceChannel.VOICE_CHANNEL_BITRATE_VIP_MAX) {
+        if (bitrate < IVoiceChannel.BITRATE_MIN || bitrate > IVoiceChannel.VOICE_CHANNEL_BITRATE_VIP_MAX) {
             throw new IllegalArgumentException("Invalid bitrate!");
         }
         this.bitrate = bitrate;

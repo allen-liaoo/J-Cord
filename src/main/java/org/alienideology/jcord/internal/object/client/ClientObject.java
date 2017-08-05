@@ -12,7 +12,7 @@ public class ClientObject extends DiscordObject implements IClientObject {
     private Client client;
 
     public ClientObject(IClient client) {
-        super(client.getIdentity());
+        super(client == null ? null : client.getIdentity());
         this.client = (Client) client;
     }
 

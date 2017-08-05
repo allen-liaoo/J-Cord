@@ -1,8 +1,14 @@
 package org.alienideology.jcord.handle.managers;
 
 import org.alienideology.jcord.handle.channel.ICallChannel;
+import org.alienideology.jcord.handle.channel.IGroup;
 import org.alienideology.jcord.handle.client.IClientObject;
+import org.alienideology.jcord.handle.client.app.IApplication;
+import org.alienideology.jcord.handle.client.relation.IFriend;
+import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.user.IUser;
+
+import java.util.Collection;
 
 /**
  * IClientManager - A manager used to manage the Discord client.
@@ -10,6 +16,37 @@ import org.alienideology.jcord.handle.user.IUser;
  * @author AlienIdeology
  */
 public interface IClientManager extends IClientObject {
+
+    /**
+     * Create a guild.
+     *
+     * @param guild The guild built by {@link org.alienideology.jcord.handle.builders.GuildBuilder}.
+     * @return The guild created.
+     */
+    IGuild createGuild(IGuild guild);
+
+    /**
+     * Create a group with specified friends.
+     *
+     * @param friends The friends to add to the group.
+     * @return The group created.
+     */
+    IGroup createGroup(Collection<IFriend> friends);
+
+    /**
+     * Create a group with specified friends' ids.
+     *
+     * @param friendsIds The friends to add to group.
+     * @return The group created.
+     */
+    IGroup createGroup(String... friendsIds);
+
+    /**
+     * Leave a group.
+     *
+     * @param group The group to leave.
+     */
+    void leaveGroup(IGroup group);
 
     /**
      * Modify a note for a user.
@@ -134,5 +171,13 @@ public interface IClientManager extends IClientObject {
      * @param channel
      */
     void endCall(ICallChannel channel);
+
+    /**
+     * Create an application.
+     *
+     * @param application The application built by {@link org.alienideology.jcord.handle.builders.ApplicationBuilder}.
+     * @return The application created.
+     */
+    IApplication createApplication(IApplication application);
 
 }

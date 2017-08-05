@@ -7,7 +7,9 @@ import org.alienideology.jcord.handle.client.app.IApplication;
 import org.alienideology.jcord.handle.client.app.IAuthApplication;
 import org.alienideology.jcord.handle.client.relation.IRelationship;
 import org.alienideology.jcord.handle.client.setting.IGuildSetting;
+import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.IClientManager;
+import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.user.IConnection;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
@@ -71,14 +73,14 @@ public final class Client extends DiscordObject implements IClient {
     @Override
     public IGroup getGroup(String id) {
         return groups.stream()
-                .filter(g -> g.getId().equals(id)).findFirst().orElse(null);
+                .filter(g -> g.getId().equals(id)).findAny().orElse(null);
     }
 
     @Override
     public IGroup getGroupByName(String name) {
         return groups.stream()
                 .filter(g -> g.getName() != null)
-                .filter(g -> g.getName().equals(name)).findFirst().orElse(null);
+                .filter(g -> g.getName().equals(name)).findAny().orElse(null);
     }
 
     @Override
@@ -107,7 +109,7 @@ public final class Client extends DiscordObject implements IClient {
     @Nullable
     public IRelationship getRelationship(String userId) {
         return relationships.stream()
-            .filter(r -> r.getUser().getId().equals(userId)).findFirst().orElse(null);
+            .filter(r -> r.getUser().getId().equals(userId)).findAny().orElse(null);
     }
 
     @Override
@@ -136,7 +138,7 @@ public final class Client extends DiscordObject implements IClient {
     public INote getNote(String userId) {
         return notes.stream()
                 .filter(n -> n.getUser() != null)
-                .filter(n -> n.getUser().getId().equals(userId)).findFirst().orElse(null);
+                .filter(n -> n.getUser().getId().equals(userId)).findAny().orElse(null);
     }
 
     @Override
@@ -146,12 +148,7 @@ public final class Client extends DiscordObject implements IClient {
 
     @Override
     public IGuildSetting getGuildSetting(String guildId) {
-        for (IGuildSetting setting : guildSettings) {
-            if (setting.getGuild().getId().equals(guildId)) {
-                return setting;
-            }
-        }
-        return null;
+        return guildSettings.stream().filter(gs -> gs.getGuild().getId().equals(guildId)).findAny().orElse(null);
     }
 
     @Override
@@ -159,10 +156,34 @@ public final class Client extends DiscordObject implements IClient {
         return guildSettings;
     }
 
+    // Available query params:
+    // "limit" for message limit
+    // "before" a certain message id
+    // "guild_id" for a certain guild
+    // "role" boolean for role mentions
+    // "everyone" boolean for everyone mentions
+    @Override
+    public List<IMessage> getRecentMentions(IGuild guild) {
+        JSONArray msgs = new Requester(identity, HttpPath.Client.GET_RECENT_MENTIONS)
+                .updateRequest(request -> request.header("guild_id", guild == null ? null : guild.getId()))
+                .request().getAsJSONArray();
+        List<IMessage> messages = new ArrayList<>();
+        ObjectBuilder builder = new ObjectBuilder(identity);
+        for (int i = 0; i< msgs.length(); i++) {
+            messages.add(builder.buildMessage(msgs.getJSONObject(i)));
+        }
+        return messages;
+    }
+
+    @Override
+    public List<IMessage> getRecentMentions() {
+        return getRecentMentions(null);
+    }
+
     @Override
     public IApplication getApplication(String id) {
         try {
-            JSONObject json = new Requester(getIdentity(), HttpPath.Application.GET_APPLICATION)
+            JSONObject json = new Requester(identity, HttpPath.Application.GET_APPLICATION)
                     .request(id).getAsJSONObject();
             return new ObjectBuilder(this).buildApplication(json);
         } catch (HttpErrorException ex) {
@@ -176,7 +197,7 @@ public final class Client extends DiscordObject implements IClient {
 
     @Override
     public List<IApplication> getApplications() {
-        JSONArray apps = new Requester(getIdentity(), HttpPath.Application.GET_APPLICATIONS)
+        JSONArray apps = new Requester(identity, HttpPath.Application.GET_APPLICATIONS)
                 .request().getAsJSONArray();
         List<IApplication> applications = new ArrayList<>();
         ObjectBuilder builder = new ObjectBuilder(this);
@@ -189,7 +210,7 @@ public final class Client extends DiscordObject implements IClient {
     @Override
     public IAuthApplication getAuthApplication(String id) {
         try {
-            JSONObject json = new Requester(getIdentity(), HttpPath.Application.GET_AUTHORIZED_APPLICATION)
+            JSONObject json = new Requester(identity, HttpPath.Application.GET_AUTHORIZED_APPLICATION)
                     .request(id).getAsJSONObject();
             return new ObjectBuilder(this).buildAuthApplication(json);
         } catch (HttpErrorException ex) {

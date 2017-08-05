@@ -3,9 +3,11 @@ package org.alienideology.jcord.internal.object.channel;
 import org.alienideology.jcord.handle.channel.IGroup;
 import org.alienideology.jcord.handle.client.IClient;
 import org.alienideology.jcord.handle.client.call.ICall;
+import org.alienideology.jcord.handle.managers.IGroupManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.client.Client;
 import org.alienideology.jcord.internal.object.client.call.Call;
+import org.alienideology.jcord.internal.object.managers.GroupManager;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ public final class Group extends MessageChannel implements IGroup {
     private List<IUser> recipients;
 
     private Call currentCall;
+    private GroupManager manager;
 
     public Group(Client client, String id, String name, String icon, String ownerId, List<IUser> recipients) {
         super(client.getIdentity(), id, Type.GROUP_DM);
@@ -31,11 +34,17 @@ public final class Group extends MessageChannel implements IGroup {
         this.icon = icon;
         this.ownerId = ownerId;
         this.recipients = recipients;
+        this.manager = new GroupManager(this);
     }
 
     @Override
     public IClient getClient() {
         return client;
+    }
+
+    @Override
+    public IGroupManager getManager() {
+        return manager;
     }
 
     @Override

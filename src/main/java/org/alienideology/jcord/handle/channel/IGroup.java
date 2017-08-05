@@ -1,12 +1,15 @@
 package org.alienideology.jcord.handle.channel;
 
 import org.alienideology.jcord.handle.client.IClientObject;
+import org.alienideology.jcord.handle.client.relation.IFriend;
+import org.alienideology.jcord.handle.managers.IGroupManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -16,6 +19,20 @@ import java.util.stream.Collectors;
  * @author AlienIdeology
  */
 public interface IGroup extends IClientObject, IMessageChannel, ICallChannel {
+
+    /**
+     * Leave this group.
+     */
+    default void leave() {
+        getClient().getManager().leaveGroup(this);
+    }
+
+    /**
+     * Get the manager that manages this group.
+     *
+     * @return The manager.
+     */
+    IGroupManager getManager();
 
     /**
      * Get the name of this group.
@@ -79,5 +96,17 @@ public interface IGroup extends IClientObject, IMessageChannel, ICallChannel {
      * @return A list of recipients.
      */
     List<IUser> getRecipients();
+
+    /**
+     * Get a list of recipients that are friends with the client.
+     *
+     * @return A list of friends.
+     */
+    default List<IFriend> getFriends() {
+        return getRecipients().stream()
+                .map(r -> getClient().getFriend(r.getId()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
 
 }
