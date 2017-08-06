@@ -1,6 +1,7 @@
 package org.alienideology.jcord.event.handler;
 
 import org.alienideology.jcord.event.user.update.UserAvatarUpdateEvent;
+import org.alienideology.jcord.event.user.update.UserDiscriminatorUpdateEvent;
 import org.alienideology.jcord.event.user.update.UserNameUpdateEvent;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.user.User;
@@ -20,19 +21,30 @@ public class UserUpdateEventHandler extends EventHandler {
 
     @Override
     public void dispatchEvent(JSONObject json, int sequence) {
-        User oldUser = (User) identity.getUser(json.getString("id"));
-        if (oldUser == null) {
+        User user = (User) identity.getUser(json.getString("id"));
+        if (user == null) {
             logger.log(LogLevel.FETAL, "[UNKNOWN USER] [PRESENCE_UPDATE_EVENT]");
             return;
         }
-        User newUser = builder.buildUser(json);
-        identity.updateUser(newUser);
 
-        if (!Objects.equals(oldUser.getName(), newUser.getName())) {
-            dispatchEvent(new UserNameUpdateEvent(identity, sequence, newUser, oldUser));
+        String name = json.getString("username");
+        String discrim = json.getString("discriminator");
+        String avatar = json.has("avatar") && !json.isNull("avatar") ? json.getString("avatar") : null;
+
+        if (!Objects.equals(user.getName(), name)) {
+            String oldName = user.getName();
+            user.setName(name);
+            dispatchEvent(new UserNameUpdateEvent(identity, sequence, user, oldName));
+
+            String oldDiscrim = user.getDiscriminator();
+            user.setDiscriminator(discrim);
+
+            dispatchEvent(new UserDiscriminatorUpdateEvent(identity, sequence, user, discrim));
         }
-        if (!Objects.equals(oldUser.getAvatarUrl(), newUser.getAvatarUrl())) {
-            dispatchEvent(new UserAvatarUpdateEvent(identity, sequence, newUser, oldUser));
+        if (!Objects.equals(user.getAvatarUrl(), avatar)) {
+            String oldAvatar = user.getName();
+            user.setAvatar(avatar);
+            dispatchEvent(new UserAvatarUpdateEvent(identity, sequence, user, oldAvatar));
         }
     }
 

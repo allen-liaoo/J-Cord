@@ -1,28 +1,20 @@
 package org.alienideology.jcord.event.user;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.user.IPresence;
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.user.Presence;
-import org.alienideology.jcord.internal.object.user.User;
+import org.alienideology.jcord.handle.user.IUser;
 
 /**
  * @author AlienIdeology
  */
 public class PresenceUpdateEvent extends UserEvent {
 
-    protected Presence oldPresence;
-
-    public PresenceUpdateEvent(IdentityImpl identity, int sequence, User user, Presence oldPresence) {
+    public PresenceUpdateEvent(Identity identity, int sequence, IUser user) {
         super(identity, sequence, user);
-        this.oldPresence = oldPresence;
     }
 
-    public IPresence getNewPresence() {
+    public IPresence getPresence() {
         return user.getPresence();
-    }
-
-    public IPresence getOldPresence() {
-        return oldPresence;
     }
 
 }

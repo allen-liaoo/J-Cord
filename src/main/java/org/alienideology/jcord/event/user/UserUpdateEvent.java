@@ -1,30 +1,23 @@
 package org.alienideology.jcord.event.user;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.user.User;
+import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.user.IUser;
 
 /**
  * @author AlienIdeology
  */
 public class UserUpdateEvent extends UserEvent {
 
-    protected User oldUser;
-
-    public UserUpdateEvent(IdentityImpl identity, int sequence, User user, User oldUser) {
+    public UserUpdateEvent(Identity identity, int sequence, IUser user) {
         super(identity, sequence, user);
-        this.oldUser = oldUser;
     }
 
     /**
      * @return The new, updated user.
      */
     @Override
-    public User getUser() {
+    public IUser getUser() {
         return super.getUser();
-    }
-
-    public User getOldUser() {
-        return oldUser;
     }
 
 }

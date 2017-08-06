@@ -2,7 +2,10 @@ package org.alienideology.jcord.event.handler;
 
 import org.alienideology.jcord.event.user.update.GameUpdateEvent;
 import org.alienideology.jcord.event.user.update.OnlineStatusUpdateEvent;
+import org.alienideology.jcord.handle.user.IGame;
+import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.object.user.Game;
 import org.alienideology.jcord.internal.object.user.Presence;
 import org.alienideology.jcord.internal.object.user.User;
 import org.alienideology.jcord.util.log.LogLevel;
@@ -26,15 +29,23 @@ public class PresenceUpdateEventHandler extends EventHandler {
             logger.log(LogLevel.FETAL, "[UNKNOWN USER] [PRESENCE_UPDATE_EVENT]");
             return;
         }
-        Presence oldPresence = (Presence) user.getPresence();
-        builder.buildPresence(json, user); // Presence are automatically set to the user
-        Presence newPresence = (Presence) user.getPresence();
+        Presence presence = (Presence) user.getPresence();
+        OnlineStatus status = OnlineStatus.getByKey(json.getString("status"));
+        Game game = null;
 
-        if (!Objects.equals(newPresence.getStatus(), oldPresence.getStatus())) {
-            dispatchEvent(new OnlineStatusUpdateEvent(identity, sequence, user, oldPresence));
+        if (json.has("game") && !json.isNull("game")) {
+            game = builder.buildGame(json.getJSONObject("game"));
         }
-        if (!Objects.equals(newPresence.getGame(), oldPresence.getGame())) {
-            dispatchEvent(new GameUpdateEvent(identity, sequence, user, oldPresence));
+
+        if (!Objects.equals(presence.getStatus(), status)) {
+            OnlineStatus oldStatus = presence.getStatus();
+            presence.setStatus(status);
+            dispatchEvent(new OnlineStatusUpdateEvent(identity, sequence, user, oldStatus));
+        }
+        if (!Objects.equals(presence.getGame(), game)) {
+            IGame oldGame = presence.getGame();
+            presence.setGame(game);
+            dispatchEvent(new GameUpdateEvent(identity, sequence, user, oldGame));
         }
     }
 

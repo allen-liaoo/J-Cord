@@ -9,8 +9,11 @@ import org.alienideology.jcord.internal.object.user.User;
  */
 public class UserAvatarUpdateEvent extends UserUpdateEvent {
 
-    public UserAvatarUpdateEvent(IdentityImpl identity, int sequence, User user, User oldUser) {
-        super(identity, sequence, user, oldUser);
+    private final String oldAvatar;
+
+    public UserAvatarUpdateEvent(IdentityImpl identity, int sequence, User user, String oldAvatar) {
+        super(identity, sequence, user);
+        this.oldAvatar = oldAvatar;
     }
 
     public String getNewAvatar() {
@@ -18,7 +21,7 @@ public class UserAvatarUpdateEvent extends UserUpdateEvent {
     }
 
     public String getOldAvatar() {
-        return oldUser.getAvatarUrl();
+        return oldAvatar;
     }
 
 }

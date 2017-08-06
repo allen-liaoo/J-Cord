@@ -621,11 +621,7 @@ public final class ObjectBuilder {
         Game game = null;
 
         if (json.has("game") && !json.isNull("game")) {
-            JSONObject gameJson = json.getJSONObject("game");
-            String name = gameJson.isNull("name") ? null : gameJson.getString("name");
-            String url = gameJson.has("type") && gameJson.getInt("type") == IGame.Type.STREAMING.key ?
-                    gameJson.getString("url") : null;
-            game = new Game(identity, name, url);
+            game = buildGame(json.getJSONObject("game"));
             if (game.isStreaming()) status = OnlineStatus.STREAMING;
         }
 
@@ -638,6 +634,14 @@ public final class ObjectBuilder {
                 .setSince(since);
         user.setPresence(presence);
         return presence;
+    }
+
+    public Game buildGame(JSONObject json) {
+        JSONObject gameJson = json.getJSONObject("game");
+        String name = gameJson.isNull("name") ? null : gameJson.getString("name");
+        String url = gameJson.has("type") && gameJson.getInt("type") == IGame.Type.STREAMING.key ?
+                gameJson.getString("url") : null;
+        return new Game(identity, name, url);
     }
 
     public VoiceState buildVoiceState(JSONObject json) {

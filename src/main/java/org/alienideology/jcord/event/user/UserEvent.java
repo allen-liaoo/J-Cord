@@ -1,22 +1,23 @@
 package org.alienideology.jcord.event.user;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.Event;
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.user.User;
+import org.alienideology.jcord.handle.user.IUser;
 
 /**
  * @author AlienIdeology
  */
 public class UserEvent extends Event {
 
-    protected User user;
+    protected IUser user;
 
-    public UserEvent(IdentityImpl identity, int sequence, User user) {
+    public UserEvent(Identity identity, int sequence, IUser user) {
         super(identity, sequence);
         this.user = user;
     }
 
-    public User getUser() {
+    public IUser getUser() {
         return user;
     }
+
 }

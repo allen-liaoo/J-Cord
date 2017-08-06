@@ -9,8 +9,11 @@ import org.alienideology.jcord.internal.object.user.User;
  */
 public class UserNameUpdateEvent extends UserUpdateEvent {
 
-    public UserNameUpdateEvent(IdentityImpl identity, int sequence, User user, User oldUser) {
-        super(identity, sequence, user, oldUser);
+    private final String oldName;
+
+    public UserNameUpdateEvent(IdentityImpl identity, int sequence, User user, String oldName) {
+        super(identity, sequence, user);
+        this.oldName = oldName;
     }
 
     public String getNewName() {
@@ -18,15 +21,7 @@ public class UserNameUpdateEvent extends UserUpdateEvent {
     }
 
     public String getOldName() {
-        return oldUser.getName();
-    }
-
-    public String getNewDiscriminator() {
-        return user.getDiscriminator();
-    }
-
-    public String getOldDiscriminator() {
-        return oldUser.getDiscriminator();
+        return oldName;
     }
 
 }
