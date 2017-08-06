@@ -1,11 +1,11 @@
 package org.alienideology.jcord.internal.object.user;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.user.IPresence;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.rest.HttpPath;
@@ -17,6 +17,7 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
+// TODO: SelfUser for email and isVerified?
 public class User extends DiscordObject implements IUser {
 
     protected final String id;
@@ -28,24 +29,16 @@ public class User extends DiscordObject implements IUser {
     private String avatar;
     private String email;
 
-    private final boolean isBot;
-    private final boolean isWebHook;
+    private boolean isBot;
+    private boolean isWebHook;
     private boolean isVerified;
-    private boolean MFAEnabled;
+    private boolean isMFAEnabled;
 
-    public User (IdentityImpl identity, String id, String name, String discriminator, String avatar, String email,
-                 boolean isBot, boolean isWebHook, boolean isVerified, boolean MFAEnabled) {
+    public User (Identity identity, String id) {
         super(identity);
         this.id = id;
-        this.name = name;
-        this.discriminator = discriminator;
-        this.avatar = avatar;
-        this.email = email;
-        this.isBot = isBot;
-        this.isWebHook = isWebHook;
-        this.isVerified = isVerified;
-        this.MFAEnabled = MFAEnabled;
-        this.presence = new Presence(identity, this, null, OnlineStatus.OFFLINE, null);
+        this.presence = new Presence(identity, this)
+                .setStatus(OnlineStatus.ONLINE);
     }
 
     @Override
@@ -115,12 +108,57 @@ public class User extends DiscordObject implements IUser {
 
     @Override
     public boolean isMFAEnabled() {
-        return MFAEnabled;
+        return isMFAEnabled;
     }
 
     @Override
     public String getId() {
         return id;
+    }
+
+    public User setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public User setDiscriminator(String discriminator) {
+        this.discriminator = discriminator;
+        return this;
+    }
+
+    public User setAvatar(String avatar) {
+        this.avatar = avatar;
+        return this;
+    }
+
+    public User setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public User setBot(boolean bot) {
+        isBot = bot;
+        return this;
+    }
+
+    public User setWebHook(boolean webHook) {
+        isWebHook = webHook;
+        return this;
+    }
+
+    public User setVerified(boolean verified) {
+        isVerified = verified;
+        return this;
+    }
+
+    public User setMFAEnabled(boolean MFAEnabled) {
+        this.isMFAEnabled = MFAEnabled;
+        return this;
+    }
+
+    public User setPresence(Presence presence) {
+        this.presence = presence;
+        return this;
     }
 
     @Override
@@ -145,7 +183,4 @@ public class User extends DiscordObject implements IUser {
                 '}';
     }
 
-    public void setPresence(Presence presence) {
-        this.presence = presence;
-    }
 }

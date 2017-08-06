@@ -39,7 +39,8 @@ public final class ChannelBuilder implements Buildable<ChannelBuilder, IGuildCha
      * @return The text channel built.
      */
     public ITextChannel buildTextChannel() {
-        return new TextChannel(null, null, null, name, 0, null)
+        return new TextChannel(null, null, null)
+                .setName(name)
                 .setPermOverwrites(overwrites);
     }
 
@@ -49,7 +50,9 @@ public final class ChannelBuilder implements Buildable<ChannelBuilder, IGuildCha
      * @return The voice channel built.
      */
     public IVoiceChannel buildVoiceChannel() {
-        return new VoiceChannel(null, null, null, name, 0, bitrate, userLimit)
+        return new VoiceChannel(null, null, null)
+                .setBitrate(bitrate)
+                .setUserLimit(userLimit)
                 .setPermOverwrites(overwrites);
     }
 

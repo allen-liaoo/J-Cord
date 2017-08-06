@@ -1,17 +1,19 @@
 package org.alienideology.jcord.event.channel.guild.text.update;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.channel.guild.text.TextChannelUpdateEvent;
-import org.alienideology.jcord.handle.channel.IGuildChannel;
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.channel.Channel;
+import org.alienideology.jcord.handle.channel.IChannel;
 
 /**
  * @author AlienIdeology
  */
 public class TextChannelTopicUpdateEvent extends TextChannelUpdateEvent {
 
-    public TextChannelTopicUpdateEvent(IdentityImpl identity, int sequence, Channel channel, IGuildChannel oldChannel) {
-        super(identity, sequence, channel, oldChannel);
+    private final String oldTopic;
+
+    public TextChannelTopicUpdateEvent(Identity identity, int sequence, IChannel channel, String oldTopic) {
+        super(identity, sequence, channel);
+        this.oldTopic = oldTopic;
     }
 
     public String getNewTopic() {
@@ -19,7 +21,7 @@ public class TextChannelTopicUpdateEvent extends TextChannelUpdateEvent {
     }
 
     public String getOldTopic() {
-        return oldChannel.getTopic();
+        return oldTopic;
     }
 
 }

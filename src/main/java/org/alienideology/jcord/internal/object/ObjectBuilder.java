@@ -65,6 +65,8 @@ import java.util.Map;
  *
  * @author AlienIdeology
  */
+// TODO: Large Constructor -> Setter List: Guild, Member, Role, Message, Guild Emoji, Reaction
+// TODO: Changed to setter, require changing update events: TextChannel, VoiceChannel, User
 public final class ObjectBuilder {
 
     private IdentityImpl identity;
@@ -199,7 +201,7 @@ public final class ObjectBuilder {
     public IGuildChannel buildGuildChannel (IGuild guild, JSONObject json) {
         handleBuildError(json);
 
-        String guild_id = json.has("guild_id") ? json.getString("guild_id") : guild.getId();
+        guild = json.has("guild_id") ? identity.getGuild(json.getString("guild_id")) : guild;
         String id = json.getString("id");
         String name = json.getString("name");
         int position = json.getInt("position");
@@ -208,23 +210,24 @@ public final class ObjectBuilder {
         /* Build PermOverwrite Objects */
         List<PermOverwrite> overwrites = new ArrayList<>();
         JSONArray perms = json.getJSONArray("permission_overwrites");
-
         for (int i = 0; i < perms.length(); i++) {
-            JSONObject over = perms.getJSONObject(i);
-            String typeId = over.getString("id");
-            long allow = over.getLong("allow");
-            long deny = over.getLong("deny");
-            overwrites.add(new PermOverwrite(identity, guild_id, typeId, allow, deny));
+            overwrites.add(buildPermOverwrite(guild, perms.getJSONObject(i)));
         }
 
         if (type.equals(IChannel.Type.GUILD_TEXT)) {
             String topic = json.isNull("topic") ? null : json.getString("topic");
-            return new TextChannel(identity, guild_id, id, name, position, topic)
+            return new TextChannel(identity, guild, id)
+                    .setName(name)
+                    .setPosition(position)
+                    .setTopic(topic)
                     .setPermOverwrites(overwrites);
         } else {
             int bitrate = json.getInt("bitrate");
-            int user_limit = json.getInt("user_limit");
-            return new VoiceChannel(identity, guild_id, id, name, position, bitrate, user_limit)
+            int userLimit = json.getInt("user_limit");
+            return new VoiceChannel(identity, guild, id)
+                    .setName(name)
+                    .setBitrate(bitrate)
+                    .setUserLimit(userLimit)
                     .setPermOverwrites(overwrites);
         }
     }
@@ -243,6 +246,13 @@ public final class ObjectBuilder {
             throw new IllegalArgumentException("Invalid ID!");
         }
         return buildGuildChannel(gChannel);
+    }
+
+    public PermOverwrite buildPermOverwrite(IGuild guild, JSONObject json) {
+        String typeId = json.getString("id");
+        long allow = json.getLong("allow");
+        long deny = json.getLong("deny");
+        return  new PermOverwrite(identity, guild, typeId, allow, deny);
     }
 
     public PrivateChannel buildPrivateChannel (JSONObject json) {
@@ -276,9 +286,18 @@ public final class ObjectBuilder {
         boolean isBot = json.has("bot") && json.getBoolean("bot");
         boolean isWebHook = json.has("webhook_id");
         boolean isVerified = json.has("verified") && json.getBoolean("verified");
-        boolean MFAEnabled = json.has("mfa_enabled") && json.getBoolean("mfa_enabled");
+        boolean isMFAEnabled = json.has("mfa_enabled") && json.getBoolean("mfa_enabled");
 
-        User user = new User(identity, id, name, discriminator, avatar, email, isBot, isWebHook, isVerified, MFAEnabled);
+        User user = new User(identity, id)
+                .setName(name)
+                .setDiscriminator(discriminator)
+                .setAvatar(avatar)
+                .setEmail(email)
+                .setBot(isBot)
+                .setWebHook(isWebHook)
+                .setVerified(isVerified)
+                .setMFAEnabled(isMFAEnabled);
+
         identity.addUser(user);
         return user;
     }
@@ -613,7 +632,10 @@ public final class ObjectBuilder {
         // Since
         Long since = json.has("since") || !json.isNull("since") ? json.getLong("since") : null;
 
-        Presence presence = new Presence(identity, user, game, status, since);
+        Presence presence = new Presence(identity, user)
+                .setStatus(status)
+                .setGame(game)
+                .setSince(since);
         user.setPresence(presence);
         return presence;
     }

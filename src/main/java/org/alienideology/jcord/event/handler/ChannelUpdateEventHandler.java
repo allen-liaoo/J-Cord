@@ -10,14 +10,15 @@ import org.alienideology.jcord.event.channel.guild.text.update.TextChannelTopicU
 import org.alienideology.jcord.event.channel.guild.voice.update.*;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.Group;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
-import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.util.log.LogLevel;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -42,68 +43,89 @@ public class ChannelUpdateEventHandler extends EventHandler {
             return;
         }
 
-        IGuildChannel oldChannel = identity.getGuildChannel(json.getString("id"));
-        Guild guild = (Guild) oldChannel.getGuild();
-        IGuildChannel newChannel = builder.buildGuildChannel(json);
+        IGuildChannel channel = identity.getGuildChannel(json.getString("id"));
+        if (channel == null) {
+            logger.log(LogLevel.FETAL, "[UNKNOWN CHANNEL][CHANNEL_UPDATE_EVENT] ID: " + json.getString("id"));
+            return;
+        }
+        IGuild guild = channel.getGuild();
+
+        String name = json.getString("name");
+        int position = json.getInt("position");
 
         // PermOverwrites
-        List<PermOverwrite> oldPOW = new ArrayList<>();
-        oldPOW.addAll(oldChannel.getPermOverwrites());
-        List<PermOverwrite> newPOW = new ArrayList<>();
-        newPOW.addAll(newChannel.getPermOverwrites());
+        List<PermOverwrite> oldPerms = new ArrayList<>(channel.getPermOverwrites());
+        List<PermOverwrite> newPerms = new ArrayList<>();
+        JSONArray perms = json.getJSONArray("permission_overwrites");
+        for (int i = 0; i < perms.length(); i++) {
+            newPerms.add(builder.buildPermOverwrite(guild, perms.getJSONObject(i)));
+        }
 
-        List<PermOverwrite> overwrites = getChangedPermOverwrites(oldPOW, newPOW);
+        List<PermOverwrite> changed = getChangedPermOverwrites(oldPerms, newPerms);
 
         if (type.equals(IChannel.Type.GUILD_TEXT)) {
-            // Update the channel instance
-            guild.removeTextChannel(oldChannel.getId());
-            guild.addGuildChannel(newChannel);
 
-            TextChannel oChannel = (TextChannel) oldChannel;
-            TextChannel nChannel = (TextChannel) newChannel;
+            TextChannel tc = (TextChannel) channel;
 
-            if (!Objects.equals(oChannel.getName(), nChannel.getName())) {
-                dispatchEvent(new TextChannelNameUpdateEvent(identity, sequence, nChannel, oChannel, null));
+            String topic = json.isNull("topic") ? null : json.getString("topic");
+
+            if (!Objects.equals(tc.getName(), name)) {
+                String oldName = tc.getName();
+                tc.setName(name);
+                dispatchEvent(new TextChannelNameUpdateEvent(identity, sequence, tc, oldName));
             }
 
-            if (!Objects.equals(oChannel.getPosition(), nChannel.getPosition())) {
-                dispatchEvent(new TextChannelPositionUpdateEvent(identity, sequence, nChannel, oChannel));
+            if (!Objects.equals(tc.getPosition(), position)) {
+                int oldPosition = tc.getPosition();
+                tc.setPosition(position);
+                dispatchEvent(new TextChannelPositionUpdateEvent(identity, sequence, tc, oldPosition));
             }
 
-            if (overwrites.size() > 0) {
-                dispatchEvent(new TextChannelPermissionsUpdateEvent(identity, sequence, nChannel, oChannel, overwrites));
+            if (changed.size() > 0) {
+                tc.setPermOverwrites(newPerms);
+                dispatchEvent(new TextChannelPermissionsUpdateEvent(identity, sequence, tc, changed, oldPerms));
             }
 
-            if (!Objects.equals(oChannel.getTopic(), nChannel.getTopic())) {
-                dispatchEvent(new TextChannelTopicUpdateEvent(identity, sequence, nChannel, oChannel));
+            if (!Objects.equals(tc.getTopic(), topic)) {
+                String oldTopic = tc.getTopic();
+                tc.setTopic(topic);
+                dispatchEvent(new TextChannelTopicUpdateEvent(identity, sequence, tc, oldTopic));
             }
 
         } else if (type.equals(IChannel.Type.GUILD_VOICE)) {
-            // Update the channel instance
-            guild.removeVoiceChannel(oldChannel.getId());
-            guild.addGuildChannel(newChannel);
 
-            VoiceChannel oChannel = (VoiceChannel) oldChannel;
-            VoiceChannel nChannel = (VoiceChannel) newChannel;
+            VoiceChannel vc = (VoiceChannel) channel;
 
-            if (!Objects.equals(oChannel.getName(), nChannel.getName())) {
-                dispatchEvent(new VoiceChannelNameUpdateEvent(identity, sequence, nChannel, oChannel));
+            int bitrate = json.getInt("bitrate");
+            int userLimit = json.getInt("user_limit");
+
+            if (!Objects.equals(vc.getName(), name)) {
+                String oldName = vc.getName();
+                vc.setName(name);
+                dispatchEvent(new VoiceChannelNameUpdateEvent(identity, sequence, vc, oldName));
             }
 
-            if (!Objects.equals(oChannel.getPosition(), nChannel.getPosition())) {
-                dispatchEvent(new VoiceChannelPositionUpdateEvent(identity, sequence, nChannel, oChannel));
+            if (!Objects.equals(vc.getPosition(), position)) {
+                int oldPosition = vc.getPosition();
+                vc.setPosition(position);
+                dispatchEvent(new VoiceChannelPositionUpdateEvent(identity, sequence, vc, oldPosition));
             }
 
-            if (overwrites.size() > 0) {
-                dispatchEvent(new VoiceChannelPermissionsUpdateEvent(identity, sequence, nChannel, oChannel, overwrites));
+            if (changed.size() > 0) {
+                vc.setPermOverwrites(newPerms);
+                dispatchEvent(new VoiceChannelPermissionsUpdateEvent(identity, sequence, vc, changed, oldPerms));
             }
 
-            if (!Objects.equals(oChannel.getBitrate(), nChannel.getBitrate())) {
-                dispatchEvent(new VoiceChannelBitrateUpdateEvent(identity, sequence, nChannel, oChannel));
+            if (!Objects.equals(vc.getBitrate(), bitrate)) {
+                int oldBitrate = vc.getBitrate();
+                vc.setBitrate(bitrate);
+                dispatchEvent(new VoiceChannelBitrateUpdateEvent(identity, sequence, vc, oldBitrate));
             }
 
-            if (!Objects.equals(oChannel.getUserLimit(), nChannel.getUserLimit())) {
-                dispatchEvent(new VoiceChannelUserLimitUpdateEvent(identity, sequence, nChannel, oChannel));
+            if (!Objects.equals(vc.getUserLimit(), userLimit)) {
+                int oldUserLimit = vc.getUserLimit();
+                vc.setUserLimit(oldUserLimit);
+                dispatchEvent(new VoiceChannelUserLimitUpdateEvent(identity, sequence, vc, oldUserLimit));
             }
         } else {
             logger.log(LogLevel.FETAL, "[UNEXPECTED CHANNEL TYPE] [CHANNEL_UPDATE_EVENT_HANDLER] Type: " + type.key);

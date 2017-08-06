@@ -14,7 +14,6 @@ import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
-import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.ChannelManager;
 import org.alienideology.jcord.internal.object.managers.InviteManager;
 import org.alienideology.jcord.internal.rest.HttpPath;
@@ -33,7 +32,7 @@ import java.util.Objects;
  */
 public final class TextChannel extends MessageChannel implements ITextChannel, Jsonable {
 
-    private Guild guild;
+    private IGuild guild;
     private ChannelManager channelManager;
     private InviteManager inviteManager;
 
@@ -41,14 +40,11 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
     private int position;
     private String topic;
 
-    private List<PermOverwrite> permOverwrites = new ArrayList<>();
+    private Collection<PermOverwrite> permOverwrites;
 
-    public TextChannel(IdentityImpl identity, String guild_id, String id, String name, int position, String topic) {
+    public TextChannel(IdentityImpl identity, IGuild guild, String id) {
         super(identity, id, IChannel.Type.GUILD_TEXT);
-        this.guild = guild_id == null ? null : (Guild) identity.getGuild(guild_id);
-        this.name = name;
-        this.position = position;
-        this.topic = topic;
+        this.guild = guild;
         this.channelManager = new ChannelManager(this);
         this.inviteManager = new InviteManager(this);
     }
@@ -69,7 +65,11 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
     }
 
     public TextChannel copy() {
-        return new TextChannel(identity, guild.getId(), id, name, position, topic);
+        return new TextChannel(identity, guild, id)
+                .setName(name)
+                .setPosition(position)
+                .setTopic(topic)
+                .setPermOverwrites(permOverwrites);
     }
 
     @Override
@@ -208,6 +208,26 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
         return webhooks;
     }
 
+    public TextChannel setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public TextChannel setPosition(int position) {
+        this.position = position;
+        return this;
+    }
+
+    public TextChannel setTopic(String topic) {
+        this.topic = topic;
+        return this;
+    }
+
+    public TextChannel setPermOverwrites(Collection<PermOverwrite> permOverwrites) {
+        this.permOverwrites = permOverwrites;
+        return this;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof TextChannel) && Objects.equals(this.id, ((TextChannel) obj).getId());
@@ -221,11 +241,6 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
                 ", guild=" + guild +
                 ", name='" + name + '\'' +
                 '}';
-    }
-
-    public TextChannel setPermOverwrites(List<PermOverwrite> permOverwrites) {
-        this.permOverwrites = permOverwrites;
-        return this;
     }
 
 }

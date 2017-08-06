@@ -1,11 +1,10 @@
 package org.alienideology.jcord.event.channel.guild;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.channel.ChannelCreateEvent;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.channel.Channel;
-import org.alienideology.jcord.internal.object.guild.Guild;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,9 +12,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class GuildChannelCreateEvent extends ChannelCreateEvent implements IGuildChannelEvent {
 
-    private Guild guild;
+    private final IGuild guild;
 
-    public GuildChannelCreateEvent(IdentityImpl identity, int sequence, Channel channel, Guild guild) {
+    public GuildChannelCreateEvent(Identity identity, int sequence, IChannel channel, IGuild guild) {
         super(identity, sequence, channel);
         this.guild = guild;
     }

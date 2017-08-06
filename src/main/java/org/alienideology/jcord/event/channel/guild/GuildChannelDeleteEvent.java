@@ -1,12 +1,11 @@
 package org.alienideology.jcord.event.channel.guild;
 
-import org.jetbrains.annotations.NotNull;
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.channel.ChannelDeleteEvent;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.channel.Channel;
-import org.alienideology.jcord.internal.object.guild.Guild;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.OffsetDateTime;
 
@@ -15,9 +14,9 @@ import java.time.OffsetDateTime;
  */
 public class GuildChannelDeleteEvent extends ChannelDeleteEvent implements IGuildChannelEvent {
 
-    private Guild guild;
+    private final IGuild guild;
 
-    public GuildChannelDeleteEvent(IdentityImpl identity, int sequence, Channel channel, OffsetDateTime timeStamp, Guild guild) {
+    public GuildChannelDeleteEvent(Identity identity, int sequence, IChannel channel, OffsetDateTime timeStamp, IGuild guild) {
         super(identity, sequence, channel, timeStamp);
         this.guild = guild;
     }

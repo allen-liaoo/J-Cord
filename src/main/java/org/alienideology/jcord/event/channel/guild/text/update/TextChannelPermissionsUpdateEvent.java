@@ -1,7 +1,6 @@
 package org.alienideology.jcord.event.channel.guild.text.update;
 
 import org.alienideology.jcord.event.channel.guild.text.TextChannelUpdateEvent;
-import org.alienideology.jcord.handle.channel.IGuildChannel;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.Channel;
@@ -14,19 +13,21 @@ import java.util.stream.Collectors;
  */
 public class TextChannelPermissionsUpdateEvent extends TextChannelUpdateEvent {
 
-    private Collection<PermOverwrite> changed;
+    private final Collection<PermOverwrite> changed;
+    private final Collection<PermOverwrite> oldPerms;
 
-    public TextChannelPermissionsUpdateEvent(IdentityImpl identity, int sequence, Channel channel, IGuildChannel oldChannel, Collection<PermOverwrite> changed) {
-        super(identity, sequence, channel, oldChannel);
+    public TextChannelPermissionsUpdateEvent(IdentityImpl identity, int sequence, Channel channel, Collection<PermOverwrite> changed, Collection<PermOverwrite> oldPerms) {
+        super(identity, sequence, channel);
         this.changed = changed;
+        this.oldPerms = oldPerms;
     }
 
     public Collection<PermOverwrite> getNewPermOverwrites() {
         return channel.getPermOverwrites();
     }
 
-    public Collection<PermOverwrite> getOlgPermOverwrites() {
-        return oldChannel.getPermOverwrites();
+    public Collection<PermOverwrite> getOldPermOverwrites() {
+        return oldPerms;
     }
 
     public Collection<PermOverwrite> getChangedPermOverwrites() {

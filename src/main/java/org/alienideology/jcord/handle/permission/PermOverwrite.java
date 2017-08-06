@@ -1,11 +1,11 @@
 package org.alienideology.jcord.handle.permission;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.Jsonable;
-import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.Member;
 import org.alienideology.jcord.internal.object.guild.Role;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +21,7 @@ import java.util.Collection;
 public class PermOverwrite extends DiscordObject implements ISnowFlake, Jsonable {
 
     private String id;
-    private Guild guild;
+    private IGuild guild;
 
     private Type overwriteType;
     private Role role;
@@ -30,9 +30,9 @@ public class PermOverwrite extends DiscordObject implements ISnowFlake, Jsonable
     private long allow;
     private long denied;
 
-    public PermOverwrite(IdentityImpl identity, String guild_id, String id, long allow, long denied) {
+    public PermOverwrite(Identity identity, IGuild guild, String id, long allow, long denied) {
         super(identity);
-        this.guild = (Guild) identity.getGuild(guild_id);
+        this.guild = guild;
         this.id = id;
         setType();
         this.allow = allow;
@@ -65,7 +65,7 @@ public class PermOverwrite extends DiscordObject implements ISnowFlake, Jsonable
      *
      * @return The guild.
      */
-    public Guild getGuild() {
+    public IGuild getGuild() {
         return guild;
     }
 

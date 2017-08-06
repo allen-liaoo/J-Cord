@@ -1,17 +1,19 @@
 package org.alienideology.jcord.event.channel.guild.voice.update;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.channel.guild.voice.VoiceChannelUpdateEvent;
-import org.alienideology.jcord.handle.channel.IGuildChannel;
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.channel.Channel;
+import org.alienideology.jcord.handle.channel.IChannel;
 
 /**
  * @author AlienIdeology
  */
 public class VoiceChannelNameUpdateEvent extends VoiceChannelUpdateEvent {
 
-    public VoiceChannelNameUpdateEvent(IdentityImpl identity, int sequence, Channel channel, IGuildChannel oldChannel) {
-        super(identity, sequence, channel, oldChannel);
+    private final String oldName;
+
+    public VoiceChannelNameUpdateEvent(Identity identity, int sequence, IChannel channel, String oldName) {
+        super(identity, sequence, channel);
+        this.oldName = oldName;
     }
 
     public String getNewName() {
@@ -19,7 +21,7 @@ public class VoiceChannelNameUpdateEvent extends VoiceChannelUpdateEvent {
     }
 
     public String getOldName() {
-        return oldChannel.getName();
+        return oldName;
     }
 
 }

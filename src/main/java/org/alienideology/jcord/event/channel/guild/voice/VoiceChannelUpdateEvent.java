@@ -1,10 +1,9 @@
 package org.alienideology.jcord.event.channel.guild.voice;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.channel.guild.GuildChannelUpdateEvent;
-import org.alienideology.jcord.handle.channel.IGuildChannel;
+import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.channel.Channel;
 
 /**
  * @author AlienIdeology
@@ -12,13 +11,11 @@ import org.alienideology.jcord.internal.object.channel.Channel;
 public class VoiceChannelUpdateEvent extends GuildChannelUpdateEvent implements IVoiceChannelEvent {
 
     // Duplicated fields for subclasses
-    protected IVoiceChannel channel;
-    protected IVoiceChannel oldChannel;
+    protected final IVoiceChannel channel;
 
-    public VoiceChannelUpdateEvent(IdentityImpl identity, int sequence, Channel channel, IGuildChannel oldChannel) {
-        super(identity, sequence, channel, oldChannel);
+    public VoiceChannelUpdateEvent(Identity identity, int sequence, IChannel channel) {
+        super(identity, sequence, channel);
         this.channel = (IVoiceChannel) channel;
-        this.oldChannel = (IVoiceChannel) oldChannel;
     }
 
     /**
@@ -29,10 +26,6 @@ public class VoiceChannelUpdateEvent extends GuildChannelUpdateEvent implements 
     @Override
     public IVoiceChannel getVoiceChannel() {
         return (IVoiceChannel) getGuildChannel();
-    }
-
-    public IVoiceChannel getOldVoiceChannel() {
-        return (IVoiceChannel) getOldChannel();
     }
 
 }

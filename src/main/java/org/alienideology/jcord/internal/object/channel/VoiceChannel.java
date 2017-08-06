@@ -11,14 +11,11 @@ import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.Jsonable;
-import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.ChannelManager;
 import org.alienideology.jcord.internal.object.managers.InviteManager;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -26,24 +23,20 @@ import java.util.Objects;
  */
 public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonable {
 
-    private Guild guild;
+    private IGuild guild;
     private ChannelManager channelManager;
     private InviteManager inviteManager;
 
     private String name;
     private int position;
     private int bitrate;
-    private int user_limit;
+    private int userLimit;
 
-    private List<PermOverwrite> permOverwrites = new ArrayList<>();
+    private Collection<PermOverwrite> permOverwrites;
 
-    public VoiceChannel(IdentityImpl identity, String guild_id, String id, String name, int position, int bitrate, int user_limit) {
+    public VoiceChannel(IdentityImpl identity, IGuild guild, String id) {
         super(identity, id, IChannel.Type.GUILD_VOICE);
-        this.guild = guild_id == null ? null : (Guild) identity.getGuild(guild_id);
-        this.name = name;
-        this.position = position;
-        this.bitrate = bitrate;
-        this.user_limit = user_limit;
+        this.guild = guild;
         this.channelManager = new ChannelManager(this);
         this.inviteManager = new InviteManager(this);
     }
@@ -54,12 +47,17 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonab
                 .put("name", name == null ? "" : name)
                 .put("type", Type.GUILD_VOICE.key)
                 .put("bitrate", bitrate)
-                .put("user_limit", user_limit)
+                .put("user_limit", userLimit)
                 .put("permission_overwrites", permOverwrites);
     }
 
     public VoiceChannel copy() {
-        return new VoiceChannel(identity, guild.getId(), id, name, position, bitrate, user_limit);
+        return new VoiceChannel(identity, guild, id)
+                .setName(name)
+                .setPosition(position)
+                .setBitrate(bitrate)
+                .setUserLimit(userLimit)
+                .setPermOverwrites(permOverwrites);
     }
 
     @Override
@@ -79,7 +77,7 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonab
 
     @Override
     public int getUserLimit() {
-        return user_limit;
+        return userLimit;
     }
 
     @Override
@@ -179,6 +177,31 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonab
         return false;
     }
 
+    public VoiceChannel setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public VoiceChannel setPosition(int position) {
+        this.position = position;
+        return this;
+    }
+
+    public VoiceChannel setBitrate(int bitrate) {
+        this.bitrate = bitrate;
+        return this;
+    }
+
+    public VoiceChannel setUserLimit(int userLimit) {
+        this.userLimit = userLimit;
+        return this;
+    }
+
+    public VoiceChannel setPermOverwrites(Collection<PermOverwrite> permOverwrites) {
+        this.permOverwrites = permOverwrites;
+        return this;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof VoiceChannel) && Objects.equals(this.id, ((VoiceChannel) obj).getId());
@@ -192,11 +215,6 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonab
                 ", guild=" + guild +
                 ", name='" + name + '\'' +
                 '}';
-    }
-
-    public VoiceChannel setPermOverwrites(List<PermOverwrite> permOverwrites) {
-        this.permOverwrites = permOverwrites;
-        return this;
     }
 
 }

@@ -1,7 +1,7 @@
 package org.alienideology.jcord.event.channel;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.channel.Channel;
+import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.channel.IChannel;
 
 import java.time.OffsetDateTime;
 
@@ -10,9 +10,9 @@ import java.time.OffsetDateTime;
  */
 public class ChannelDeleteEvent extends ChannelEvent {
 
-    private OffsetDateTime timeStamp;
+    private final OffsetDateTime timeStamp;
 
-    public ChannelDeleteEvent(IdentityImpl identity, int sequence, Channel channel, OffsetDateTime timeStamp) {
+    public ChannelDeleteEvent(Identity identity, int sequence, IChannel channel, OffsetDateTime timeStamp) {
         super(identity, sequence, channel);
         this.timeStamp = timeStamp;
     }
