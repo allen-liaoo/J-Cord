@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.IVoiceState;
 import org.alienideology.jcord.handle.channel.IAudioChannel;
 import org.alienideology.jcord.handle.user.IUser;
@@ -16,7 +17,7 @@ public class VoiceState extends DiscordObject implements IVoiceState {
     protected boolean selfMuted = false;
     protected boolean selfDeafened = false;
 
-    public VoiceState(IdentityImpl identity, IUser user) {
+    public VoiceState(Identity identity, IUser user) {
         super(identity);
         this.user = user;
     }

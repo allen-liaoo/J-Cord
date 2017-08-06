@@ -1,11 +1,11 @@
 package org.alienideology.jcord.internal.object.guild;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IRoleManager;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.managers.RoleManager;
 import org.json.JSONObject;
@@ -21,7 +21,7 @@ import java.util.List;
 public final class Role extends DiscordObject implements IRole, Jsonable {
 
     private final String id;
-    private final Guild guild;
+    private final IGuild guild;
 
     private RoleManager roleManager;
 
@@ -34,17 +34,10 @@ public final class Role extends DiscordObject implements IRole, Jsonable {
     private boolean isSeparateListed;
     private boolean canMention;
 
-    public Role(IdentityImpl identity, Guild guild, String id, String name, Color color, int position, long permissions, boolean isSeparateListed, boolean canMention) {
+    public Role(Identity identity, IGuild guild, String id) {
         super(identity);
         this.guild = guild;
         this.id = id;
-        this.name = name;
-        this.color = color;
-        this.permissionsLong = permissions;
-        initPermissions(permissions);
-        this.position = position;
-        this.isSeparateListed = isSeparateListed;
-        this.canMention = canMention;
         this.roleManager = new RoleManager(this);
     }
 
@@ -158,28 +151,34 @@ public final class Role extends DiscordObject implements IRole, Jsonable {
                 '}';
     }
 
-    public void setName(String name) {
+    public Role setName(String name) {
         this.name = name;
+        return this;
     }
 
-    public void setColor(Color color) {
+    public Role setColor(Color color) {
         this.color = color;
+        return this;
     }
 
-    public void setPosition(int position) {
+    public Role setPosition(int position) {
         this.position = position;
+        return this;
     }
 
-    public void setPermissionsLong(long permissionsLong) {
+    public Role setPermissionsLong(long permissionsLong) {
         this.permissionsLong = permissionsLong;
         initPermissions(permissionsLong);
+        return this;
     }
 
-    public void setSeparateListed(boolean separateListed) {
+    public Role setSeparateListed(boolean separateListed) {
         isSeparateListed = separateListed;
+        return this;
     }
 
-    public void setCanMention(boolean canMention) {
+    public Role setCanMention(boolean canMention) {
         this.canMention = canMention;
+        return this;
     }
 }

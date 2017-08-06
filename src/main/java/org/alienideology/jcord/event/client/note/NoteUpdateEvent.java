@@ -1,29 +1,33 @@
 package org.alienideology.jcord.event.client.note;
 
 import org.alienideology.jcord.event.client.ClientEvent;
-import org.alienideology.jcord.internal.object.client.Client;
-import org.alienideology.jcord.internal.object.client.Note;
+import org.alienideology.jcord.handle.client.IClient;
+import org.alienideology.jcord.handle.client.INote;
 
 /**
  * @author AlienIdeology
  */
 public class NoteUpdateEvent extends ClientEvent {
 
-    private final Note newNote;
-    private final Note oldNote;
+    private final INote newNote;
+    private final String oldContent;
 
-    public NoteUpdateEvent(Client client, int sequence, Note newNote, Note oldNote) {
+    public NoteUpdateEvent(IClient client, int sequence, INote newNote, String oldContent) {
         super(client, sequence);
         this.newNote = newNote;
-        this.oldNote = oldNote;
+        this.oldContent = oldContent;
     }
 
-    public Note getNewNote() {
+    public INote getNote() {
         return newNote;
     }
 
-    public Note getOldNote() {
-        return oldNote;
+    public String getNewContent() {
+        return newNote.getContent();
+    }
+
+    public String getOldContent() {
+        return oldContent;
     }
 
 }

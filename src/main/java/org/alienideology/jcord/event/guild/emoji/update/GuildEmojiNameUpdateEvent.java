@@ -1,5 +1,6 @@
-package org.alienideology.jcord.event.guild.emoji;
+package org.alienideology.jcord.event.guild.emoji.update;
 
+import org.alienideology.jcord.event.guild.emoji.GuildEmojiUpdateEvent;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
@@ -9,8 +10,11 @@ import org.alienideology.jcord.internal.object.guild.GuildEmoji;
  */
 public class GuildEmojiNameUpdateEvent extends GuildEmojiUpdateEvent {
 
-    public GuildEmojiNameUpdateEvent(IdentityImpl identity, Guild guild, int sequence, GuildEmoji emoji, GuildEmoji oldEmoji) {
-        super(identity, guild, sequence, emoji, oldEmoji);
+    private final String oldName;
+
+    public GuildEmojiNameUpdateEvent(IdentityImpl identity, Guild guild, int sequence, GuildEmoji emoji, String oldName) {
+        super(identity, guild, sequence, emoji);
+        this.oldName = oldName;
     }
 
     public String getNewName() {
@@ -18,7 +22,7 @@ public class GuildEmojiNameUpdateEvent extends GuildEmojiUpdateEvent {
     }
 
     public String getOldName() {
-        return oldEmoji.getName();
+        return oldName;
     }
 
 }

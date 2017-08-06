@@ -1,18 +1,23 @@
 package org.alienideology.jcord.event.handler;
 
 import org.alienideology.jcord.event.guild.emoji.GuildEmojiDeleteEvent;
-import org.alienideology.jcord.event.guild.emoji.GuildEmojiNameUpdateEvent;
-import org.alienideology.jcord.event.guild.emoji.GuildEmojiRolesUpdateEvent;
 import org.alienideology.jcord.event.guild.emoji.GuildEmojiUploadEvent;
+import org.alienideology.jcord.event.guild.emoji.update.GuildEmojiNameUpdateEvent;
+import org.alienideology.jcord.event.guild.emoji.update.GuildEmojiRequireColonUpdateEvent;
+import org.alienideology.jcord.event.guild.emoji.update.GuildEmojiRolesUpdateEvent;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
+import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
+import org.alienideology.jcord.internal.object.guild.Role;
 import org.alienideology.jcord.util.log.LogLevel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -33,7 +38,7 @@ public class GuildEmojisUpdateEventHandler extends EventHandler {
             return;
         }
 
-        JSONArray emojis = json.getJSONArray("EMOJIS");
+        JSONArray emojis = json.getJSONArray("emojis");
 
         // Emoji Deleted
         // The Json will be updated, but the deleted guild emoji is still in the cache.
@@ -56,21 +61,37 @@ public class GuildEmojisUpdateEventHandler extends EventHandler {
             JSONObject emojiJson = emojis.getJSONObject(i);
 
             GuildEmoji emoji = (GuildEmoji) guild.getGuildEmoji(emojiJson.getString("id"));
-            GuildEmoji newEmoji = builder.buildEmoji(emojiJson, guild); // Automatically add emoji to guild if appropriate
+
+            String name = emojiJson.getString("name");
+            boolean requireColon = json.has("require_colons") & json.getBoolean("require_colons");
+
+            List<Role> roles = new ArrayList<>();
+            JSONArray rolesJson = json.getJSONArray("roles");
+            for (int j = 0; j < rolesJson.length(); j++) {
+                Role role = (Role) guild.getRole(rolesJson.getString(j));
+                if (role != null) roles.add(role);
+            }
 
             if (emoji == null) { // New emoji, not cached yet
-                dispatchEvent(new GuildEmojiUploadEvent(identity, guild, sequence, newEmoji)); // Emoji get added to the guild automatically
+                dispatchEvent(new GuildEmojiUploadEvent(identity, guild, sequence, builder.buildEmoji(emojiJson, guild))); // Emoji get added to the guild automatically
             } else {
-                guild.removeGuildEmoji(emoji.getId());
-                guild.addGuildEmoji(newEmoji); // Builder ignores the new emoji because the emoji list already contains the old one
-
-                if (!Objects.equals(emoji.getName(), newEmoji.getName())) {
-                    dispatchEvent(new GuildEmojiNameUpdateEvent(identity, guild, sequence, newEmoji, emoji));
+                if (!Objects.equals(emoji.getName(), name)) {
+                    String oldName = emoji.getName();
+                    emoji.setName(name);
+                    dispatchEvent(new GuildEmojiNameUpdateEvent(identity, guild, sequence, emoji, oldName));
                 }
 
                 if (!Objects.equals(emoji.getUsableRoles(), emoji.getUsableRoles())) {
-                    dispatchEvent(new GuildEmojiRolesUpdateEvent(identity, guild, sequence, newEmoji, emoji));
+                    List<IRole> oldRoles = emoji.getUsableRoles();
+                    emoji.setRoles(roles);
+                    dispatchEvent(new GuildEmojiRolesUpdateEvent(identity, guild, sequence, emoji, oldRoles));
                 }
+
+                if (requireColon != emoji.isRequireColon()) {
+                    emoji.setRequireColon(requireColon);
+                    dispatchEvent(new GuildEmojiRequireColonUpdateEvent(identity, guild, sequence, emoji));
+                }
+
             }
         }
 

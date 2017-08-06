@@ -1,23 +1,23 @@
 package org.alienideology.jcord.event.guild.member;
 
+import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.guild.Guild;
-import org.alienideology.jcord.internal.object.guild.Member;
 
 /**
  * @author AlienIdeology
  */
 public class GuildMemberBanEvent extends GuildMemberEvent {
 
-    private Member bannedMember;
+    private IMember bannedMember;
 
-    public GuildMemberBanEvent(IdentityImpl identity, Guild guild, int sequence, Member bannedMember) {
+    public GuildMemberBanEvent(Identity identity, IGuild guild, int sequence, IMember bannedMember) {
         super(identity, guild, sequence, bannedMember);
         this.bannedMember = bannedMember;
     }
 
-    public Member getBannedMember() {
+    public IMember getBannedMember() {
         return bannedMember;
     }
 

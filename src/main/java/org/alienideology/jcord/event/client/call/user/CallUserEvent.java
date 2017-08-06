@@ -1,21 +1,20 @@
 package org.alienideology.jcord.event.client.call.user;
 
 import org.alienideology.jcord.event.client.call.CallEvent;
+import org.alienideology.jcord.handle.client.IClient;
+import org.alienideology.jcord.handle.client.call.ICall;
 import org.alienideology.jcord.handle.client.call.ICallUser;
 import org.alienideology.jcord.handle.client.call.ICallVoiceState;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.object.client.Client;
-import org.alienideology.jcord.internal.object.client.call.Call;
-import org.alienideology.jcord.internal.object.client.call.CallUser;
 
 /**
  * @author AlienIdeology
  */
 public class CallUserEvent extends CallEvent {
 
-    private CallUser callUser;
+    private final ICallUser callUser;
 
-    public CallUserEvent(Client client, int sequence, Call call, CallUser callUser) {
+    public CallUserEvent(IClient client, int sequence, ICall call, ICallUser callUser) {
         super(client, sequence, call);
         this.callUser = callUser;
     }

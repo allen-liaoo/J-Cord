@@ -1,6 +1,6 @@
 package org.alienideology.jcord.event.guild.emoji;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 
@@ -9,14 +9,8 @@ import org.alienideology.jcord.internal.object.guild.GuildEmoji;
  */
 public class GuildEmojiUpdateEvent extends GuildEmojiEvent {
 
-    protected GuildEmoji oldEmoji;
-
-    public GuildEmojiUpdateEvent(IdentityImpl identity, Guild guild, int sequence, GuildEmoji emoji, GuildEmoji oldEmoji) {
+    public GuildEmojiUpdateEvent(Identity identity, Guild guild, int sequence, GuildEmoji emoji) {
         super(identity, guild, sequence, emoji);
-        this.oldEmoji = oldEmoji;
     }
 
-    public GuildEmoji getOldEmoji() {
-        return oldEmoji;
-    }
 }

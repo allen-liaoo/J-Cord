@@ -1,7 +1,8 @@
 package org.alienideology.jcord.event.guild.update;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.event.guild.GuildUpdateEvent;
+import org.alienideology.jcord.handle.guild.IMember;
+import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.Member;
 
@@ -14,7 +15,7 @@ public class GuildOwnerUpdateEvent extends GuildUpdateEvent {
         super(identity, sequence, guild, oldGuild);
     }
 
-    public Member getNewOwner() {
+    public IMember getNewOwner() {
         return guild.getOwner();
     }
 

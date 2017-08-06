@@ -1,12 +1,12 @@
 package org.alienideology.jcord.internal.object.guild;
 
+import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.rest.HttpPath;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,8 +15,8 @@ import java.util.List;
  */
 public final class GuildEmoji extends DiscordObject implements IGuildEmoji {
 
-    private final Guild guild;
     private final String id;
+    private final IGuild guild;
 
     private String name;
     private final String image;
@@ -25,27 +25,28 @@ public final class GuildEmoji extends DiscordObject implements IGuildEmoji {
     private boolean requireColon;
 
     /**
-     * Constructor for global guild EMOJIS
+     * Constructor for global guild emojis
      */
-    public GuildEmoji(IdentityImpl identity, String id, String name) {
-        this(identity, null, id, name, new ArrayList<>(), true);
+    public GuildEmoji(Identity identity, String id, String name) {
+        super(identity);
+        this.guild = null;
+        this.id = id;
+        this.image = String.format(HttpPath.EndPoint.EMOJI_ICON, id);
+        setName(name);
     }
 
     /**
      * Default Constructor
      */
-    public GuildEmoji(IdentityImpl identity, Guild guild, String id, String name, List<Role> roles, boolean requireColon) {
+    public GuildEmoji(Identity identity, IGuild guild, String id) {
         super(identity);
         this.guild = guild;
         this.id = id;
-        this.name = name;
         this.image = String.format(HttpPath.EndPoint.EMOJI_ICON, id);
-        this.roles = roles;
-        this.requireColon = requireColon;
     }
 
     @Override
-    public Guild getGuild() {
+    public IGuild getGuild() {
         return guild;
     }
 
@@ -72,6 +73,21 @@ public final class GuildEmoji extends DiscordObject implements IGuildEmoji {
     @Override
     public String getId() {
         return id;
+    }
+
+    public GuildEmoji setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public GuildEmoji setRoles(List<Role> roles) {
+        this.roles = roles;
+        return this;
+    }
+
+    public GuildEmoji setRequireColon(boolean requireColon) {
+        this.requireColon = requireColon;
+        return this;
     }
 
     @Override

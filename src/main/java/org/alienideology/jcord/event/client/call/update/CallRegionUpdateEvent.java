@@ -2,8 +2,8 @@ package org.alienideology.jcord.event.client.call.update;
 
 import org.alienideology.jcord.event.client.call.CallUpdateEvent;
 import org.alienideology.jcord.handle.Region;
-import org.alienideology.jcord.internal.object.client.Client;
-import org.alienideology.jcord.internal.object.client.call.Call;
+import org.alienideology.jcord.handle.client.IClient;
+import org.alienideology.jcord.handle.client.call.ICall;
 
 /**
  * @author AlienIdeology
@@ -12,7 +12,7 @@ public class CallRegionUpdateEvent extends CallUpdateEvent {
 
     private final Region oldRegion;
 
-    public CallRegionUpdateEvent(Client client, int sequence, Call call, Region oldRegion) {
+    public CallRegionUpdateEvent(IClient client, int sequence, ICall call, Region oldRegion) {
         super(client, sequence, call);
         this.oldRegion = oldRegion;
     }

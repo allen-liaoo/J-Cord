@@ -50,6 +50,7 @@ Event - Whenever a change happens to an entity, an event get fired.
      - GuildEmojiUpdateEvent
        - GuildEmojiNameUpdateEvent
        - GuildEmojiRolesUpdateEvent
+       - GuildEmojiRequireColonUpdateEvent
      - GuildEmojiDeleteEvent
  - ChannelEvent
    - ChannelCreateEvent
@@ -103,6 +104,7 @@ Event - Whenever a change happens to an entity, an event get fired.
    - UserUpdateEvent
      - UserNameUpdateEvent
      - UserAvatarUpdateEVent
+     - UserDiscriminatorUpdateEvent
    - PresenceUpdateEvent
      - OnlineStatusUpdateEvent
      - GameUpdateEvent

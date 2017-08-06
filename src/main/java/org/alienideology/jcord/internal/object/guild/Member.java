@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.guild;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IGuildVoiceState;
 import org.alienideology.jcord.handle.guild.IMember;
@@ -8,10 +9,8 @@ import org.alienideology.jcord.handle.managers.IMemberManager;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.VoiceState;
 import org.alienideology.jcord.internal.object.managers.MemberManager;
-import org.alienideology.jcord.internal.object.user.User;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.OffsetDateTime;
@@ -22,11 +21,11 @@ import java.util.*;
  */
 public final class Member extends DiscordObject implements IMember {
 
-    private final Guild guild;
+    private final IGuild guild;
 
-    private MemberManager memberManager;
+    private final MemberManager memberManager;
 
-    private final User user;
+    private final IUser user;
     private String nickname;
     private OffsetDateTime joinedDate;
     private GuildVoiceState voiceState;
@@ -34,17 +33,11 @@ public final class Member extends DiscordObject implements IMember {
     private List<IRole> roles;
     private List<Permission> permissions;
 
-    public Member(IdentityImpl identity, Guild guild, User user, String nickname, String joinedDate, List<IRole> roles, boolean muted, boolean deafened) {
+    public Member(Identity identity, IGuild guild, IUser user) {
         super(identity);
         this.guild = guild;
         this.user = user;
-        this.nickname = nickname;
-        this.joinedDate = OffsetDateTime.parse(joinedDate);
         this.voiceState = new GuildVoiceState(identity, this, new VoiceState(identity, user));
-        this.voiceState.setMuted(muted);
-        this.voiceState.setDeafened(deafened);
-        this.roles = roles;
-        this.roles.sort((o1, o2) -> -1 * o1.compareTo(o2));
         this.permissions = initPermissions();
         this.memberManager = new MemberManager(this);
     }
@@ -73,16 +66,6 @@ public final class Member extends DiscordObject implements IMember {
                 return true;
         }
         return false;
-    }
-
-    public List<Permission> initPermissions() {
-        Set<Permission> allPerms = new TreeSet<>();
-        for (IRole role : roles) {
-            allPerms.addAll(role.getPermissions());
-        }
-        List<Permission> permissions = new ArrayList<>();
-        permissions.addAll(allPerms);
-        return permissions;
     }
 
     @Override
@@ -167,13 +150,45 @@ public final class Member extends DiscordObject implements IMember {
         return this;
     }
 
-    public void setVoiceState(GuildVoiceState voiceState) {
+    public Member setJoinedDate(String joinedDate) {
+        this.joinedDate = OffsetDateTime.parse(joinedDate);
+        return this;
+    }
+
+    public Member setVoiceState(GuildVoiceState voiceState) {
         this.voiceState = voiceState;
+        return this;
+    }
+
+    public Member setMuted(boolean muted) {
+        this.voiceState.setMuted(muted);
+        return this;
+    }
+
+    public Member setDeafened(boolean deafened) {
+        this.voiceState.setDeafened(deafened);
+        return this;
     }
 
     public Member setRoles(List<IRole> roles) {
         this.roles = roles;
+        this.roles.sort((o1, o2) -> -1 * o1.compareTo(o2));
         return this;
+    }
+
+    public Member setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+        return this;
+    }
+
+    public List<Permission> initPermissions() {
+        Set<Permission> allPerms = new TreeSet<>();
+        for (IRole role : roles) {
+            allPerms.addAll(role.getPermissions());
+        }
+        List<Permission> permissions = new ArrayList<>();
+        permissions.addAll(allPerms);
+        return permissions;
     }
 
     public Member addRole(Role role) {

@@ -1,8 +1,8 @@
 package org.alienideology.jcord.event.guild.emoji;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.internal.object.guild.Guild;
-import org.alienideology.jcord.internal.object.guild.GuildEmoji;
 
 import java.time.OffsetDateTime;
 
@@ -11,9 +11,9 @@ import java.time.OffsetDateTime;
  */
 public class GuildEmojiDeleteEvent extends GuildEmojiEvent {
 
-    private OffsetDateTime timeStamp;
+    private final OffsetDateTime timeStamp;
 
-    public GuildEmojiDeleteEvent(IdentityImpl identity, Guild guild, int sequence, GuildEmoji emoji, OffsetDateTime timeStamp) {
+    public GuildEmojiDeleteEvent(Identity identity, Guild guild, int sequence, IGuildEmoji emoji, OffsetDateTime timeStamp) {
         super(identity, guild, sequence, emoji);
         this.timeStamp = timeStamp;
     }

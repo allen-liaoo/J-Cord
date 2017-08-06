@@ -31,7 +31,7 @@ public enum Permission {
     ATTACH_FILES (0x00008000, "Allows for uploading images and files", ALL),
     READ_MESSAGE_HISTORY (0x00010000, "Allows for reading of message history", ALL),
     MENTION_EVERYONE (0x00020000, "Allows for using the @everyone tag to notify all users in a channel, and the @here tag to notify all online users in a channel", ALL),
-    USE_EXTERNAL_EMOJIS (0x00040000, "Allows the usage of custom EMOJIS from other servers", ALL),
+    USE_EXTERNAL_EMOJIS (0x00040000, "Allows the usage of custom emojis from other servers", ALL),
 
     /* VoiceChannel Permissions */
     CONNECT (0x00100000, "Allows for joining of a voice channel", ALL),
@@ -46,7 +46,7 @@ public enum Permission {
     MANAGE_NICKNAMES (0x08000000, "Allows for modification of other users nicknames", GUILD_ONLY),
     MANAGE_ROLES (0x10000000, "Allows management and editing of roles", GUILD_ONLY),
     MANAGE_WEBHOOKS (0x20000000, "Allows management and editing of webhooks", ALL),
-    MANAGE_EMOJIS (0x40000000, "Allows management and editing of EMOJIS", GUILD_ONLY),
+    MANAGE_EMOJIS (0x40000000, "Allows management and editing of emojis", GUILD_ONLY),
     MANAGE_PERMISSIONS (0x80000000, "Allows management and editing permissions of a role in a specific channel", CHANNEL_ONLY),
 
     UNKNOWN (-1, "Unknown permission", UNKNOWN_LEVEL);

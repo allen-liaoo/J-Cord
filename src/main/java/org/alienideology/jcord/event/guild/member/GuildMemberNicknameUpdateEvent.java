@@ -1,8 +1,8 @@
 package org.alienideology.jcord.event.guild.member;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.guild.Guild;
-import org.alienideology.jcord.internal.object.guild.Member;
+import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
 
 /**
  * @author AlienIdeology
@@ -11,7 +11,7 @@ public class GuildMemberNicknameUpdateEvent extends GuildMemberEvent {
 
     private String oldNickname;
 
-    public GuildMemberNicknameUpdateEvent(IdentityImpl identity, Guild guild, int sequence, Member member, String oldNickname) {
+    public GuildMemberNicknameUpdateEvent(Identity identity, IGuild guild, int sequence, IMember member, String oldNickname) {
         super(identity, guild, sequence, member);
         this.oldNickname = oldNickname;
     }

@@ -1,22 +1,22 @@
 package org.alienideology.jcord.event.client.call;
 
 import org.alienideology.jcord.event.client.ClientEvent;
-import org.alienideology.jcord.internal.object.client.Client;
-import org.alienideology.jcord.internal.object.client.call.Call;
+import org.alienideology.jcord.handle.client.IClient;
+import org.alienideology.jcord.handle.client.call.ICall;
 
 /**
  * @author AlienIdeology
  */
 public class CallEvent extends ClientEvent {
 
-    private final Call call;
+    private final ICall call;
 
-    public CallEvent(Client client, int sequence, Call call) {
+    public CallEvent(IClient client, int sequence, ICall call) {
         super(client, sequence);
         this.call = call;
     }
 
-    public Call getCall() {
+    public ICall getCall() {
         return call;
     }
 

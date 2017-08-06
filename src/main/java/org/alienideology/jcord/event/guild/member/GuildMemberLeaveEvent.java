@@ -1,15 +1,15 @@
 package org.alienideology.jcord.event.guild.member;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.guild.Guild;
-import org.alienideology.jcord.internal.object.guild.Member;
+import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
 
 /**
  * @author AlienIdeology
  */
 public class GuildMemberLeaveEvent extends GuildMemberEvent {
 
-    public GuildMemberLeaveEvent(IdentityImpl identity, Guild guild, int sequence, Member member) {
+    public GuildMemberLeaveEvent(Identity identity, IGuild guild, int sequence, IMember member) {
         super(identity, guild, sequence, member);
     }
 

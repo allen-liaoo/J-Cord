@@ -36,7 +36,12 @@ public final class RoleBuilder implements Buildable<RoleBuilder, IRole> {
      */
     @Override
     public IRole build() {
-        return new Role(null, null, null, name, color,  -1, permissions, isSeparateListed, canMention);
+        return new Role(null, null, null)
+                .setName(name)
+                .setColor(color)
+                .setPermissionsLong(permissions)
+                .setSeparateListed(isSeparateListed)
+                .setCanMention(canMention);
     }
 
     @Override

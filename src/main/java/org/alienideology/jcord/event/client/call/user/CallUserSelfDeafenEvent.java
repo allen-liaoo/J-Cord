@@ -1,15 +1,15 @@
 package org.alienideology.jcord.event.client.call.user;
 
-import org.alienideology.jcord.internal.object.client.Client;
-import org.alienideology.jcord.internal.object.client.call.Call;
-import org.alienideology.jcord.internal.object.client.call.CallUser;
+import org.alienideology.jcord.handle.client.IClient;
+import org.alienideology.jcord.handle.client.call.ICall;
+import org.alienideology.jcord.handle.client.call.ICallUser;
 
 /**
  * @author AlienIdeology
  */
 public class CallUserSelfDeafenEvent extends CallUserEvent {
 
-    public CallUserSelfDeafenEvent(Client client, int sequence, Call call, CallUser callUser) {
+    public CallUserSelfDeafenEvent(IClient client, int sequence, ICall call, ICallUser callUser) {
         super(client, sequence, call, callUser);
     }
 

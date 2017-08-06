@@ -51,7 +51,13 @@ import org.alienideology.jcord.event.gateway.GatewayEvent;
 import org.alienideology.jcord.event.gateway.ReadyEvent;
 import org.alienideology.jcord.event.gateway.ResumedEvent;
 import org.alienideology.jcord.event.guild.*;
-import org.alienideology.jcord.event.guild.emoji.*;
+import org.alienideology.jcord.event.guild.emoji.GuildEmojiDeleteEvent;
+import org.alienideology.jcord.event.guild.emoji.GuildEmojiEvent;
+import org.alienideology.jcord.event.guild.emoji.GuildEmojiUpdateEvent;
+import org.alienideology.jcord.event.guild.emoji.GuildEmojiUploadEvent;
+import org.alienideology.jcord.event.guild.emoji.update.GuildEmojiNameUpdateEvent;
+import org.alienideology.jcord.event.guild.emoji.update.GuildEmojiRequireColonUpdateEvent;
+import org.alienideology.jcord.event.guild.emoji.update.GuildEmojiRolesUpdateEvent;
 import org.alienideology.jcord.event.guild.member.*;
 import org.alienideology.jcord.event.guild.role.GuildRoleCreateEvent;
 import org.alienideology.jcord.event.guild.role.GuildRoleDeleteEvent;
@@ -72,10 +78,7 @@ import org.alienideology.jcord.event.message.guild.IGuildMessageEvent;
 import org.alienideology.jcord.event.user.PresenceUpdateEvent;
 import org.alienideology.jcord.event.user.UserEvent;
 import org.alienideology.jcord.event.user.UserUpdateEvent;
-import org.alienideology.jcord.event.user.update.GameUpdateEvent;
-import org.alienideology.jcord.event.user.update.OnlineStatusUpdateEvent;
-import org.alienideology.jcord.event.user.update.UserAvatarUpdateEvent;
-import org.alienideology.jcord.event.user.update.UserNameUpdateEvent;
+import org.alienideology.jcord.event.user.update.*;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 
 /**
@@ -236,6 +239,8 @@ public class DispatcherAdaptor {
                     onGuildEmojiNameUpdate((GuildEmojiNameUpdateEvent) event);
                 } else if (event instanceof GuildEmojiRolesUpdateEvent) {
                     onGuildEmojiRolesUpdate((GuildEmojiRolesUpdateEvent) event);
+                } else if (event instanceof GuildEmojiRequireColonUpdateEvent) {
+                    onGuildEmojiRequireColonUpdate((GuildEmojiRequireColonUpdateEvent) event);
                 }
             } else if (event instanceof GuildEmojiDeleteEvent) {
                 onGuildEmojiDelete((GuildEmojiDeleteEvent) event);
@@ -351,6 +356,8 @@ public class DispatcherAdaptor {
     public void onGuildEmojiNameUpdate (GuildEmojiNameUpdateEvent event) {}
 
     public void onGuildEmojiRolesUpdate (GuildEmojiRolesUpdateEvent event) {}
+
+    public void onGuildEmojiRequireColonUpdate (GuildEmojiRequireColonUpdateEvent event) {}
 
     public void onGuildEmojiDelete (GuildEmojiDeleteEvent event) {}
 
@@ -549,6 +556,8 @@ public class DispatcherAdaptor {
             onUserUpdate((UserUpdateEvent) event);
             if (event instanceof UserNameUpdateEvent) {
                 onUserNameUpdate((UserNameUpdateEvent) event);
+            } else if (event instanceof UserDiscriminatorUpdateEvent) {
+                onUserDiscriminatorUpdate((UserDiscriminatorUpdateEvent) event);
             } else if (event instanceof UserAvatarUpdateEvent) {
                 onUserAvatarUpdate((UserAvatarUpdateEvent) event);
             }
@@ -567,6 +576,8 @@ public class DispatcherAdaptor {
     public void onUserUpdate (UserUpdateEvent event) {}
 
     public void onUserNameUpdate (UserNameUpdateEvent event) {}
+
+    public void onUserDiscriminatorUpdate (UserDiscriminatorUpdateEvent event) {}
 
     public void onUserAvatarUpdate (UserAvatarUpdateEvent event) {}
 

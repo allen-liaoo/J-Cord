@@ -1,11 +1,11 @@
 package org.alienideology.jcord.internal.object.guild;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.IVoiceState;
 import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IGuildVoiceState;
 import org.alienideology.jcord.handle.guild.IMember;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.VoiceState;
 
 /**
@@ -19,7 +19,7 @@ public final class GuildVoiceState extends VoiceState implements IGuildVoiceStat
     private boolean deafened = false;
     private boolean suppressed = false;
 
-    public GuildVoiceState(IdentityImpl identity, IMember member, IVoiceState state) {
+    public GuildVoiceState(Identity identity, IMember member, IVoiceState state) {
         super(identity, member.getUser());
         this.member = member;
         setChannel(state.getChannel());

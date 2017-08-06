@@ -13,11 +13,10 @@ public final class Note extends ClientObject implements INote {
     private IUser user;
     private String content;
 
-    public Note(Client client, String userId, String content) {
+    public Note(Client client, IUser user) {
         super(client);
-        this.id = userId;
-        this.user = client.getIdentity().getUser(userId);
-        this.content = content;
+        this.id = user.getId();
+        this.user = user;
     }
 
     @Override
@@ -45,6 +44,11 @@ public final class Note extends ClientObject implements INote {
 
         if (user != null ? !user.equals(note.user) : note.user != null) return false;
         return content.equals(note.content);
+    }
+
+    public Note setContent(String content) {
+        this.content = content;
+        return this;
     }
 
     @Override

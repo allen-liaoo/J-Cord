@@ -1,15 +1,15 @@
 package org.alienideology.jcord.event.guild.voice;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.guild.Guild;
-import org.alienideology.jcord.internal.object.guild.Member;
+import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.guild.IGuild;
+import org.alienideology.jcord.handle.guild.IMember;
 
 /**
  * @author AlienIdeology
  */
 public class GuildMemberMuteByServerEvent extends GuildMemberVoiceEvent {
 
-    public GuildMemberMuteByServerEvent(IdentityImpl identity, int sequence, Guild guild, Member member) {
+    public GuildMemberMuteByServerEvent(Identity identity, int sequence, IGuild guild, IMember member) {
         super(identity, sequence, guild, member);
     }
 

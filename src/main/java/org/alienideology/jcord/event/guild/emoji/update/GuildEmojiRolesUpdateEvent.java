@@ -1,5 +1,6 @@
-package org.alienideology.jcord.event.guild.emoji;
+package org.alienideology.jcord.event.guild.emoji.update;
 
+import org.alienideology.jcord.event.guild.emoji.GuildEmojiUpdateEvent;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
@@ -12,8 +13,11 @@ import java.util.List;
  */
 public class GuildEmojiRolesUpdateEvent extends GuildEmojiUpdateEvent {
 
-    public GuildEmojiRolesUpdateEvent(IdentityImpl identity, Guild guild, int sequence, GuildEmoji emoji, GuildEmoji oldEmoji) {
-        super(identity, guild, sequence, emoji, oldEmoji);
+    private final List<IRole> oldRoles;
+
+    public GuildEmojiRolesUpdateEvent(IdentityImpl identity, Guild guild, int sequence, GuildEmoji emoji, List<IRole> oldRoles) {
+        super(identity, guild, sequence, emoji);
+        this.oldRoles = oldRoles;
     }
 
     public List<IRole> getNewUsableRoles() {
@@ -21,7 +25,7 @@ public class GuildEmojiRolesUpdateEvent extends GuildEmojiUpdateEvent {
     }
 
     public List<IRole> getOldUsableRoles() {
-        return oldEmoji.getUsableRoles();
+        return oldRoles;
     }
 
 }

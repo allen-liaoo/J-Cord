@@ -65,8 +65,8 @@ import java.util.Map;
  *
  * @author AlienIdeology
  */
-// TODO: Large Constructor -> Setter List: Guild, Member, Role, Message, Guild Emoji, Reaction
-// TODO: Changed to setter, require changing update events: TextChannel, VoiceChannel, User
+// TODO: Large Constructor -> Setter List: Guild, Member, Message, Reaction
+// TODO: Changed to setter, require changing update events:
 public final class ObjectBuilder {
 
     private IdentityImpl identity;
@@ -83,6 +83,7 @@ public final class ObjectBuilder {
         this.client = (Client) client;
     }
 
+    // Guild
     public Guild buildGuild (JSONObject json) {
         handleBuildError(json);
 
@@ -255,21 +256,101 @@ public final class ObjectBuilder {
         return  new PermOverwrite(identity, guild, typeId, allow, deny);
     }
 
-    public PrivateChannel buildPrivateChannel (JSONObject json) {
+    public Member buildMember (JSONObject json, Guild guild) {
+        handleBuildError(json);
+        String nick = !json.has("nick") || json.isNull("nick") ? null : json.getString("nick");
+        String joined_at = json.getString("joined_at");
+        boolean muted = json.getBoolean("mute");
+        boolean deafened = json.getBoolean("deaf");
+        User user = buildUser(json.getJSONObject("user"));
+
+        List<IRole> memberRoles = new ArrayList<>();
+
+        if (!json.isNull("roles")) {
+            JSONArray roles = json.getJSONArray("roles");
+            for (int i = 0; i < roles.length(); i++) {
+                String roleId = roles.getString(i);
+                Role newRole = (Role) guild.getRole(roleId);
+                if (newRole != null) memberRoles.add(newRole);
+            }
+            memberRoles.add(guild.getEveryoneRole());
+        }
+
+        return new Member(identity, guild, user)
+                .setNickname(nick)
+                .setJoinedDate(joined_at)
+                .setMuted(muted)
+                .setDeafened(deafened)
+                .setRoles(memberRoles);
+    }
+
+    public Member buildMemberById (JSONObject json, String guild_id) {
+        Guild guild = (Guild) identity.getGuild(guild_id);
+        return buildMember(json, guild);
+    }
+
+    public Role buildRole (JSONObject json, Guild guild) {
         handleBuildError(json);
 
         String id = json.getString("id");
-        JSONArray recipients = json.getJSONArray("recipients");
-        if (recipients.length() > 1) {
-            throw new RuntimeException("Cannot build a Group as a Private Channel!");
-        }
-        User recipient = buildUser(recipients.getJSONObject(0));
+        String name = json.getString("name");
+        Color color = json.has("color") ? new Color(json.getInt("color")) : null;
+        int position = json.getInt("position");
+        long permissions = json.getLong("permissions");
+        boolean isSeparateListed = json.has("hoist") && json.getBoolean("hoist");
+        boolean canMention = json.has("mentionable")&& json.getBoolean("mentionable");
 
-        PrivateChannel dm = new PrivateChannel(identity, id, recipient);
-        identity.addPrivateChannel(dm);
-        return dm;
+        return new Role(identity, guild, id)
+                .setName(name)
+                .setColor(color)
+                .setPosition(position)
+                .setPermissionsLong(permissions)
+                .setSeparateListed(isSeparateListed)
+                .setCanMention(canMention);
     }
 
+    public GuildEmoji buildEmoji(JSONObject json, Guild guild) {
+        handleBuildError(json);
+        String id = json.getString("id");
+        String name = json.getString("name");
+        boolean requireColon = json.has("require_colons") & json.getBoolean("require_colons");
+
+        List<Role> roles = new ArrayList<>();
+        JSONArray rolesJson = json.getJSONArray("roles");
+        for (int i = 0; i < rolesJson.length(); i++) {
+            Role role = (Role) guild.getRole(rolesJson.getString(i));
+            if (role != null) roles.add(role);
+        }
+
+        GuildEmoji emoji = new GuildEmoji(identity, guild, id)
+                .setName(name)
+                .setRoles(roles)
+                .setRequireColon(requireColon);
+        guild.addGuildEmoji(emoji);
+        return emoji;
+    }
+
+    public Invite buildInvite(JSONObject json) {
+        String code = json.getString("code");
+        Guild guild = (Guild) identity.getGuild(json.getJSONObject("guild").getString("id"));
+        IGuildChannel channel = identity.getGuildChannel(json.getJSONObject("channel").getString("id"));
+        Invite invite = new Invite(code, guild, channel);
+
+        // If the invites has metadata object
+        if (json.has("inviter")) {
+            User inviter = (User) identity.getUser(json.getJSONObject("inviter").getString("id"));
+            int uses = json.getInt("uses");
+            int maxUses = json.getInt("max_uses");
+            long maxAge = json.getLong("max_age");
+            boolean isTemporary = json.has("temporary") && json.getBoolean("temporary");
+            boolean isRevoked = json.has("revoked") && json.getBoolean("revoked");
+            String timeStamp = json.getString("created_at");
+            invite.setMetaData(inviter, uses, maxUses, maxAge, isTemporary, isRevoked, timeStamp);
+        }
+        return invite;
+    }
+
+    // User
     public User buildUser (JSONObject json) {
         handleBuildError(json);
 
@@ -346,34 +427,68 @@ public final class ObjectBuilder {
         return buildWebhook(wh);
     }
 
-    public Member buildMember (JSONObject json, Guild guild) {
+    public PrivateChannel buildPrivateChannel (JSONObject json) {
         handleBuildError(json);
-        String nick = !json.has("nick") || json.isNull("nick") ? null : json.getString("nick");
-        String joined_at = json.getString("joined_at");
-        boolean muted = json.getBoolean("mute");
-        boolean deafened = json.getBoolean("deaf");
-        User user = buildUser(json.getJSONObject("user"));
 
-        List<IRole> memberRoles = new ArrayList<>();
+        String id = json.getString("id");
+        JSONArray recipients = json.getJSONArray("recipients");
+        if (recipients.length() > 1) {
+            throw new RuntimeException("Cannot build a Group as a Private Channel!");
+        }
+        User recipient = buildUser(recipients.getJSONObject(0));
 
-        if (!json.isNull("roles")) {
-            JSONArray roles = json.getJSONArray("roles");
-            for (int i = 0; i < roles.length(); i++) {
-                String roleId = roles.getString(i);
-                Role newRole = (Role) guild.getRole(roleId);
-                if (newRole != null) memberRoles.add(newRole);
-            }
-            memberRoles.add(guild.getEveryoneRole());
+        PrivateChannel dm = new PrivateChannel(identity, id, recipient);
+        identity.addPrivateChannel(dm);
+        return dm;
+    }
+
+    public Presence buildPresence(JSONObject json, User user) {
+        handleBuildError(json);
+        /* OnlineStatus */
+        OnlineStatus status = OnlineStatus.getByKey(json.getString("status"));
+
+        /* Game */
+        Game game = null;
+
+        if (json.has("game") && !json.isNull("game")) {
+            game = buildGame(json.getJSONObject("game"));
+            if (game.isStreaming()) status = OnlineStatus.STREAMING;
         }
 
-        return new Member(identity, guild, user, nick, joined_at, memberRoles, muted, deafened);
+        // Since
+        Long since = json.has("since") || !json.isNull("since") ? json.getLong("since") : null;
+
+        Presence presence = new Presence(identity, user)
+                .setStatus(status)
+                .setGame(game)
+                .setSince(since);
+        user.setPresence(presence);
+        return presence;
     }
 
-    public Member buildMemberById (JSONObject json, String guild_id) {
-        Guild guild = (Guild) identity.getGuild(guild_id);
-        return buildMember(json, guild);
+    public Game buildGame(JSONObject json) {
+        JSONObject gameJson = json.getJSONObject("game");
+        String name = gameJson.isNull("name") ? null : gameJson.getString("name");
+        String url = gameJson.has("type") && gameJson.getInt("type") == IGame.Type.STREAMING.key ?
+                gameJson.getString("url") : null;
+        return new Game(identity, name, url);
     }
 
+    public VoiceState buildVoiceState(JSONObject json) {
+        IUser user = identity.getUser(json.getString("user_id"));
+        IAudioChannel channel = json.isNull("channel_id") ? null : identity.getAudioChannel(json.getString("channel_id"));
+        String session_id = json.getString("session_id");
+        boolean selfMute = json.getBoolean("self_mute");
+        boolean selfDeaf = json.getBoolean("self_deaf");
+        VoiceState state = new VoiceState(identity, user);
+        state.setChannel(channel);
+        state.setSessionId(session_id);
+        state.setSelfMuted(selfMute);
+        state.setSelfDeafened(selfDeaf);
+        return state;
+    }
+
+    // Message
     public Message buildMessage (JSONObject json) {
         handleBuildError(json);
 
@@ -536,38 +651,6 @@ public final class ObjectBuilder {
         return buildMessage(message);
     }
 
-    public Role buildRole (JSONObject json, Guild guild) {
-        handleBuildError(json);
-
-        String id = json.getString("id");
-        String name = json.getString("name");
-        Color color = json.has("color") ? new Color(json.getInt("color")) : null;
-        int position = json.getInt("position");
-        long permissions = json.getLong("permissions");
-        boolean isSeparateListed = json.has("hoist") && json.getBoolean("hoist");
-        boolean canMention = json.has("mentionable")&& json.getBoolean("mentionable");
-
-        return new Role(identity, guild, id, name, color, position, permissions, isSeparateListed, canMention);
-    }
-
-    public GuildEmoji buildEmoji(JSONObject json, Guild guild) {
-        handleBuildError(json);
-        String id = json.getString("id");
-        String name = json.getString("name");
-        boolean requireColon = json.has("require_colons") & json.getBoolean("require_colons");
-
-        List<Role> roles = new ArrayList<>();
-        JSONArray rolesJson = json.getJSONArray("roles");
-        for (int i = 0; i < rolesJson.length(); i++) {
-            Role role = (Role) guild.getRole(rolesJson.getString(i));
-            if (role != null) roles.add(role);
-        }
-
-        GuildEmoji emoji = new GuildEmoji(identity, guild, id, name, roles, requireColon);
-        guild.addGuildEmoji(emoji);
-        return emoji;
-    }
-
     public Reaction buildReaction(JSONObject json, Message message) {
         handleBuildError(json);
         int reactedTimes = json.has("count") ? json.getInt("count") : -1;
@@ -590,72 +673,6 @@ public final class ObjectBuilder {
             reaction = new Reaction(identity, message, reactedTimes, selfReacted, Emojis.getByUnicode(emojiJson.getString("name")));
         }
         return reaction;
-    }
-
-    public Invite buildInvite(JSONObject json) {
-        String code = json.getString("code");
-        Guild guild = (Guild) identity.getGuild(json.getJSONObject("guild").getString("id"));
-        IGuildChannel channel = identity.getGuildChannel(json.getJSONObject("channel").getString("id"));
-        Invite invite = new Invite(code, guild, channel);
-
-        // If the invites has metadata object
-        if (json.has("inviter")) {
-            User inviter = (User) identity.getUser(json.getJSONObject("inviter").getString("id"));
-            int uses = json.getInt("uses");
-            int maxUses = json.getInt("max_uses");
-            long maxAge = json.getLong("max_age");
-            boolean isTemporary = json.has("temporary") && json.getBoolean("temporary");
-            boolean isRevoked = json.has("revoked") && json.getBoolean("revoked");
-            String timeStamp = json.getString("created_at");
-            invite.setMetaData(inviter, uses, maxUses, maxAge, isTemporary, isRevoked, timeStamp);
-        }
-        return invite;
-    }
-
-    public Presence buildPresence(JSONObject json, User user) {
-        handleBuildError(json);
-        /* OnlineStatus */
-        OnlineStatus status = OnlineStatus.getByKey(json.getString("status"));
-
-        /* Game */
-        Game game = null;
-
-        if (json.has("game") && !json.isNull("game")) {
-            game = buildGame(json.getJSONObject("game"));
-            if (game.isStreaming()) status = OnlineStatus.STREAMING;
-        }
-
-        // Since
-        Long since = json.has("since") || !json.isNull("since") ? json.getLong("since") : null;
-
-        Presence presence = new Presence(identity, user)
-                .setStatus(status)
-                .setGame(game)
-                .setSince(since);
-        user.setPresence(presence);
-        return presence;
-    }
-
-    public Game buildGame(JSONObject json) {
-        JSONObject gameJson = json.getJSONObject("game");
-        String name = gameJson.isNull("name") ? null : gameJson.getString("name");
-        String url = gameJson.has("type") && gameJson.getInt("type") == IGame.Type.STREAMING.key ?
-                gameJson.getString("url") : null;
-        return new Game(identity, name, url);
-    }
-
-    public VoiceState buildVoiceState(JSONObject json) {
-        IUser user = identity.getUser(json.getString("user_id"));
-        IAudioChannel channel = json.isNull("channel_id") ? null : identity.getAudioChannel(json.getString("channel_id"));
-        String session_id = json.getString("session_id");
-        boolean selfMute = json.getBoolean("self_mute");
-        boolean selfDeaf = json.getBoolean("self_deaf");
-        VoiceState state = new VoiceState(identity, user);
-        state.setChannel(channel);
-        state.setSessionId(session_id);
-        state.setSelfMuted(selfMute);
-        state.setSelfDeafened(selfDeaf);
-        return state;
     }
 
     public Integration buildIntegration(JSONObject json) {
@@ -685,6 +702,7 @@ public final class ObjectBuilder {
         return integration;
     }
 
+    // OAuth & Client Only
     public Connection buildConnection(JSONObject json, IUser user) {
         String id = json.getString("id");
         String name = json.getString("name");
@@ -846,7 +864,8 @@ public final class ObjectBuilder {
     }
 
     public Note buildNote(String userId, String content) {
-        Note note = new Note(client, userId, content);
+        Note note = new Note(client, identity.getUser(userId))
+                .setContent(content);
         client.addNote(note);
         return note;
     }
