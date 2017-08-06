@@ -12,13 +12,13 @@ import org.alienideology.jcord.internal.exception.HigherHierarchyException;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException.HierarchyType;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.exception.PermissionException;
-import org.alienideology.jcord.internal.gateway.ErrorResponse;
-import org.alienideology.jcord.internal.gateway.HttpCode;
-import org.alienideology.jcord.internal.gateway.HttpPath;
-import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.guild.Member;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
+import org.alienideology.jcord.internal.rest.HttpCode;
+import org.alienideology.jcord.internal.rest.HttpPath;
+import org.alienideology.jcord.internal.rest.Requester;
 import org.json.JSONObject;
 
 import java.util.*;

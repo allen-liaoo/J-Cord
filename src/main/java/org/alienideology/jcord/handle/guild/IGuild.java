@@ -11,7 +11,7 @@ import org.alienideology.jcord.handle.managers.IGuildManager;
 import org.alienideology.jcord.handle.managers.IInviteManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.IWebhook;
-import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.rest.HttpPath;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

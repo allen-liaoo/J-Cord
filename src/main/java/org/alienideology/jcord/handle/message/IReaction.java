@@ -5,7 +5,7 @@ import org.alienideology.jcord.handle.emoji.Emoji;
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
-import org.alienideology.jcord.internal.gateway.ErrorResponse;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public interface IReaction extends IDiscordObject {
      *
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the message is not found.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *          @see ErrorResponse#UNKNOWN_MESSAGE
      *
      * @return A list of users.
      */

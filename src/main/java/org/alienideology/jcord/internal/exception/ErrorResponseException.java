@@ -1,6 +1,6 @@
 package org.alienideology.jcord.internal.exception;
 
-import org.alienideology.jcord.internal.gateway.ErrorResponse;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
 
 /**
  * ErrorResponseException - An exception for Json ErrorResponse

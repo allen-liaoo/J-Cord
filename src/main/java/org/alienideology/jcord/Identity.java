@@ -10,10 +10,11 @@ import org.alienideology.jcord.handle.client.IClient;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.ISelfManager;
+import org.alienideology.jcord.handle.modifiers.ISelfModifier;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
-import org.alienideology.jcord.internal.gateway.ErrorResponse;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
 import org.alienideology.jcord.util.log.Logger;
 import org.jetbrains.annotations.Nullable;
 
@@ -140,6 +141,13 @@ public interface Identity {
      * @return The self manager.
      */
     ISelfManager getSelfManager();
+
+    /**
+     * Get the self modifier of this identity.
+     *
+     * @return The self modifier.
+     */
+    ISelfModifier getSelfModifier();
 
     /**
      * Get a user by ID.

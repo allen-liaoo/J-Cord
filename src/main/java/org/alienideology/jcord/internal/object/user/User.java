@@ -4,12 +4,12 @@ import org.alienideology.jcord.handle.channel.IPrivateChannel;
 import org.alienideology.jcord.handle.user.IPresence;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
-import org.alienideology.jcord.internal.gateway.HttpPath;
-import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
+import org.alienideology.jcord.internal.rest.HttpPath;
+import org.alienideology.jcord.internal.rest.Requester;
 import org.json.JSONObject;
 
 import java.util.Objects;

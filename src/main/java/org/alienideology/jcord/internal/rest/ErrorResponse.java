@@ -1,4 +1,4 @@
-package org.alienideology.jcord.internal.gateway;
+package org.alienideology.jcord.internal.rest;
 
 /**
  * ErrorResponse - Json Error Responses

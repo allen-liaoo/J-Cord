@@ -2,9 +2,9 @@ package org.alienideology.jcord.internal.object.guild;
 
 import org.alienideology.jcord.handle.guild.IGuildEmoji;
 import org.alienideology.jcord.handle.guild.IRole;
-import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.rest.HttpPath;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -18,7 +18,7 @@ public interface ITextChannel extends IGuildChannel, IMessageChannel, IMention, 
     /**
      * The maximum length of the text channel's topic.
      */
-    int TOPIC_LENGTH_MAX = 2014;
+    int TOPIC_LENGTH_MAX = 1024;
 
     /**
      * Check if a topic is valid.

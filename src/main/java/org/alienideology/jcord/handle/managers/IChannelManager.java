@@ -14,7 +14,7 @@ import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
-import org.alienideology.jcord.internal.gateway.ErrorResponse;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
 
 import java.util.Collection;
 import java.util.List;
@@ -159,7 +159,7 @@ public interface IChannelManager {
      *          If the member is at a higher or same hierarchy than the identity.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the member does not belong to this guild.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
+     *          @see ErrorResponse#UNKNOWN_MEMBER
      *
      * @param member The member to add permission overwrites.
      * @param allowed The allowed permissions.
@@ -177,7 +177,7 @@ public interface IChannelManager {
      *          If the role is at a higher or same hierarchy than the identity.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the role does not belong to this guild.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     *          @see ErrorResponse#UNKNOWN_ROLE
      *
      * @param role The role to add permission overwrites.
      * @param allowed The allowed permissions.
@@ -196,7 +196,7 @@ public interface IChannelManager {
      *          If the member or role is at a higher or same hierarchy than the identity.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the member or role does not belong to this guild.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_OVERWRITE
+     *          @see ErrorResponse#UNKNOWN_OVERWRITE
      *
      * @param id The key.
      * @return A void {@link AuditAction}, used to attach reason to the modify action.
@@ -228,7 +228,7 @@ public interface IChannelManager {
      *          If the channel managers manages a {@link IVoiceChannel}.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the webhook does not belong to this channel.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
+     * @see ErrorResponse#UNKNOWN_USER
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
     default AuditAction<Void> deleteWebhook(IWebhook webhook) {

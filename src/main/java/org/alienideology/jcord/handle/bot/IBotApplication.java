@@ -3,7 +3,7 @@ package org.alienideology.jcord.handle.bot;
 import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.rest.HttpPath;
 
 import java.util.List;
 

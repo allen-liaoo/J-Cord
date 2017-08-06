@@ -4,7 +4,7 @@ import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.IPrivateChannel;
-import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.rest.HttpPath;
 
 import java.util.Arrays;
 import java.util.Collections;

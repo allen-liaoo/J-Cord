@@ -1,6 +1,6 @@
 package org.alienideology.jcord.handle.oauth;
 
-import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.rest.HttpPath;
 import org.alienideology.jcord.util.DataUtils;
 
 /**

@@ -1,6 +1,8 @@
 # Todo List
-1. GuildEmbedUtil - Parse Guild Embed Json, and get widget png.
-2. FriendSuggestion
+1. Chainable Modifier and Attribute.
+ Managers should have default methods for modifier's individual attributes.
+2. FriendSuggestion (Unknown json object)
+3. GuildWidget - Parse Guild Embed Json, and get widget png.
 
 ### Description
  - [x] Done : Tested and working.

@@ -3,7 +3,7 @@ package org.alienideology.jcord.handle.client.app;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.client.IClientObject;
 import org.alienideology.jcord.handle.oauth.Scope;
-import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.rest.HttpPath;
 
 import java.util.List;
 

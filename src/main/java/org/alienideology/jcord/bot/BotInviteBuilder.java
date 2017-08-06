@@ -1,7 +1,7 @@
 package org.alienideology.jcord.bot;
 
 import org.alienideology.jcord.handle.permission.Permission;
-import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.rest.HttpPath;
 
 /**
  * BotInviteBuilder - A builder for building bot invite URL.

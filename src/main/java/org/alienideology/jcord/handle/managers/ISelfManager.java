@@ -1,6 +1,6 @@
 package org.alienideology.jcord.handle.managers;
 
-import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.IDiscordObject;
 import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
@@ -14,14 +14,7 @@ import org.alienideology.jcord.handle.user.OnlineStatus;
  *
  * @author AlienIdeology
  */
-public interface ISelfManager {
-
-    /**
-     * Get the identity this self user is.
-     *
-     * @return The identity.
-     */
-    Identity getIdentity();
+public interface ISelfManager extends IDiscordObject {
 
     /**
      * Get the self user.
@@ -32,20 +25,24 @@ public interface ISelfManager {
 
     /**
      * Modify the user name of this identity.
-     * Changing the username will cause the discriminator to randomize.
      *
      * @exception IllegalArgumentException
      *          If the username is not valid. See {@link IUser#isValidUsername(String)}
+     *
      * @param name The new username.
      */
-    void modifyUserName(String name);
+    default void modifyUserName(String name) {
+        getIdentity().getSelfModifier();
+    }
 
     /**
      * Modify the avatar of this identity.
      *
      * @param icon The avatar.
      */
-    void modifyAvatar(Icon icon);
+    default void modifyAvatar(Icon icon) {
+        getIdentity().getSelfModifier();
+    }
 
     /**
      * Set the online status of this user.

@@ -3,8 +3,9 @@ package org.alienideology.jcord.handle.channel;
 import org.alienideology.jcord.handle.client.IClientObject;
 import org.alienideology.jcord.handle.client.relation.IFriend;
 import org.alienideology.jcord.handle.managers.IGroupManager;
+import org.alienideology.jcord.handle.modifiers.IGroupModifier;
 import org.alienideology.jcord.handle.user.IUser;
-import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.rest.HttpPath;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,6 +55,13 @@ public interface IGroup extends IClientObject, IMessageChannel, ICallChannel {
      * @return The manager.
      */
     IGroupManager getManager();
+
+    /**
+     * Get the modifier that modify this group.
+     *
+     * @return The modifier.
+     */
+    IGroupModifier getModifier();
 
     /**
      * Get the name of this group.

@@ -1,57 +1,30 @@
 package org.alienideology.jcord.internal.object.managers;
 
-import org.alienideology.jcord.Identity;
-import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.ISelfManager;
 import org.alienideology.jcord.handle.user.IGame;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.OnlineStatus;
-import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.gateway.OPCode;
-import org.alienideology.jcord.internal.gateway.Requester;
+import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.user.Game;
+import org.alienideology.jcord.internal.rest.HttpPath;
+import org.alienideology.jcord.internal.rest.Requester;
 import org.json.JSONObject;
 
 /**
  * @author AlienIdeology
  */
-public final class SelfManager implements ISelfManager {
-
-    private IdentityImpl identity;
+public final class SelfManager extends DiscordObject implements ISelfManager {
 
     public SelfManager(IdentityImpl identity) {
-        this.identity = identity;
-    }
-
-    @Override
-    public Identity getIdentity() {
-        return identity;
+        super(identity);
     }
 
     @Override
     public IUser getSelf() {
         return identity.getSelf();
-    }
-
-    @Override
-    public void modifyUserName(String name) {
-        if (!IUser.isValidUsername(name)) {
-            throw new IllegalArgumentException("The username is not valid!");
-        }
-
-        modifySelf(new JSONObject().put("username", name));
-    }
-
-    @Override
-    public void modifyAvatar(Icon icon)  {
-        modifySelf(new JSONObject().put("avatar", icon.getData()));
-    }
-
-    private void modifySelf(JSONObject json) {
-        new Requester(identity, HttpPath.User.MODIFY_CURRENT_USER)
-                .request().updateRequestWithBody(request -> request.body(json)).performRequest();
     }
 
     @Override

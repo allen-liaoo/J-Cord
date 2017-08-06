@@ -5,7 +5,7 @@ import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.IWebhookManager;
-import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.rest.HttpPath;
 
 /**
  * IWebhook - A low effort way to send messages to channels.

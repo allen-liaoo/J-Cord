@@ -3,11 +3,11 @@ package org.alienideology.jcord.internal.object.bot;
 import org.alienideology.jcord.bot.BotInviteBuilder;
 import org.alienideology.jcord.handle.bot.IBot;
 import org.alienideology.jcord.handle.bot.IBotApplication;
-import org.alienideology.jcord.internal.gateway.HttpPath;
-import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
+import org.alienideology.jcord.internal.rest.HttpPath;
+import org.alienideology.jcord.internal.rest.Requester;
 import org.json.JSONObject;
 
 /**

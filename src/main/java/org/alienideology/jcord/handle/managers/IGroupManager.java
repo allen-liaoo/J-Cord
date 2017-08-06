@@ -8,7 +8,7 @@ import org.alienideology.jcord.handle.client.relation.IFriend;
 import org.alienideology.jcord.handle.user.IUser;
 
 /**
- * IGroupManager - A manager that modify a group.
+ * IGroupManager - A manager that manages a group.
  *
  * @author AlienIdeology
  */
@@ -30,16 +30,23 @@ public interface IGroupManager extends IClientObject {
      * Modify the name of this group.
      * Use empty or {@code null} name to reset the name.
      *
+     * @exception IllegalArgumentException
+     *          If the group name is not valid. See {@link IGroup#isValidName(String)}.
+     *
      * @param name The name.
      */
-    void modifyName(String name);
+    default void modifyName(String name) {
+        getGroup().getModifier().name(name).modify();
+    }
 
     /**
      * Modify the icon of this group.
      *
      * @param icon The image file.
      */
-    void modifyIcon(Icon icon);
+    default void modifyIcon(Icon icon) {
+        getGroup().getModifier().icon(icon).modify();
+    }
 
     /**
      * Add a friend to this group.

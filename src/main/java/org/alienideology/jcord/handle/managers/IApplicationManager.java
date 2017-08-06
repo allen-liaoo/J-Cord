@@ -30,6 +30,9 @@ public interface IApplicationManager extends IClientObject {
     /**
      * Modify the name of this application.
      *
+     * @exception IllegalArgumentException
+     *          If the name is not valid. See {@link IApplication#isValidName(String)}.
+     *
      * @param name The name.
      */
     void modifyName(String name);
@@ -43,6 +46,9 @@ public interface IApplicationManager extends IClientObject {
 
     /**
      * Modify the description of this application.
+     *
+     * @exception IllegalArgumentException
+     *          If the description is not valid. See {@link IApplication#isValidDescription(String)}.
      *
      * @param description The description.
      */

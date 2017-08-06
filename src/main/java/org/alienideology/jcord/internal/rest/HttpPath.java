@@ -1,4 +1,4 @@
-package org.alienideology.jcord.internal.gateway;
+package org.alienideology.jcord.internal.rest;
 
 import com.mashape.unirest.http.HttpMethod;
 import org.alienideology.jcord.JCord;

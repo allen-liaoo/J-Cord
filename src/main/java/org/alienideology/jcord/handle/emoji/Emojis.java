@@ -1,6 +1,6 @@
 package org.alienideology.jcord.handle.emoji;
 
-import org.alienideology.jcord.internal.gateway.HttpPath;
+import org.alienideology.jcord.internal.rest.HttpPath;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 import org.json.JSONTokener;

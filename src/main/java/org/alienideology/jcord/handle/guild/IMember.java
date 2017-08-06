@@ -9,6 +9,7 @@ import org.alienideology.jcord.handle.permission.PermCheckable;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.managers.GuildManager;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -81,7 +82,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
      *          If the member is the server owner or have higher role than the identity.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
+     * @see ErrorResponse#UNKNOWN_MEMBER
      *
      * @return An boolean AuditAction, used to attach reason (or not).
      * The boolean value will be true if the member is banned successfully.
@@ -101,7 +102,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * @exception IllegalArgumentException If the days are smaller than 0 or greater than 7.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the member does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
+     * @see ErrorResponse#UNKNOWN_MEMBER
      *
      * @param days The number of days to delete the member's message. Only valid between 0 and 7.
      * @return An boolean AuditAction, used to attach reason (or not).

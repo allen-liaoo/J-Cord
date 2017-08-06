@@ -11,6 +11,7 @@ import org.alienideology.jcord.handle.message.IEmbed;
 import org.alienideology.jcord.handle.message.IMessage;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.PermissionException;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -259,7 +260,7 @@ public interface IMessageChannel extends IChannel {
      *
      * @throws org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If one of the messages is not from this channel.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *          @see ErrorResponse#UNKNOWN_MESSAGE
      * @throws IllegalArgumentException
      *          If one of the messages is older than 2 weeks.
      *
@@ -274,7 +275,7 @@ public interface IMessageChannel extends IChannel {
      *          If the identity lack {@code Manager Messages} permission.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the message is not found in this channel.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *          @see ErrorResponse#UNKNOWN_MESSAGE
      *
      * @param messageId The message key.
      */
@@ -287,7 +288,7 @@ public interface IMessageChannel extends IChannel {
      *          If the identity lack {@code Manager Messages} permission.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the message is not found in this channel.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *          @see ErrorResponse#UNKNOWN_MESSAGE
      *
      * @param message The message object.
      */
@@ -300,7 +301,7 @@ public interface IMessageChannel extends IChannel {
      *          If the identity lack {@code Manager Messages} permission.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the message is not found in this channel.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *          @see ErrorResponse#UNKNOWN_MESSAGE
      *
      * @param messageId The message key.
      */
@@ -313,7 +314,7 @@ public interface IMessageChannel extends IChannel {
      *          If the identity lack {@code Manager Messages} permission.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the message is not found in this channel.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *          @see ErrorResponse#UNKNOWN_MESSAGE
      *
      * @param message The message object.
      */
@@ -324,7 +325,7 @@ public interface IMessageChannel extends IChannel {
      *
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the message or reaction is not found.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN
+     *          @see ErrorResponse#UNKNOWN
      *
      * @param messageId The message ID.
      * @param unicode The unicode reaction.
@@ -337,7 +338,7 @@ public interface IMessageChannel extends IChannel {
      *
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the message or reaction is not found.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN
+     *          @see ErrorResponse#UNKNOWN
      *
      * @param messageId The message ID.
      * @param emoji The emoji reaction.
@@ -352,7 +353,7 @@ public interface IMessageChannel extends IChannel {
      *
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the message or reaction is not found.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN
+     *          @see ErrorResponse#UNKNOWN
      *
      * @param messageId The message ID.
      * @param guildEmoji The guild emoji reaction.
@@ -370,7 +371,7 @@ public interface IMessageChannel extends IChannel {
      *          </ul>
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the messages does not belong to this channel.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *          @see ErrorResponse#UNKNOWN_MESSAGE
      *
      * @param messageId The message ID.
      * @param unicode The string unicode
@@ -387,7 +388,7 @@ public interface IMessageChannel extends IChannel {
      *          </ul>
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the messages does not belong to this channel.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *          @see ErrorResponse#UNKNOWN_MESSAGE
      *
      * @param messageId The message ID.
      * @param emoji The emoji.
@@ -406,7 +407,7 @@ public interface IMessageChannel extends IChannel {
      *          </ul>
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the messages does not belong to this channel.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *          @see ErrorResponse#UNKNOWN_MESSAGE
      *
      * @param messageId The message ID.
      * @param guildEmoji The guild emoji
@@ -425,7 +426,7 @@ public interface IMessageChannel extends IChannel {
      *          </ul>
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the reaction is not found from the message's reactions.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_EMOJI
+     *          @see ErrorResponse#UNKNOWN_EMOJI
      *
      * @param member The member that reacted on the message.
      * @param messageId The message's ID.
@@ -445,7 +446,7 @@ public interface IMessageChannel extends IChannel {
      *          </ul>
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the reaction is not found from the message's reactions.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_EMOJI
+     *          @see ErrorResponse#UNKNOWN_EMOJI
      *
      * @param member The member that reacted on the message.
      * @param messageId The message's ID.
@@ -467,7 +468,7 @@ public interface IMessageChannel extends IChannel {
      *          </ul>
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the reaction is not found from the message's reactions.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_EMOJI
+     *          @see ErrorResponse#UNKNOWN_EMOJI
      *
      * @param member The member that reacted on the message.
      * @param messageId The message's ID.
@@ -482,7 +483,7 @@ public interface IMessageChannel extends IChannel {
      *          If the identity does not have {@code Manager Messages} permission.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the message is not from this channel.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MESSAGE
+     *          @see ErrorResponse#UNKNOWN_MESSAGE
      *
      * @param messageId The message ID.
      */

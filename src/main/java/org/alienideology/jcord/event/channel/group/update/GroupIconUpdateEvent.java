@@ -1,9 +1,9 @@
 package org.alienideology.jcord.event.channel.group.update;
 
 import org.alienideology.jcord.event.channel.group.GroupUpdateEvent;
-import org.alienideology.jcord.internal.gateway.HttpPath;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.channel.Channel;
+import org.alienideology.jcord.internal.rest.HttpPath;
 
 /**
  * @author AlienIdeology

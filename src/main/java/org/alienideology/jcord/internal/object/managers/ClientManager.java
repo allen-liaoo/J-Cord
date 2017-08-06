@@ -12,14 +12,14 @@ import org.alienideology.jcord.handle.managers.IClientManager;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
-import org.alienideology.jcord.internal.gateway.ErrorResponse;
-import org.alienideology.jcord.internal.gateway.HttpCode;
-import org.alienideology.jcord.internal.gateway.HttpPath;
-import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.client.Client;
 import org.alienideology.jcord.internal.object.client.app.Application;
 import org.alienideology.jcord.internal.object.guild.Guild;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
+import org.alienideology.jcord.internal.rest.HttpCode;
+import org.alienideology.jcord.internal.rest.HttpPath;
+import org.alienideology.jcord.internal.rest.Requester;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

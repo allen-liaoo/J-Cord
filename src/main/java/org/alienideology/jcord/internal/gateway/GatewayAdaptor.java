@@ -13,6 +13,7 @@ import org.alienideology.jcord.event.handler.*;
 import org.alienideology.jcord.handle.user.OnlineStatus;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
 import org.alienideology.jcord.util.log.LogLevel;
 import org.alienideology.jcord.util.log.Logger;
 import org.json.JSONObject;

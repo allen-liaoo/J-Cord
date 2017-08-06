@@ -17,7 +17,7 @@ import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
-import org.alienideology.jcord.internal.gateway.ErrorResponse;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
 
 import java.util.List;
 
@@ -296,7 +296,7 @@ public interface IGuildManager {
      * @exception HigherHierarchyException
      *          If the member is at a higher hierarchy than the identity (ie.e server owner)
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
+     * @see ErrorResponse#UNKNOWN_MEMBER
      *
      * @param member The member.
      * @return A boolean {@link AuditAction}, used to attach reason (or not).
@@ -313,7 +313,7 @@ public interface IGuildManager {
      *          If the member is at a higher hierarchy than the identity (ie.e server owner)
      * @exception IllegalArgumentException If the days are smaller than 0 or greater than 7.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
+     * @see ErrorResponse#UNKNOWN_MEMBER
      *
      * @param member The member.
      * @param days The number of days to delete the member's message. Only valid between 0 and 7.
@@ -331,7 +331,7 @@ public interface IGuildManager {
      * @exception HigherHierarchyException
      *          If the member is at a higher hierarchy than the identity (ie.e server owner)
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
+     * @see ErrorResponse#UNKNOWN_MEMBER
      *
      * @param memberId The member's ID.
      * @return A boolean {@link AuditAction}, used to attach reason (or not).
@@ -348,7 +348,7 @@ public interface IGuildManager {
      *          If the member is at a higher hierarchy than the identity (ie.e server owner)
      * @exception IllegalArgumentException If the days are smaller than 0 or greater than 7.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
+     * @see ErrorResponse#UNKNOWN_MEMBER
      *
      * @param memberId The member's ID.
      * @param days The number of days to delete the member's message. Only valid between 0 and 7.
@@ -363,7 +363,7 @@ public interface IGuildManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the user is not in the guild ban list.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
+     * @see ErrorResponse#UNKNOWN_USER
      *
      * @param user The user.
      * @return A boolean {@link AuditAction}, used to attach reason (or not).
@@ -377,7 +377,7 @@ public interface IGuildManager {
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have either {@code Ban Member} or {@code Administrator} permission.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the user is not in the guild ban list.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
+     * @see ErrorResponse#UNKNOWN_USER
      *
      * @param memberId The user's ID.
      * @return A boolean {@link AuditAction}, used to attach reason (or not).
@@ -443,7 +443,7 @@ public interface IGuildManager {
      *          If the identity does not have {@code Manage Roles} permission.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the role is null or if the role is not from this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_ROLE
+     * @see ErrorResponse#UNKNOWN_ROLE
      *
      * @param role The role to be deleted.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
@@ -464,7 +464,7 @@ public interface IGuildManager {
      *          If the default name is not valid. See {@link IWebhook#isValidWebhookName(String)}.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the channel does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_CHANNEL
+     * @see ErrorResponse#UNKNOWN_CHANNEL
      * @return An {@link IWebhook} {@link AuditAction}, used to attach reason for creating this webhook.
      */
     default AuditAction<IWebhook> createWebhook(ITextChannel channel, String defaultName, Icon defaultAvatar) {
@@ -481,7 +481,7 @@ public interface IGuildManager {
      *
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the webhook does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
+     * @see ErrorResponse#UNKNOWN_USER
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
     default AuditAction<Void> deleteWebhook(IWebhook webhook) {

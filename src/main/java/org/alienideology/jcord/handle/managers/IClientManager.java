@@ -8,6 +8,7 @@ import org.alienideology.jcord.handle.client.app.IAuthApplication;
 import org.alienideology.jcord.handle.client.relation.IFriend;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.user.IUser;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
 
 import java.util.Collection;
 
@@ -31,7 +32,7 @@ public interface IClientManager extends IClientObject {
      *
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the guild is not from this identity.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_GUILD
+     * @see ErrorResponse#UNKNOWN_GUILD
      *
      * @param guild The guild to delete.
      */
@@ -58,7 +59,7 @@ public interface IClientManager extends IClientObject {
      *
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the group is not from this identity.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_CHANNEL
+     * @see ErrorResponse#UNKNOWN_CHANNEL
      *
      * @param group The group to leave.
      */
@@ -70,7 +71,7 @@ public interface IClientManager extends IClientObject {
      *
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the user id provided is not valid.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_USER
+     * @see ErrorResponse#UNKNOWN_USER
      *
      * @param userId The user to modify note.
      * @param note The note.
@@ -201,7 +202,7 @@ public interface IClientManager extends IClientObject {
      *
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the application is not from this identity.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_APPLICATION
+     * @see ErrorResponse#UNKNOWN_APPLICATION
      *
      * @param application The application to delete.
      */
@@ -212,7 +213,7 @@ public interface IClientManager extends IClientObject {
      *
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the auth application is not from this identity.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_APPLICATION
+     * @see ErrorResponse#UNKNOWN_APPLICATION
      *
      * @param authApplication The auth application.
      */

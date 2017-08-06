@@ -1,6 +1,6 @@
 package org.alienideology.jcord.internal.exception;
 
-import org.alienideology.jcord.internal.gateway.HttpCode;
+import org.alienideology.jcord.internal.rest.HttpCode;
 
 /**
  * HttpErrorException - An exception for Http Error Codes.

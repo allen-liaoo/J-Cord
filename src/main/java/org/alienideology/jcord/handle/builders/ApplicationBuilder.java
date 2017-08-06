@@ -48,6 +48,9 @@ public final class ApplicationBuilder implements Buildable<ApplicationBuilder, I
      * @return ApplicationBuilder for chaining.
      */
     public ApplicationBuilder setName(String name) {
+        if (!IApplication.isValidName(name)) {
+            throw new IllegalArgumentException("Invalid application name!");
+        }
         this.name = name;
         return this;
     }
@@ -73,6 +76,9 @@ public final class ApplicationBuilder implements Buildable<ApplicationBuilder, I
      * @return ApplicationBuilder for chaining.
      */
     public ApplicationBuilder setDescription(String description) {
+        if (!IApplication.isValidDescription(description)) {
+            throw new IllegalArgumentException("Invalid application description!");
+        }
         this.description = description;
         return this;
     }

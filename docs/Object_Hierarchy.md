@@ -118,8 +118,14 @@ Permission (Enumeration) - A way to limit and grant certain abilities to members
  - IWebhookManager - A manager for modifying, executing and deleting webhooks.
  - ISelfManager - A manager that manages self user.
  - IClientManager - A manager used to manage the Discord client.
- - IGroupManager - A manager that modify a group.
+ - IGroupManager - A manager that manages a group.
  - IApplicationManager - A manager for managing IApplication.
+
+### Modifiers
+IModifier - A modifier that support chainable methods to update multiple IAttribute of an instance at once.
+IAttribute - An updatable field of an IModifier.
+ - ISelfModifier - A modifier that modify the self user.
+ - IGroupModifier - A modifier that modify a group.
 
 ### Builders
  - GuildBuilder - A builder for creating a guild. Used by IClientManager.
@@ -165,11 +171,14 @@ OAuth - Used to build applications that utilize authentication and data from the
 ### Gateway
 Gateway - The communication between J-Cord and Discord API.
  - GatewayAdaptor - Communication client for Discord GateWay.
- - Requester - A Http Requester for HttpPath.
- - HttpPath (Static) - Used to set HttpRequest Paths and request them.
  - OPCode (Enumeration) - OP Code sent by Discord GateWay server.
  - DisconnectionCode (Enumeration) - Disconnection Code sent when Discord gateway closed.
- - ErrorCode (Enumeration) - HTTP Response/Error Codes.
+
+### Rest
+REST - The Http API for Discord.
+ - Requester - A Http Requester for HttpPath.
+ - HttpPath (Static) - Used to set HttpRequest Paths and request them.
+ - HttpCode (Enumeration) - HTTP Response/Error Codes.
  - ErrorResponse (Enumeration) - Json Error Responses.
 
 ### Object

@@ -17,14 +17,14 @@ import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HigherHierarchyException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.exception.PermissionException;
-import org.alienideology.jcord.internal.gateway.ErrorResponse;
-import org.alienideology.jcord.internal.gateway.HttpCode;
-import org.alienideology.jcord.internal.gateway.HttpPath;
-import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
 import org.alienideology.jcord.internal.object.channel.VoiceChannel;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
+import org.alienideology.jcord.internal.rest.HttpCode;
+import org.alienideology.jcord.internal.rest.HttpPath;
+import org.alienideology.jcord.internal.rest.Requester;
 import org.json.JSONObject;
 
 import java.util.Collection;

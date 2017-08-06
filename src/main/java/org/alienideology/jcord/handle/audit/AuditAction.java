@@ -1,8 +1,8 @@
 package org.alienideology.jcord.handle.audit;
 
-import org.alienideology.jcord.internal.gateway.HttpPath;
-import org.alienideology.jcord.internal.gateway.Requester;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.rest.HttpPath;
+import org.alienideology.jcord.internal.rest.Requester;
 import org.alienideology.jcord.util.DataUtils;
 
 /**

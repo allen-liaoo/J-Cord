@@ -15,6 +15,7 @@ import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.object.message.Message;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.OffsetDateTime;
@@ -203,7 +204,7 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
      *          </ul>
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the reaction is not found from the message's reactions.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_EMOJI
+     *          @see ErrorResponse#UNKNOWN_EMOJI
      *
      * @param member The member that reacted on the message.
      * @param unicode The unicode reaction.
@@ -224,7 +225,7 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
      *          </ul>
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the reaction is not found from the message's reactions.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_EMOJI
+     *          @see ErrorResponse#UNKNOWN_EMOJI
      *
      * @param member The member that reacted on the message.
      * @param emoji The emoji reaction.
@@ -245,7 +246,7 @@ public interface IMessage extends IDiscordObject, ISnowFlake, Comparable<IMessag
      *          </ul>
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the reaction is not found from the message's reactions.
-     *          @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_EMOJI
+     *          @see ErrorResponse#UNKNOWN_EMOJI
      *
      * @param member The member that reacted on the message.
      * @param guildEmoji The guild emoji reaction.

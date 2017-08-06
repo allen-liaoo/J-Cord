@@ -4,8 +4,8 @@ import org.alienideology.jcord.handle.oauth.IOAuthUser;
 import org.alienideology.jcord.handle.oauth.OAuth;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
-import org.alienideology.jcord.internal.gateway.HttpPath;
-import org.alienideology.jcord.internal.gateway.Requester;
+import org.alienideology.jcord.internal.rest.HttpPath;
+import org.alienideology.jcord.internal.rest.Requester;
 import org.json.JSONObject;
 
 /**

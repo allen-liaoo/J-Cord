@@ -6,6 +6,7 @@ import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
 
 import java.util.Collection;
 
@@ -170,7 +171,7 @@ public interface IMemberManager {
      *          </ul>
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the voice channel does not belongs to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_CHANNEL
+     * @see ErrorResponse#UNKNOWN_CHANNEL
      *
      * @param channel The new channel.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
@@ -187,7 +188,7 @@ public interface IMemberManager {
      *          </ul>
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the voice channel does not belongs to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_CHANNEL
+     * @see ErrorResponse#UNKNOWN_CHANNEL
      *
      * @param channelId The new channel's ID.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
@@ -203,7 +204,7 @@ public interface IMemberManager {
      *          If the member is the server owner or have higher role than the identity.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException
      *          If the member does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
+     * @see ErrorResponse#UNKNOWN_MEMBER
      *
      * @param mute True to mute, false to unmute.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
@@ -218,7 +219,7 @@ public interface IMemberManager {
      * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
      *          If the member is the server owner or have higher role than the identity.
      * @exception org.alienideology.jcord.internal.exception.ErrorResponseException If the member does not belong to this guild.
-     * @see org.alienideology.jcord.internal.gateway.ErrorResponse#UNKNOWN_MEMBER
+     * @see ErrorResponse#UNKNOWN_MEMBER
      *
      * @param deafen True to deafen the member, false to undeafen.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.

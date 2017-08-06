@@ -3,8 +3,8 @@ package org.alienideology.jcord;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import org.alienideology.jcord.event.EventManager;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
-import org.alienideology.jcord.internal.gateway.ErrorResponse;
 import org.alienideology.jcord.internal.object.IdentityImpl;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
 import org.alienideology.jcord.util.log.Logger;
 
 import java.net.ConnectException;

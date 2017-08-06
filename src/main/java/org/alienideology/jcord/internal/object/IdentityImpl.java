@@ -25,13 +25,18 @@ import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.exception.PermissionException;
-import org.alienideology.jcord.internal.gateway.*;
+import org.alienideology.jcord.internal.gateway.GatewayAdaptor;
 import org.alienideology.jcord.internal.object.bot.Bot;
 import org.alienideology.jcord.internal.object.channel.PrivateChannel;
 import org.alienideology.jcord.internal.object.client.Client;
 import org.alienideology.jcord.internal.object.guild.Guild;
 import org.alienideology.jcord.internal.object.managers.SelfManager;
+import org.alienideology.jcord.internal.object.modifiers.SelfModifier;
 import org.alienideology.jcord.internal.object.user.User;
+import org.alienideology.jcord.internal.rest.ErrorResponse;
+import org.alienideology.jcord.internal.rest.HttpCode;
+import org.alienideology.jcord.internal.rest.HttpPath;
+import org.alienideology.jcord.internal.rest.Requester;
 import org.alienideology.jcord.util.log.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
@@ -66,6 +71,7 @@ public final class IdentityImpl implements Identity {
 
     private IUser self;
     private SelfManager selfManager;
+    private SelfModifier selfModifier;
     private List<IUser> users = new ArrayList<>();
     private List<IGuild> guilds = new ArrayList<>();
     private List<IPrivateChannel> privateChannels = new ArrayList<>();
@@ -74,9 +80,9 @@ public final class IdentityImpl implements Identity {
         this.type = type;
         this.token = type.equals(IdentityType.CLIENT) ? token : "Bot " + token;
         this.wsFactory = wsFactory;
+        this.LOG = logger;
         this.manager  = new EventManager();
         this.selfManager = new SelfManager(this);
-        this.LOG = logger;
     }
 
     @Override
@@ -146,6 +152,11 @@ public final class IdentityImpl implements Identity {
     @Override
     public ISelfManager getSelfManager() {
         return selfManager;
+    }
+
+    @Override
+    public SelfModifier getSelfModifier() {
+        return selfModifier;
     }
 
     @Override
@@ -456,6 +467,7 @@ public final class IdentityImpl implements Identity {
 
     public void setSelf (User selfUser) {
         this.self = selfUser;
+        this.selfModifier = new SelfModifier(this);
 
         // Initialize this after self user is built
         if (type == IdentityType.BOT) {

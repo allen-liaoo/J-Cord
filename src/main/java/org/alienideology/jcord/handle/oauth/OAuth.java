@@ -2,8 +2,8 @@ package org.alienideology.jcord.handle.oauth;
 
 import fi.iki.elonen.NanoHTTPD;
 import org.alienideology.jcord.internal.exception.ErrorResponseException;
-import org.alienideology.jcord.internal.gateway.HttpPath;
-import org.alienideology.jcord.internal.gateway.Requester;
+import org.alienideology.jcord.internal.rest.HttpPath;
+import org.alienideology.jcord.internal.rest.Requester;
 import org.alienideology.jcord.util.DataUtils;
 import org.json.JSONObject;
 
