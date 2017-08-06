@@ -160,6 +160,11 @@ public final class IdentityImpl implements Identity {
     }
 
     @Override
+    public long getHeartbeatInterval() {
+        return gateway.getInterval();
+    }
+
+    @Override
     @Nullable
     public IUser getUser(String id) {
         for (IUser user : users) {

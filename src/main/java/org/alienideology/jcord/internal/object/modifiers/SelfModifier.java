@@ -1,8 +1,9 @@
 package org.alienideology.jcord.internal.object.modifiers;
 
 import org.alienideology.jcord.handle.Icon;
-import org.alienideology.jcord.handle.modifiers.IAttribute;
+import org.alienideology.jcord.handle.modifiers.Attribute;
 import org.alienideology.jcord.handle.modifiers.ISelfModifier;
+import org.alienideology.jcord.handle.modifiers.attr.IconAttribute;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.rest.HttpPath;
@@ -14,7 +15,7 @@ import org.alienideology.jcord.internal.rest.Requester;
 public final class SelfModifier extends Modifier<Void> implements ISelfModifier {
 
     private Attribute<ISelfModifier, String> usernameAttr;
-    private Attribute<ISelfModifier, Icon> avatarAttr;
+    private IconAttribute<ISelfModifier> avatarAttr;
 
     public SelfModifier(IdentityImpl identity) {
         super(identity);
@@ -39,12 +40,12 @@ public final class SelfModifier extends Modifier<Void> implements ISelfModifier 
     }
 
     @Override
-    public IAttribute<ISelfModifier, String> getUsernameAttr() {
+    public Attribute<ISelfModifier, String> getUsernameAttr() {
         return usernameAttr;
     }
 
     @Override
-    public IAttribute<ISelfModifier, Icon> getAvatarAttr() {
+    public IconAttribute<ISelfModifier> getAvatarAttr() {
         return avatarAttr;
     }
 
@@ -55,13 +56,13 @@ public final class SelfModifier extends Modifier<Void> implements ISelfModifier 
                 .updateRequestWithBody(request -> request.body(getUpdatableJson()))
                 .performRequest();
 
-        updateAttributes();
+        reset();
         return null;
     }
 
     @Override
     protected void setupAttributes() {
-        usernameAttr = new Attribute<ISelfModifier, String>("username", this, identity.getSelf().getName()) {
+        usernameAttr = new Attribute<ISelfModifier, String>("username", this, identity.getSelf()::getName) {
             @Override
             public void checkValue(String value) {
                 if (!IUser.isValidUsername(value)) {
@@ -76,27 +77,7 @@ public final class SelfModifier extends Modifier<Void> implements ISelfModifier 
                 return super.getAltValue();
             }
         };
-        avatarAttr = new Attribute<ISelfModifier, Icon>("avatar", this, null) {
-            @Override
-            public void checkValue(Icon value) {}
-
-            @Override
-            public Icon getOldValue() {
-                throw new UnsupportedOperationException("Use IUser#getAvatarUrl instead!");
-            }
-
-            @Override
-            public Object getAltValue() {
-                if (newValue == null)
-                    newValue = Icon.DEFAULT_ICON;
-                return needUpdate() ? getNewValue().getData() : null;
-            }
-
-            @Override
-            public boolean needUpdate() {
-                return isChanged();
-            }
-        };
+        avatarAttr = new IconAttribute<>("avatar", this, null);
 
         setAttributes(usernameAttr, avatarAttr);
     }

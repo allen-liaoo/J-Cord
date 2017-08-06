@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author AlienIdeology
  */
-public class ApplicationManager extends ClientObject implements IApplicationManager {
+public final class ApplicationManager extends ClientObject implements IApplicationManager {
 
     private IApplication application;
 

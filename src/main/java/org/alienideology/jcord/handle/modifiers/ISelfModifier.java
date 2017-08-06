@@ -1,6 +1,7 @@
 package org.alienideology.jcord.handle.modifiers;
 
 import org.alienideology.jcord.handle.Icon;
+import org.alienideology.jcord.handle.modifiers.attr.IconAttribute;
 import org.alienideology.jcord.handle.user.IUser;
 
 /**
@@ -42,13 +43,13 @@ public interface ISelfModifier extends IModifier<Void> {
      *
      * @return The user name attribute.
      */
-    IAttribute<ISelfModifier, String> getUsernameAttr();
+    Attribute<ISelfModifier, String> getUsernameAttr();
 
     /**
      * Get the avatar attribute, used to modify the avatar.
      *
      * @return The avatar attribute.
      */
-    IAttribute<ISelfModifier, Icon> getAvatarAttr();
+    IconAttribute<ISelfModifier> getAvatarAttr();
 
 }

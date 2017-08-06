@@ -1,6 +1,7 @@
 package org.alienideology.jcord.internal.object.modifiers;
 
 import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.modifiers.Attribute;
 import org.alienideology.jcord.handle.modifiers.IModifier;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.json.JSONObject;
@@ -50,11 +51,6 @@ public abstract class Modifier<R> extends DiscordObject implements IModifier<R> 
                 .filter(Attribute::needUpdate)
                 .forEach(attr -> json.put(attr.getKey(), attr.getAltValue()));
         return json;
-    }
-
-    // Call this at the end of the method modify(), to reset and update the local cached original value
-    protected void updateAttributes() {
-        attributes.forEach(Attribute::update);
     }
 
 }

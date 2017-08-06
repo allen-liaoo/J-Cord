@@ -313,6 +313,10 @@ public final class GatewayAdaptor extends WebSocketAdapter {
         return webSocket;
     }
 
+    public long getInterval() {
+        return interval;
+    }
+
     private void setEventHandler() {
         /* Gateway Event */
         eventHandler.put("READY", new ReadyEventHandler(identity, this));

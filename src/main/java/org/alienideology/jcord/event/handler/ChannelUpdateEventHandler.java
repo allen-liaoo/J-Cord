@@ -37,7 +37,7 @@ public class ChannelUpdateEventHandler extends EventHandler {
     public void dispatchEvent(JSONObject json, int sequence) {
         IChannel.Type type = IChannel.Type.getByKey(json.getInt("type"));
 
-        if (type == IChannel.Type.GROUP_DM) {
+        if (type.equals(IChannel.Type.GROUP_DM)) {
             groupUpdate(json, sequence);
             return;
         }

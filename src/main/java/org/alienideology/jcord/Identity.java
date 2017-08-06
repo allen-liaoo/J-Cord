@@ -150,6 +150,13 @@ public interface Identity {
     ISelfModifier getSelfModifier();
 
     /**
+     * Get the ping, or heart beat time in milliseconds for the gateway connection with Discord server.
+     *
+     * @return The heartbeat interval in milliseconds.
+     */
+    long getHeartbeatInterval();
+
+    /**
      * Get a user by ID.
      *
      * @param id The user ID.

@@ -3,8 +3,9 @@ package org.alienideology.jcord.internal.object.modifiers;
 import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.channel.IGroup;
 import org.alienideology.jcord.handle.client.IClient;
-import org.alienideology.jcord.handle.modifiers.IAttribute;
+import org.alienideology.jcord.handle.modifiers.Attribute;
 import org.alienideology.jcord.handle.modifiers.IGroupModifier;
+import org.alienideology.jcord.handle.modifiers.attr.IconAttribute;
 import org.alienideology.jcord.internal.object.channel.Group;
 import org.alienideology.jcord.internal.rest.HttpPath;
 import org.alienideology.jcord.internal.rest.Requester;
@@ -16,7 +17,7 @@ public final class GroupModifier extends Modifier<Void> implements IGroupModifie
 
     private Group group;
     private Attribute<IGroupModifier, String> nameAttr;
-    private Attribute<IGroupModifier, Icon> iconAttr;
+    private IconAttribute<IGroupModifier> iconAttr;
 
     public GroupModifier(Group group) {
         super(group.getIdentity());
@@ -46,11 +47,11 @@ public final class GroupModifier extends Modifier<Void> implements IGroupModifie
         return this;
     }
 
-    public IAttribute<IGroupModifier, String> getNameAttr() {
+    public Attribute<IGroupModifier, String> getNameAttr() {
         return nameAttr;
     }
 
-    public IAttribute<IGroupModifier, Icon> getIconAttr() {
+    public IconAttribute<IGroupModifier> getIconAttr() {
         return iconAttr;
     }
 
@@ -61,13 +62,13 @@ public final class GroupModifier extends Modifier<Void> implements IGroupModifie
                 .updateRequestWithBody(request -> request.body(getUpdatableJson()))
                 .performRequest();
 
-        updateAttributes(); // Update all attributes
+        reset(); // Reset all attributes
         return null;
     }
 
     @Override
     protected void setupAttributes() {
-        nameAttr = new Attribute<IGroupModifier, String>("name", this, group.getName()) {
+        nameAttr = new Attribute<IGroupModifier, String>("name", this, group::getName) {
             @Override
             public void checkValue(String value) {
                 if (!IGroup.isValidName(value)) {
@@ -82,27 +83,7 @@ public final class GroupModifier extends Modifier<Void> implements IGroupModifie
                 return super.getAltValue();
             }
         };
-        iconAttr = new Attribute<IGroupModifier, Icon>("icon", this, null) {
-            @Override
-            public void checkValue(Icon value) {}
-
-            @Override
-            public Icon getOldValue() {
-                throw new UnsupportedOperationException("Use IGuild#getIconUrl instead!");
-            }
-
-            @Override
-            public Object getAltValue() {
-                if (newValue == null)
-                    newValue = Icon.DEFAULT_ICON;
-                return needUpdate() ? getNewValue().getData() : null;
-            }
-
-            @Override
-            public boolean needUpdate() {
-                return isChanged();
-            }
-        };
+        iconAttr = new IconAttribute<>("icon", this, null);
 
         setAttributes(nameAttr, iconAttr);
     }

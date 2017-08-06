@@ -123,7 +123,7 @@ Permission (Enumeration) - A way to limit and grant certain abilities to members
 
 ### Modifiers
 IModifier - A modifier that support chainable methods to update multiple IAttribute of an instance at once.
-IAttribute - An updatable field of an IModifier.
+Attribute - An updatable field of an IModifier.
  - ISelfModifier - A modifier that modify the self user.
  - IGroupModifier - A modifier that modify a group.
 

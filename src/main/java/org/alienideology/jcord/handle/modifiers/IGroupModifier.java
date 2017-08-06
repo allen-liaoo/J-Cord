@@ -3,6 +3,7 @@ package org.alienideology.jcord.handle.modifiers;
 import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.channel.IGroup;
 import org.alienideology.jcord.handle.client.IClientObject;
+import org.alienideology.jcord.handle.modifiers.attr.IconAttribute;
 
 /**
  * IGroupModifier - A modifier that modify a group.
@@ -43,13 +44,13 @@ public interface IGroupModifier extends IClientObject, IModifier<Void> {
      *
      * @return The name attribute.
      */
-    IAttribute<IGroupModifier, String> getNameAttr();
+    Attribute<IGroupModifier, String> getNameAttr();
 
     /**
      * Get the icon attribute, used to modify the group's icon.
      *
      * @return The icon attribute.
      */
-    IAttribute<IGroupModifier, Icon> getIconAttr();
+    IconAttribute<IGroupModifier> getIconAttr();
 
 }

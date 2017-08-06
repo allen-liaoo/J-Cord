@@ -1,22 +1,48 @@
 package org.alienideology.jcord.handle.modifiers;
 
+import org.json.JSONObject;
+
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
- * IAttribute - An updatable field of an {@link IModifier}.
+ * Attribute - An updatable field of an {@link IModifier}.
  *
  * @author AlienIdeology
  * @param <M> The modifier this attribute belongs to.
  * @param <T> The type of value for this attribute.
  */
-public interface IAttribute<M extends IModifier, T> {
+public abstract class Attribute<M extends IModifier, T> {
+
+    private final String key;
+    private final M modifier;
+    protected Supplier<T> oldValue;
+    protected T newValue;
+    protected boolean isSet;
+
+    /**
+     * Construct an attribute object.
+     *
+     * @param key The json key for constructing the json object.
+     * @param modifier The modifier this attribute belongs to.
+     * @param oldValue The method reference of the old value.
+     */
+    public Attribute(String key, M modifier, Supplier<T> oldValue) {
+        this.key = key;
+        this.modifier = modifier;
+        this.oldValue = oldValue;
+        this.newValue = null;
+        this.isSet = false;
+    }
 
     /**
      * Get the modifier of this attribute.
      *
      * @return The modifier.
      */
-    M getModifier();
+    public M getModifier() {
+        return modifier;
+    }
 
     /**
      * Set this attribute to a new value.
@@ -26,7 +52,12 @@ public interface IAttribute<M extends IModifier, T> {
      * @param newValue The new value.
      * @return The modifier for chaining.
      */
-    M setValue(T newValue);
+    public M setValue(T newValue) {
+        checkValue(newValue);
+        this.newValue = newValue;
+        this.isSet = true;
+        return modifier;
+    }
 
     /**
      * Check this value against the circumstances.
@@ -40,7 +71,7 @@ public interface IAttribute<M extends IModifier, T> {
      *
      * @param value The value to check with.
      */
-    void checkValue(T value) throws IllegalArgumentException;
+    public abstract void checkValue(T value) throws IllegalArgumentException;
 
     /**
      * Check if this value is valid or not under the circumstances.
@@ -49,7 +80,7 @@ public interface IAttribute<M extends IModifier, T> {
      * @param value The value to check with.
      * @return True if the value is valid, and it can be set to {@link #setValue(Object)} without any exception thrown.
      */
-    default boolean isValidValue(T value) {
+    public boolean isValidValue(T value) {
         try {
             checkValue(value);
         } catch (Exception e) {
@@ -63,28 +94,42 @@ public interface IAttribute<M extends IModifier, T> {
      *
      * @return The modifier for chaining.
      */
-    M reset();
+    public M reset() {
+        newValue = null;
+        this.isSet = false;
+        return modifier;
+    }
 
     /**
      * Get the json key that is used to update.
      *
      * @return The json key.
      */
-    String getKey();
+    public String getKey() {
+        return key;
+    }
 
     /**
      * Get the old value that is cached by the instance.
+     * Some attributes may not support this operation.
+     *
+     * @exception UnsupportedOperationException
+     *          If the cache is unable to provide the old value.
      *
      * @return The old value.
      */
-    T getOldValue();
+    public T getOldValue() throws UnsupportedOperationException {
+        return oldValue.get();
+    }
 
     /**
      * Get the new value, or null if no value is set yet.
      *
      * @return The new value.
      */
-    T getNewValue();
+    public T getNewValue() {
+        return newValue;
+    }
 
     /**
      * Get the alternative value.
@@ -94,16 +139,25 @@ public interface IAttribute<M extends IModifier, T> {
      *
      * @return The alternative value.
      */
-    Object getAltValue();
+    public Object getAltValue() {
+        return needUpdate() ? newValue == null ? JSONObject.NULL : newValue : getOldValue() == null ? JSONObject.NULL : getOldValue();
+    }
 
-    boolean isChanged();
+    /**
+     * Check if the new value is set.
+     *
+     * @return True if the new value is set.
+     */
+    public boolean isSet() {
+        return isSet;
+    }
 
     /**
      * Check if the value is changed and different from the {@link #getOldValue()}.
      *
      * @return True if the value is changed and different from the old value.
      */
-    default boolean needUpdate() {
+    public boolean needUpdate() {
         return !Objects.equals(getNewValue(), getOldValue());
     }
 
