@@ -4,10 +4,12 @@ import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IRoleManager;
+import org.alienideology.jcord.handle.modifiers.IRoleModifier;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.managers.RoleManager;
+import org.alienideology.jcord.internal.object.modifiers.RoleModifier;
 import org.json.JSONObject;
 
 import java.awt.*;
@@ -23,8 +25,6 @@ public final class Role extends DiscordObject implements IRole, Jsonable {
     private final String id;
     private final IGuild guild;
 
-    private RoleManager roleManager;
-
     private String name;
     private Color color;
     private int position;
@@ -34,11 +34,15 @@ public final class Role extends DiscordObject implements IRole, Jsonable {
     private boolean isSeparateListed;
     private boolean canMention;
 
+    private final RoleManager manager;
+    private final RoleModifier modifier;
+
     public Role(Identity identity, IGuild guild, String id) {
         super(identity);
         this.guild = guild;
         this.id = id;
-        this.roleManager = new RoleManager(this);
+        this.manager = new RoleManager(this);
+        this.modifier = new RoleModifier(this);
     }
 
     @Override
@@ -63,8 +67,13 @@ public final class Role extends DiscordObject implements IRole, Jsonable {
     }
 
     @Override
-    public IRoleManager getRoleManager() {
-        return roleManager;
+    public IRoleManager getManager() {
+        return manager;
+    }
+
+    @Override
+    public IRoleModifier getModifier() {
+        return modifier;
     }
 
     @Override

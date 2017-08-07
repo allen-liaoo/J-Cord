@@ -46,22 +46,6 @@ public final class RoleManager implements IRoleManager {
     }
 
     @Override
-    public AuditAction<Void> modifyName(String name) {
-        if (name == null || name.isEmpty()) return new AuditAction.EmptyAuditAction<>();
-        return modifyRole(new JSONObject().put("name", name));
-    }
-
-    @Override
-    public AuditAction<Void> modifyPermissions(Permission... permissions) {
-        return modifyPermission(Arrays.asList(permissions));
-    }
-
-    @Override
-    public AuditAction<Void> modifyPermissions(Collection<Permission> permissions) {
-        return modifyPermission(permissions);
-    }
-
-    @Override
     public AuditAction<Void> addPermissions(Permission... permissions) {
         return addPermissions(Arrays.asList(permissions));
     }
@@ -70,7 +54,7 @@ public final class RoleManager implements IRoleManager {
     public AuditAction<Void> addPermissions(Collection<Permission> permissions) {
         List<Permission> allPerms = new ArrayList<>(role.getPermissions());
         allPerms.addAll(permissions);
-        return modifyPermission(allPerms);
+        return modifyPermissions(allPerms);
     }
 
     @Override
@@ -82,11 +66,7 @@ public final class RoleManager implements IRoleManager {
     public AuditAction<Void> removePermissions(Collection<Permission> permissions) {
         List<Permission> allPerms = new ArrayList<>(role.getPermissions());
         allPerms.removeAll(permissions);
-        return modifyPermission(allPerms);
-    }
-
-    private AuditAction<Void> modifyPermission(Collection<Permission> permissions) {
-        return modifyRole(new JSONObject().put("permissions", Permission.getLongByPermissions(permissions)));
+        return modifyPermissions(allPerms);
     }
 
     @Override

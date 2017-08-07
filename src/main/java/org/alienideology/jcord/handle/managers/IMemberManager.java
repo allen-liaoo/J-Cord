@@ -81,7 +81,7 @@ public interface IMemberManager {
     AuditAction<Void> modifyRoles(Collection<IRole> add, Collection<IRole> remove);
 
     /**
-     * Modify roles of this member by passing all the roles this member wll have.
+     * Modify roles of this member by passing all the roles this member will have.
      * Note that this will override all roles the member once had.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
@@ -91,10 +91,12 @@ public interface IMemberManager {
      * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
      *          If the member is the server owner or have higher role than the identity.
      *
-     * @param modified The modified roles.
+     * @param roles The modified roles.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    AuditAction<Void> modifyRoles(Collection<IRole> modified);
+    default AuditAction<Void> modifyRoles(Collection<IRole> roles) {
+        return getMember().getModifier().roles(roles).modify();
+    }
 
     /**
      * Add roles to this member.
@@ -176,10 +178,12 @@ public interface IMemberManager {
      * @param channel The new channel.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    AuditAction<Void> moveToVoiceChannel(IVoiceChannel channel);
+    default AuditAction<Void> moveToVoiceChannel(IVoiceChannel channel) {
+        return getMember().getModifier().voiceChannel(channel).modify();
+    }
 
     /**
-     * Move this member to a voice channel bt ID.
+     * Move this member to a voice channel by ID.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          <ul>
@@ -193,7 +197,9 @@ public interface IMemberManager {
      * @param channelId The new channel's ID.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    AuditAction<Void> moveToVoiceChannel(String channelId);
+    default AuditAction<Void> moveToVoiceChannel(String channelId) {
+        return getMember().getModifier().voiceChannel(channelId).modify();
+    }
 
     /**
      * Mute or unmute this member.
@@ -209,7 +215,9 @@ public interface IMemberManager {
      * @param mute True to mute, false to unmute.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    AuditAction<Void> mute(boolean mute);
+    default AuditAction<Void> mute(boolean mute) {
+        return getMember().getModifier().mute(mute).modify();
+    }
 
     /**
      * Deafen or undeafen this member.
@@ -224,6 +232,8 @@ public interface IMemberManager {
      * @param deafen True to deafen the member, false to undeafen.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    AuditAction<Void> deafen(boolean deafen);
+    default AuditAction<Void> deafen(boolean deafen) {
+        return getMember().getModifier().deafen(deafen).modify();
+    }
 
 }

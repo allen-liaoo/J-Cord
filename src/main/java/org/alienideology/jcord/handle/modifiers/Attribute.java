@@ -3,6 +3,7 @@ package org.alienideology.jcord.handle.modifiers;
 import org.json.JSONObject;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -47,7 +48,7 @@ public abstract class Attribute<M extends IModifier, T> {
     /**
      * Set this attribute to a new value.
      * This invokes {@link #checkValue(Object)} before checking the value.
-     * All {@link Exception} will be thrown if the new value is invalid.
+     * All {@link RuntimeException} will be thrown if the new value is invalid.
      *
      * @param newValue The new value.
      * @return The modifier for chaining.
@@ -60,8 +61,40 @@ public abstract class Attribute<M extends IModifier, T> {
     }
 
     /**
+     * Set this attribute to a new value, if the value is valid.
+     * If the value is not valid, then invoke the {@link Consumer} error handler to handle the exception.
+     *
+     * @param newValue The new value.
+     * @param errorHandler The handler for handling exceptions when setting value.
+     * @return The modifier for chaining.
+     */
+    public M setValue(T newValue, Consumer<RuntimeException> errorHandler) {
+        try {
+            setValue(newValue);
+        } catch (RuntimeException ex) {
+            if (errorHandler != null) errorHandler.accept(ex);
+        }
+        return modifier;
+    }
+
+    /**
+     * Set this attribute to a new value, if the value is valid.
+     * This method is guaranteed to not throw any exception.
+     *
+     * @param newValue The new value.
+     * @return The modifier for chaining.
+     */
+    public M setValueIfValid(T newValue) {
+        if (isValidValue(newValue)) {
+            this.newValue = newValue;
+            this.isSet = true;
+        }
+        return modifier;
+    }
+
+    /**
      * Check this value against the circumstances.
-     * The {@link Exception}s thrown will be different, depends on the individual attribute.
+     * The {@link RuntimeException} thrown will be different, depends on the individual attribute.
      *
      * @exception IllegalArgumentException
      *          This exception is thrown generally to invalid attributes.

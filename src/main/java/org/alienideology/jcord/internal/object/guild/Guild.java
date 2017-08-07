@@ -51,7 +51,7 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
     private String icon;
     private String splash;
 
-    private Member owner;
+    private IMember owner;
     private Region region;
 
     private AFKTimeout afkTimeout;
@@ -68,7 +68,7 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
     private List<Role> roles;
     private List<GuildEmoji> emojis;
 
-    private final List<Member> members;
+    private List<IMember> members;
     private final List<TextChannel> textChannels;
     private final List<VoiceChannel> voiceChannels;
 
@@ -190,7 +190,7 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
     }
 
     @Override
-    public Member getOwner() {
+    public IMember getOwner() {
         return owner;
     }
 
@@ -222,7 +222,7 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
     @Override
     public List<IUser> getUsers() {
         List<User> users = new ArrayList<>();
-        for (Member mem : members) {
+        for (IMember mem : members) {
             users.add((User) mem.getUser());
         }
         return Collections.unmodifiableList(users);
@@ -230,7 +230,7 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
 
     @Override
     public IMember getSelfMember() {
-        for (Member member : members) {
+        for (IMember member : members) {
             if (member.getUser().isSelf())
                 return member;
         }
@@ -240,7 +240,7 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
     @Override
     @Nullable
     public IMember getMember(String id) {
-        for (Member member : members) {
+        for (IMember member : members) {
             if (member.getId().equals(id))
                 return member;
         }
@@ -417,7 +417,7 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
 
     //----------------Setters----------------
     public Guild setOwner (String id) {
-        for (Member mem : members) {
+        for (IMember mem : members) {
             if (mem.getId().equals(id)) {
                 this.owner = mem;
                 break;
@@ -519,6 +519,10 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
         VoiceChannel channel = (VoiceChannel) getVoiceChannel(channelId);
         this.voiceChannels.remove(channel);
         return channel;
+    }
+
+    public void setMembers(List<IMember> members) {
+        this.members = members;
     }
 
     public Guild addMember (Member member) {

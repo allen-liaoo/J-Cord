@@ -5,6 +5,7 @@ import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.managers.IGuildManager;
 import org.alienideology.jcord.handle.managers.IRoleManager;
+import org.alienideology.jcord.handle.modifiers.IRoleModifier;
 import org.alienideology.jcord.handle.permission.PermCheckable;
 import org.alienideology.jcord.handle.permission.Permission;
 
@@ -23,7 +24,14 @@ public interface IRole extends IDiscordObject, ISnowFlake, IMention, PermCheckab
      *
      * @return The role managers.
      */
-    IRoleManager getRoleManager();
+    IRoleManager getManager();
+
+    /**
+     * Get the modifier that modifies this role.
+     *
+     * @return The role modifier.
+     */
+    IRoleModifier getModifier();
 
     /**
      * Deletes this role from the guild.

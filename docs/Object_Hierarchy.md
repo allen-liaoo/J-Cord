@@ -125,6 +125,8 @@ Permission (Enumeration) - A way to limit and grant certain abilities to members
 IModifier - A modifier that support chainable methods to update multiple IAttribute of an instance at once.
 Attribute - An updatable field of an IModifier.
  - IChannelModifier - A modifier that modifies both ITextChannel and IVoiceChannel.
+ - IMemberModifier - The modifier that modifies a member.
+ - IRoleModifier - The modifier for a role.
  - ISelfModifier - A modifier that modify the self user.
  - IWebhookModifier - The modifier that modifies a webhook.
  - IGroupModifier - A modifier that modify a group.

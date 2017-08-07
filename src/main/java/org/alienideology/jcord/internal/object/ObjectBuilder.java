@@ -12,10 +12,7 @@ import org.alienideology.jcord.handle.client.setting.IClientSetting;
 import org.alienideology.jcord.handle.client.setting.IClientSetting.FriendSource;
 import org.alienideology.jcord.handle.client.setting.MessageNotification;
 import org.alienideology.jcord.handle.emoji.Emojis;
-import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.handle.guild.IGuildEmoji;
-import org.alienideology.jcord.handle.guild.IIntegration;
-import org.alienideology.jcord.handle.guild.IRole;
+import org.alienideology.jcord.handle.guild.*;
 import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.oauth.Scope;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
@@ -164,19 +161,17 @@ public final class ObjectBuilder {
             guild.setOwner(owner).setAfkChannel(afk_channel).setEmbedChannel(embed_channel);
 
             /* Build Members */
-            // Members array are only present at Client Ready Event or Guild Create Event.
             // Build this after roles because members have roles field
+            // Members array are only present at Client Ready Event or Guild Create Event, but they are not complete.
+            // So we still use http request to get members
             JSONArray members;
-            if (json.has("members")) {
-                members = json.getJSONArray("members");
-            } else {
-                try {
-                    members = new Requester(identity, HttpPath.Guild.LIST_GUILD_MEMBERS).request(id)
-                            .updateGetRequest(r -> r.queryString("limit", "1000")).getAsJSONArray();
-                } catch (RuntimeException e) {
-                    identity.LOG.log(LogLevel.FETAL,"Building guild members. (Guild: "+guild.toString()+")", e);
-                    return guild;
-                }
+            List<IMember> membersList = new ArrayList<>();
+            try {
+                members = new Requester(identity, HttpPath.Guild.LIST_GUILD_MEMBERS).request(id)
+                        .updateGetRequest(r -> r.queryString("limit", "1000")).getAsJSONArray();
+            } catch (RuntimeException e) {
+                identity.LOG.log(LogLevel.FETAL,"Building guild members. (Guild: "+guild.toString()+")", e);
+                return guild;
             }
 
             // Request guild members after the guild and members are built
@@ -188,8 +183,9 @@ public final class ObjectBuilder {
 
             for (int i = 0; i < members.length(); i++) {
                 JSONObject member = members.getJSONObject(i);
-                guild.addMember(buildMember(member, guild));
+                membersList.add(buildMember(member, guild));
             }
+            guild.setMembers(membersList);
 
             return guild;
         }

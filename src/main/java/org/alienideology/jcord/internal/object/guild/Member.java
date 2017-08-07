@@ -6,11 +6,13 @@ import org.alienideology.jcord.handle.guild.IGuildVoiceState;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IMemberManager;
+import org.alienideology.jcord.handle.modifiers.IMemberModifier;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.VoiceState;
 import org.alienideology.jcord.internal.object.managers.MemberManager;
+import org.alienideology.jcord.internal.object.modifiers.MemberModifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.OffsetDateTime;
@@ -23,8 +25,6 @@ public final class Member extends DiscordObject implements IMember {
 
     private final IGuild guild;
 
-    private final MemberManager memberManager;
-
     private final IUser user;
     private String nickname;
     private OffsetDateTime joinedDate;
@@ -33,17 +33,26 @@ public final class Member extends DiscordObject implements IMember {
     private List<IRole> roles;
     private List<Permission> permissions;
 
+    private final MemberManager manager;
+    private final MemberModifier modifier;
+
     public Member(Identity identity, IGuild guild, IUser user) {
         super(identity);
         this.guild = guild;
         this.user = user;
         this.voiceState = new GuildVoiceState(identity, this, new VoiceState(identity, user));
-        this.memberManager = new MemberManager(this);
+        this.manager = new MemberManager(this);
+        this.modifier = new MemberModifier(this);
     }
 
     @Override
-    public IMemberManager getMemberManager() {
-        return memberManager;
+    public IMemberManager getManager() {
+        return manager;
+    }
+
+    @Override
+    public IMemberModifier getModifier() {
+        return modifier;
     }
 
     @Override

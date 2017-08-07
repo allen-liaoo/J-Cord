@@ -5,6 +5,7 @@ import org.alienideology.jcord.handle.IMention;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.managers.IMemberManager;
+import org.alienideology.jcord.handle.modifiers.IMemberModifier;
 import org.alienideology.jcord.handle.permission.PermCheckable;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IUser;
@@ -48,12 +49,19 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
     }
 
     /**
-     * Get the IMemberManager of this guild.
+     * Get the IMemberManager of this member.
      * The member managers is used to change nicknames, mute, and deafen members.
      *
      * @return The member managers.
      */
-    IMemberManager getMemberManager();
+    IMemberManager getManager();
+
+    /**
+     * Get the IMemberModifier for this member.
+     *
+     * @return The member modifier.
+     */
+    IMemberModifier getModifier();
 
     /**
      * Kick this member.
@@ -215,7 +223,7 @@ public interface IMember extends IDiscordObject, ISnowFlake, IMention, PermCheck
      * @return True if the role is modifiable.
      */
     default boolean canModify(IRole role) {
-        return this.hasPermissions(true, Permission.MANAGE_ROLES) && this.getHighestRole().compareTo(role) < 0;
+        return this.hasPermissions(true, Permission.MANAGE_ROLES) && this.getHighestRole().compareTo(role) > 0;
     }
 
     /**

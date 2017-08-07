@@ -40,7 +40,6 @@ public interface IRoleManager {
 
     /**
      * Modify the name of this role.
-     * Null or empty name will be ignored.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Manage Roles} permission.
@@ -50,7 +49,24 @@ public interface IRoleManager {
      * @param name The new name.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    AuditAction<Void> modifyName(String name);
+    default AuditAction<Void> modifyName(String name) {
+        return getRole().getModifier().name(name).modify();
+    }
+
+    /**
+     * Modify the role color.
+     *
+     * @exception org.alienideology.jcord.internal.exception.PermissionException
+     *          If the identity does not have {@code Manage Roles} permission.
+     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
+     *          If the role is at a higher hierarchy position than the identity.
+     *
+     * @param color The new color.
+     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
+     */
+    default AuditAction<Void> modifyColor(Color color) {
+        return getRole().getModifier().color(color).modify();
+    }
 
     /**
      * Modify this role's permissions.
@@ -63,7 +79,9 @@ public interface IRoleManager {
      * @param permissions A new varargs of permissions.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    AuditAction<Void> modifyPermissions(Permission... permissions);
+    default AuditAction<Void> modifyPermissions(Permission... permissions) {
+        return getRole().getModifier().permissions(permissions).modify();
+    }
 
     /**
      * Modify this role's permissions.
@@ -76,7 +94,9 @@ public interface IRoleManager {
      * @param permissions A new collection of permissions.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    AuditAction<Void> modifyPermissions(Collection<Permission> permissions);
+    default AuditAction<Void> modifyPermissions(Collection<Permission> permissions) {
+        return getRole().getModifier().permissions(permissions).modify();
+    }
 
     /**
      * Add permissions to this role.
@@ -131,19 +151,6 @@ public interface IRoleManager {
     AuditAction<Void> removePermissions(Collection<Permission> permissions);
 
     /**
-     * Modify the role color.
-     *
-     * @exception org.alienideology.jcord.internal.exception.PermissionException
-     *          If the identity does not have {@code Manage Roles} permission.
-     * @exception org.alienideology.jcord.internal.exception.HigherHierarchyException
-     *          If the role is at a higher hierarchy position than the identity.
-     *
-     * @param color The new color.
-     * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
-     */
-    AuditAction<Void> modifyColor(Color color);
-
-    /**
      * Set if this role will be separate listed from online members.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
@@ -154,7 +161,9 @@ public interface IRoleManager {
      * @param isSeparateListed If set to true, then the role will be separated listed.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    AuditAction<Void> modifyIsSeparateListed(boolean isSeparateListed);
+    default AuditAction<Void> modifyIsSeparateListed(boolean isSeparateListed) {
+        return getRole().getModifier().isSeparateListed(isSeparateListed).modify();
+    }
 
     /**
      * Set if this role can be mentioned by anyone in the guild.
@@ -167,7 +176,9 @@ public interface IRoleManager {
      * @param canMention If set to true, then the role can be mentioned.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    AuditAction<Void> modifyCanMention(boolean canMention);
+    default AuditAction<Void> modifyCanMention(boolean canMention) {
+        return getRole().getModifier().canMention(canMention).modify();
+    }
 
     /**
      * Change the position of a role.
