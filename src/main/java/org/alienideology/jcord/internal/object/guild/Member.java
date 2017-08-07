@@ -38,7 +38,6 @@ public final class Member extends DiscordObject implements IMember {
         this.guild = guild;
         this.user = user;
         this.voiceState = new GuildVoiceState(identity, this, new VoiceState(identity, user));
-        this.permissions = initPermissions();
         this.memberManager = new MemberManager(this);
     }
 
@@ -173,11 +172,7 @@ public final class Member extends DiscordObject implements IMember {
     public Member setRoles(List<IRole> roles) {
         this.roles = roles;
         this.roles.sort((o1, o2) -> -1 * o1.compareTo(o2));
-        return this;
-    }
-
-    public Member setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
+        this.permissions = initPermissions();
         return this;
     }
 

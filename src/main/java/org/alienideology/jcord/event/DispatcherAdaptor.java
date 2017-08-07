@@ -156,12 +156,22 @@ public class DispatcherAdaptor {
                 onGuildSplashUpdate((GuildSplashUpdateEvent) event);
             } else if (event instanceof GuildAFKTimeoutUpdateEvent) {
                 onGuildAFKTimeoutUpdate((GuildAFKTimeoutUpdateEvent) event);
+            } else if (event instanceof GuildAFKChannelUpdateEvent) {
+                onGuildAFKChannelUpdate((GuildAFKChannelUpdateEvent) event);
+            } else if (event instanceof GuildEmbedEnabledUpdateEvent) {
+                onGuildEmbedEnabledUpdate((GuildEmbedEnabledUpdateEvent) event);
+            } else if (event instanceof GuildEmbedChannelUpdateEvent) {
+                onGuildEmbedChannelpdate((GuildEmbedChannelUpdateEvent) event);
             } else if (event instanceof GuildVerificationUpdateEvent) {
                 onGuildVerificationUpdate((GuildVerificationUpdateEvent) event);
             } else if (event instanceof GuildNotificationUpdateEvent) {
                 onGuildNotificationUpdate((GuildNotificationUpdateEvent) event);
             } else if (event instanceof GuildMFAUpdateEvent) {
                 onGuildMFAUpdate((GuildMFAUpdateEvent) event);
+            } else if (event instanceof GuildContentFilterUpdateEvent) {
+                onGuildContentFilterUpdate((GuildContentFilterUpdateEvent) event);
+            } else if (event instanceof GuildIntegrationsUpdateEvent) {
+                onGuildIntegrationUpdate((GuildIntegrationsUpdateEvent) event);
             }
         } else if (event instanceof GuildDeleteEvent) {
             onGuildDelete((GuildDeleteEvent) event);
@@ -267,11 +277,21 @@ public class DispatcherAdaptor {
 
     public void onGuildAFKTimeoutUpdate (GuildAFKTimeoutUpdateEvent event) {}
 
+    public void onGuildAFKChannelUpdate (GuildAFKChannelUpdateEvent event) {}
+
+    public void onGuildEmbedEnabledUpdate (GuildEmbedEnabledUpdateEvent event) {}
+
+    public void onGuildEmbedChannelpdate (GuildEmbedChannelUpdateEvent event) {}
+
     public void onGuildVerificationUpdate (GuildVerificationUpdateEvent event) {}
 
     public void onGuildNotificationUpdate (GuildNotificationUpdateEvent event) {}
 
     public void onGuildMFAUpdate (GuildMFAUpdateEvent event) {}
+
+    public void onGuildContentFilterUpdate (GuildContentFilterUpdateEvent event) {}
+
+    public void onGuildIntegrationUpdate (GuildIntegrationsUpdateEvent event) {}
 
     public void onGuildDelete (GuildDeleteEvent event) {}
 

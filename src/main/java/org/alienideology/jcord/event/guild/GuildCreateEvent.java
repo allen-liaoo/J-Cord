@@ -1,7 +1,7 @@
 package org.alienideology.jcord.event.guild;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.guild.Guild;
+import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.guild.IGuild;
 
 /**
  * GuildCreateEvent - Fired whenever a guild is detected
@@ -18,7 +18,7 @@ import org.alienideology.jcord.internal.object.guild.Guild;
  */
 public class GuildCreateEvent extends GuildEvent {
 
-    public GuildCreateEvent(IdentityImpl identity, Guild guild, int sequence) {
+    public GuildCreateEvent(Identity identity, int sequence, IGuild guild) {
         super(identity, sequence, guild);
     }
 

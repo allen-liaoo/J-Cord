@@ -50,8 +50,9 @@ public final class MessageBuilder implements Buildable<MessageBuilder, IMessage>
      */
     @Override
     public IMessage build() {
-        Message message = new Message(null, null, null, content.toString(), IMessage.Type.DEFAULT.key, null,
-                null, null, null, isTTS, false, false);
+        Message message = new Message(null, null, null)
+                .setContent(content.toString())
+                .setTTS(isTTS);
         if (embed != null)
                 message.addEmbed(embed);
         return message;

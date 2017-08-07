@@ -1,17 +1,20 @@
 package org.alienideology.jcord.event.guild.update;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.guild.GuildUpdateEvent;
 import org.alienideology.jcord.handle.Region;
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.guild.Guild;
+import org.alienideology.jcord.handle.guild.IGuild;
 
 /**
  * @author AlienIdeology
  */
 public class GuildRegionUpdateEvent extends GuildUpdateEvent {
 
-    public GuildRegionUpdateEvent(IdentityImpl identity, int sequence, Guild guild, Guild oldGuild) {
-        super(identity, sequence, guild, oldGuild);
+    private final Region oldRegion;
+
+    public GuildRegionUpdateEvent(Identity identity, int sequence, IGuild guild, Region oldRegion) {
+        super(identity, sequence, guild);
+        this.oldRegion = oldRegion;
     }
 
     public Region getNewRegion() {
@@ -19,7 +22,7 @@ public class GuildRegionUpdateEvent extends GuildUpdateEvent {
     }
 
     public Region getOldRegion() {
-        return oldGuild.getRegion();
+        return oldRegion;
     }
 
 }

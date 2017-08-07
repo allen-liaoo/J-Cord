@@ -39,9 +39,13 @@ public final class GuildBuilder implements Buildable<GuildBuilder, IGuild> {
      */
     @Override
     public IGuild build() {
-        Guild guild = new Guild(null, null, name, icon == null || icon.equals(Icon.DEFAULT_ICON) ? null : (String) icon.getData(), null,
-                region == null ? null : region.key, -1,false,
-                ((verification == null) ? -1 : (verification.key)), notification == null ? -1 : notification.key, -1, -1);
+        Guild guild = new Guild(null, null, true)
+                .setName(name)
+                .setRegion(region.key)
+                .setIcon(icon == Icon.DEFAULT_ICON ? null : (String) icon.getData())
+                .setVerificationLevel(verification.key)
+                .setNotificationLevel(notification.key);
+
         roles.forEach(r -> guild.addRole((Role) r));
         channels.forEach(guild::addGuildChannel);
         return guild;

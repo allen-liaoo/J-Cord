@@ -191,7 +191,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
     private Message edit(JSONObject json, String id) {
         checkContentLength(json.getString("content"));
 
-        User author = new ObjectBuilder(identity).buildMessageById(this.id, id).getAuthor();
+        User author = (User) new ObjectBuilder(identity).buildMessageById(this.id, id).getAuthor();
 
         if (!isPrivate && !author.isSelf()) {
             // Edit message from other people
@@ -228,7 +228,7 @@ public class MessageChannel extends Channel implements IMessageChannel {
     }
 
     private AuditAction<IMessage> delete(String id) {
-        User author = new ObjectBuilder(identity).buildMessageById(this.id, id).getAuthor();
+        IUser author = new ObjectBuilder(identity).buildMessageById(this.id, id).getAuthor();
         if (!author.isSelf()) {  // Delete a message from others
             if (isPrivate) {
                 throw new IllegalArgumentException("Cannot delete the recipient's message in a PrivateChannel or Group!");

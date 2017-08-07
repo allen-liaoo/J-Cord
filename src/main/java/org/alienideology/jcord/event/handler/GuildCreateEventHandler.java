@@ -34,7 +34,7 @@ public class GuildCreateEventHandler extends EventHandler {
         // Ignore initial guild create event
         if (guild == null) {
             guild = builder.buildGuild(json);
-            dispatchEvent(new GuildCreateEvent(identity, guild, sequence));
+            dispatchEvent(new GuildCreateEvent(identity, sequence, guild));
         }
 
         // Request guild members after the guild is built

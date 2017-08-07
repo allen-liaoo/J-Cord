@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.guild;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.Region;
 import org.alienideology.jcord.handle.audit.IAuditLog;
@@ -14,7 +15,6 @@ import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.exception.PermissionException;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.channel.TextChannel;
@@ -54,16 +54,16 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
     private Member owner;
     private Region region;
 
-    private AFKTimeout afk_timeout;
-    private VoiceChannel afk_channel;
+    private AFKTimeout afkTimeout;
+    private VoiceChannel afkChannel;
 
-    private boolean embed_enabled;
-    private TextChannel embed_channel;
+    private boolean embedEnabled;
+    private TextChannel embedChannel;
 
-    private Verification verification_level;
-    private Notification notifications_level;
-    private ContentFilterLevel ecf_level;
-    private MFA mfa_level;
+    private Verification verificationLevel;
+    private Notification notificationLevel;
+    private ContentFilterLevel ecfLevel;
+    private MFA mfaLevel;
 
     private List<Role> roles;
     private List<GuildEmoji> emojis;
@@ -72,45 +72,10 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
     private final List<TextChannel> textChannels;
     private final List<VoiceChannel> voiceChannels;
 
-    /**
-     * Unavailable Guild
-     * @param identity The IdentityImpl this guild belongs to.
-     * @param id The ID of this guild
-     */
-    public Guild (IdentityImpl identity, String id) {
-        this(identity, id, null, null, null, null,
-                -1, false, -1, -1, -1, -1);
-    }
-
-
-    /**
-     * Available Guild
-     * @param identity The IdentityImpl this guild belongs to.
-     * @param id The ID of this guild
-     * @param icon The icon of this guild
-     * @param splash The splash hash of this guild
-     * @param region The string value of the region
-     * @param afk_timeout The afk timeout
-     * @param embed_enabled Is embed enabled (i.e. widget)
-     * @param verification_level Level of verification
-     * @param notification_level Level of notification
-     * @param mfa_level Required MFA level
-     */
-    public Guild (IdentityImpl identity, String id, String name, String icon, String splash, String region,
-                  int afk_timeout, boolean embed_enabled, int verification_level, int notification_level, int ecf_level, int mfa_level) {
+    public Guild(Identity identity, String id, boolean isAvailable) {
         super(identity);
         this.id = id;
-        this.isAvailable = true;
-        this.name = name;
-        this.icon = icon;
-        this.splash = splash;
-        this.region = Region.getByKey(region);
-        this.afk_timeout = AFKTimeout.getByTimeout(afk_timeout);
-        this.embed_enabled = embed_enabled;
-        this.verification_level = Verification.getByKey(verification_level);
-        this.notifications_level = Notification.getByKey(notification_level);
-        this.ecf_level = ContentFilterLevel.getByKey(ecf_level);
-        this.mfa_level = MFA.getByKey(mfa_level);
+        this.isAvailable = isAvailable;
         this.roles = new ArrayList<>();
         this.emojis = new ArrayList<>();
         this.members = new ArrayList<>();
@@ -128,8 +93,8 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
                 // icon is either raw data from Icon.getData() casted to string
                 // or Icon.DEFAULT_ICON
                 .put("icon", icon == null ? Icon.DEFAULT_ICON.getData() : icon);
-        if (verification_level != Verification.UNKNOWN) json.put("verification_level", verification_level.key);
-        if (notifications_level != Notification.UNKNOWN) json.put("default_message_notifications", notifications_level.key);
+        if (verificationLevel != Verification.UNKNOWN) json.put("verification_level", verificationLevel.key);
+        if (notificationLevel != Notification.UNKNOWN) json.put("default_message_notifications", notificationLevel.key);
 
         JSONArray roles = new JSONArray();
         for (IRole role : this.roles) {
@@ -184,44 +149,44 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
 
     @Override
     public AFKTimeout getAfkTimeout() {
-        return afk_timeout;
+        return afkTimeout;
     }
 
     @Override
     public boolean isEmbedEnabled() {
-        return embed_enabled;
+        return embedEnabled;
     }
 
     @Override
     public Verification getVerificationLevel() {
-        return verification_level;
+        return verificationLevel;
     }
 
     @Override
     public Notification getNotificationsLevel() {
-        return notifications_level;
+        return notificationLevel;
     }
 
     @Override
     public ContentFilterLevel getContentFilterLevel() {
-        return ecf_level;
+        return ecfLevel;
     }
 
     @Override
     public MFA getMFALevel() {
-        return mfa_level;
+        return mfaLevel;
     }
 
     @Override
     @Nullable
     public VoiceChannel getAfkChannel() {
-        return afk_channel;
+        return afkChannel;
     }
 
     @Override
     @Nullable
     public TextChannel getEmbedChannel() {
-        return embed_channel;
+        return embedChannel;
     }
 
     @Override
@@ -448,6 +413,7 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
                 '}';
     }
 
+    //----------------Setters----------------
     public Guild setOwner (String id) {
         for (Member mem : members) {
             if (mem.getId().equals(id)) {
@@ -463,9 +429,68 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
         return this;
     }
 
-    public Guild setChannels (String afk, String embed) {
-        this.afk_channel = (VoiceChannel) getVoiceChannel(afk);
-        this.embed_channel = (TextChannel) getTextChannel(embed);
+    public Guild setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Guild setIcon(String icon) {
+        this.icon = icon;
+        return this;
+    }
+
+    public Guild setSplash(String splash) {
+        this.splash = splash;
+        return this;
+    }
+
+    public Guild setOwner(Member owner) {
+        this.owner = owner;
+        return this;
+    }
+
+    public Guild setRegion(String region) {
+        this.region = Region.getByKey(region);
+        return this;
+    }
+
+    public Guild setAfkTimeout(int afkTimeout) {
+        this.afkTimeout = AFKTimeout.getByTimeout(afkTimeout);
+        return this;
+    }
+
+    public Guild setAfkChannel(String afkChannel) {
+        this.afkChannel = (VoiceChannel) getVoiceChannel(afkChannel);
+        return this;
+    }
+
+    public Guild setEmbedEnabled(boolean embedEnabled) {
+        this.embedEnabled = embedEnabled;
+        return this;
+    }
+
+    public Guild setEmbedChannel(String embedChannel) {
+        this.embedChannel = (TextChannel) getTextChannel(embedChannel);
+        return this;
+    }
+
+    public Guild setVerificationLevel(int verificationLevel) {
+        this.verificationLevel = Verification.getByKey(verificationLevel);
+        return this;
+    }
+
+    public Guild setNotificationLevel(int notificationLevel) {
+        this.notificationLevel = Notification.getByKey(notificationLevel);
+        return this;
+    }
+
+    public Guild setEcfLevel(int ecfLevel) {
+        this.ecfLevel = ContentFilterLevel.getByKey(ecfLevel);
+        return this;
+    }
+
+    public Guild setMfaLevel(int mfaLevel) {
+        this.mfaLevel = MFA.getByKey(mfaLevel);
         return this;
     }
 

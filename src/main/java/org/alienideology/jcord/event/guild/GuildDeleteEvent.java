@@ -1,7 +1,7 @@
 package org.alienideology.jcord.event.guild;
 
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.guild.Guild;
+import org.alienideology.jcord.Identity;
+import org.alienideology.jcord.handle.guild.IGuild;
 
 import java.time.OffsetDateTime;
 
@@ -12,7 +12,7 @@ public class GuildDeleteEvent extends GuildEvent {
 
     private final OffsetDateTime timeStamp;
 
-    public GuildDeleteEvent(IdentityImpl identity, Guild guild, int sequence, OffsetDateTime timeStamp) {
+    public GuildDeleteEvent(Identity identity, int sequence, IGuild guild, OffsetDateTime timeStamp) {
         super(identity, sequence, guild);
         this.timeStamp = timeStamp;
     }

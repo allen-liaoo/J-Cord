@@ -15,7 +15,7 @@ public final class Note extends ClientObject implements INote {
 
     public Note(Client client, IUser user) {
         super(client);
-        this.id = user.getId();
+        this.id = user == null ? null : user.getId();
         this.user = user;
     }
 

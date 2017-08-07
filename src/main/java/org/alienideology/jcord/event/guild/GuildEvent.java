@@ -8,7 +8,7 @@ import org.alienideology.jcord.handle.guild.IGuild;
  * Guild Events - Any events that happens under a guild
  * @author AlienIdeology
  */
-public abstract class GuildEvent extends Event {
+public class GuildEvent extends Event {
 
     protected final IGuild guild;
 

@@ -65,8 +65,6 @@ import java.util.Map;
  *
  * @author AlienIdeology
  */
-// TODO: Large Constructor -> Setter List: Guild, Member, Message, Reaction
-// TODO: Changed to setter, require changing update events:
 public final class ObjectBuilder {
 
     private IdentityImpl identity;
@@ -90,7 +88,7 @@ public final class ObjectBuilder {
         String id = json.getString("id");
 
         if (json.has("unavailable") && json.getBoolean("unavailable")) {
-            Guild guild = new Guild(identity, id);
+            Guild guild = new Guild(identity, id, false);
             identity.addGuild(guild);
             return guild;
         } else {
@@ -109,7 +107,18 @@ public final class ObjectBuilder {
             int ecf_level = json.getInt("explicit_content_filter");
             int mfa_level = json.getInt("mfa_level");
 
-            Guild guild = new Guild(identity, id, name, icon, splash, region, afk_timeout, embed_enabled, verification_level, notifications_level, ecf_level, mfa_level);
+            Guild guild = new Guild(identity, id, true)
+                    .setName(name)
+                    .setIcon(icon)
+                    .setSplash(splash)
+                    .setOwner(owner)
+                    .setRegion(region)
+                    .setAfkTimeout(afk_timeout)
+                    .setEmbedEnabled(embed_enabled)
+                    .setVerificationLevel(verification_level)
+                    .setNotificationLevel(notifications_level)
+                    .setEcfLevel(ecf_level)
+                    .setMfaLevel(mfa_level);
 
             // Add guilds first because channels, roles, and members have a guild field
             identity.addGuild(guild);
@@ -152,7 +161,7 @@ public final class ObjectBuilder {
                 guild.addGuildChannel((IGuildChannel) channel);
             }
 
-            guild.setOwner(owner).setChannels(afk_channel, embed_channel);
+            guild.setOwner(owner).setAfkChannel(afk_channel).setEmbedChannel(embed_channel);
 
             /* Build Members */
             // Members array are only present at Client Ready Event or Guild Create Event.
@@ -537,7 +546,16 @@ public final class ObjectBuilder {
         boolean mentionedEveryone = json.getBoolean("mention_everyone");
         boolean isPinned = json.has("pinned") && json.getBoolean("pinned");
 
-        Message message =  new Message(identity, id, author, content, type, timeStamp, mentions, mentionsRole, attachments, isTTS, mentionedEveryone, isPinned);
+        Message message =  new Message(identity, id, author)
+                .setContent(content)
+                .setType(type)
+                .setCreatedTime(timeStamp)
+                .setMentions(mentions)
+                .setMentionedRoles(mentionsRole)
+                .setAttachments(attachments)
+                .setTTS(isTTS)
+                .setMentionedEveryone(mentionedEveryone)
+                .setPinned(isPinned);
 
         /* Channel */
         message.setChannel((MessageChannel) identity.getMessageChannel(channel_id));  // Set channel may be null for MessageChannel's LastMessage

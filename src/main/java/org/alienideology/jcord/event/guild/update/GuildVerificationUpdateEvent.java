@@ -1,17 +1,19 @@
 package org.alienideology.jcord.event.guild.update;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.event.guild.GuildUpdateEvent;
 import org.alienideology.jcord.handle.guild.IGuild;
-import org.alienideology.jcord.internal.object.IdentityImpl;
-import org.alienideology.jcord.internal.object.guild.Guild;
 
 /**
  * @author AlienIdeology
  */
 public class GuildVerificationUpdateEvent extends GuildUpdateEvent {
 
-    public GuildVerificationUpdateEvent(IdentityImpl identity, int sequence, Guild newGuild, Guild oldGuild) {
-        super(identity, sequence, newGuild, oldGuild);
+    private final IGuild.Verification oldVerification;
+
+    public GuildVerificationUpdateEvent(Identity identity, int sequence, IGuild guild, IGuild.Verification oldVerification) {
+        super(identity, sequence, guild);
+        this.oldVerification = oldVerification;
     }
 
     public IGuild.Verification getNewVerification() {
@@ -19,7 +21,7 @@ public class GuildVerificationUpdateEvent extends GuildUpdateEvent {
     }
 
     public IGuild.Verification getOldVerification() {
-        return oldGuild.getVerificationLevel();
+        return oldVerification;
     }
 
 }

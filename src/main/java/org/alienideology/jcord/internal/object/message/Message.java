@@ -1,5 +1,6 @@
 package org.alienideology.jcord.internal.object.message;
 
+import org.alienideology.jcord.Identity;
 import org.alienideology.jcord.handle.channel.IMessageChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
@@ -10,7 +11,6 @@ import org.alienideology.jcord.handle.message.IReaction;
 import org.alienideology.jcord.handle.message.MessageProcessor;
 import org.alienideology.jcord.handle.user.IUser;
 import org.alienideology.jcord.internal.object.DiscordObject;
-import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.channel.MessageChannel;
 import org.alienideology.jcord.internal.object.guild.Role;
@@ -27,18 +27,17 @@ import java.util.Objects;
 /**
  * @author AlienIdeology
  */
-public class Message extends DiscordObject implements IMessage, Jsonable {
+public final class Message extends DiscordObject implements IMessage, Jsonable {
 
-    /* Instance Field */
     private MessageChannel channel;
 
     private final String id;
-    private final User author;
+    private final IUser author;
 
     private MessageProcessor messageProcessor;
     private String content;
     private Type type;
-    private final OffsetDateTime createdTime;
+    private OffsetDateTime createdTime;
 
     private List<IEmbed> embeds;
     private List<User> mentions;
@@ -50,22 +49,11 @@ public class Message extends DiscordObject implements IMessage, Jsonable {
     private boolean mentionedEveryone;
     private boolean isPinned;
 
-    public Message (IdentityImpl identity, String id, User author, String content, int type, String createdTime,
-                    List<User> mentions, List<Role> mentionedRoles, List<Attachment> attachments, boolean isTTs, boolean mentionedEveryone, boolean isPinned) {
+    public Message(Identity identity, String id, IUser author) {
         super(identity);
         this.id = id;
         this.author = author;
-        this.content = content;
-        this.type = Type.getByKey(type);
-        this.createdTime = createdTime == null ? null : OffsetDateTime.parse(createdTime);
         this.embeds = new ArrayList<>();
-        this.mentions = mentions;
-        this.mentionedRoles = mentionedRoles;
-        this.attachments = attachments;
-        this.reactions = new ArrayList<>();
-        this.isTTS = isTTs;
-        this.mentionedEveryone = mentionedEveryone;
-        this.isPinned = isPinned;
         this.messageProcessor = new MessageProcessor(this);
     }
 
@@ -118,7 +106,7 @@ public class Message extends DiscordObject implements IMessage, Jsonable {
     }
 
     @Override
-    public User getAuthor() {
+    public IUser getAuthor() {
         return author;
     }
 
@@ -234,14 +222,45 @@ public class Message extends DiscordObject implements IMessage, Jsonable {
         return this;
     }
 
+    public Message setContent(String content) {
+        this.content = content;
+        return this;
+    }
+
+    public Message setType(int type) {
+        this.type = Type.getByKey(type);
+        return this;
+    }
+
+    public Message setCreatedTime(String createdTime) {
+        this.createdTime = createdTime == null ? null : OffsetDateTime.parse(createdTime);
+        return this;
+    }
+
     public Message addEmbed(IEmbed embeds) {
         this.embeds.add(embeds);
         return this;
 
     }
 
-    public void setReactions(List<IReaction> reactions) {
+    public Message setMentions(List<User> mentions) {
+        this.mentions = mentions;
+        return this;
+    }
+
+    public Message setMentionedRoles(List<Role> mentionedRoles) {
+        this.mentionedRoles = mentionedRoles;
+        return this;
+    }
+
+    public Message setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
+        return this;
+    }
+
+    public Message setReactions(List<IReaction> reactions) {
         this.reactions = reactions;
+        return this;
     }
 
     public Message addReaction(IReaction reaction) {
@@ -254,4 +273,18 @@ public class Message extends DiscordObject implements IMessage, Jsonable {
         return this;
     }
 
+    public Message setTTS(boolean TTS) {
+        isTTS = TTS;
+        return this;
+    }
+
+    public Message setMentionedEveryone(boolean mentionedEveryone) {
+        this.mentionedEveryone = mentionedEveryone;
+        return this;
+    }
+
+    public Message setPinned(boolean pinned) {
+        isPinned = pinned;
+        return this;
+    }
 }

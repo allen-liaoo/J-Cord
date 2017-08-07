@@ -9,10 +9,14 @@ Event - Whenever a change happens to an entity, an event get fired.
      - GuildOwnerUpdateEvent
      - GuildRegionUpdateEvent
      - GuildIconUpdateEvent
+     - GuildAFKTimeoutUpdateEvent
+     - GuildAFKChannelUpdateEvent
+     - GuildEmbedEnabledUpdateEvent
+     - GuildEmbedChannelUpdateEvent
      - GuildVerificationUpdateEvent
      - GuildNotificationUpdateEvent
      - GuildMFAUpdateEvent
-     - GuildAFKTimeoutUpdateEvent
+     - GuildContentFilterUpdateEvent
      - GuildIntegrationsUpdateEvent
    - GuildDeleteEvent
    - GuildUnavailableEvent
