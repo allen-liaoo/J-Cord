@@ -4,6 +4,7 @@ import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.IChannelManager;
 import org.alienideology.jcord.handle.managers.IInviteManager;
+import org.alienideology.jcord.handle.modifiers.IChannelModifier;
 import org.alienideology.jcord.handle.permission.OverwriteCheckable;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.jetbrains.annotations.Nullable;
@@ -68,11 +69,18 @@ public interface IGuildChannel extends IChannel, OverwriteCheckable, ISnowFlake 
     IGuild getGuild();
 
     /**
-     * Get the managers that manages this GuildChannel.
+     * Get the manager that manages this GuildChannel.
      *
-     * @return The channel managers.
+     * @return The channel manager.
      */
-    IChannelManager getChannelManager();
+    IChannelManager getManager();
+
+    /**
+     * Get the modifier tha modify this GuildChannel.
+     *
+     * @return The channel modifier.
+     */
+    IChannelModifier getModifier();
 
     /**
      * Get the IInviteManager that manages invites from this GuildChannel.

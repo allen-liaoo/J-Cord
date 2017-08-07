@@ -203,7 +203,7 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
     public IAuditLog getAuditLogBefore(String entryId, int amount) {
         return getAuditLog(entryId, amount);
     }
-
+    // TODO: Get Audit Log Query Params: limit(int), before(snowflake), user_id(snowflake), action_type(LogType key)
     private IAuditLog getAuditLog(String entryId, int amount) {
         JSONObject audit;
         if (entryId == null) {
@@ -255,8 +255,10 @@ public final class Guild extends DiscordObject implements IGuild, Jsonable {
     @Override
     public IWebhook getWebhook(String id) {
         for (ITextChannel channel : textChannels) {
-            IWebhook webhook = channel.getWebhook(id);
-            if (webhook != null) return webhook;
+            if (channel.hasPermission(getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS)) {
+                IWebhook webhook = channel.getWebhook(id);
+                if (webhook != null) return webhook;
+            }
         }
         return null;
     }

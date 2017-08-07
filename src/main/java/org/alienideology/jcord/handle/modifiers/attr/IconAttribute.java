@@ -4,8 +4,6 @@ import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.modifiers.Attribute;
 import org.alienideology.jcord.handle.modifiers.IModifier;
 
-import java.util.function.Supplier;
-
 /**
  * IconAttribute - An attribute that modify an {@link Icon} instance.
  *
@@ -13,8 +11,8 @@ import java.util.function.Supplier;
  */
 public class IconAttribute<M extends IModifier> extends Attribute<M, Icon> {
 
-    public IconAttribute(String key, M modifier, Supplier<Icon> oldValue) {
-        super(key, modifier, oldValue);
+    public IconAttribute(String key, M modifier) {
+        super(key, modifier, null);
     }
 
     @Override

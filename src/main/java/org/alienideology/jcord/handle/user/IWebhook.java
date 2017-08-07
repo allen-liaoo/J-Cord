@@ -5,6 +5,7 @@ import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.channel.ITextChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.managers.IWebhookManager;
+import org.alienideology.jcord.handle.modifiers.IWebhookModifier;
 import org.alienideology.jcord.internal.rest.HttpPath;
 
 /**
@@ -45,7 +46,14 @@ public interface IWebhook extends IDiscordObject, ISnowFlake {
      *
      * @return The manager.
      */
-    IWebhookManager getWebhookManager();
+    IWebhookManager getManager();
+
+    /**
+     * Get the webhook modifier that modifies this webhook.
+     *
+     * @return The modifier.
+     */
+    IWebhookModifier getModifier();
 
     /**
      * Get the guild this webhook belongs to.

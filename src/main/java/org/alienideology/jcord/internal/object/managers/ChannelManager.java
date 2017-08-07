@@ -5,8 +5,6 @@ import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.channel.IChannel;
 import org.alienideology.jcord.handle.channel.IGuildChannel;
-import org.alienideology.jcord.handle.channel.ITextChannel;
-import org.alienideology.jcord.handle.channel.IVoiceChannel;
 import org.alienideology.jcord.handle.guild.IGuild;
 import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
@@ -57,83 +55,6 @@ public final class ChannelManager implements IChannelManager {
     @Override
     public IGuildChannel getGuildChannel() {
         return channel;
-    }
-
-    @Override
-    public AuditAction<Void> modifyName(String name) {
-        if (!IGuildChannel.isValidChannelName(name)) {
-            throw new IllegalArgumentException("Invalid channel name!");
-        }
-        return modifyChannel(new JSONObject().put("name", name));
-    }
-
-    @Override
-    public AuditAction<Void> modifyPosition(int position) {
-        return modifyChannel(new JSONObject().put("position", position));
-    }
-
-    @Override
-    public AuditAction<Void> moveChannelBy(int amount) {
-        return modifyPosition(channel.getPosition() + amount);
-    }
-
-    @Override
-    public AuditAction<Void> modifyTopic(String topic) {
-        if (channel instanceof VoiceChannel) {
-            throw new IllegalArgumentException("Cannot modify the topic of a voice channel!");
-        }
-        if (topic == null) topic = "";
-        if (!ITextChannel.isValidTopic(topic)) {
-            throw new IllegalArgumentException("The TextChannel's topic may not be longer than"+ ITextChannel.TOPIC_LENGTH_MAX +" characters!");
-        }
-        return modifyChannel(new JSONObject().put("topic", topic));
-    }
-
-    @Override
-    public AuditAction<Void> modifyBitrate(int bitrate) {
-        if (channel instanceof TextChannel) {
-            throw new IllegalArgumentException("Cannot modify the bitrate of a text channel!");
-        }
-        checkBitrate(bitrate, getGuild());
-
-        return modifyChannel(new JSONObject().put("bitrate", bitrate));
-    }
-
-    @Override
-    public AuditAction<Void> modifyUserLimit(int limit) {
-        if (channel instanceof TextChannel) {
-            throw new IllegalArgumentException("Cannot modify the user limit of a text channel!");
-        }
-        if (!IVoiceChannel.isValidUserLimit(limit)) {
-            throw new IllegalArgumentException("The user limit is not valid!");
-        }
-        return modifyChannel(new JSONObject().put("user_limit", limit));
-    }
-
-    private AuditAction<Void> modifyChannel(JSONObject json) {
-        if (!channel.hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_CHANNELS)) {
-            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_CHANNELS);
-        }
-
-        return new AuditAction<Void>((IdentityImpl) getIdentity(), HttpPath.Channel.MODIFY_CHANNEL, channel.getId()) {
-            @Override
-            protected Void request(Requester requester) {
-                requester.updateRequestWithBody(request -> request.body(json)).performRequest();
-                return null;
-            }
-        };
-    }
-
-    private void checkBitrate(int bitrate, IGuild guild) {
-        if (bitrate < IVoiceChannel.BITRATE_MIN) {
-            throw new IllegalArgumentException("The bitrate can not be lower than "+ IVoiceChannel.BITRATE_MIN +"!");
-        } else if (bitrate > IVoiceChannel.BITRATE_MAX) {
-            if (guild.getSplash() != null && bitrate > IVoiceChannel.VOICE_CHANNEL_BITRATE_VIP_MAX) { // Guild is VIP
-                throw new IllegalArgumentException("The bitrate of a vip guild can not be greater than "+ IVoiceChannel.VOICE_CHANNEL_BITRATE_VIP_MAX+"!");
-            } else {
-                throw new IllegalArgumentException("The bitrate of a normal guild can not be greater than "+ IVoiceChannel.BITRATE_MAX +"!");
-            }
-        }
     }
 
     @Override

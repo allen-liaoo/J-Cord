@@ -31,7 +31,7 @@ public abstract class Modifier<R> extends DiscordObject implements IModifier<R> 
 
     @Override
     public boolean needUpdate() {
-        return attributes.stream().filter(Attribute::needUpdate).count() == attributes.size();
+        return attributes.stream().filter(Attribute::needUpdate).count() > 0;
     }
 
     //-------------------------Internal-------------------------
@@ -39,8 +39,8 @@ public abstract class Modifier<R> extends DiscordObject implements IModifier<R> 
     protected abstract void setupAttributes();
 
     // All modifiers must set the values first by using setupAttributes()
-    protected void setAttributes(Attribute... attributes) {
-        this.attributes = Arrays.asList(attributes);
+    protected void addAttributes(Attribute... attributes) {
+        this.attributes.addAll(Arrays.asList(attributes));
     }
 
     // In the method modify(), call this to get a general updatable json.

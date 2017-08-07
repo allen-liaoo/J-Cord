@@ -15,7 +15,8 @@ import org.alienideology.jcord.internal.rest.Requester;
  */
 public final class GroupModifier extends Modifier<Void> implements IGroupModifier {
 
-    private Group group;
+    private final Group group;
+
     private Attribute<IGroupModifier, String> nameAttr;
     private IconAttribute<IGroupModifier> iconAttr;
 
@@ -37,14 +38,12 @@ public final class GroupModifier extends Modifier<Void> implements IGroupModifie
 
     @Override
     public IGroupModifier name(String name) {
-        nameAttr.setValue(name);
-        return this;
+        return nameAttr.setValue(name);
     }
 
     @Override
     public IGroupModifier icon(Icon icon) {
-        iconAttr.setValue(icon);
-        return this;
+        return iconAttr.setValue(icon);
     }
 
     public Attribute<IGroupModifier, String> getNameAttr() {
@@ -83,9 +82,9 @@ public final class GroupModifier extends Modifier<Void> implements IGroupModifie
                 return super.getAltValue();
             }
         };
-        iconAttr = new IconAttribute<>("icon", this, null);
+        iconAttr = new IconAttribute<>("icon", this);
 
-        setAttributes(nameAttr, iconAttr);
+        addAttributes(nameAttr, iconAttr);
     }
 
 }

@@ -41,6 +41,16 @@ public interface ILogEntry extends ISnowFlake {
     Map<ChangeType, ILogChange> getChanges();
 
     /**
+     * Get a {@link ILogChange} by the change type.
+     *
+     * @param type The change type.
+     * @return The change, or null if no change is found.
+     */
+    default ILogChange getChange(ChangeType type) {
+        return getChanges().get(type);
+    }
+
+    /**
      * Get the options that are attached to this log entry.
      *
      * @return The options.

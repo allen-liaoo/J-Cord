@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * IChannelManager - A manager for both text and voice channels.
+ * IChannelManager - A manager that manages both {@link ITextChannel} and {@link IVoiceChannel}.
  *
  * @author AlienIdeology
  */
@@ -49,6 +49,7 @@ public interface IChannelManager {
 
     /**
      * Modify the name of this channel.
+     * Use empty or {@code null} string to reset the name.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          <ul>
@@ -61,7 +62,9 @@ public interface IChannelManager {
      * @param name The new name.
      * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    AuditAction<Void> modifyName(String name);
+    default AuditAction<Void> modifyName(String name) {
+        return getGuildChannel().getModifier().name(name).modify();
+    }
 
     /**
      * Modify the position of this channel.
@@ -82,7 +85,9 @@ public interface IChannelManager {
      * @param position The new position.
      * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    AuditAction<Void> modifyPosition(int position);
+    default AuditAction<Void> modifyPosition(int position) {
+        return getGuildChannel().getModifier().position(position).modify();
+    }
 
     /**
      * Moves the channel by an amount of positions.
@@ -92,12 +97,13 @@ public interface IChannelManager {
      * @param amount The offset, or amount of channels to move by.
      * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    AuditAction<Void> moveChannelBy(int amount);
+    default AuditAction<Void> moveChannelBy(int amount) {
+        return modifyPosition(getGuildChannel().getPosition() + amount);
+    }
 
     /**
      * Modify the topic of a {@link ITextChannel}.
-     * It is important to understand that this event will only work for text channels.
-     * Use empty or null topic parameter to reset the topic to none.
+     * Use empty or {@code null} string to reset the topic.
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity do not have {@code Manage Channels} permission.
@@ -110,7 +116,9 @@ public interface IChannelManager {
      * @param topic The new topic.
      * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    AuditAction<Void> modifyTopic(String topic);
+    default AuditAction<Void> modifyTopic(String topic) {
+        return getGuildChannel().getModifier().topic(topic).modify();
+    }
 
     /**
      * Modify the bitrate of a {@link IVoiceChannel}.
@@ -132,11 +140,12 @@ public interface IChannelManager {
      * @param bitrate The new bitrate.
      * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    AuditAction<Void> modifyBitrate(int bitrate);
+    default AuditAction<Void> modifyBitrate(int bitrate) {
+        return getGuildChannel().getModifier().bitrate(bitrate).modify();
+    }
 
     /**
      * Modify the user limit of a {@link IVoiceChannel}.
-     * This event will only work for voice channels.
      * Use 0 for no user limits. Note that negative limits will throw {@link IllegalArgumentException}.
      * @see IVoiceChannel#getUserLimit() For more information on user limit.
      *
@@ -148,7 +157,9 @@ public interface IChannelManager {
      * @param limit The new limit.
      * @return A void {@link AuditAction}, used to attach reason to the modify action.
      */
-    AuditAction<Void> modifyUserLimit(int limit);
+    default AuditAction<Void> modifyUserLimit(int limit) {
+        return getGuildChannel().getModifier().userLimit(limit).modify();
+    }
 
     /**
      * Edit or add {@link PermOverwrite} to a member in this channel.
@@ -238,7 +249,7 @@ public interface IChannelManager {
         if (!webhook.getChannel().equals(getGuildChannel())) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_USER);
         }
-        return webhook.getWebhookManager().delete();
+        return webhook.getManager().delete();
     }
 
     /**

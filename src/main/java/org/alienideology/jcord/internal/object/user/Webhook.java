@@ -8,6 +8,7 @@ import org.alienideology.jcord.handle.user.IWebhook;
 import org.alienideology.jcord.internal.object.DiscordObject;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.managers.WebhookManager;
+import org.alienideology.jcord.internal.object.modifiers.WebhookModifier;
 
 /**
  * @author AlienIdeology
@@ -15,7 +16,6 @@ import org.alienideology.jcord.internal.object.managers.WebhookManager;
 public final class Webhook extends DiscordObject implements IWebhook {
 
     private final String id;
-    private final WebhookManager manager;
 
     private IGuild guild;
     private ITextChannel channel;
@@ -25,15 +25,24 @@ public final class Webhook extends DiscordObject implements IWebhook {
     private String defaultAvatar;
     private String token;
 
+    private final WebhookManager manager;
+    private final WebhookModifier modifier;
+
     public Webhook(IdentityImpl identity, String id) {
         super(identity);
         this.id = id;
         this.manager = new WebhookManager(this);
+        this.modifier = new WebhookModifier(this);
     }
 
     @Override
-    public IWebhookManager getWebhookManager() {
+    public IWebhookManager getManager() {
         return manager;
+    }
+
+    @Override
+    public WebhookModifier getModifier() {
+        return modifier;
     }
 
     @Override

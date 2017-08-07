@@ -7,12 +7,14 @@ import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IChannelManager;
 import org.alienideology.jcord.handle.managers.IInviteManager;
+import org.alienideology.jcord.handle.modifiers.IChannelModifier;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.managers.ChannelManager;
 import org.alienideology.jcord.internal.object.managers.InviteManager;
+import org.alienideology.jcord.internal.object.modifiers.ChannelModifier;
 import org.json.JSONObject;
 
 import java.util.Collection;
@@ -24,8 +26,6 @@ import java.util.Objects;
 public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonable {
 
     private IGuild guild;
-    private ChannelManager channelManager;
-    private InviteManager inviteManager;
 
     private String name;
     private int position;
@@ -34,10 +34,16 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonab
 
     private Collection<PermOverwrite> permOverwrites;
 
+    private final ChannelManager channelManager;
+    private final ChannelModifier channelModifier;
+    private final InviteManager inviteManager;
+
+
     public VoiceChannel(IdentityImpl identity, IGuild guild, String id) {
         super(identity, id, IChannel.Type.GUILD_VOICE);
         this.guild = guild;
         this.channelManager = new ChannelManager(this);
+        this.channelModifier = new ChannelModifier(this);
         this.inviteManager = new InviteManager(this);
     }
 
@@ -61,8 +67,13 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonab
     }
 
     @Override
-    public IChannelManager getChannelManager() {
+    public IChannelManager getManager() {
         return channelManager;
+    }
+
+    @Override
+    public IChannelModifier getModifier() {
+        return null;
     }
 
     @Override
@@ -128,6 +139,7 @@ public final class VoiceChannel extends Channel implements IVoiceChannel, Jsonab
 
     @Override
     public boolean hasPermission(IMember member, Collection<Permission> permissions) {
+        if (member.isOwner()) return true;
         PermOverwrite overwrites = getMemberPermOverwrite(member.getId());
 
         // If the member does not have overwrite, check the highest role

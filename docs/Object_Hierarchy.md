@@ -111,12 +111,12 @@ Permission (Enumeration) - A way to limit and grant certain abilities to members
 
 ### Managers
  - IGuildManager - The manager that manages and perform actions upon a guild.
- - IChannelManager - A manager for both text and voice channels.
+ - IChannelManager - A manager that manages both ITextChannel and IVoiceChannel.
  - IInviteManager - A manager for managing invites in both a guild or a guild channel.
  - IMemberManager - The manager that manages and perform actions upon a member.
  - IRoleManager - A manager that manages a role in the guild.
- - IWebhookManager - A manager for modifying, executing and deleting webhooks.
  - ISelfManager - A manager that manages self user.
+ - IWebhookManager - A manager for modifying, executing and deleting webhooks.
  - IClientManager - A manager used to manage the Discord client.
  - IGroupManager - A manager that manages a group.
  - IApplicationManager - A manager for managing IApplication.
@@ -124,8 +124,11 @@ Permission (Enumeration) - A way to limit and grant certain abilities to members
 ### Modifiers
 IModifier - A modifier that support chainable methods to update multiple IAttribute of an instance at once.
 Attribute - An updatable field of an IModifier.
+ - IChannelModifier - A modifier that modifies both ITextChannel and IVoiceChannel.
  - ISelfModifier - A modifier that modify the self user.
+ - IWebhookModifier - The modifier that modifies a webhook.
  - IGroupModifier - A modifier that modify a group.
+ - IApplicationModifier - A modifier that modify an application.
 
 ### Builders
  - GuildBuilder - A builder for creating a guild. Used by IClientManager.

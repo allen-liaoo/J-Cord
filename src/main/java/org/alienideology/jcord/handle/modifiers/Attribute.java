@@ -153,12 +153,12 @@ public abstract class Attribute<M extends IModifier, T> {
     }
 
     /**
-     * Check if the value is changed and different from the {@link #getOldValue()}.
+     * Check if the value is set and different from the {@link #getOldValue()}.
      *
-     * @return True if the value is changed and different from the old value.
+     * @return True if the value is set and different from the old value.
      */
     public boolean needUpdate() {
-        return !Objects.equals(getNewValue(), getOldValue());
+        return isSet && !Objects.equals(getNewValue(), getOldValue());
     }
 
 }

@@ -27,7 +27,10 @@ public final class ApplicationBuilder implements Buildable<ApplicationBuilder, I
      */
     @Override
     public IApplication build() {
-        return new Application(null, null, null, name, icon == null || icon.equals(Icon.DEFAULT_ICON) ? null : (String) icon.getData(), description, null);
+        return new Application(null, null)
+                .setName(name)
+                .setIcon(icon == null || icon == Icon.DEFAULT_ICON ? null : (String) icon.getData())
+                .setDescription(description);
     }
 
     @Override

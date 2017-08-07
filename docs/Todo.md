@@ -1,8 +1,10 @@
 # Todo List
 1. Chainable Modifier and Attribute.
  Managers should have default methods for modifier's individual attributes.
-2. FriendSuggestion (Unknown json object)
-3. GuildWidget - Parse Guild Embed Json, and get widget png.
+2. Retriever for chainable retrieving options. (With query params such as "limit", "before")
+Retrieve MessageHistory, Reactions, Audit Logs, Recent Mentions(Client).
+3. FriendSuggestion (Unknown json object)
+4. GuildWidget - Parse Guild Embed Json, and get widget png.
 
 ### Description
  - [x] Done : Tested and working.

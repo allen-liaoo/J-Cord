@@ -1,15 +1,11 @@
 package org.alienideology.jcord.internal.object.managers;
 
-import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.client.app.IApplication;
 import org.alienideology.jcord.handle.managers.IApplicationManager;
 import org.alienideology.jcord.internal.exception.HttpErrorException;
 import org.alienideology.jcord.internal.object.client.ClientObject;
 import org.alienideology.jcord.internal.rest.HttpPath;
 import org.alienideology.jcord.internal.rest.Requester;
-import org.json.JSONObject;
-
-import java.util.List;
 
 /**
  * @author AlienIdeology
@@ -26,68 +22,6 @@ public final class ApplicationManager extends ClientObject implements IApplicati
     @Override
     public IApplication getApplication() {
         return application;
-    }
-
-    @Override
-    public void modifyName(String name) {
-        if (!IApplication.isValidName(name)) {
-            throw new IllegalArgumentException("Invalid application name!");
-        }
-        modifyApplication(new JSONObject().put("name", name));
-    }
-
-    @Override
-    public void modifyIcon(Icon icon) {
-        modifyApplication(new JSONObject()
-                .put("icon", icon.getData())
-                // For some reason, discord responds with 400 BAD REQUEST when the request without name
-                .put("name", application.getName())
-        );
-    }
-
-    @Override
-    public void modifyDescription(String description) {
-        if (!IApplication.isValidDescription(description)) {
-            throw new IllegalArgumentException("Invalid application description!");
-        }
-        modifyApplication(new JSONObject()
-                .put("description", description)
-                // For some reason, discord responds with 400 BAD REQUEST when the request without name
-                .put("name", application.getName())
-        );
-    }
-
-    @Override
-    public void modifyRedirectUris(List<String> redirectUris) {
-        modifyApplication(new JSONObject()
-                .put("redirect_uris", redirectUris)
-                // For some reason, discord responds with 400 BAD REQUEST when the request without name
-                .put("name", application.getName())
-        );
-    }
-
-    @Override
-    public void modifyIsBotPublic(boolean isBotPublic) {
-        modifyApplication(new JSONObject()
-                .put("bot_public", isBotPublic)
-                // For some reason, discord responds with 400 BAD REQUEST when the request without name
-                .put("name", application.getName())
-        );
-    }
-
-    @Override
-    public void modifyRequireCodeGrant(boolean requireCodeGrant) {
-        modifyApplication(new JSONObject()
-                .put("bot_require_code_grant", requireCodeGrant)
-                // For some reason, discord responds with 400 BAD REQUEST when the request without name
-                .put("name", application.getName()));
-    }
-
-    private void modifyApplication(JSONObject json) {
-        new Requester(getIdentity(), HttpPath.Application.MODIFY_APPLICATION)
-                .request(application.getId())
-                .updateRequestWithBody(request -> request.body(json))
-                .performRequest();
     }
 
     @Override

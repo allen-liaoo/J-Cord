@@ -7,6 +7,7 @@ import org.alienideology.jcord.handle.guild.IMember;
 import org.alienideology.jcord.handle.guild.IRole;
 import org.alienideology.jcord.handle.managers.IChannelManager;
 import org.alienideology.jcord.handle.managers.IInviteManager;
+import org.alienideology.jcord.handle.modifiers.IChannelModifier;
 import org.alienideology.jcord.handle.permission.PermOverwrite;
 import org.alienideology.jcord.handle.permission.Permission;
 import org.alienideology.jcord.handle.user.IWebhook;
@@ -16,9 +17,9 @@ import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.ObjectBuilder;
 import org.alienideology.jcord.internal.object.managers.ChannelManager;
 import org.alienideology.jcord.internal.object.managers.InviteManager;
+import org.alienideology.jcord.internal.object.modifiers.ChannelModifier;
 import org.alienideology.jcord.internal.rest.HttpPath;
 import org.alienideology.jcord.internal.rest.Requester;
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -33,8 +34,6 @@ import java.util.Objects;
 public final class TextChannel extends MessageChannel implements ITextChannel, Jsonable {
 
     private IGuild guild;
-    private ChannelManager channelManager;
-    private InviteManager inviteManager;
 
     private String name;
     private int position;
@@ -42,10 +41,15 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
 
     private Collection<PermOverwrite> permOverwrites;
 
+    private final ChannelManager channelManager;
+    private final ChannelModifier channelModifier;
+    private final InviteManager inviteManager;
+
     public TextChannel(IdentityImpl identity, IGuild guild, String id) {
         super(identity, id, IChannel.Type.GUILD_TEXT);
         this.guild = guild;
         this.channelManager = new ChannelManager(this);
+        this.channelModifier = new ChannelModifier(this);
         this.inviteManager = new InviteManager(this);
     }
 
@@ -78,8 +82,13 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
     }
 
     @Override
-    public IChannelManager getChannelManager() {
+    public IChannelManager getManager() {
         return channelManager;
+    }
+
+    @Override
+    public IChannelModifier getModifier() {
+        return channelModifier;
     }
 
     @Override
@@ -128,6 +137,7 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
 
     @Override
     public boolean hasPermission(IMember member, Collection<Permission> permissions) {
+        if (member.isOwner()) return true;
         PermOverwrite overwrites = getMemberPermOverwrite(member.getId());
 
         // If the member does not have overwrite, check the highest role
@@ -183,7 +193,10 @@ public final class TextChannel extends MessageChannel implements ITextChannel, J
     }
 
     @Override
-    public @Nullable IWebhook getWebhook(String id) {
+    public IWebhook getWebhook(String id) {
+        if (!hasPermission(guild.getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS)) {
+            return null;
+        }
         for (IWebhook webhook : getWebhooks()) {
             if (webhook.getId().equals(id)) {
                 return webhook;

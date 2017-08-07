@@ -3,10 +3,12 @@ package org.alienideology.jcord.internal.object.client.app;
 import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.client.app.IApplication;
 import org.alienideology.jcord.handle.managers.IApplicationManager;
+import org.alienideology.jcord.handle.modifiers.IApplicationModifier;
 import org.alienideology.jcord.internal.object.Jsonable;
 import org.alienideology.jcord.internal.object.client.Client;
 import org.alienideology.jcord.internal.object.client.ClientObject;
 import org.alienideology.jcord.internal.object.managers.ApplicationManager;
+import org.alienideology.jcord.internal.object.modifiers.ApplicationModifier;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -18,37 +20,26 @@ import java.util.List;
 public final class Application extends ClientObject implements IApplication, Jsonable {
 
     private final String id;
-    private final String secret;
+    private String secret;
 
-    private final String name;
-    private final String icon;
-    private final String description;
+    private String name;
+    private String icon;
+    private String description;
 
-    private final List<String> redirectUris;
+    private List<String> redirectUris;
     private BotUser bot;
 
-    private final boolean isPublicBot;
-    private final boolean requireCodeGrant;
+    private boolean isPublicBot;
+    private boolean requireCodeGrant;
 
     private final ApplicationManager manager;
+    private final ApplicationModifier modifier;
 
-    public Application(Client client, String id, String secret, String name, String icon, String description, List<String> redirectUris) {
-        this(client, id, secret, name, icon, description, redirectUris, null, false, false);
-    }
-
-    public Application(Client client, String id, String secret, String name, String icon, String description,
-                       List<String> redirectUris, BotUser bot, boolean isPublicBot, boolean requireCodeGrant) {
+    public Application(Client client, String id) {
         super(client);
         this.id = id;
-        this.secret = secret;
-        this.name = name;
-        this.icon = icon;
-        this.description = description;
-        this.redirectUris = redirectUris;
-        this.bot = bot;
-        this.isPublicBot = isPublicBot;
-        this.requireCodeGrant = requireCodeGrant;
         this.manager = new ApplicationManager(this);
+        this.modifier = new ApplicationModifier(this);
     }
 
     @Override
@@ -69,6 +60,11 @@ public final class Application extends ClientObject implements IApplication, Jso
     @Override
     public IApplicationManager getManager() {
         return manager;
+    }
+
+    @Override
+    public IApplicationModifier getModifier() {
+        return modifier;
     }
 
     @Override
@@ -114,6 +110,48 @@ public final class Application extends ClientObject implements IApplication, Jso
     @Override
     public boolean requireCodeGrant() {
         return requireCodeGrant;
+    }
+
+    //-----------------Internal-----------------
+
+    public Application setSecret(String secret) {
+        this.secret = secret;
+        return this;
+    }
+
+    public Application setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Application setIcon(String icon) {
+        this.icon = icon;
+        return this;
+    }
+
+    public Application setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public Application setRedirectUris(List<String> redirectUris) {
+        this.redirectUris = redirectUris;
+        return this;
+    }
+
+    public Application setBot(BotUser bot) {
+        this.bot = bot;
+        return this;
+    }
+
+    public Application setPublicBot(boolean publicBot) {
+        isPublicBot = publicBot;
+        return this;
+    }
+
+    public Application setRequireCodeGrant(boolean requireCodeGrant) {
+        this.requireCodeGrant = requireCodeGrant;
+        return this;
     }
 
     @Override

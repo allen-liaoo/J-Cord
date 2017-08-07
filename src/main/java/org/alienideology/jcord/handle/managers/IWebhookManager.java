@@ -69,7 +69,9 @@ public interface IWebhookManager {
      * @param name The name.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    AuditAction<Void> modifyDefaultName(String name);
+    default AuditAction<Void> modifyDefaultName(String name) {
+        return getWebhook().getModifier().defaultName(name).modify();
+    }
 
     /**
      * Modify the default avatar of this webhook.
@@ -77,10 +79,13 @@ public interface IWebhookManager {
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity itself does not have {@code Manager Webhooks} permission.
+     *
      * @param icon The avatar.
      * @return A {@link Void} {@link AuditAction}, used to attach audit log reason.
      */
-    AuditAction<Void> modifyDefaultAvatar(Icon icon);
+    default AuditAction<Void> modifyDefaultAvatar(Icon icon) {
+        return getWebhook().getModifier().defaultAvatar(icon).modify();
+    }
 
     /**
      * Execute the webhook by sending a message to the channel.

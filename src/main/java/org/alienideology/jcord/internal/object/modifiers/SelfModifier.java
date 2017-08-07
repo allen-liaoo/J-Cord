@@ -29,14 +29,12 @@ public final class SelfModifier extends Modifier<Void> implements ISelfModifier 
 
     @Override
     public ISelfModifier name(String name) {
-        usernameAttr.setValue(name);
-        return this;
+        return usernameAttr.setValue(name);
     }
 
     @Override
     public ISelfModifier avatar(Icon icon) {
-        avatarAttr.setValue(icon);
-        return this;
+        return avatarAttr.setValue(icon);
     }
 
     @Override
@@ -77,8 +75,8 @@ public final class SelfModifier extends Modifier<Void> implements ISelfModifier 
                 return super.getAltValue();
             }
         };
-        avatarAttr = new IconAttribute<>("avatar", this, null);
+        avatarAttr = new IconAttribute<>("avatar", this);
 
-        setAttributes(usernameAttr, avatarAttr);
+        addAttributes(usernameAttr, avatarAttr);
     }
 }

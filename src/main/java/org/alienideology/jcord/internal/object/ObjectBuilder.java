@@ -1017,9 +1017,25 @@ public final class ObjectBuilder {
             String bIcon = botJson.isNull("avatar") ? null : botJson.getString("avatar");
             Application.BotUser bot = new Application.BotUser(bId, bToken, bName, bDiscriminator, bIcon);
 
-            return new Application(client, id, secret, name, icon, description, redirectUris, bot, isPublicBot, requireCodeGrant);
+            return new Application(client, id)
+                    .setSecret(secret)
+                    .setName(name)
+                    .setIcon(icon)
+                    .setDescription(description)
+                    .setRedirectUris(redirectUris)
+                    .setPublicBot(isPublicBot)
+                    .setRequireCodeGrant(requireCodeGrant)
+                    .setBot(bot);
         } else {
-            return new Application(client, id, secret, name, icon, description, redirectUris);
+            return new Application(client, id)
+                    .setSecret(secret)
+                    .setName(name)
+                    .setIcon(icon)
+                    .setDescription(description)
+                    .setRedirectUris(redirectUris)
+                    .setPublicBot(false)
+                    .setRequireCodeGrant(false)
+                    .setBot(null);
         }
     }
 

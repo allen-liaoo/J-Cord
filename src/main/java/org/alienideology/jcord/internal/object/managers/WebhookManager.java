@@ -1,6 +1,5 @@
 package org.alienideology.jcord.internal.object.managers;
 
-import org.alienideology.jcord.handle.Icon;
 import org.alienideology.jcord.handle.audit.AuditAction;
 import org.alienideology.jcord.handle.managers.IWebhookManager;
 import org.alienideology.jcord.handle.permission.Permission;
@@ -10,7 +9,6 @@ import org.alienideology.jcord.internal.object.IdentityImpl;
 import org.alienideology.jcord.internal.object.user.Webhook;
 import org.alienideology.jcord.internal.rest.HttpPath;
 import org.alienideology.jcord.internal.rest.Requester;
-import org.json.JSONObject;
 
 /**
  * @author AlienIdeology
@@ -26,34 +24,6 @@ public final class WebhookManager implements IWebhookManager {
     @Override
     public IWebhook getWebhook() {
         return webhook;
-    }
-
-    @Override
-    public AuditAction<Void> modifyDefaultName(String name) {
-        if (name == null || name.isEmpty()) return new AuditAction.EmptyAuditAction<>();
-        if (!IWebhook.isValidWebhookName(name)) {
-            throw new IllegalArgumentException("The name is not valid!");
-        }
-        return modify(new JSONObject().put("name", name));
-    }
-
-    @Override
-    public AuditAction<Void> modifyDefaultAvatar(Icon icon) {
-        return modify(new JSONObject().put("avatar", icon.getData()));
-    }
-
-    private AuditAction<Void> modify(JSONObject json) {
-        if (!getChannel().hasPermission(getGuild().getSelfMember(), Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS)) {
-            throw new PermissionException(Permission.ADMINISTRATOR, Permission.MANAGE_WEBHOOKS);
-        }
-
-        return new AuditAction<Void>((IdentityImpl) getIdentity(), HttpPath.Webhook.MODIFY_WEBHOOK, webhook.getId()) {
-            @Override
-            protected Void request(Requester requester) {
-                requester.updateRequestWithBody(request -> request.body(json)).performRequest();
-                return null;
-            }
-        };
     }
 
     @Override

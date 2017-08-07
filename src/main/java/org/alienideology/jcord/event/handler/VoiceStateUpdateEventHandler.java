@@ -39,7 +39,7 @@ public class VoiceStateUpdateEventHandler extends EventHandler {
 
         IUser user = identity.getUser(json.getString("user_id"));
         if (user == null) {
-            logger.log(LogLevel.FETAL, "[UNKNOWN USER][VOICE_STATE_UPDATE_EVENT]");
+            logger.log(LogLevel.FETAL, "[UNKNOWN USER] [VOICE_STATE_UPDATE_EVENT]");
             return;
         }
 
@@ -50,7 +50,7 @@ public class VoiceStateUpdateEventHandler extends EventHandler {
 
             CallUser cUser = identity.getClient().getCallUsers().get(json.getString("user_id"));
             if (cUser == null) {
-                logger.log(LogLevel.FETAL, "[UNKNOWN CALL USER][VOICE_STATE_UPDATE_EVENT]");
+                logger.log(LogLevel.FETAL, "[UNKNOWN CALL USER] [VOICE_STATE_UPDATE_EVENT]");
                 return;
             }
 
@@ -85,19 +85,19 @@ public class VoiceStateUpdateEventHandler extends EventHandler {
             }
 
             if (!Objects.equals(state.isSelfDeafened(), oldState.isSelfDeafened())) {
-                dispatchEvent(new CallUserSelfDeafenEvent(client, sequence, (Call) cUser.getCall(), cUser));
+                dispatchEvent(new CallUserSelfDeafenEvent(client, sequence, cUser.getCall(), cUser));
             }
 
         } else {
             Guild guild = (Guild) identity.getGuild(json.getString("guild_id"));
             if (guild == null) {
-                logger.log(LogLevel.FETAL, "[UNKNOWN GUILD][VOICE_STATE_UPDATE_EVENT]");
+                logger.log(LogLevel.FETAL, "[UNKNOWN GUILD] [VOICE_STATE_UPDATE_EVENT]");
                 return;
             }
 
             Member member = (Member) guild.getMember(json.getString("user_id"));
             if (member == null) {
-                logger.log(LogLevel.FETAL, "[UNKNOWN MEMBER][VOICE_STATE_UPDATE_EVENT]");
+                logger.log(LogLevel.FETAL, "[UNKNOWN MEMBER] [VOICE_STATE_UPDATE_EVENT]");
                 return;
             }
 

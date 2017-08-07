@@ -28,7 +28,7 @@ public interface ITextChannel extends IGuildChannel, IMessageChannel, IMention, 
      * @return True if the topic is valid.
      */
     static boolean isValidTopic(String topic) {
-        return topic == null || topic.length() > TOPIC_LENGTH_MAX;
+        return topic == null || topic.length() < TOPIC_LENGTH_MAX;
     }
 
     /**
@@ -62,6 +62,7 @@ public interface ITextChannel extends IGuildChannel, IMessageChannel, IMention, 
      *
      * @exception org.alienideology.jcord.internal.exception.PermissionException
      *          If the identity does not have {@code Manager Webhooks} permission.
+     *
      * @return A list of webhooks.
      */
     List<IWebhook> getWebhooks();

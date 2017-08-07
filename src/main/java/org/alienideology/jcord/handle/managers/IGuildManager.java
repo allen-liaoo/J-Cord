@@ -471,7 +471,7 @@ public interface IGuildManager {
         if (!channel.getGuild().equals(getGuild())) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_CHANNEL);
         }
-        return channel.getChannelManager().createWebhook(defaultName, defaultAvatar);
+        return channel.getManager().createWebhook(defaultName, defaultAvatar);
     }
 
     /**
@@ -488,7 +488,7 @@ public interface IGuildManager {
         if (!webhook.getGuild().equals(getGuild())) {
             throw new ErrorResponseException(ErrorResponse.UNKNOWN_USER);
         }
-        return webhook.getWebhookManager().delete();
+        return webhook.getManager().delete();
     }
 
 }

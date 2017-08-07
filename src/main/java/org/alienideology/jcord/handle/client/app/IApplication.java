@@ -3,6 +3,7 @@ package org.alienideology.jcord.handle.client.app;
 import org.alienideology.jcord.handle.ISnowFlake;
 import org.alienideology.jcord.handle.client.IClientObject;
 import org.alienideology.jcord.handle.managers.IApplicationManager;
+import org.alienideology.jcord.handle.modifiers.IApplicationModifier;
 import org.alienideology.jcord.internal.rest.HttpPath;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,6 +75,13 @@ public interface IApplication extends IClientObject, ISnowFlake {
      * @return The application manager.
      */
     IApplicationManager getManager();
+
+    /**
+     * Get the modifier that modify attributes of this application.
+     *
+     * @return The application modifier.
+     */
+    IApplicationModifier getModifier();
 
     /**
      * Get the client secret of this application.

@@ -38,8 +38,8 @@ public class DataUtils {
             return URLEncoder.encode(toEncode, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             JCord.LOG.log(LogLevel.FETAL, e);
+            return toEncode;
         }
-        return null;
     }
 
 }

@@ -210,7 +210,6 @@ public interface IClientSetting extends IClientObject {
         TRADITIONAL_CHINESE ("zh-TW"),
         TURKISH ("tr"),
         UKRAINIAN ("uk"),
-
         UNKNOWN("unknown");
 
         public final String key;
